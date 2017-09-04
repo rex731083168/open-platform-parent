@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.ce</groupId>
+    <artifactId>open-platform-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>paas-estatistics</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  
+
+	<properties>
+		<spring.version>4.2.9.RELEASE</spring.version>
+		<elasticsearch.version>5.5.2</elasticsearch.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- 编译时的编码 -->
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>transport</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch-transport-wares</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.plugin</groupId>
+			<artifactId>transport-netty3-client</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.plugin</groupId>
+			<artifactId>transport-netty4-client</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.plugin</groupId>
+			<artifactId>reindex-client</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.plugin</groupId>
+			<artifactId>lang-mustache-client</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.plugin</groupId>
+			<artifactId>percolator-client</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+	</dependencies>
+</project>

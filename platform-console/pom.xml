@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cn.ce</groupId>
+		<artifactId>open-platform-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>platform-console</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+ 	<properties>
+		<platform.service.version>0.0.1-SNAPSHOT</platform.service.version>
+	</properties>
+
+
+
+	<!-- denpendencies -->
+	<dependencies>
+ 		<dependency>
+			<groupId>cn.ce</groupId>
+			<artifactId>platform-service</artifactId>
+			<version>${platform.service.version}</version>
+		</dependency>
+
+
+		<!-- swagger dependency -->
+		<dependency>
+			<groupId>com.mangofactory</groupId>
+			<artifactId>swagger-springmvc</artifactId>
+			<version>${swagger.springmvc.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mangofactory</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>${swagger.springmvc.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger.annotations}</version>
+		</dependency>
+
+		<!-- swagger-springmvc dependencies -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+
+
+	</dependencies>
+
+</project>
