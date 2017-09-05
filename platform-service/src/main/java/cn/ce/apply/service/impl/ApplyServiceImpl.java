@@ -53,33 +53,17 @@ public class ApplyServiceImpl implements IApplyService {
 		result.setStatus(Status.SUCCESS);
 		
 		
-		String errorMessage = "";
-		
 		if(null == entity.getUser()){
 			result.setErrorMessage("请登录后操作!");
 			return result;
 		}
 		
 		
-		//新增时
-		if(StringUtils.isBlank(entity.getId())){
-			if(StringUtils.isBlank(entity.getApplyName())){
-				result.setErrorMessage("应用名称不能为空!");
-				return result;
-			}
-		}
-		
-		
-		//构建查询对象 判断是否重复
-		ApplyEntity applyParam = new ApplyEntity();
-		applyParam.setUserId(entity.getUserId());
-		applyParam.setApplyName(entity.getApplyName());
-		
 		//构建查询对象
 		Criteria c = new Criteria();
 		
-		if(StringUtils.isNotBlank(entity.getUserId())){
-			c.and("userId").is(entity.getUserId());
+		if(StringUtils.isNotBlank(entity.getUser().getId())){
+			c.and("userId").is(entity.getUser().getId());
 		}
 		
 		if(StringUtils.isNotBlank(entity.getApplyName())){
@@ -91,15 +75,28 @@ public class ApplyServiceImpl implements IApplyService {
 		
 		List<ApplyEntity> findPageByList = applyDao.findListByEntity(query);
 		
-		if(!findPageByList.isEmpty()){
-			result.setErrorMessage("应用名称不可重复!");
-			return result;
-		}
 		
-		if(StringUtils.isNotBlank(errorMessage)){
+		if(StringUtils.isBlank(entity.getApplyName())){
 			result.setErrorMessage("应用名称不能为空!");
 			return result;
 		}
+		
+		//新增时
+		if(StringUtils.isBlank(entity.getId())){
+			if(null != findPageByList && findPageByList.size() > 0){
+				result.setErrorMessage("应用名称不可重复!");
+				return result;
+			}
+		}else{
+			//修改时 判断是否数据库中重复 排除修改对象本身
+			for (ApplyEntity applyEntity : findPageByList) {
+				if(!applyEntity.getId().equals(entity.getId())){
+					result.setErrorMessage("应用名称不可重复!");
+					return result;
+				}
+			}
+		}
+
 		
 		try {
 			
@@ -108,12 +105,18 @@ public class ApplyServiceImpl implements IApplyService {
 				entity.setUserId(entity.getUser().getId());
 				entity.setUserName(entity.getUser().getUsername());
 				entity.setCreateDate(new Date());
+
+				logger.info("insert apply begin : " + JSON.toJSONString(entity));
+				applyDao.saveOrUpdate(entity);
+				logger.info("save end");
+				
 			}else{
 			//修改
 				ApplyEntity applyById = applyDao.getApplyById(entity.getId());
 				
 				if(null == applyById){
 					result.setErrorMessage("请求的应用信息不存在!");
+					return result;
 				}else{
 					
 					if(StringUtils.isNotBlank(entity.getApplyName())){
@@ -124,22 +127,21 @@ public class ApplyServiceImpl implements IApplyService {
 						applyById.setApplyDesc(entity.getApplyDesc());
 					}
 				}
-			}
-			
-			if(Status.SUCCESS == result.getStatus()){
-				logger.info("save apply begin : " + JSON.toJSONString(entity));
-				applyDao.saveOrUpdate(entity);
+				
+				logger.info("update apply begin : " + JSON.toJSONString(applyById));
+				applyDao.saveOrUpdate(applyById);
 				logger.info("save end");
+				
 			}
 			
 		} catch (Exception e) {
 			logger.error("saveApply system error,e:" + e.toString());
 			if(StringUtils.isBlank(entity.getId())){
-				errorMessage = "新增应用时出现错误!";
+				result.setErrorMessage("新增应用时出现错误!");
 			}else{
-				errorMessage = "修改应用时出现错误!";
+				result.setErrorMessage("修改应用时出现错误!");
 			}
-			result.setErrorMessage(errorMessage);
+			
 		}
 		
 		return result;
