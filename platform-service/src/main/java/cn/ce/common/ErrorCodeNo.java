@@ -8,8 +8,9 @@ package cn.ce.common;
 public enum ErrorCodeNo {
 
 
-	SYS000("系统正常"),
-	SYS001("系统错误");
+	SYS000("系统正常")
+	,SYS001("系统错误")
+	;
 	
 	
 	private String desc;

@@ -56,9 +56,9 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public Page<User> getUsers(int roleType, String uname, String checkstate,
+	public Page<User> getUsers(int roleType, String uname, String checkstate,String state,
 			int currentPage, int pageSize) {
-		return userDAO.getUsers(roleType, uname, checkstate, currentPage, pageSize);
+		return userDAO.getUsers(roleType, uname, checkstate, state, currentPage, pageSize);
 	}
 
 

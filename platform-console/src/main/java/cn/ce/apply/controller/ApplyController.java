@@ -64,7 +64,7 @@ public class ApplyController{
 		return result;
 	}
 
-	@RequestMapping(value = "deleteApplyByid", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/deleteApplyByid", method = RequestMethod.DELETE)
 	public Result<String> deleteApplyByid(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "id", required = true) String id) {
 		
@@ -84,7 +84,7 @@ public class ApplyController{
 		return result;
 	}
 	
-	@RequestMapping(value = "getApplyByid", method = RequestMethod.GET)
+	@RequestMapping(value = "/getApplyByid", method = RequestMethod.GET)
 	public Result<ApplyEntity> getApplyByid(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "id", required = true) String id,
 			@RequestParam(required=false,defaultValue="10") int pageSize,

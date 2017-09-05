@@ -46,6 +46,7 @@ public class UserController {
 			String roleType,
 			String uname,
 			String checkstate,
+			String state,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
 
@@ -54,7 +55,7 @@ public class UserController {
 
 		JSONObject result = new JSONObject();
 		try {
-			Page<User> userList = userService.getUsers(role, uname, checkstate,currentPage, pageSize);
+			Page<User> userList = userService.getUsers(role, uname, checkstate,state,currentPage, pageSize);
 			List<User> items = (List<User>) userList.getItems();
 			JSONArray jsonArray = new JSONArray();
 			JSONObject data = new JSONObject();
@@ -127,16 +128,16 @@ public class UserController {
 			
 			
 			logger.info("------->邮件通知用户，帐号审核结果");
-			if(i > 0) {
+			if(i > 0 && "2".equals(checkstate)) {
 				MailInfo mailInfo = new MailInfo();
-				mailInfo.setContent("您申请的pass平台帐号已经审核通过。欢迎使用中企云pass平台！");
-				mailInfo.setSubject("Pass平台账户审核结果通知");
+				mailInfo.setContent("您申请注册的开放平台帐号已经审核通过。欢迎使用中企云Pass开放平台！");
+				mailInfo.setSubject("中企云Pass开放平台账户审核结果通知");
 				mailInfo.setToOne(user.getEmail());
 				MailUtil.send(mailInfo, false);
-			}else{
+			}else if(i > 0 && "3".equals(checkstate)){
 				MailInfo mailInfo = new MailInfo();
-				mailInfo.setContent("很抱歉通知您，您的账户未审核通过，请重新申请");
-				mailInfo.setSubject("Pass平台账户审核结果通知");
+				mailInfo.setContent("很抱歉通知您，您申请的开放平台账户未审核通过，原因是："+checkmem+",请重新申请");
+				mailInfo.setSubject("中企云Pass开放平台账户审核结果通知");
 				mailInfo.setToOne(user.getEmail());
 				MailUtil.send(mailInfo, false);
 			}
