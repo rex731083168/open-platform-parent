@@ -122,10 +122,17 @@ public class UserServiceImpl implements IUserService {
 		
 		User user = userDAO.findUserByEmail(email);
 		
-		if(user != null){
+		//if(user != null && user.getCheckState() != 3){ // 当前email已经存在，且审核状态为审核失败，当前email仍然可以使用
+		if(user != null) {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public User findByEmail(String email) {
+		
+		return userDAO.findUserByEmail(email);
 	}
 
 }

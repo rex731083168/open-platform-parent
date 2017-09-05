@@ -38,4 +38,6 @@ public interface IUserService {
 	
 	boolean checkUserName(String username);
 
+	User findByEmail(String email);
+
 }

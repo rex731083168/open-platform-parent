@@ -129,18 +129,17 @@ public class LoginController {
 	
 	@RequestMapping(value = "user/register", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveRegister(HttpServletRequest request, HttpServletResponse response, String username,
+	public String userRegister(HttpServletRequest request, HttpServletResponse response, String username,
 			String password, String email, String tel,String userType) {
 		logger.info("------->> ACTION!     Save regitry");
 		logger.info(username);
-		logger.info(password);
 		logger.info(email);
 		logger.info(tel);
 		
 		JSONObject ret = new JSONObject();
 		
 		//校验当前用户名是否存在
-		// TODO 是否需要校验邮箱和手机号
+		// TODO 校验用户名
 		boolean bool = userService.checkUserName(username);
 		if(bool){
 			//当前用户名存在
@@ -148,6 +147,17 @@ public class LoginController {
 			ret.put("message", "当前用户已存在");
 			return ret.toString();
 		}
+		
+		//校验邮箱
+		boolean bool1 = userService.checkEmail(email);
+		if(!bool1){
+			ret.put("0", "0");
+			ret.put("message", "当前邮箱已经被注册");
+			return ret.toString();
+		}
+		
+		//如果之前使用过当前邮箱注册，但是审核失败了，可以重新用该邮箱注册。将原来的数据修改
+//		User preUser = userService.findByEmail(email);
 		
 		try {
 			User user = new User();
@@ -164,7 +174,6 @@ public class LoginController {
 			ret.put("code", "1");
 			ret.put("message", "OK");
 			return ret.toString();
-
 		} catch (Exception ex) {
 			ret.put("code", "0");
 			ret.put("message", "ERROR");
