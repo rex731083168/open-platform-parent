@@ -152,10 +152,13 @@ public class ApplyServiceImpl implements IApplyService {
 		Result<String> result = new Result<>();
 		try {
 			ApplyEntity apply = applyDao.getApplyById(id);
+			
 			if(null == apply){
 				result.setErrorMessage("请求删除的应用不存在!");
-			} else if(null != apply.getAuditList()){
+				return result;
+			} else if(apply.getAuthIds() != null && apply.getAuthIds().size() > 0){
 				result.setErrorMessage("应用下存在api,删除失败!");
+				return result;
 			} else {
 				logger.info("delete apply begin applyId:" + id);
 				applyDao.delete(id);
@@ -168,8 +171,6 @@ public class ApplyServiceImpl implements IApplyService {
 		}
 		return result;
 	}
-
-
 
 	@Override
 	public Result<Page<ApplyEntity>> findApplyList(ApplyEntity entity, int currentPage, int pageSize) {

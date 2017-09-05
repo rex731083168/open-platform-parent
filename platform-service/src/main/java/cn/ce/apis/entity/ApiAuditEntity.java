@@ -41,7 +41,7 @@ public class ApiAuditEntity implements Serializable{
 	@Field("secret")
 	private String secret;
 	@Field("check_state")
-	private Integer checkState;
+	private Integer checkState; //0：未审核，1：提交审核，2：审核成功，3：审核失败，4：使用者删除调用
 	@Field("user_id")
 	private String userId;
 	@Field("user_name")

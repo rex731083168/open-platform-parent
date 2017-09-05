@@ -116,6 +116,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		auditEntity.setQuotaRenewalRate(apiEntity.getQuota_renewal_rate());
 		auditEntity.setApplyId(applyEntity.getId());
 		auditEntity.setApplyTime(new Date());
+		auditEntity.setApplyName(applyEntity.getApplyName());
 		
 		if(apiEntity.getApiversion() != null && StringUtils.isNotBlank(apiEntity.getApiversion().getVersion())){
 			auditEntity.setVersion(apiEntity.getApiversion().getVersion());
@@ -295,14 +296,44 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 			result.setMessage("auditId不能为空");
 			return result;
 		}
-		int i = apiOauthDao.deleteById(auditId);
 		
-		if(i > 0 ){
-			result.setStatus(Status.SUCCESS);
-			result.setMessage("删除成功");
+		ApiAuditEntity auditEntity = apiOauthDao.findById(auditId);
+		
+		if(null == auditEntity){
+			result.setErrorMessage("当前申请记录查询不到,请检查id");
 			return result;
 		}
-		return null;
+		
+		ApplyEntity applyEntity = applyDao.getApplyById(auditEntity.getApplyId());
+		
+		/***
+		 * 删除将api与应用Apply建立关系
+		 * @author makangwei
+		 * @date 2017年9月1日 16:47:40
+		 */
+		List<String> authIds = applyEntity.getAuthIds();
+		if(authIds == null){
+			authIds = new ArrayList<>();
+		}
+		
+		if(authIds.contains(auditEntity.getId())){
+			logger.info(">>>> apiService delete apply api begin,applyId:" 
+					+ auditEntity.getApplyId() + ";apiId:" + auditEntity.getApiId());
+			
+			authIds.remove(auditEntity.getId());
+			applyEntity.setAuthIds(authIds);
+			applyDao.saveOrUpdate(applyEntity);
+			logger.info("<<< apiService update apply end");
+		}
+		
+		//int i = apiOauthDao.deleteById(auditId);
+		auditEntity.setCheckState(4); //删除并不是真的删除，而是将状态改为4
+		apiOauthDao.UpdateAuditEntity(auditEntity);
+		
+		result.setStatus(Status.SUCCESS);
+		result.setMessage("删除成功");
+		return result;
+		
 	}
 
 }

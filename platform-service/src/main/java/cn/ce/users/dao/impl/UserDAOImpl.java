@@ -86,7 +86,7 @@ public class UserDAOImpl extends AbstractBaseMongoDao<User> implements IUserDAO 
 
 	@Override
 		public Page<User> getUsers(int roleType, String uname,
-				String checkstate, int currentPage, int pageSize) {
+				String checkstate, String state, int currentPage, int pageSize) {
 			//构建查询对象
 			Criteria c = new Criteria();
 			
@@ -98,9 +98,15 @@ public class UserDAOImpl extends AbstractBaseMongoDao<User> implements IUserDAO 
 				c.and("checkstate").is(Integer.valueOf(checkstate));
 			}
 			
+			if(StringUtils.isNotBlank(state)){
+				c.and("state").is(Integer.valueOf(state));
+			}
+			
 			if(StringUtils.isNotBlank(uname)){
 				c.and("username").regex(uname);
 			}
+			
+
 			
 	        Query query = new Query(c).with(new Sort(new Order(Direction.DESC,"regtime")));
 	        
