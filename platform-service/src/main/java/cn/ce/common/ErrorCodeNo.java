@@ -10,6 +10,7 @@ public enum ErrorCodeNo {
 
 	SYS000("系统正常")
 	,SYS001("系统错误")
+	,SYS003("用户未登录")
 	;
 	
 	
