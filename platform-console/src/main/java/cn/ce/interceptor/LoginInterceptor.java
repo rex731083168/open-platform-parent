@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.common.Constants;
 import cn.ce.common.ErrorCodeNo;
 import cn.ce.common.Result;
+import cn.ce.users.entity.User;
 
 /**
  * 
@@ -54,7 +55,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         logger.info("contextPath:"+contextPath);    
         logger.info("url:"+url);    
         
-        String user =  (String)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
+        User user =  (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
         if(user != null){
         	return true;
         }

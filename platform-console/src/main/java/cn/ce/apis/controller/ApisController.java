@@ -84,22 +84,7 @@ public class ApisController {
 //		try {
 			
 			HttpSession session = request.getSession();
-			User user = null;
-			try{
-				
-				user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-				
-				if(user == null){
-					ret.put("code", "0");
-					ret.put("message", "session已过期，请重新登录");
-					return ret.toJSONString();
-				}
-				
-			}catch(Exception e){
-				ret.put("code", "0");
-				ret.put("message", "session已过期，请点击重新登录");
-				return ret.toJSONString();
-			}
+			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 			String str = JSONObject.toJSONString(apientity);
 			logger.info(str);
 			
