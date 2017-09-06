@@ -3,8 +3,8 @@
   <parent>
     <groupId>cn.ce</groupId>
     <artifactId>open-platform-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>platform-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
 </project>
