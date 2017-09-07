@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 
 import cn.ce.apis.service.IAPIService;
 import cn.ce.apply.entity.ApplyEntity;
@@ -24,6 +22,7 @@ import cn.ce.common.Constants;
 import cn.ce.common.Result;
 import cn.ce.page.Page;
 import cn.ce.users.entity.User;
+import io.swagger.annotations.ApiOperation;
 
 /***
  * 
@@ -35,7 +34,6 @@ import cn.ce.users.entity.User;
  */
 @RestController
 @RequestMapping("/apply")
-@Api("apply")
 public class ApplyController{
 
 	/** 日志对象 */

@@ -18,6 +18,7 @@
     <!-- Configures the annotation-driven Spring MVC Controller programming model.Note that, with Spring 3.0, this tag works in Servlet MVC only!  -->  
     <mvc:annotation-driven />
     
+
     <!-- filter -->  
     <mvc:interceptors>  
         <mvc:interceptor>
@@ -34,7 +35,7 @@
 	<!-- redis -->
 	<import resource="spring-session.xml" />
 	
-	<!-- swagger -->
-	<bean class="cn.ce.config.SwaggerConfig" />	
-	
+	<!-- Swagger Configue -->
+    <bean class="cn.ce.interceptor.SwaggerConfig" />
+    
 </beans>

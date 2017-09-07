@@ -26,7 +26,15 @@
 
 
 		<!-- swagger dependency -->
+		
 		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-swagger}</version>
+		</dependency>
+		
+		
+<!-- 		<dependency>
 			<groupId>com.mangofactory</groupId>
 			<artifactId>swagger-springmvc</artifactId>
 			<version>${swagger.springmvc.version}</version>
@@ -44,12 +52,12 @@
 			<version>${swagger.annotations}</version>
 		</dependency>
 
-		<!-- swagger-springmvc dependencies -->
+		swagger-springmvc dependencies
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
-		</dependency>
+		</dependency> -->
 
 
 	</dependencies>

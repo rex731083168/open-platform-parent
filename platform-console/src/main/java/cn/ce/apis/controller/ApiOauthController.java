@@ -61,11 +61,9 @@ public class ApiOauthController {
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize){
 		
-		
-
 		return apiOauthService.getUseList(userId,currentPage,pageSize);
 	}
-	
+		
 	//api提供者查看api的列表
 	@RequestMapping(value="/supplyList1",method=RequestMethod.GET)
 	public Result<Page<ApiAuditEntity>> getsupplyList1(HttpServletRequest request,
@@ -73,17 +71,17 @@ public class ApiOauthController {
 			@RequestParam(required = true) String userId,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize){
-		
+			
 		return apiOauthService.getsupplyList(userId,currentPage,pageSize);
 		
 	}
-	
+		
 	//api使用者删除api使用
 	@RequestMapping(value="/deleteAuditEntity", method=RequestMethod.GET)
 	@ResponseBody
 	public Result<String> deleteById(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(required = true)String auditId){
-		
+			
 		return apiOauthService.deleteById(auditId);
 	}
 }
