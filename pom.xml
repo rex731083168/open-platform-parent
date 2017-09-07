@@ -469,5 +469,6 @@
 		<module>platform-manage</module>
 		<module>paas-oauth-tykcode</module>
 		<module>paas-estatistics</module>
+		<module>platform-common</module>
 	</modules>
 </project>
