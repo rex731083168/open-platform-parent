@@ -12,9 +12,11 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.ce.admin.entity.AdminEntity;
 import cn.ce.common.Constants;
 import cn.ce.common.ErrorCodeNo;
 import cn.ce.common.Result;
+import cn.ce.users.entity.User;
 
 /**
  * 
@@ -54,7 +56,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         logger.info("contextPath:"+contextPath);    
         logger.info("url:"+url);    
         
-        String user =  (String)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
+        AdminEntity user =  (AdminEntity)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
         if(user != null){
         	return true;
         }

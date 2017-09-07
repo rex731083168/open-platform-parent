@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.common.Constants;
 import cn.ce.common.ErrorCodeNo;
 import cn.ce.common.Result;
+import cn.ce.users.entity.User;
 
 /**
  * 
@@ -50,21 +51,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String contextPath = request.getContextPath();  
         String url = requestUri.substring(contextPath.length());  
         
-        logger.debug("requestUri:"+requestUri);    
-        logger.debug("contextPath:"+contextPath);    
-        logger.debug("url:"+url);    
+        logger.info("requestUri:"+requestUri);    
+        logger.info("contextPath:"+contextPath);    
+        logger.info("url:"+url);    
         
-        String user =  (String)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
-        
-        return true; // TODO
-//        if(user != null){
-//        	return true;
-//        }
-//        Result<String> result = new Result<>();
-//        result.setErrorCode(ErrorCodeNo.SYS003);
-//        result.setErrorMessage("用户未登录");
-//        this.returnJson(response, JSON.toJSONString(result));
-//		return false;
+        User user =  (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
+        if(user != null){
+        	return true;
+        }
+        Result<String> result = new Result<>();
+        result.setErrorCode(ErrorCodeNo.SYS003);
+        result.setErrorMessage("用户未登录");
+        this.returnJson(response, JSON.toJSONString(result));
+		return false;
 	}
 
 	private void returnJson(HttpServletResponse response, String json)throws Exception {
