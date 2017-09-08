@@ -9,17 +9,13 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.IndexOperations;
-import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import cn.ce.apis.dao.IApiDAO;
 import cn.ce.apis.entity.APIEntity;
 import cn.ce.common.Constants;
-import cn.ce.common.Result;
 import cn.ce.core.AbstractBaseMongoDao;
 import cn.ce.page.Page;
 import cn.ce.page.PageContext;
@@ -116,22 +112,22 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 
     @PostConstruct
     public void init() {
-        boolean ext = mongoTemplate.collectionExists(APIEntity.class);
-        if (!ext) {
-            System.out.println("=========>> Init Create Collection : APIMG_APIS ....");
-            mongoTemplate.createCollection(APIEntity.class);
-            /** 配置分片 */
-            /* super.shardCollection("OPC_API", "_id"); */
-
-            /** 创建唯一索引 ，失败，分片后无法创建唯一索引*/
-            IndexOperations io = mongoTemplate.indexOps(APIEntity.class);
-            Index index = new Index();
-            // 为name属性加上 索引
-            index.on("apienname", Order.ASCENDING);
-            // 唯一索引
-            index.unique();
-            io.ensureIndex(index);
-        }
+//        boolean ext = mongoTemplate.collectionExists(APIEntity.class);
+//        if (!ext) {
+//            System.out.println("=========>> Init Create Collection : APIMG_APIS ....");
+//            mongoTemplate.createCollection(APIEntity.class);
+//            /** 配置分片 */
+//            /* super.shardCollection("OPC_API", "_id"); */
+//
+//            /** 创建唯一索引 ，失败，分片后无法创建唯一索引*/
+//            IndexOperations io = mongoTemplate.indexOps(APIEntity.class);
+//            Index index = new Index();
+//            // 为name属性加上 索引
+//            index.on("apienname", Order.ASCENDING);
+//            // 唯一索引
+//            index.unique();
+//            io.ensureIndex(index);
+//        }
     }
 
     @Override
