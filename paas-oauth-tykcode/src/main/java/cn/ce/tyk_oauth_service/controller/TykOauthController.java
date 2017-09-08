@@ -96,10 +96,12 @@ public class TykOauthController {
 			JSONObject job = new JSONObject(result.getData());
 			String code = job.getString("code");
 			redirect_uri+="code="+code+"&status="+result.getStatus();
-			return "redirect:"+redirect_uri;
 		}else{
 			redirect_uri+="status="+result.getStatus()+"&message="+result.getMessage()+"&code=";
-			return "redirect:"+redirect_uri;
 		}
+		
+		logger.info("redirect:" + redirect_uri);
+		
+		return "redirect:"+redirect_uri;
 	}
 }
