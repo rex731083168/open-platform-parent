@@ -4,10 +4,10 @@
 	<parent>
 		<groupId>cn.ce</groupId>
 		<artifactId>open-platform-parent</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>platform-service</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 
 	<properties>
 		<elasticsearch.version>5.5.2</elasticsearch.version>
