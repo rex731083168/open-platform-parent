@@ -44,4 +44,11 @@
 	<!-- Swagger Configue -->
     <bean class="cn.ce.platform_console.interceptor.SwaggerConfig" />
     
+   	
+	<!-- es -->
+	<bean id="esclient" class="cn.ce.util.ElasticsearchUtils">
+		<!-- 构造器注入 -->
+		<constructor-arg value="open-platform"></constructor-arg>
+		<constructor-arg value="${es.path}"></constructor-arg>
+	</bean>	
 </beans>
