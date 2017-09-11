@@ -15,6 +15,8 @@ public class Result <T> {
 	
 	private ErrorCodeNo errorCode = ErrorCodeNo.SYS000;
 
+
+	
 	public T getData() {
 		return data;
 	}
@@ -44,10 +46,17 @@ public class Result <T> {
 		this.status = Status.FAILED;
 	}
 	
+	public void setErrorMessage(String message,ErrorCodeNo errorCodeNo){
+		this.message = message;
+		this.status = Status.FAILED;
+		this.errorCode = errorCodeNo;
+	}
+	
 	public void setSuccessMessage(String message){
 		this.message = message;
 		this.status = Status.SUCCESS;
 	}
+
 	
 	public void setSuccessData(T data){
 		this.data = data;

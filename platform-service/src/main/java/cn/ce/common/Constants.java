@@ -99,4 +99,7 @@ public class Constants {
 	public static final int SECRET_LENGTH = 32;
 	/** 分页长度 */
 	public static final int PAGE_SIZE = 8;
+	/** 发生异常时将跳转到的页面地址 **/
+	public static final String ERROR_PAGE = "www.baidu.com";
+	
 }
