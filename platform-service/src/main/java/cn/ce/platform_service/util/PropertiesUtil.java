@@ -1,4 +1,4 @@
-package cn.ce.util;
+package cn.ce.platform_service.util;
 
 import java.io.File;
 import java.io.IOException;

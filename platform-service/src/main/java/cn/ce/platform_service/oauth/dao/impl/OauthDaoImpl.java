@@ -1,4 +1,4 @@
-package cn.ce.oauth.dao.impl;
+package cn.ce.platform_service.oauth.dao.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.oauth.dao.IOauthDao;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.oauth.dao.IOauthDao;
 
 /**
 * @Description : 说明

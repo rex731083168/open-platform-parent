@@ -1,4 +1,4 @@
-package cn.ce.core.bean;
+package cn.ce.platform_service.core.bean;
 
 /***
  * 

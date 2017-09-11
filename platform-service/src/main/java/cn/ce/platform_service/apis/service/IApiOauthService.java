@@ -1,11 +1,11 @@
-package cn.ce.apis.service;
+package cn.ce.platform_service.apis.service;
 
 import java.util.List;
 
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.common.Result;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : 说明

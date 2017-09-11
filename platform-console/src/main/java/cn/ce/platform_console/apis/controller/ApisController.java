@@ -1,4 +1,4 @@
-package cn.ce.apis.controller;
+package cn.ce.platform_console.apis.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,21 +22,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.apis.entity.ApiVersion;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.apis.service.IApiOauthService;
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.apisecret.service.IApiSecretKeyService;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.app.service.IAppService;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.common.gateway.GatewayUtils;
-import cn.ce.gateway.entity.GatewayColonyEntity;
-import cn.ce.page.Page;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiVersion;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.app.service.IAppService;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.entity.User;
 
 @Controller
 @RequestMapping("/apis")

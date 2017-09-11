@@ -1,4 +1,4 @@
-package cn.ce.gateway.dao;
+package cn.ce.platform_service.gateway.dao;
 
 
 
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.WriteResult;
 
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.gateway.entity.GatewayColonyEntity;
-import cn.ce.page.Page;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
+import cn.ce.platform_service.page.Page;
 
 /**
  *

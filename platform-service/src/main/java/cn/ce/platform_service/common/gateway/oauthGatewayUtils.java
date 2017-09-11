@@ -1,4 +1,4 @@
-package cn.ce.common.gateway;
+package cn.ce.platform_service.common.gateway;
 
 /**
 * @Description : 说明

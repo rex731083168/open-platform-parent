@@ -1,3 +1,4 @@
+package cn.ce.platform_service.gateway.service;
 //package cn.ce.gateway.service;
 //
 //import net.sf.json.JSONArray;

@@ -25,11 +25,11 @@
 			<mvc:mapping path="/**"/> 
 			<mvc:exclude-mapping path="/user/*"/>
 			<mvc:exclude-mapping path="/test/*"/>
-            <bean class="cn.ce.interceptor.LoginInterceptor" />
+            <bean class="cn.ce.platform_console.interceptor.LoginInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
         	<mvc:mapping path="/**"/>
-        	<bean class="cn.ce.interceptor.ExceptionInterceptor" />
+        	<bean class="cn.ce.platform_console.interceptor.ExceptionInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>  
     
@@ -41,6 +41,6 @@
 	<import resource="spring-session.xml" />
 	
 	<!-- Swagger Configue -->
-    <bean class="cn.ce.interceptor.SwaggerConfig" />
+    <bean class="cn.ce.platform_console.interceptor.SwaggerConfig" />
     
 </beans>

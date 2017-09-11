@@ -1,10 +1,10 @@
-package cn.ce.users.dao;
+package cn.ce.platform_service.users.dao;
 
 import java.util.List;
 import java.util.Map;
 
-import cn.ce.page.Page;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.entity.User;
 
 /**
  * 

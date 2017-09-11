@@ -1,4 +1,4 @@
-package cn.ce.oauth.dao;
+package cn.ce.platform_service.oauth.dao;
 
 import java.util.Map;
 

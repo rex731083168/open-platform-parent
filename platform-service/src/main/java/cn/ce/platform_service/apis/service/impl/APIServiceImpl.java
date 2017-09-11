@@ -1,4 +1,4 @@
-package cn.ce.apis.service.impl;
+package cn.ce.platform_service.apis.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 
 import com.mongodb.WriteResult;
 
-import cn.ce.apis.dao.IApiDAO;
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.apis.entity.ApiVersion;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.oauth.dao.IOauthDao;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.dao.IApiDAO;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiVersion;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.oauth.dao.IOauthDao;
+import cn.ce.platform_service.page.Page;
 
 /**
  * 

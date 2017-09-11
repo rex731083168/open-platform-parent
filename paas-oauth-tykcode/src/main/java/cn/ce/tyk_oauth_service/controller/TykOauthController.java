@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.common.Result;
-import cn.ce.oauth.service.IOauthService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.oauth.service.IOauthService;
 
 @Controller
 @RequestMapping("/tykOauth")

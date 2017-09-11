@@ -1,4 +1,4 @@
-package cn.ce.apis.dao.impl;
+package cn.ce.platform_service.apis.dao.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 
 import com.mongodb.WriteResult;
 
-import cn.ce.apis.dao.IApiOauthDao;
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.dao.IApiOauthDao;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : 说明

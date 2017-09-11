@@ -1,4 +1,4 @@
-package cn.ce.test;
+package cn.ce.platform_console.test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.ce.common.ErrorCodeNo;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
+import cn.ce.platform_service.common.ErrorCodeNo;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 
 /**
  *

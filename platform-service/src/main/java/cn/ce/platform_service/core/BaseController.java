@@ -1,3 +1,4 @@
+package cn.ce.platform_service.core;
 /*package cn.ce.core;
 
 import javax.servlet.http.HttpServletRequest;

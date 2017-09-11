@@ -1,4 +1,4 @@
-package cn.ce.interceptor;
+package cn.ce.platform_console.interceptor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.web.WebAppConfiguration;

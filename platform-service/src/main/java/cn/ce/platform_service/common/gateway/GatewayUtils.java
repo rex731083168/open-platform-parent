@@ -1,4 +1,4 @@
-package cn.ce.common.gateway;
+package cn.ce.platform_service.common.gateway;
 
 
 import java.io.IOException;
@@ -15,15 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.gateway.dao.GatewayManageDao;
-import cn.ce.gateway.dao.GatewayNodeManageDao;
-import cn.ce.gateway.entity.GatewayColonyEntity;
-import cn.ce.gateway.entity.GatewayKeyEntity;
-import cn.ce.gateway.entity.GatewayNodeEntity;
-import cn.ce.util.RandomUtil;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.gateway.dao.GatewayManageDao;
+import cn.ce.platform_service.gateway.dao.GatewayNodeManageDao;
+import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
+import cn.ce.platform_service.gateway.entity.GatewayKeyEntity;
+import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
+import cn.ce.platform_service.util.RandomUtil;
 
 
 

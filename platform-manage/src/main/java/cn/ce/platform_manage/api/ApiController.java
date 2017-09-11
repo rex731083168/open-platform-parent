@@ -1,4 +1,4 @@
-package cn.ce.api;
+package cn.ce.platform_manage.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.app.service.IAppService;
-import cn.ce.common.Result;
-import cn.ce.common.gateway.GatewayUtils;
-import cn.ce.gateway.entity.GatewayColonyEntity;
-import cn.ce.gateway.service.GatewayApiKeyService;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.app.service.IAppService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
+import cn.ce.platform_service.gateway.service.GatewayApiKeyService;
+import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : 后台api管理

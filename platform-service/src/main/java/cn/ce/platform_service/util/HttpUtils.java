@@ -1,4 +1,4 @@
-package cn.ce.util;
+package cn.ce.platform_service.util;
 
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -26,8 +26,8 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.ce.common.IOUtils;
-import cn.ce.common.Result;
+import cn.ce.platform_service.common.IOUtils;
+import cn.ce.platform_service.common.Result;
 
 /**
 * @Description : 说明

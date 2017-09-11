@@ -1,4 +1,4 @@
-package cn.ce.base;
+package cn.ce.platform_manage.base;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

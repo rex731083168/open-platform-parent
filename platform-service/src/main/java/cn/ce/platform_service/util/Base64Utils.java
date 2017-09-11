@@ -1,4 +1,4 @@
-package cn.ce.util;
+package cn.ce.platform_service.util;
 
 import java.io.ByteArrayInputStream; 
  import java.io.ByteArrayOutputStream; 

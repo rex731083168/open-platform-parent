@@ -33,7 +33,12 @@
 		<mvc:interceptor>
 		    <mvc:mapping path="/**"/> 
 		    <mvc:exclude-mapping path="/admin/*"/>
-			<bean class="cn.ce.interceptor.LoginInterceptor"></bean>
+			<bean class="cn.ce.platform_manage.interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="cn.ce.platform_manage.interceptor.ExceptionInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 	

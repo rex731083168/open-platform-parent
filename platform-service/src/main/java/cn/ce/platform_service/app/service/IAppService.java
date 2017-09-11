@@ -1,11 +1,11 @@
-package cn.ce.app.service;
+package cn.ce.platform_service.app.service;
 
 import java.util.List;
 import java.util.Map;
 
-import cn.ce.app.entity.AppEntity;
-import cn.ce.common.Result;
-import cn.ce.page.Page;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
 
 /**
  * 

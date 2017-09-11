@@ -1,4 +1,4 @@
-package cn.ce.apisecret.dao.impl;
+package cn.ce.platform_service.apisecret.dao.impl;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.apisecret.dao.IApiSecretKeyDao;
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.page.Page;
 
 @Repository(value ="apiSecretDao")
 public class ApiSecretKeyDaoImpl extends AbstractBaseMongoDao<ApiSecretKey> implements IApiSecretKeyDao {

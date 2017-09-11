@@ -1,4 +1,4 @@
-package cn.ce.interceptor;
+package cn.ce.platform_console.interceptor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,10 +12,10 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.common.Constants;
-import cn.ce.common.ErrorCodeNo;
-import cn.ce.common.Result;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.users.entity.User;
 
 /**
  * 

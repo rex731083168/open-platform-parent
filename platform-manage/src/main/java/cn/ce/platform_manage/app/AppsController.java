@@ -1,4 +1,4 @@
-package cn.ce.app;
+package cn.ce.platform_manage.app;
 
 import java.util.Date;
 import java.util.List;
@@ -20,15 +20,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.ce.admin.entity.AdminEntity;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.app.service.IAppService;
-import cn.ce.base.BaseController;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.page.Page;
+import cn.ce.platform_manage.base.BaseController;
+import cn.ce.platform_service.admin.entity.AdminEntity;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.app.service.IAppService;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.page.Page;
 
 /***
  * 服务管理前端控制器

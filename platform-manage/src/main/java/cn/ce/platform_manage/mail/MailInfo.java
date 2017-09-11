@@ -1,4 +1,4 @@
-package cn.ce.mail;
+package cn.ce.platform_manage.mail;
 
 /**  
  * 发送邮件需要使用的基本信息  

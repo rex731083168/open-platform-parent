@@ -1,4 +1,4 @@
-package cn.ce.common;
+package cn.ce.platform_service.common;
 
 /**
  *

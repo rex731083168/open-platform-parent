@@ -1,4 +1,4 @@
-package cn.ce.mail;
+package cn.ce.platform_manage.mail;
 
 /**
  * 

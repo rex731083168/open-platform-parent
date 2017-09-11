@@ -1,4 +1,4 @@
-package cn.ce.mail;
+package cn.ce.platform_manage.mail;
 
 import java.util.Properties;
 
@@ -13,7 +13,7 @@ import javax.mail.internet.MimeUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.ce.util.PropertiesUtil;
+import cn.ce.platform_service.util.PropertiesUtil;
 
 
 public class MailUtil {

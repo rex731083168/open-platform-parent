@@ -1,4 +1,4 @@
-package cn.ce.core;
+package cn.ce.platform_service.core;
 
 import java.io.Serializable;
 

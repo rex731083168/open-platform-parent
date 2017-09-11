@@ -1,4 +1,4 @@
-package cn.ce.app.controller;
+package cn.ce.platform_console.app.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.apis.service.IAPIService;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.app.service.IAppService;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.page.Page;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.app.service.IAppService;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.entity.User;
 
 @Controller
 @RequestMapping("/app")

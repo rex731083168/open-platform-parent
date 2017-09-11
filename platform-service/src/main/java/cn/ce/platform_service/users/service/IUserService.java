@@ -1,8 +1,8 @@
-package cn.ce.users.service;
+package cn.ce.platform_service.users.service;
 
-import cn.ce.common.Result;
-import cn.ce.page.Page;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.entity.User;
 
 /**
  * 

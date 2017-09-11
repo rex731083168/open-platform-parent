@@ -1,9 +1,9 @@
-package cn.ce.apisecret.dao;
+package cn.ce.platform_service.apisecret.dao;
 
 import java.util.List;
 
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.page.Page;
 
 /***
  * 

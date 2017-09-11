@@ -1,10 +1,10 @@
-package cn.ce.apisecret.service;
+package cn.ce.platform_service.apisecret.service;
 
 import java.util.List;
 
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.common.Result;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
 
 /***
  *

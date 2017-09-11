@@ -1,12 +1,12 @@
-package cn.ce.admin.service.impl;
+package cn.ce.platform_service.admin.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.ce.admin.dao.IAdminDao;
-import cn.ce.admin.entity.AdminEntity;
-import cn.ce.admin.service.IAdminService;
+import cn.ce.platform_service.admin.dao.IAdminDao;
+import cn.ce.platform_service.admin.entity.AdminEntity;
+import cn.ce.platform_service.admin.service.IAdminService;
 
 /**
  * 

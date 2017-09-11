@@ -1,4 +1,4 @@
-package cn.ce.gateway.service;
+package cn.ce.platform_service.gateway.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,17 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.apisecret.dao.IApiSecretKeyDao;
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.app.service.IAppService;
-import cn.ce.apply.dao.IApplyDao;
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.common.gateway.GatewayUtils;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.app.service.IAppService;
+import cn.ce.platform_service.apply.dao.IApplyDao;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.gateway.GatewayUtils;
 
 /**
 * @Description : 网关api和密钥的管理

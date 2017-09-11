@@ -1,4 +1,4 @@
-package cn.ce.test;
+package cn.ce.platform_console.test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.ce.common.Result;
-import cn.ce.common.Status;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 
 /**
 * @Description : 测试版本的访问

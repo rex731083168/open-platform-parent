@@ -1,4 +1,4 @@
-package cn.ce.apply.service.impl;
+package cn.ce.platform_service.apply.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -15,15 +15,15 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.apis.service.IApiOauthService;
-import cn.ce.apply.dao.IApplyDao;
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.apply.service.IApplyService;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.apply.dao.IApplyDao;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.service.IApplyService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.page.Page;
 
 /***
  * 

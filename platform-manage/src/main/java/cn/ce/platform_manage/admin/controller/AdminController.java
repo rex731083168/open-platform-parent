@@ -1,4 +1,4 @@
-package cn.ce.admin.controller;
+package cn.ce.platform_manage.admin.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.ce.admin.entity.AdminEntity;
-import cn.ce.admin.service.IAdminService;
-import cn.ce.base.BaseController;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
+import cn.ce.platform_manage.base.BaseController;
+import cn.ce.platform_service.admin.entity.AdminEntity;
+import cn.ce.platform_service.admin.service.IAdminService;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
 
 @Controller
 public class AdminController extends BaseController{

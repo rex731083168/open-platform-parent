@@ -1,4 +1,4 @@
-package cn.ce.oauth.entity;
+package cn.ce.platform_service.oauth.entity;
 
 public class AuthorizeClientEntity {
 

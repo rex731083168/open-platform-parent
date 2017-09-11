@@ -1,11 +1,11 @@
-package cn.ce.apply.dao;
+package cn.ce.platform_service.apply.dao;
 
 import java.util.List;
 
 import org.springframework.data.mongodb.core.query.Query;
 
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.page.Page;
 
 /***
  * 应用dao 

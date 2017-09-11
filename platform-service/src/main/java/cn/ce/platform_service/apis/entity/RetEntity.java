@@ -1,4 +1,4 @@
-package cn.ce.apis.entity;
+package cn.ce.platform_service.apis.entity;
 
 import java.io.Serializable;
 

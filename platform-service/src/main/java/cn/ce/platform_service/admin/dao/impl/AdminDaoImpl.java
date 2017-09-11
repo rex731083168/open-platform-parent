@@ -1,4 +1,4 @@
-package cn.ce.admin.dao.impl;
+package cn.ce.platform_service.admin.dao.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 
-import cn.ce.admin.dao.IAdminDao;
-import cn.ce.admin.entity.AdminEntity;
-import cn.ce.common.Constants;
-import cn.ce.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.admin.dao.IAdminDao;
+import cn.ce.platform_service.admin.entity.AdminEntity;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
 
 
 

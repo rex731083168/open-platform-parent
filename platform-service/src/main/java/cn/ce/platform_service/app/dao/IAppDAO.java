@@ -1,13 +1,13 @@
-package cn.ce.app.dao;
+package cn.ce.platform_service.app.dao;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.core.bean.MongoDBWhereEntity;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
+import cn.ce.platform_service.page.Page;
 
 /**
  * 

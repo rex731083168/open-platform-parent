@@ -1,4 +1,4 @@
-package cn.ce.apisecret.entity;
+package cn.ce.platform_service.apisecret.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import cn.ce.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.APIEntity;
 
 /**
  * 

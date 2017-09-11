@@ -1,4 +1,4 @@
-package cn.ce.apply.controller;
+package cn.ce.platform_console.apply.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.apis.service.IAPIService;
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.apply.service.IApplyService;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.page.Page;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.service.IApplyService;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.entity.User;
 import io.swagger.annotations.ApiOperation;
 
 /***

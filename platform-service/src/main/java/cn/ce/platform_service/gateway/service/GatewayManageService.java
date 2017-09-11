@@ -1,4 +1,4 @@
-package cn.ce.gateway.service;
+package cn.ce.platform_service.gateway.service;
 
 
 import java.util.List;
@@ -9,21 +9,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.apisecret.dao.IApiSecretKeyDao;
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.common.gateway.ApiCallUtils;
-import cn.ce.common.gateway.GatewayUtils;
-import cn.ce.gateway.dao.GatewayManageDao;
-import cn.ce.gateway.dao.GatewayNodeManageDao;
-import cn.ce.gateway.entity.GatewayColonyEntity;
-import cn.ce.gateway.entity.GatewayNodeEntity;
-import cn.ce.page.Page;
-import cn.ce.util.RandomUtil;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
+import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.gateway.dao.GatewayManageDao;
+import cn.ce.platform_service.gateway.dao.GatewayNodeManageDao;
+import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
+import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.util.RandomUtil;
 
 /**
  *

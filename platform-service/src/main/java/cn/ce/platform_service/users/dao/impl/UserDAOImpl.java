@@ -1,4 +1,4 @@
-package cn.ce.users.dao.impl;
+package cn.ce.platform_service.users.dao.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.WriteResult;
 
-import cn.ce.common.Constants;
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.page.Page;
-import cn.ce.page.PageContext;
-import cn.ce.users.dao.IUserDAO;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.page.PageContext;
+import cn.ce.platform_service.users.dao.IUserDAO;
+import cn.ce.platform_service.users.entity.User;
 
 /**
  * 

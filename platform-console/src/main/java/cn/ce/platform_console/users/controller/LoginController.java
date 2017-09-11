@@ -1,4 +1,4 @@
-package cn.ce.users.controller;
+package cn.ce.platform_console.users.controller;
 
 import java.util.Date;
 
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.users.entity.User;
-import cn.ce.users.service.IUserService;
-import cn.ce.util.Util;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.users.service.IUserService;
+import cn.ce.platform_service.util.Util;
 
 /**
  * @author 作者 E -mail: dingjia@300.cn 创建时间：2017年7月17日 下午3:17:22

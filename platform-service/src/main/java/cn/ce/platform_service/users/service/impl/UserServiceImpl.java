@@ -1,4 +1,4 @@
-package cn.ce.users.service.impl;
+package cn.ce.platform_service.users.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,12 +7,12 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.page.Page;
-import cn.ce.users.dao.IUserDAO;
-import cn.ce.users.entity.User;
-import cn.ce.users.service.IUserService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.dao.IUserDAO;
+import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.users.service.IUserService;
 
 /**
  * 

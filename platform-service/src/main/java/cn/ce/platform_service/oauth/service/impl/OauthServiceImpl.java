@@ -1,4 +1,4 @@
-package cn.ce.oauth.service.impl;
+package cn.ce.platform_service.oauth.service.impl;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.apis.service.IApiOauthService;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.app.service.IAppService;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.common.gateway.GatewayUtils;
-import cn.ce.oauth.dao.IOauthDao;
-import cn.ce.oauth.entity.AuthorizeClientEntity;
-import cn.ce.oauth.service.IOauthService;
-import cn.ce.util.HttpUtils;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.app.service.IAppService;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.oauth.dao.IOauthDao;
+import cn.ce.platform_service.oauth.entity.AuthorizeClientEntity;
+import cn.ce.platform_service.oauth.service.IOauthService;
+import cn.ce.platform_service.util.HttpUtils;
 
 /**
 * @Description : 说明

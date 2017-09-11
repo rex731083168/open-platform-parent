@@ -1,6 +1,6 @@
-package cn.ce.admin.dao;
+package cn.ce.platform_service.admin.dao;
 
-import cn.ce.admin.entity.AdminEntity;
+import cn.ce.platform_service.admin.entity.AdminEntity;
 
 
 /**

@@ -1,4 +1,4 @@
-package cn.ce.apis.controller;
+package cn.ce.platform_console.apis.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.apis.service.IApiOauthService;
-import cn.ce.common.Result;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : api审核管理

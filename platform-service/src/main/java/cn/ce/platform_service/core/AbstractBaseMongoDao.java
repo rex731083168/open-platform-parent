@@ -1,4 +1,4 @@
-package cn.ce.core;
+package cn.ce.platform_service.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,10 +24,10 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.WriteResult;
 
-import cn.ce.common.Constants;
-import cn.ce.core.bean.ConditionEnum;
-import cn.ce.core.bean.MongoDBWhereEntity;
-import cn.ce.page.Page;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.core.bean.ConditionEnum;
+import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
+import cn.ce.platform_service.page.Page;
 
 /**
  * 

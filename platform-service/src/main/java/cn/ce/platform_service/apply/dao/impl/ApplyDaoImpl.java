@@ -1,4 +1,4 @@
-package cn.ce.apply.dao.impl;
+package cn.ce.platform_service.apply.dao.impl;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.apply.dao.IApplyDao;
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apply.dao.IApplyDao;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.page.Page;
 
 /***
  * 应用数据层实现

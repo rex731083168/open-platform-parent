@@ -1,4 +1,4 @@
-package cn.ce.apply.entity;
+package cn.ce.platform_service.apply.entity;
 
 import java.util.Date;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.users.entity.User;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.users.entity.User;
 
 
 /***

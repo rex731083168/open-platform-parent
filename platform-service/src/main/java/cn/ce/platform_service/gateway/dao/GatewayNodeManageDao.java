@@ -1,4 +1,4 @@
-package cn.ce.gateway.dao;
+package cn.ce.platform_service.gateway.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.WriteResult;
 
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.gateway.entity.GatewayNodeEntity;
-import cn.ce.page.Page;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
+import cn.ce.platform_service.page.Page;
 
 /**
  *

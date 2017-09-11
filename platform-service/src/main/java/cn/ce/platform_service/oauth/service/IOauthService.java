@@ -1,8 +1,8 @@
-package cn.ce.oauth.service;
+package cn.ce.platform_service.oauth.service;
 
 import java.util.Map;
 
-import cn.ce.common.Result;
+import cn.ce.platform_service.common.Result;
 
 /**
 * @Description : 说明

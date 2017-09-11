@@ -1,4 +1,4 @@
-package cn.ce.gateway.entity;
+package cn.ce.platform_service.gateway.entity;
 
 
 import org.springframework.data.annotation.Id;

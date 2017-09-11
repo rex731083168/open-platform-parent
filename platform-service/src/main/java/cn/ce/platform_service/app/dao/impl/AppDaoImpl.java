@@ -1,4 +1,4 @@
-package cn.ce.app.dao.impl;
+package cn.ce.platform_service.app.dao.impl;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,14 +12,14 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.app.dao.IAppDAO;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.common.Constants;
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.core.bean.MongoDBWhereEntity;
-import cn.ce.page.Page;
-import cn.ce.page.PageContext;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.app.dao.IAppDAO;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.page.PageContext;
 
 /**
  * 

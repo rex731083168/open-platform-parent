@@ -1,11 +1,11 @@
-package cn.ce.test;
+package cn.ce.platform_console.test;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.common.Result;
+import cn.ce.platform_service.common.Result;
 
 /**
 * @Description : 测试代码发生异常是否能够进行拦截并跳转

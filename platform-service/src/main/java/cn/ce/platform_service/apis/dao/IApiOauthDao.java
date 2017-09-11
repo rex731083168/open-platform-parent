@@ -1,10 +1,10 @@
-package cn.ce.apis.dao;
+package cn.ce.platform_service.apis.dao;
 
 import java.util.List;
 
-import cn.ce.apis.entity.ApiAuditEntity;
-import cn.ce.apply.entity.ApplyEntity;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : 说明

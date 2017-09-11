@@ -1,4 +1,4 @@
-package cn.ce.user;
+package cn.ce.platform_manage.user;
 
 import java.util.List;
 
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.common.Result;
-import cn.ce.mail.MailInfo;
-import cn.ce.mail.MailUtil;
-import cn.ce.page.Page;
-import cn.ce.users.entity.User;
-import cn.ce.users.service.IUserService;
+import cn.ce.platform_manage.mail.MailInfo;
+import cn.ce.platform_manage.mail.MailUtil;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.users.service.IUserService;
 
 /**
 * @Description : 说明

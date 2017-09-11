@@ -1,4 +1,4 @@
-package cn.ce.key.controller;
+package cn.ce.platform_console.key.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 
-import cn.ce.apis.controller.ApisController;
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.apis.service.IAPIService;
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.apisecret.service.IApiSecretKeyService;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.gateway.service.GatewayApiKeyService;
-import cn.ce.users.entity.User;
+import cn.ce.platform_console.apis.controller.ApisController;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.gateway.service.GatewayApiKeyService;
+import cn.ce.platform_service.users.entity.User;
 
 /**
 * @Description : 说明

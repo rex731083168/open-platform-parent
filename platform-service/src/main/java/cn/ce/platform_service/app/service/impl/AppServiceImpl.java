@@ -1,4 +1,4 @@
-package cn.ce.app.service.impl;
+package cn.ce.platform_service.app.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,14 +9,14 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.ce.app.dao.IAppDAO;
-import cn.ce.app.entity.AppEntity;
-import cn.ce.app.service.IAppService;
-import cn.ce.common.Result;
-import cn.ce.common.Status;
-import cn.ce.oauth.service.IOauthService;
-import cn.ce.page.Page;
-import cn.ce.page.PageContext;
+import cn.ce.platform_service.app.dao.IAppDAO;
+import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.app.service.IAppService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.oauth.service.IOauthService;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.page.PageContext;
 
 
 /**

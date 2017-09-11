@@ -1,4 +1,4 @@
-package cn.ce.apis.dao.impl;
+package cn.ce.platform_service.apis.dao.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,13 +16,13 @@ import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.apis.dao.IApiDAO;
-import cn.ce.apis.entity.APIEntity;
-import cn.ce.common.Constants;
-import cn.ce.common.Result;
-import cn.ce.core.AbstractBaseMongoDao;
-import cn.ce.page.Page;
-import cn.ce.page.PageContext;
+import cn.ce.platform_service.apis.dao.IApiDAO;
+import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.page.PageContext;
 
 /**
  * 

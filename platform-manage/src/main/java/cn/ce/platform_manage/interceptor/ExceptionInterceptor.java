@@ -1,4 +1,4 @@
-package cn.ce.platform_console.interceptor;
+package cn.ce.platform_manage.interceptor;
 
 import java.io.IOException;
 import java.io.PrintWriter;

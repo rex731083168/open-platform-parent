@@ -1,4 +1,4 @@
-package cn.ce.apisecret.service.impl;
+package cn.ce.platform_service.apisecret.service.impl;
 
 import java.util.List;
 
@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import cn.ce.apisecret.dao.IApiSecretKeyDao;
-import cn.ce.apisecret.entity.ApiSecretKey;
-import cn.ce.apisecret.service.IApiSecretKeyService;
-import cn.ce.common.Result;
-import cn.ce.page.Page;
+import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
+import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
+import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.page.Page;
 
 @Service("apiSecretKeyService")
 public class ApiSecretKeyServiceImpl implements IApiSecretKeyService {

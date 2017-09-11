@@ -1,4 +1,4 @@
-package cn.ce.users.entity;
+package cn.ce.platform_service.users.entity;
 
 import java.io.Serializable;
 import java.util.Date;

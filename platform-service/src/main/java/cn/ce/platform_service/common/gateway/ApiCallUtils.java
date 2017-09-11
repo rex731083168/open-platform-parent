@@ -1,4 +1,4 @@
-package cn.ce.common.gateway;
+package cn.ce.platform_service.common.gateway;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -35,8 +35,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.ce.common.Constants;
-import cn.ce.common.IOUtils;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.IOUtils;
 
 /**
  *

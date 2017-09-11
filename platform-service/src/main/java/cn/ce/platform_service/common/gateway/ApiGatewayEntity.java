@@ -1,4 +1,4 @@
-package cn.ce.common.gateway;
+package cn.ce.platform_service.common.gateway;
 
 /**
  * api与网关交互的实体,密钥授权
