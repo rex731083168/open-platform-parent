@@ -1,4 +1,4 @@
-package cn.ce.util;
+package cn.ce.es.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,6 +18,7 @@ import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeAggregat
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.joda.time.DateTimeZone;
+import org.springframework.stereotype.Component;
 
 import cn.ce.es.bean.KeyValueForDate;
 import cn.ce.es.bean.LineData;
