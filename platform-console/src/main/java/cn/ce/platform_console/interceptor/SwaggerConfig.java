@@ -1,9 +1,11 @@
 package cn.ce.platform_console.interceptor;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import cn.ce.platform_console.apis.controller.ApisController;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -16,6 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @WebAppConfiguration
 @EnableSwagger2
 @EnableWebMvc
+//@ComponentScan(basePackageClasses = {ApisController.class }) //Instructs spring where to scan for API controllers
 public class SwaggerConfig {
 	
     /**
