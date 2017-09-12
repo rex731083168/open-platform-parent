@@ -1,4 +1,4 @@
-package cn.ce.es;
+package cn.ce.es.service;
 
 import org.springframework.stereotype.Service;
 
