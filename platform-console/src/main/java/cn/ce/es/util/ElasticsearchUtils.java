@@ -1,4 +1,4 @@
-package cn.ce.util;
+package cn.ce.es.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

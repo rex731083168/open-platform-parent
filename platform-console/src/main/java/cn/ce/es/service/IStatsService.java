@@ -1,4 +1,4 @@
-package cn.ce.es;
+package cn.ce.es.service;
 
 import net.sf.json.JSONArray;
 
@@ -11,7 +11,7 @@ import net.sf.json.JSONArray;
  * @date dat2017年9月1日 time下午1:45:06
  *
  **/
-public interface StatsService {
+public interface IStatsService {
 	/**
 	 * 
 	 * @param param

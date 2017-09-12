@@ -1,4 +1,4 @@
-package cn.ce.es.impl;
+package cn.ce.es.service.impl;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -15,11 +15,11 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.ce.es.StatsService;
 import cn.ce.es.bean.KeyValueForDate;
 import cn.ce.es.bean.LineData;
-import cn.ce.util.ElasticsearchUtils;
-import cn.ce.util.SplitDateUtil;
+import cn.ce.es.service.IStatsService;
+import cn.ce.es.util.ElasticsearchUtils;
+import cn.ce.es.util.SplitDateUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -33,7 +33,7 @@ import net.sf.json.JSONObject;
  *
  **/
 @Service("statsService")
-public class StatsServiceImpl implements StatsService{
+public class StatsServiceImpl implements IStatsService{
 
 	private static Logger logger = Logger.getLogger(StatsServiceImpl.class);
 
