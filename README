@@ -1,0 +1,14 @@
+编译环境:jdk 1.8
+web容器:推荐tomcat
+platform-console(前端访问)   >> war - tomcat
+platform-manage(后台审核)  >> war - tomcat
+platform-oauth-tykcode(对接cas系统,生成tykcode服务)   >> war - tomcat
+platform-service(jar包服务 为console / manage / oauth-tykcode)提供服务 >> jar
+
+
+版本：v1.0.1
+描述：
+（***** paas-estatistics(统计应用日志) *****）此服务已过期，
+将paas-estatistics服务整合至platform-console应用中
+时间：2017年9月8日17:38:51
+操作人：lida@300.cn 

@@ -1,0 +1,110 @@
+package cn.ce.gateway.dao;
+
+
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
+
+import com.mongodb.WriteResult;
+
+import cn.ce.core.AbstractBaseMongoDao;
+import cn.ce.gateway.entity.GatewayColonyEntity;
+import cn.ce.page.Page;
+
+/**
+ *
+ * @author makangwei
+ * 2017-8-4
+ */
+@Repository
+public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> {
+
+	Logger LOGGER = LoggerFactory.getLogger(GatewayManageDao.class);
+	
+	@Override
+	public void init() {
+		
+		boolean isHasCollection = mongoTemplate.collectionExists(GatewayColonyEntity.class);
+
+		if(!isHasCollection){
+			LOGGER.info("------------init create Collection GatewayColonyEntity:----------------");
+			mongoTemplate.createCollection(GatewayColonyEntity.class);
+		}
+		
+	}
+	
+	/**
+	 * 添加集群到mongodb数据库
+	 * @param colEntity
+	 * @return
+	 */
+	public boolean addGatewayCol(GatewayColonyEntity colEntity) {
+		
+		try{
+			add(colEntity);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+
+    /**
+     * 查询所有网关集群
+     * @return
+     */
+	public Page<GatewayColonyEntity> getAllGatewayCol(Integer currentPage,Integer pageSize) {
+		
+		Page<GatewayColonyEntity> page = findAsPage(currentPage,pageSize,GatewayColonyEntity.class);
+	
+		if(page != null){
+			return page;
+		}
+		
+		return null;
+	}
+
+	public boolean deleteGatewayColonyById(Integer colId) {
+		
+		Query query =new Query();
+		query.addCriteria(Criteria.where("_id").is(colId));
+		WriteResult rt = mongoTemplate.remove(query, GatewayColonyEntity.class);
+		
+		LOGGER.info("-------数据是否已删除:"+rt.getN());
+		
+		if(rt.getN() > 0 ){
+			return true;
+		}
+		return false;
+	}
+
+	public GatewayColonyEntity findById(Integer colId, Class<GatewayColonyEntity> entityclass) {
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(colId));
+		GatewayColonyEntity entity = mongoTemplate.findOne(query, GatewayColonyEntity.class);
+		return entity;
+		
+	}
+
+	public boolean updateById(int colId, GatewayColonyEntity entity) {
+		
+		entity.setColId(colId);
+		try{
+			mongoTemplate.save(entity);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+		
+	}
+
+	
+	
+}
