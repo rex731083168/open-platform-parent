@@ -1,4 +1,4 @@
-package cn.ce.platform_console.interceptor;
+package cn.ce.platform_service.interceptors;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,9 +51,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String contextPath = request.getContextPath();  
         String url = requestUri.substring(contextPath.length());  
         
-        logger.info("requestUri:"+requestUri);    
-        logger.info("contextPath:"+contextPath);    
-        logger.info("url:"+url);    
+        //logger.info("requestUri:"+requestUri);    
+        //logger.info("contextPath:"+contextPath);  
+        //logger.info("url:"+url);    
         
         User user =  (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
         if(user != null){
@@ -64,6 +64,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         result.setErrorMessage("用户未登录");
         this.returnJson(response, JSON.toJSONString(result));
 		return false;
+        
 	}
 
 	private void returnJson(HttpServletResponse response, String json)throws Exception {

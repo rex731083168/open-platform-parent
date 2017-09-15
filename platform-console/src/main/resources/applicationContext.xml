@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>  
-<beans xmlns="http://www.springframework.org/schema/beans"  
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"  
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
     xmlns:p="http://www.springframework.org/schema/p"  
-    xmlns:context="http://www.springframework.org/schema/context"  
-    xmlns:mvc="http://www.springframework.org/schema/mvc"  
-    xsi:schemaLocation="http://www.springframework.org/schema/mvc   
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/mvc   
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd  
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">  
+        
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+        
+        http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd"> 
 
 
     <!-- Activates various annotations to be detected in bean classes -->  
@@ -15,7 +26,8 @@
       
     <!-- Scans the classpath for annotated components that will be auto-registered as Spring beans.For example @Controller and @Service . Make sure to set the correct base-package-->  
     <context:component-scan base-package="cn.ce" />   
-      
+    <context:component-scan base-package="springfox.petstore.controller" />
+    
     <!-- Configures the annotation-driven Spring MVC Controller programming model.Note that, with Spring 3.0, this tag works in Servlet MVC only!  -->  
     <mvc:annotation-driven />
     
@@ -25,12 +37,25 @@
         <mvc:interceptor>
 			<mvc:mapping path="/**"/> 
 			<mvc:exclude-mapping path="/user/*"/>
-			<mvc:exclude-mapping path="/test/*"/>
-            <bean class="cn.ce.platform_console.interceptor.LoginInterceptor" />
+			<!-- test api -->
+			<mvc:exclude-mapping path="/test/*"/> 
+			<!--swagger pet store demo -->
+			<mvc:exclude-mapping path="/api/pet/*"/> 
+			<mvc:exclude-mapping path="/api/store/*"/>
+			<mvc:exclude-mapping path="/api/user/*"/>
+			<!-- swagger api json -->
+			<mvc:exclude-mapping path="/v2/api-docs"/> 
+			<!-- swagger ui page -->
+			<mvc:exclude-mapping path="/swagger/index.html"/> 
+            <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
         	<mvc:mapping path="/**"/>
-        	<bean class="cn.ce.platform_console.interceptor.ExceptionInterceptor" />
+        	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+       	<mvc:mapping path="/**"/>
+        	<bean class="cn.ce.platform_service.interceptors.ExceptionInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>  
     
@@ -42,7 +67,7 @@
 	<import resource="spring-session.xml" />
 	
 	<!-- Swagger Configue -->
-    <bean class="cn.ce.platform_console.interceptor.SwaggerConfig" />
+    <bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
     
    	
 	<!-- es -->

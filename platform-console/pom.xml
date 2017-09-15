@@ -23,43 +23,6 @@
 			<artifactId>platform-service</artifactId>
 			<version>${platform.service.version}</version>
 		</dependency>
-
-
-		<!-- swagger dependency -->
-		
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>${springfox-swagger}</version>
-		</dependency>
-		
-		
-<!-- 		<dependency>
-			<groupId>com.mangofactory</groupId>
-			<artifactId>swagger-springmvc</artifactId>
-			<version>${swagger.springmvc.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.mangofactory</groupId>
-			<artifactId>swagger-models</artifactId>
-			<version>${swagger.springmvc.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.wordnik</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>${swagger.annotations}</version>
-		</dependency>
-
-		swagger-springmvc dependencies
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency> -->
-
-
 	</dependencies>
 
 </project>
