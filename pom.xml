@@ -164,6 +164,7 @@
 							<directory>src/main/resources/conf</directory>
 							<includes>
 								<include>application.properties</include>
+								<include>log4j.properties</include>
 							</includes>
 						</resource>
 					</webResources>

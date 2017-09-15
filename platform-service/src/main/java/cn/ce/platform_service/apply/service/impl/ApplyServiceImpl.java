@@ -22,7 +22,6 @@ import cn.ce.platform_service.apply.dao.IApplyDao;
 import cn.ce.platform_service.apply.entity.ApplyEntity;
 import cn.ce.platform_service.apply.service.IApplyService;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.page.Page;
 
 /***
@@ -50,14 +49,6 @@ public class ApplyServiceImpl implements IApplyService {
 	@Override
 	public Result<String> saveApply(ApplyEntity entity) {
 		Result<String> result = new Result<>();
-		result.setStatus(Status.SUCCESS);
-		
-		
-		if(null == entity.getUser()){
-			result.setErrorMessage("请登录后操作!");
-			return result;
-		}
-		
 		
 		//构建查询对象
 		Criteria c = new Criteria();
@@ -97,50 +88,37 @@ public class ApplyServiceImpl implements IApplyService {
 			}
 		}
 
-		
-		try {
-			
-			//新增
-			if(StringUtils.isBlank(entity.getId())){
-				entity.setUserId(entity.getUser().getId());
-				entity.setUserName(entity.getUser().getUsername());
-				entity.setCreateDate(new Date());
+		//新增
+		if(StringUtils.isBlank(entity.getId())){
+			entity.setUserId(entity.getUser().getId());
+			entity.setUserName(entity.getUser().getUsername());
+			entity.setCreateDate(new Date());
 
-				logger.info("insert apply begin : " + JSON.toJSONString(entity));
-				applyDao.saveOrUpdate(entity);
-				logger.info("save end");
-				
+			logger.info("insert apply begin : " + JSON.toJSONString(entity));
+			applyDao.saveOrUpdate(entity);
+			logger.info("save end");
+			
+		}else{
+		//修改
+			ApplyEntity applyById = applyDao.findById(entity.getId());
+			
+			if(null == applyById){
+				result.setErrorMessage("请求的应用信息不存在!");
+				return result;
 			}else{
-			//修改
-				ApplyEntity applyById = applyDao.getApplyById(entity.getId());
 				
-				if(null == applyById){
-					result.setErrorMessage("请求的应用信息不存在!");
-					return result;
-				}else{
-					
-					if(StringUtils.isNotBlank(entity.getApplyName())){
-						applyById.setApplyName(entity.getApplyName());
-					}
-					
-					if(StringUtils.isNotBlank(entity.getApplyDesc())){
-						applyById.setApplyDesc(entity.getApplyDesc());
-					}
+				if(StringUtils.isNotBlank(entity.getApplyName())){
+					applyById.setApplyName(entity.getApplyName());
 				}
 				
-				logger.info("update apply begin : " + JSON.toJSONString(applyById));
-				applyDao.saveOrUpdate(applyById);
-				logger.info("save end");
-				
+				if(StringUtils.isNotBlank(entity.getApplyDesc())){
+					applyById.setApplyDesc(entity.getApplyDesc());
+				}
 			}
 			
-		} catch (Exception e) {
-			logger.error("saveApply system error,e:" + e.toString());
-			if(StringUtils.isBlank(entity.getId())){
-				result.setErrorMessage("新增应用时出现错误!");
-			}else{
-				result.setErrorMessage("修改应用时出现错误!");
-			}
+			logger.info("update apply begin : " + JSON.toJSONString(applyById));
+			applyDao.saveOrUpdate(applyById);
+			logger.info("save end");
 			
 		}
 		
@@ -152,37 +130,27 @@ public class ApplyServiceImpl implements IApplyService {
 	public Result<String> deleteApplyByid(String id) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<>();
-		try {
-			ApplyEntity apply = applyDao.getApplyById(id);
-			
-			if(null == apply){
-				result.setErrorMessage("请求删除的应用不存在!");
-				return result;
-			} else if(apply.getAuthIds() != null && apply.getAuthIds().size() > 0){
-				result.setErrorMessage("应用下存在api,删除失败!");
-				return result;
-			} else {
-				logger.info("delete apply begin applyId:" + id);
-				applyDao.delete(id);
-				logger.info("delete apply end");
-				result.setSuccessMessage("删除成功!");
-			} 
-		} catch (Exception e) {
-			logger.error("saveApply system error,e:" + e.toString());
-			result.setErrorMessage("删除应用时出现错误!");
+		ApplyEntity apply = applyDao.findById(id);
+		if(null == apply){
+			result.setErrorMessage("请求删除的应用不存在!");
+			return result;
+		} else if(apply.getAuthIds() != null && apply.getAuthIds().size() > 0){
+			result.setErrorMessage("应用下存在api,删除失败!");
+			return result;
+		} else {
+			logger.info("delete apply begin applyId:" + id);
+			applyDao.delete(id);
+			logger.info("delete apply end");
+			result.setSuccessMessage("删除成功!");
 		}
 		return result;
 	}
 
 	@Override
-	public Result<Page<ApplyEntity>> findApplyList(ApplyEntity entity, int currentPage, int pageSize) {
+	public Result<Page<ApplyEntity>> findApplyList(ApplyEntity entity,Page<ApplyEntity> page) {
 		Result<Page<ApplyEntity>> result = new Result<>();
-		try {
-			Page<ApplyEntity> findPageByEntity = applyDao.findPageByEntity(generalApplyQuery(entity), currentPage, pageSize);
-			result.setSuccessData(findPageByEntity);
-		} catch (Exception e) {
-			result.setErrorMessage("获取应用列表时出现错误!");
-		}
+		Page<ApplyEntity> findPageByEntity = applyDao.findPageByEntity(generalApplyQuery(entity,null), page);
+		result.setData(findPageByEntity);
 		return result;
 	}
 
@@ -198,39 +166,31 @@ public class ApplyServiceImpl implements IApplyService {
 	@Override
 	public Result<ApplyEntity> getApplyById(String id,int pageSize,int currentPage) {
 		Result<ApplyEntity> result = new Result<>(); 
+		ApplyEntity apply = applyDao.findById(id);
 		
-		try {
-			ApplyEntity apply = applyDao.getApplyById(id);
-			
-			if(null == apply){
-				result.setErrorMessage("该应用不存在!");
-			} else if(null == apply.getAuthIds()){
-				result.setErrorMessage("该应用下暂无api信息!");
-			} else {
-				List<String> authIds = apply.getAuthIds();
-				if(null != authIds){
-					int begin = (currentPage - 1) * pageSize;
-					
-					int end = pageSize * currentPage;
-					
-					if(authIds.size() < end){
-						end = authIds.size();
-					}
-					
-					authIds = authIds.subList(begin, end);
-					
-					List<ApiAuditEntity> apiAuditList = oauthService.getApiAuditEntity(authIds);
-					
-					apply.setAuditList(apiAuditList);
-					result.setSuccessData(apply);
+		if(null == apply){
+			result.setErrorMessage("该应用不存在!");
+		} else if(null == apply.getAuthIds()){
+			result.setErrorMessage("该应用下暂无api信息!");
+		} else {
+			List<String> authIds = apply.getAuthIds();
+			if(null != authIds){
+				int begin = (currentPage - 1) * pageSize;
+				
+				int end = pageSize * currentPage;
+				
+				if(authIds.size() < end){
+					end = authIds.size();
 				}
+				
+				authIds = authIds.subList(begin, end);
+				
+				List<ApiAuditEntity> apiAuditList = oauthService.getApiAuditEntity(authIds);
+				
+				apply.setAuditList(apiAuditList);
+				result.setSuccessData(apply);
 			}
-			
-		} catch (Exception e) {
-			logger.error("saveApply system error,e:" + e.toString());
-			result.setErrorMessage("系统错误!");
-		} 
-		
+		}
 		return result;
 	}
 	
@@ -259,15 +219,17 @@ public class ApplyServiceImpl implements IApplyService {
 		return c;
 	}
 
-	private Query generalApplyQuery(ApplyEntity apply){
-		Query query = new Query(generalApplyCriteria(apply)).with(new Sort(Direction.DESC,"createDate"));
+	private Query generalApplyQuery(ApplyEntity apply,Sort sort){
+		if(sort == null){
+			sort = new Sort(Direction.DESC,"createDate");
+		}
+		Query query = new Query(generalApplyCriteria(apply)).with(sort);
 		return query;
 	}
 
 
 	@Override
 	public ApplyEntity findById(String applyId) {
-		
 		return applyDao.findById(applyId);
 	}
 

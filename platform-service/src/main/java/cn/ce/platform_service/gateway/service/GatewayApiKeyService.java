@@ -188,7 +188,7 @@ public class GatewayApiKeyService {
 			return result;
 		}
 		
-		ApplyEntity applyById = applyDao.getApplyById(applyId);
+		ApplyEntity applyById = applyDao.findById(applyId);
 		if(null == applyById){
 			result.setErrorMessage("应用信息不存在!");
 			return result;

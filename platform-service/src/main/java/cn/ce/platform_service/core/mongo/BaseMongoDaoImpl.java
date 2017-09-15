@@ -138,4 +138,11 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 	private Class<T> getEntityClass() {
 		return ReflectionUtils.getSuperClassGenricType(getClass());
 	}
+
+	@Override
+	public void removeById(String id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		remove(query);
+	}
 }

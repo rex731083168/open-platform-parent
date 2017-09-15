@@ -34,7 +34,7 @@ public interface IApplyDao {
 	 * @param pageSize
 	 * @return
 	 */
-	Page<ApplyEntity> findPageByEntity(Query query,int currentPage,int pageSize);
+	Page<ApplyEntity> findPageByEntity(Query query,Page<ApplyEntity> page);
 	
 	/***
 	 * 根据条件查询应用列表
@@ -48,7 +48,5 @@ public interface IApplyDao {
 	 * @param id
 	 * @return
 	 */
-	ApplyEntity getApplyById(String id);
-
-	ApplyEntity findById(String applyId);
+	ApplyEntity findById(String id);
 }

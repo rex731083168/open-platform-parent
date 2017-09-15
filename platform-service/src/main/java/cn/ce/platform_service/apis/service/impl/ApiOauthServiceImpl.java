@@ -85,7 +85,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 			return result;
 		}
 		
-		ApplyEntity applyEntity = applyDao.getApplyById(applyId);
+		ApplyEntity applyEntity = applyDao.findById(applyId);
 		
 		if(null == applyEntity){
 			result.setErrorMessage("应用信息不存在!");
@@ -176,7 +176,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		
 		String applyId = auditEntity.getApplyId();
 		
-		ApplyEntity applyEntity = applyDao.getApplyById(applyId);
+		ApplyEntity applyEntity = applyDao.findById(applyId);
 		
 		if(applyEntity == null){
 			//当前应用已经删除，删除审核记录
@@ -304,7 +304,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 			return result;
 		}
 		
-		ApplyEntity applyEntity = applyDao.getApplyById(auditEntity.getApplyId());
+		ApplyEntity applyEntity = applyDao.findById(auditEntity.getApplyId());
 		
 		/***
 		 * 删除将api与应用Apply建立关系

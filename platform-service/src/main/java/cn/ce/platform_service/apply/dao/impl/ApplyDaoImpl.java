@@ -8,56 +8,52 @@ import org.springframework.stereotype.Repository;
 
 import cn.ce.platform_service.apply.dao.IApplyDao;
 import cn.ce.platform_service.apply.entity.ApplyEntity;
-import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.page.Page;
 
+
 /***
- * 应用数据层实现
- * @author lida
- * @date 2017年8月23日14:29:53
+ * 
+ * 
+ * @ClassName:  ApplyDaoImpl   
+ * @Description:应用数据层实现 
+ * @author: lida 
+ * @date:   2017年8月23日14:29:53   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  *
  */
 @Repository("applyDao")
-public class ApplyDaoImpl extends AbstractBaseMongoDao<ApplyEntity> implements IApplyDao {
+public class ApplyDaoImpl extends BaseMongoDaoImpl<ApplyEntity> implements IApplyDao {
 
 	@Override
 	public void saveOrUpdate(ApplyEntity entity) {
 		// TODO Auto-generated method stub
 		if(StringUtils.isNotBlank(entity.getId())){
-			super.updateById(entity.getId(), entity);
+			super.update(entity);
 		}else{
-			super.add(entity);
+			super.save(entity);
 		}
 	}
 
 	@Override
 	public void delete(String id) {
-		super.delById(id, ApplyEntity.class);
+		super.removeById(id);
 	}
 
 	@Override
-	public Page<ApplyEntity> findPageByEntity(Query query,int currentPage,int pageSize) {
-		return super.findAsPage(query, currentPage, pageSize, ApplyEntity.class);
+	public Page<ApplyEntity> findPageByEntity(Query query,Page<ApplyEntity> page) {
+		return super.findPage(page, query);
 	}
 
 	@Override
 	public List<ApplyEntity> findListByEntity(Query query) {
-		return super.find(query, ApplyEntity.class);
+		return super.find(query);
 	}
 
-	@Override
-	public void init() {
-		
-	}
 
 	@Override
-	public ApplyEntity getApplyById(String id) {
-		return super.findById(id, ApplyEntity.class);
-	}
-
-	@Override
-	public ApplyEntity findById(String applyId) {
-		return super.findById(applyId, ApplyEntity.class);
+	public ApplyEntity findById(String id) {
+		return super.findById(id);
 	}
 
 }

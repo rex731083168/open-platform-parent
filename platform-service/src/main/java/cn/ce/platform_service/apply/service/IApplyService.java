@@ -34,7 +34,7 @@ public interface IApplyService {
 	 * @param pageSize
 	 * @return
 	 */
-	Result<Page<ApplyEntity>> findApplyList(ApplyEntity entity,int currentPage,int pageSize);
+	Result<Page<ApplyEntity>> findApplyList(ApplyEntity entity,Page<ApplyEntity> page);
 	
 	/***
 	 * 根据条件查询应用列表
@@ -49,7 +49,16 @@ public interface IApplyService {
 	 * @return
 	 */
 	Result<ApplyEntity> getApplyById(String id,int pageSize,int currentPage);
-
-	ApplyEntity findById(String applyId);
+	
+	/***
+	 * 
+	 * @Title: findById
+	 * @Description: 根据id加载应用信息
+	 * @param : @param applyId
+	 * @param : @return
+	 * @return: ApplyEntity
+	 * @throws
+	 */
+	public ApplyEntity findById(String applyId);
 	
 }

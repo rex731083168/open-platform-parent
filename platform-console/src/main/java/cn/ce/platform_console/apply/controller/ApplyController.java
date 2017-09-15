@@ -45,20 +45,11 @@ public class ApplyController{
 
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
 	@ApiOperation(value = "根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
-	public Result<Page<ApplyEntity>> findApplyList(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody ApplyEntity apply,
+	public Result<Page<ApplyEntity>> findApplyList(@RequestBody ApplyEntity apply,
 			@RequestParam(required=false,defaultValue="10") int pageSize,
 			@RequestParam(required=false,defaultValue="1") int currentPage) {
-		logger.info(">>>>> Action by fidApplyList start,parameter:" + JSON.toJSONString(apply));
-		Result<Page<ApplyEntity>> result = new Result<>();
-		try {
-			result = applyService.findApplyList(apply, currentPage, pageSize);
-		} catch (Exception e) {
-			logger.error("saveApply system error,e:" + e.toString());
-			result.setErrorMessage("系统错误!");
-		} finally {
-			logger.info("<<<<< Action by findApplyList end,result:" + JSON.toJSONString(result));
-		}
+		Page<ApplyEntity> page = new Page<>(currentPage, 0, pageSize);
+		Result<Page<ApplyEntity>> result = applyService.findApplyList(apply, page);
 		return result;
 	}
 

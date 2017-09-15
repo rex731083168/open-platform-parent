@@ -9,7 +9,7 @@ public class Result <T> {
 
 	private T data;
 	
-	private String status = Status.FAILED;
+	private String status = Status.SUCCESS;
 	
 	private String message;
 	

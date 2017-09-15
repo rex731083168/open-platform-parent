@@ -79,7 +79,7 @@ public interface BaseMongoDao<T> {
     /** 
      * 根据传入实体ID更新 
      */  
-    public WriteResult update(T entity);  
+    public WriteResult update(T entity);
   
     /** 
      * 根据条件 删除 
@@ -87,5 +87,15 @@ public interface BaseMongoDao<T> {
      * @param query 
      */  
     public void remove(Query query);  
+    
+    /***
+     * 
+     * @Title: removeById
+     * @Description: 根据id删除实体
+     * @param : @param id
+     * @return: void
+     * @throws
+     */
+    public void removeById(String id);
 	
 }
