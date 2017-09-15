@@ -175,7 +175,20 @@
 	</build>
 
 	<dependencies>
-
+		<!-- swagger dependency -->
+		
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-swagger}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-petstore</artifactId>
+		    <version>${springfox-swagger}</version>
+		</dependency>
+		
 		<!-- Spring Session -->
 		<dependency>
 			<groupId>org.springframework.session</groupId>

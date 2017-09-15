@@ -12,7 +12,11 @@ import java.io.InputStreamReader;
  */
 public class IOUtils {
 
-	 public static String convertStreamToString(InputStream is) {      
+	 public static String convertStreamToString(InputStream is) {    
+		 
+		 if(null == is){
+			 return null;
+		 }
 		  
 		 BufferedReader reader = new BufferedReader(new InputStreamReader(is));      
 	   
