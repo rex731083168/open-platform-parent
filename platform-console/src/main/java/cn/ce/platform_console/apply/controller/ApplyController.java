@@ -4,7 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,8 +38,8 @@ import io.swagger.annotations.ApiOperation;
 public class ApplyController{
 
 	/** 日志对象 */
-	private static Logger logger = Logger.getLogger(ApplyController.class);
-
+	private static Logger logger = LogManager.getLogger(ApplyController.class);
+	
 	@Autowired @Qualifier("applyService") private IApplyService applyService;
 	
 	@Autowired @Qualifier("apiService") private IAPIService apiService;
@@ -49,6 +50,7 @@ public class ApplyController{
 			@RequestParam(required=false,defaultValue="10") int pageSize,
 			@RequestParam(required=false,defaultValue="1") int currentPage) {
 		Page<ApplyEntity> page = new Page<>(currentPage, 0, pageSize);
+		logger.info("findApplyList start,parameter:{},{}",pageSize,currentPage);
 		Result<Page<ApplyEntity>> result = applyService.findApplyList(apply, page);
 		return result;
 	}
