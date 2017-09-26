@@ -40,7 +40,8 @@ public class LoginController {
 	@RequestMapping(value = "user/login", method = RequestMethod.POST)
 	@ResponseBody
 	public String login(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model,
-			String usertype, String username, String password) {
+			@RequestParam String username, 
+			@RequestParam String password) {
 
 		username.trim();
 		password.trim();

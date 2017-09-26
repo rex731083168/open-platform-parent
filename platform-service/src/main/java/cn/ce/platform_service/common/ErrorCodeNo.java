@@ -12,6 +12,7 @@ public enum ErrorCodeNo {
 	,SYS001("系统错误")
 	,SYS003("用户未登录")
 	,SYS004("程序发生未处理的异常")
+	,SYS005("部分参数为空")
 	;
 	
 	

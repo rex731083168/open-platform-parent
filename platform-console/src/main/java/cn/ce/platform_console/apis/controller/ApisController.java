@@ -56,7 +56,11 @@ public class ApisController {
 
 	@RequestMapping(value = "/apiVerify", method = RequestMethod.POST)
 	@ResponseBody
-	public String apiVerify(HttpServletRequest request, HttpServletResponse response, String apiid) {
+	public String apiVerify(
+			@RequestParam String apiid,
+			@RequestParam(required=false) String username,
+			@RequestParam(required=false) String password
+			) {
 
 		JSONObject obj = new JSONObject();
 		try {
@@ -230,8 +234,8 @@ public class ApisController {
 	@RequestMapping(value="/checkApiChName",method=RequestMethod.POST)
 	@ResponseBody
 	public Result<String> checkApiChName(HttpServletRequest request,HttpServletResponse response,
-			String appId,
-			String apiChName){
+			@RequestParam String appId,
+			@RequestParam String apiChName){
 		
 		return apiService.checkApiChName(apiChName,appId);
 	}

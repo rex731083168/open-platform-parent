@@ -1,11 +1,11 @@
 package cn.ce.platform_console.apis.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,22 +24,23 @@ import cn.ce.platform_service.page.Page;
 */
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/apiOauth")
 public class ApiOauthController {
 
-	@Autowired
+	@Resource
 	private IApiOauthService apiOauthService;
 	
 	private static Logger logger  = LoggerFactory.getLogger(ApiOauthController.class);
 	
 	//api使用者申请api
 	@RequestMapping(value="/applyApi", method=RequestMethod.POST)
-	public Result<String> applyApi(HttpServletRequest request,HttpServletResponse response,
-			String userId, String apiId,String applyId){
+	public Result<String> applyApi(
+			@RequestParam String userId, 
+			@RequestParam String apiId,
+			@RequestParam String applyId){
 		
-		logger.info("------------------api使用者申请api------------------------------");
-		logger.info("userId:"+userId);
-		logger.info("apiId:"+apiId);
+		
+		
 		return apiOauthService.applyApi(userId,apiId,applyId);
 		
 	}

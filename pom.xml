@@ -34,6 +34,7 @@
 		<org.slf4j.version>1.7.1</org.slf4j.version>
 		<log4j.version>2.6.0</log4j.version>
 		<log4j.core.version>2.9.0</log4j.core.version> 
+		<!-- <log4j.version>1.2.9</log4j.version> -->
 		<commons.logging.version>1.2</commons.logging.version>
 		<alibaba.fastjson.version>1.2.35</alibaba.fastjson.version>
 		<org.json.version>20170516</org.json.version>
@@ -83,6 +84,38 @@
 		</profile>
 	</profiles>
 
+
+	<!-- repository config -->
+	<scm>
+		<connection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</connection>
+		<developerConnection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</developerConnection>
+	</scm>
+	
+	<repositories>
+		<repository>
+			<id>maven-releases</id>
+			<name>Maven Release Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>maven-snapshots</id>
+			<name>Maven Snapshot Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>maven-releases</id>
+			<name>Maven Release Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>maven-snapshots</id>
+			<name>Maven Snapshot Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>	
 
 	<!-- repository config -->
 	<scm>
@@ -207,6 +240,33 @@
 	</build>
 
 	<dependencies>
+	
+		<!-- javax validation impl -->
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		    <version>2.0.0.Final</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.hibernate.validator</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+		    <version>6.0.2.Final</version>
+		</dependency>
+
+		<!-- swagger parser -->
+		<dependency>
+		    <groupId>io.swagger</groupId>
+		    <artifactId>swagger-parser</artifactId>
+		    <version>1.0.32</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>io.swagger</groupId>
+		    <artifactId>swagger-compat-spec-parser</artifactId>
+		    <version>1.0.32</version>
+		</dependency>
+		
 		<!-- swagger dependency -->
 		
 		<dependency>
@@ -344,7 +404,11 @@
 		    <version>${log4j.core.version}</version>
 		</dependency>			
 
-
+<!-- 		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency> -->
 
 
 		<!-- spring data >> Mongodb >> redis -->

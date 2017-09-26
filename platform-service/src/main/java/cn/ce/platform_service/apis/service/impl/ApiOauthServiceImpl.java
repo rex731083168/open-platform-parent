@@ -41,7 +41,7 @@ import cn.ce.platform_service.util.HttpUtils;
 * @Author : makangwei
 * @Date : 2017年8月18日
 */
-@Service
+@Service(value = "apiOauthService")
 public class ApiOauthServiceImpl implements IApiOauthService{
 
 	@Autowired

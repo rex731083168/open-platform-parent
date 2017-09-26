@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,15 +37,17 @@ public class LogInterceptor extends HandlerInterceptorAdapter{
 		_LOGGER.debug("_____________>request uri:"+request.getRequestURI());
 		_LOGGER.debug("_____________>invoke time:"+new Date());
 		_LOGGER.debug("_____________>request method:"+request.getMethod());
-		_LOGGER.debug("_____________>request body:"+IOUtils.convertStreamToString(request.getInputStream()));
 		
-		_LOGGER.debug("____________>request parameters:");
+		// TODO 如何从request中多次读取流信息
+		//_LOGGER.debug("_____________>request body:"+IOUtils.convertStreamToString(IOUtils.deepCopyInputStream(request.getInputStream())));
+		_LOGGER.debug("_____________>request parameters:");
 		@SuppressWarnings("unchecked")
 		Enumeration<String> enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();  
 			_LOGGER.debug(paraName+": "+request.getParameter(paraName));  
 		}
+		_LOGGER.debug("_____________>log interceptor finished");
 		return true;
 	}
 
