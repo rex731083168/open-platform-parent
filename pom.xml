@@ -118,6 +118,38 @@
 	</distributionManagement>	
 
 
+	<!-- repository config -->
+<!-- 	<scm>
+		<connection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</connection>
+		<developerConnection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</developerConnection>
+	</scm>
+	
+	<repositories>
+		<repository>
+			<id>maven-releases</id>
+			<name>Maven Release Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>maven-snapshots</id>
+			<name>Maven Snapshot Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>maven-releases</id>
+			<name>Maven Release Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>maven-snapshots</id>
+			<name>Maven Snapshot Repository</name>
+			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>	 -->
+
 
 	<!-- build config -->
 	<build>
