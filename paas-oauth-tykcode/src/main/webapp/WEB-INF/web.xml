@@ -40,7 +40,7 @@
 	    <init-param>
 	        <param-name>casServerLoginUrl</param-name>
 	        <!-- test -->
-	        <param-value>http://120.133.2.71/cas/login</param-value>
+	        <param-value>http://10.20.0.234:8080/cas/login</param-value>
 <!-- 	          <param-value>https://cas.300.cn/CAS/login</param-value>  -->
 	    </init-param>
 	    <init-param>
@@ -67,7 +67,7 @@
 	    <init-param>
 	        <param-name>casServerUrlPrefix</param-name>
 	        <!-- test -->
-	        <param-value>http://120.133.2.71/cas</param-value>
+	        <param-value>http://10.20.0.234:8080/cas</param-value>
 <!-- 	        <param-value>https://cas.300.cn/CAS</param-value>  -->
 	    </init-param>
 	    <init-param>
