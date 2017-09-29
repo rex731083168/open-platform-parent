@@ -22,6 +22,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
+import cn.ce.platform_service.util.SmsUtil;
 import cn.ce.platform_service.util.Util;
 
 /**
@@ -240,4 +241,23 @@ public class LoginController {
 		}
 		return result;
 	}
+	
+	@RequestMapping(value="user/sendSms",method=RequestMethod.POST)
+	@ResponseBody
+	public Result<String> sendSms(HttpServletRequest request,HttpServletResponse response,
+			String phone,String content){
+		
+		Result<String> result = new Result<String>();
+		boolean bool = SmsUtil.messageSend(phone, content);
+		
+		if(bool){
+			result.setStatus(Status.SUCCESS);
+			result.setMessage("发送成功");
+		}else{
+			result.setErrorMessage("发送失败");
+		}
+		
+		return result;
+	}
+	
 }

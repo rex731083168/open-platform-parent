@@ -15,6 +15,7 @@
 
 
 	<dependencies>
+		<!-- es dependency -->
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>transport</artifactId>
@@ -54,7 +55,7 @@
 			<groupId>org.elasticsearch.plugin</groupId>
 			<artifactId>percolator-client</artifactId>
 			<version>${elasticsearch.version}</version>
-		</dependency>
+		</dependency>	
 	</dependencies>
 
 
