@@ -93,16 +93,9 @@ public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> 
 		
 	}
 
-	public boolean updateById(int colId, GatewayColonyEntity entity) {
-		
+	public void updateById(String colId, GatewayColonyEntity entity) {
 		entity.setColId(colId);
-		try{
-			mongoTemplate.save(entity);
-			return true;
-		}catch(Exception e){
-			return false;
-		}
-		
+		mongoTemplate.save(entity);
 	}
 
 	

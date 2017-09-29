@@ -4,6 +4,7 @@ package cn.ce.platform_service.gateway.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,11 +75,11 @@ public class GatewayManageService {
 		}
 		
 		//查询当前网关id是否存在
-		List<GatewayColonyEntity> isExits = null;
-		do{
-			colEntity.setColId(RandomUtil.random9Number());
-			isExits = gatewayManageDao.findByField("_id", colEntity.getColId(), GatewayColonyEntity.class);
-		}while(isExits.size() >0);
+//		List<GatewayColonyEntity> isExits = null;
+//		do{
+//			colEntity.setColId(RandomUtil.random9Number());
+//			isExits = gatewayManageDao.findByField("_id", colEntity.getColId(), GatewayColonyEntity.class);
+//		}while(isExits.size() >0);
 		
 		
 		//对集群的测试
@@ -114,7 +115,7 @@ public class GatewayManageService {
 		Result<GatewayColonyEntity> result = new Result<GatewayColonyEntity>();
 		
 		//判断参数是否可用
-		if(colEntity.getColId() == null || colEntity.getColId() == 0){
+		if(StringUtils.isNotBlank(colEntity.getColId())){
 			result.setMessage("当前集群id不能为空");
 			return result;
 		}
@@ -151,14 +152,15 @@ public class GatewayManageService {
 		}
 		
 		//boolean bool = gatewayManageDao.addGatewayCol(colEntity);
-		boolean bool = gatewayManageDao.updateById(colEntity.getColId(), colEntity );
-		
-		if(bool){
+		try {
+			gatewayManageDao.updateById(colEntity.getColId(), colEntity );
 			result.setMessage("集群修改成功");
 			result.setData(colEntity);
 			result.setStatus(Status.SUCCESS);
+		} catch (Exception e) {
+			result.setErrorMessage("集群修改失败");
+			LOGGER.error("modifyGatewayCol error! e:" + e.toString());
 		}
-		
 		return result;
 	}
 	
@@ -227,7 +229,7 @@ public class GatewayManageService {
 			result.setMessage("请求节点名称不能为空");
 			return result;
 		}
-		if(nodeEntity.getColId() == null || nodeEntity.getColId() < 1){
+		if(StringUtils.isNotBlank(nodeEntity.getColId())){
 			result.setMessage("所属集群id不能为空");
 			return result;
 		}
@@ -315,7 +317,7 @@ public class GatewayManageService {
 			result.setMessage("请求节点名称不能为空");
 			return result;
 		}
-		if(nodeEntity.getColId() == null || nodeEntity.getColId() < 1){
+		if(StringUtils.isNotBlank(nodeEntity.getColId())){
 			result.setMessage("所属集群id不能为空");
 			return result;
 		}

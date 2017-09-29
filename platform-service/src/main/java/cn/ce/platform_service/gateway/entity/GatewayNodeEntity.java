@@ -22,13 +22,14 @@ public class GatewayNodeEntity {
 	@Field("nodeDesc")
 	private String nodeDesc;
 	@Field("colId")
-	private Integer colId; //所属集群的id
+	private String colId; //所属集群的id
 
-	public Integer getColId() {
+
+	public String getColId() {
 		return colId;
 	}
 
-	public void setColId(Integer colId) {
+	public void setColId(String colId) {
 		this.colId = colId;
 	}
 

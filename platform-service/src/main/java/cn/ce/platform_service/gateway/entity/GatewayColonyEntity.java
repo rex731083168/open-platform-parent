@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class GatewayColonyEntity {
 
 	@Id 
-	private Integer colId; //集群id
+	private String colId; //集群id
 	@Field("colName") 
 	private String colName;	//集群名称	
 	@Field("colUrl")
@@ -27,12 +27,15 @@ public class GatewayColonyEntity {
 	public Integer getColStatus() {
 		return colStatus;
 	}
-	public Integer getColId() {
+
+	public String getColId() {
 		return colId;
 	}
-	public void setColId(Integer colId) {
+
+	public void setColId(String colId) {
 		this.colId = colId;
 	}
+
 	public void setColStatus(Integer colStatus) {
 		this.colStatus = colStatus;
 	}
