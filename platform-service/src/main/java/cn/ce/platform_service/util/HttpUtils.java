@@ -23,6 +23,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +88,27 @@ public class HttpUtils {
 			return null;
 		}
 	}
+	
+	public static String postJsonNew(String url,String params,Map<String,String> headers){
+	    String backMes = null;  
+	    HttpPost post = new HttpPost(url);
+	    CloseableHttpClient client = HttpClients.createDefault();
+	    try {  
+			//添加头信息
+			for (String key : headers.keySet()) {
+				post.addHeader(key, headers.get(key));
+			}
+	        StringEntity reqEntity = new StringEntity(params);  
+	        post.setEntity(reqEntity);  
+	        HttpResponse httpResponse = client.execute(post);  
+	        HttpEntity entity = httpResponse.getEntity();  
+	        backMes = EntityUtils.toString(entity, "UTF-8").toString();  
+	    }catch(Exception e){
+	    	
+	    }
+	    return backMes;
+	}
+	
 	
 	/**
 	 * @Description : 返回string类型的数据

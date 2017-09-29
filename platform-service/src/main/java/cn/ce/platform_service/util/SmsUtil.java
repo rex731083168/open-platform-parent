@@ -67,7 +67,7 @@ public class SmsUtil {
 			params.put("providerId", "1");
 			
 			
-			String postJson = HttpUtils.postJson(uri, params.toString(), headers);
+			String postJson = HttpUtils.postJsonNew(uri, params.toString(), headers);
 			log.info(postJson);
 			return true;
 			
