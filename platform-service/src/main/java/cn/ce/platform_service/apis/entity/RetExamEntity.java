@@ -56,5 +56,10 @@ public class RetExamEntity implements Serializable{
         this.exvalue = exvalue;
     }
 
+	@Override
+	public String toString() {
+		return "RetExamEntity [exname=" + exname + ", extype=" + extype + ", statecode=" + statecode + ", exvalue="
+				+ exvalue + "]";
+	}
     
 }

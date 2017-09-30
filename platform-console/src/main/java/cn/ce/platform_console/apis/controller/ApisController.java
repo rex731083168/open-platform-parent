@@ -1,9 +1,7 @@
 package cn.ce.platform_console.apis.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,18 +21,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.ce.platform_service.apis.entity.APIEntity;
-import cn.ce.platform_service.apis.entity.ApiVersion;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
-import cn.ce.platform_service.app.entity.AppEntity;
 import cn.ce.platform_service.app.service.IAppService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.common.gateway.GatewayUtils;
-import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
@@ -43,183 +37,58 @@ import cn.ce.platform_service.users.entity.User;
 public class ApisController {
 
 	/** 日志对象 */
-	private static Logger logger = Logger.getLogger(ApisController.class);
+	private static Logger _LOGGER = Logger.getLogger(ApisController.class);
 
 	@Autowired
 	private IAPIService apiService;
 	@Autowired
 	private IAppService appService;
 	@Autowired
-	private IApiSecretKeyService secretKeyService;
+	private IApiSecretKeyService apiSecretKeyService;
 	@Autowired
 	private IApiOauthService oauthService;
 
 	@RequestMapping(value = "/apiVerify", method = RequestMethod.POST)
 	@ResponseBody
-	public String apiVerify(
+	public Result<String> apiVerify(
 			@RequestParam String apiid,
 			@RequestParam(required=false) String username,
 			@RequestParam(required=false) String password
 			) {
 
-		JSONObject obj = new JSONObject();
-		try {
-			APIEntity api = apiService.findById(apiid);
-			api.setCheckState(1);
-
-			apiService.updateAPI(api);
-			obj.put("code", "1");
-			obj.put("message", "OK");
-			return obj.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			obj.put("code", "0");
-			obj.put("message", "ERROR");
-			return obj.toString();
-		}
+		return apiService.apiVerify(apiid,username,password);
 	}
 
 	@RequestMapping(value = "/publish", method = RequestMethod.POST)
 	@ResponseBody
-	public String publishAPI(HttpServletRequest request, HttpServletResponse response, @RequestBody APIEntity apientity) {
-
-		JSONObject ret = new JSONObject();
-
-//		try {
+	public Result<String> publishAPI(HttpSession session, @RequestBody APIEntity apiEntity) {
 			
-			HttpSession session = request.getSession();
-			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-			String str = JSONObject.toJSONString(apientity);
-			logger.info(str);
-			
-			//如果apiId存在，则修改api
-			if(apientity.getId() != null ){
-				apiService.updateAPI(apientity);
-				ret.put("code", 1);
-				ret.put("message", "修改成功");
-				return ret.toString();
-			}
-			
-			// 第一次添加接口,并且选择未开启版本控制
-			if (apientity.getApiversion() == null || StringUtils.isBlank(apientity.getApiversion().getVersion())) {
-				apientity.setId(UUID.randomUUID().toString().replace("-", ""));
-				apientity.setUserid(user.getId());
-				apientity.setUsername(user.getUsername());
-				apientity.setCreatetime(new Date());
-
-				ApiVersion version = new ApiVersion();
-				version.setApiId(apientity.getId());
-				apientity.setApiversion(version);
-
-				// 过滤apienname不能以/开头和结尾
-				apientity.setApienname(apientity.getApienname().replaceAll("/", ""));
-
-				apiService.addAPI(apientity);
-
-			} else {
-				// 开启版本控制
-				
-				apientity.setId(UUID.randomUUID().toString().replace("-", ""));
-				apientity.setUserid(user.getId());
-				apientity.setUsername(user.getUsername());
-				apientity.setCreatetime(new Date());
-
-				
-				int num = apiService.updApiVersionByApiid(apientity.getApiversion().getApiId());
-				logger.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");
-				
-				// TODO 前端传入版本号和newVersion字段吗？
-				apientity.getApiversion().setNewVersion(true);
-
-				//如果没有传入版本的apiId则重新生成apiId
-				if(StringUtils.isBlank(apientity.getApiversion().getApiId())){
-					apientity.getApiversion().setApiId(apientity.getId());
-				}
-				
-				apiService.addAPI(apientity);
-				
-				logger.info("------新添加的数据为："+new org.json.JSONObject(apientity).toString());
-			}
-			ret.put("code", "1");
-			ret.put("message", "OK");
-			return ret.toString();
-//		} 
-//		catch (Exception ex) {
-//			ex.printStackTrace();
-//			ret.put("code", "0");
-//			ret.put("message", "添加发生异常，异常原因为："+ex.getMessage());
-//			return ret.toString();
-//		}
+		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+		
+		_LOGGER.info(JSONObject.toJSONString(apiEntity));
+		
+		return apiService.publishAPI(user, apiEntity);
 	}
 
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
 	@ResponseBody
-	public Result<String> modifyApi(@RequestBody APIEntity apientity){
+	public Result<String> modifyApi(@RequestBody APIEntity apiEntity){
 		
 		//校验参数
-		return apiService.modifyApi(apientity);
+		return apiService.modifyApi(apiEntity);
 	}
-	@RequestMapping(value = "/showapi", method = RequestMethod.POST)
+	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
 	@ResponseBody
-	public String show(HttpServletRequest request, HttpServletResponse response, String apiid) {
-
-		JSONObject obj = new JSONObject();
-		try {
-			APIEntity api = apiService.findById(apiid);
-
-			if (api == null) {
-				obj.put("code", "0");
-				obj.put("message", "您访问的api不存在!");
-				return obj.toString();
-			}
-
-			String appId = api.getAppid();
-			AppEntity app = appService.findById(appId);
-
-			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
-
-			// 添加网关访问地址
-			AppEntity appEntity = appService.findById(api.getAppid());
-			
-			List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
-			List<String> gatewayUrlList = new ArrayList<String>();
-
-			for (GatewayColonyEntity gatewayColonyEntity : colList) {
-				
-				gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+appEntity.getAppkey()+"/" + api.getApienname()+"/"+api.getApiversion().getVersion()+"/");
-			}
-			jsonObject.put("gatewayUrls", gatewayUrlList);
-
-			jsonObject.put("appname", app.getAppname());
-			obj.put("data", jsonObject);
-			obj.put("code", "1");
-			obj.put("message", "OK");
-			return obj.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			obj.put("code", "0");
-			obj.put("message", "ERROR");
-			return obj.toString();
-		}
+	public Result<String> show(String apiId) {
+		
+		return apiService.show(apiId);
 	}
 
-	@RequestMapping(value = "/delapi", method = RequestMethod.GET)
+	@RequestMapping(value = "/delApi", method = RequestMethod.GET)
 	@ResponseBody
-	public String delAPI(HttpServletRequest request, HttpServletResponse response, String apiid) {
-		logger.info("--------------->> Action!  del api. ID: " + apiid);
-		JSONObject object = new JSONObject();
-		try {
-			apiService.delById(apiid.trim());
-			// secretKeyService.delApi(apiid.trim());
-			object.put("code", "1");
-			object.put("message", "OK");
-			return object.toString();
-		} catch (Exception ex) {
-			object.put("code", "1");
-			object.put("message", "ERROR");
+	public Result<String> delAPI(String apiId) {
 
-			return object.toString();
-		}
+		return apiService.delById(apiId);
 	}
 
 	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
@@ -241,14 +110,13 @@ public class ApisController {
 	}
 	@RequestMapping(value="/checkVersion",method=RequestMethod.GET,produces="application/json;charset=utf-8")
 	@ResponseBody
-	public Result<String> checkVersion(HttpServletRequest request, HttpServletResponse response,
-			String apiId, String version){
+	public Result<String> checkVersion(String apiId, String version){
 		
 		Result<String> result = new Result<String>();
-		if(apiId == null || apiId.trim()==""){
+		if(StringUtils.isBlank(apiId)){
 			result.setMessage("apiId不能为空");
 			return result;
-		}if(version == null || version.trim() ==""){
+		}if(StringUtils.isBlank(version)){
 			result.setMessage("version不能为空");
 			return result;
 		}
@@ -258,11 +126,11 @@ public class ApisController {
 
 	@RequestMapping(value="/list2",method=RequestMethod.GET)
 	@ResponseBody
-	public Result<String> showApis2(String appid,String userid,String applyId,int currentPage,int pageSize){
+	public Result<String> showApis2(String appId,String userId,String applyId,int currentPage,int pageSize){
 		
 		APIEntity apiParam = new APIEntity();
-		apiParam.setAppid(appid);
-		apiParam.setUserid(userid);
+		apiParam.setAppid(appId);
+		apiParam.setUserid(userId);
 		Result<String> result = new Result<String>();
 
 		try{
@@ -286,7 +154,7 @@ public class ApisController {
 				}else{
 					tempJson.put("isUseful", true);//不可申请
 				}
-				logger.info(tempJson.get("isUseful"));
+				_LOGGER.info(tempJson.get("isUseful"));
 				list1.add(tempJson);
 			}
 			page.setItems(list1);
@@ -306,8 +174,8 @@ public class ApisController {
 	public String showAPIs(HttpServletRequest request, HttpServletResponse response, String appid, String userid,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
-		logger.info("-------------->> Action!  show apis.  ======>> appid: " + appid + " userid:" + userid);
-		logger.info("-------------->> Action!  show apis. currentPage: " + currentPage + "  pageSize:" + pageSize);
+		_LOGGER.info("-------------->> Action!  show apis.  ======>> appid: " + appid + " userid:" + userid);
+		_LOGGER.info("-------------->> Action!  show apis. currentPage: " + currentPage + "  pageSize:" + pageSize);
 		JSONObject obj = new JSONObject();
 		try {
 			APIEntity apiParam = new APIEntity();
@@ -323,7 +191,7 @@ public class ApisController {
 			}
 
 			// 根据apiId加载秘钥信息
-			List<ApiSecretKey> findSecretKeyByApiIds = secretKeyService.findSecretKeyByApiIds(apiIdList);
+			List<ApiSecretKey> findSecretKeyByApiIds = apiSecretKeyService.findSecretKeyByApiIds(apiIdList);
 			List<ApiSecretKey> secretKeyList;
 
 			// 循环Api集合查找秘钥apiSecretKeyList进行组装Api信息
@@ -359,13 +227,13 @@ public class ApisController {
 			@RequestParam(required = true) String userid,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
-		logger.info("-------------->> Action!  show use apis.  ======>> userid:" + userid);
-		logger.info("-------------->> Action!  show use. currentPage: " + currentPage + "  pageSize:" + pageSize);
+		_LOGGER.info("-------------->> Action!  show use apis.  ======>> userid:" + userid);
+		_LOGGER.info("-------------->> Action!  show use. currentPage: " + currentPage + "  pageSize:" + pageSize);
 		JSONObject obj = new JSONObject();
 		try {
 			ApiSecretKey param = new ApiSecretKey();
 			param.setUserId(userid);
-			Page<ApiSecretKey> ds = secretKeyService.findSecretKeyEntityPage(param, currentPage, pageSize);
+			Page<ApiSecretKey> ds = apiSecretKeyService.findSecretKeyEntityPage(param, currentPage, pageSize);
 			APIEntity api = new APIEntity();
 			// 构建apiId集合
 			for (ApiSecretKey apiSecret : (List<ApiSecretKey>) ds.getItems()) {

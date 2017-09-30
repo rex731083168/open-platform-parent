@@ -9,11 +9,11 @@ public class Result <T> {
 
 	private T data;
 	
-	private String status = Status.SUCCESS;
+	private String status = Status.FAILED;
 	
 	private String message;
 	
-	private ErrorCodeNo errorCode = ErrorCodeNo.SYS000;
+	private ErrorCodeNo errorCode = ErrorCodeNo.SYS001;
 
 
 	
@@ -44,6 +44,7 @@ public class Result <T> {
 	public void setErrorMessage(String message){
 		this.message = message;
 		this.status = Status.FAILED;
+		this.errorCode = ErrorCodeNo.SYS001;
 	}
 	
 	public void setErrorMessage(String message,ErrorCodeNo errorCodeNo){
@@ -55,12 +56,14 @@ public class Result <T> {
 	public void setSuccessMessage(String message){
 		this.message = message;
 		this.status = Status.SUCCESS;
+		this.errorCode = ErrorCodeNo.SYS000;
 	}
 
 	
 	public void setSuccessData(T data){
 		this.data = data;
 		this.status = Status.SUCCESS;
+		this.errorCode = ErrorCodeNo.SYS000;
 	}
 
 	public ErrorCodeNo getErrorCode() {

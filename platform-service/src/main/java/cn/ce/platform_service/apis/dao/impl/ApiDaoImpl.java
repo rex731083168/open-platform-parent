@@ -14,7 +14,10 @@ import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.apis.dao.IApiDAO;
 import cn.ce.platform_service.apis.entity.APIEntity;
@@ -222,6 +225,23 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 		}catch(Exception e){
 			return false;
 		}
+	}
+
+	@Override
+	public int updApiVersionByApiid(String apiid) {
+		Query query = new Query();
+        query.addCriteria(Criteria.where("apiversion.apiId").is(apiid));
+        WriteResult rt = mongoTemplate.updateMulti(query, Update.update("apiversion.newVersion", false), APIEntity.class);
+        return rt.getN();
+	}
+
+	@Override
+	public boolean exitsVersion(String apiId, String version) {
+		Criteria c = new Criteria();
+		c.and("apiversion.apiId").is(apiId);
+		c.and("apiversion.version").is(version);
+		Query query = new Query(c);
+		return mongoTemplate.exists(query, APIEntity.class);
 	}
 
 }

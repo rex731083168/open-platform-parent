@@ -1,4 +1,4 @@
-package cn.ce.platform_service.gateway.service;
+package cn.ce.platform_service.gateway.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +28,8 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 * @Author : makangwei
 * @Date : 2017年8月14日
 */
-@Service("gatewayService")
-public class GatewayApiKeyService {
+@Service("gatewayApiService")
+public class GatewayApiService {
 
 	@Autowired
 	private IAPIService apiService;
@@ -40,7 +40,7 @@ public class GatewayApiKeyService {
 	@Autowired
 	private IApiSecretKeyDao apiSecretKeyDao;
 	
-	private static Logger logger = LoggerFactory.getLogger(GatewayApiKeyService.class);
+	private static Logger logger = LoggerFactory.getLogger(GatewayApiService.class);
 	/**
 	 * 
 	 * @Description : 添加版本后的api审核

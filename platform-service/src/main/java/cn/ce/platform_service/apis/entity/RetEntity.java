@@ -57,4 +57,9 @@ public class RetEntity implements Serializable{
         this.desc = desc;
     }
 
+	@Override
+	public String toString() {
+		return "RetEntity [retname=" + retname + ", rettype=" + rettype + ", example=" + example + ", desc=" + desc
+				+ "]";
+	}
 }

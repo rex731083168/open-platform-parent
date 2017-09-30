@@ -1,17 +1,13 @@
 package cn.ce.platform_console.users.controller;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,8 +18,11 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
+<<<<<<< Upstream, based on branch 'feature/review' of http://gitlab.300.cn/paas-code/open-platform-parent.git
 import cn.ce.platform_service.util.SmsUtil;
 import cn.ce.platform_service.util.Util;
+=======
+>>>>>>> 155a2fa 20170930
 
 /**
  * @author 作者 E -mail: dingjia@300.cn 创建时间：2017年7月17日 下午3:17:22
@@ -33,63 +32,31 @@ import cn.ce.platform_service.util.Util;
 public class LoginController {
 
 	/** 日志对象 */
-	private static Logger logger = Logger.getLogger(LoginController.class);
+	private static Logger _LOGGER = Logger.getLogger(LoginController.class);
 
 	@Autowired
 	private IUserService userService;
 
 	@RequestMapping(value = "user/login", method = RequestMethod.POST)
 	@ResponseBody
-	public String login(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model,
-			@RequestParam String username, 
+	public Result<User> login(HttpSession session, @RequestParam String userName, 
 			@RequestParam String password) {
 
-		username.trim();
-		password.trim();
-
-		JSONObject result = new JSONObject();
-		User user = userService.findUserByUserNameAndPWD(username, password);
-
-		if (user == null) {
-			logger.info("---------->> not found user name");
-			result.put("code", "0");
-			result.put("message", "用户名称或密码错误！");
-			return result.toString();
-		} else if (user.getPassword().equals(password.toUpperCase())) {
-			logger.info("---------->> not found user name");
-			result.put("code", "0");
-			result.put("message", "用户名称或密码错误！");
-			return result.toString();
-		} else {
-			if (user.getState() == 1 && (2 == user.getUserType() || 1 == user.getUserType())
-					&& 2 == user.getCheckState()) {
-				result.put("code", "1");
-				result.put("message", "OK");
-				session.setAttribute(Constants.SES_LOGIN_USER, user);
-				JSONObject object = new JSONObject(user);
-				object.remove("password");
-				result.put("data", object);
-				return result.toString();
-			}
-			result.put("code", "0");
-			result.put("message", "用户状态不可用！");
-			return result.toString();
-
-		}
+		return userService.login(session, userName,password);
 	}
 	@RequestMapping(value="/user/checkUserName",method=RequestMethod.GET,produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Result<String> checkUserName(HttpServletRequest request,HttpServletResponse response,
-			String username){
+			String userName){
 		
 		Result<String> result = new Result<String>();
 		
-		if(StringUtils.isBlank(username)){
+		if(StringUtils.isBlank(userName)){
 			result.setErrorMessage("当前用户名不能为空");
 			return result;
 		}
 		
-		boolean bool = userService.checkUserName(username);
+		boolean bool = userService.checkUserName(userName);
 		
 		if(bool){
 			result.setMessage("当前用户名已存在，请重新输入");
@@ -109,9 +76,9 @@ public class LoginController {
 			@RequestParam(required=true)String newPassword
 			){
 		
-		logger.info("---------->用户名："+userName);
-		logger.info("---------->旧密码："+password);
-		logger.info("---------->新密码："+newPassword);
+		_LOGGER.info("---------->用户名："+userName);
+		_LOGGER.info("---------->旧密码："+password);
+		_LOGGER.info("---------->新密码："+newPassword);
 		
 		Result<String> result = new Result<String>();
 		
@@ -119,7 +86,7 @@ public class LoginController {
 		if(user != null){
 			user.setPassword(newPassword);
 			int i = userService.modifyPasswordById(user.getId(), newPassword);
-			logger.info("修改了"+i+"个用户");
+			_LOGGER.info("修改了"+i+"个用户");
 			result.setStatus(Status.SUCCESS);
 			result.setMessage("修改成功");
 			return result;
@@ -131,96 +98,46 @@ public class LoginController {
 	
 	@RequestMapping(value = "user/register", method = RequestMethod.POST)
 	@ResponseBody
-	public String userRegister(HttpServletRequest request, HttpServletResponse response, String username,
+	public Result<String> userRegister(HttpServletRequest request, HttpServletResponse response, String userName,
 			String password, String email, String tel,String userType) {
-		logger.info("------->> ACTION!     Save regitry");
-		logger.info(username);
-		logger.info(email);
-		logger.info(tel);
+		_LOGGER.info("------->> ACTION!     Save regitry");
+		_LOGGER.info(userName);
+		_LOGGER.info(email);
+		_LOGGER.info(tel);
 		
-		JSONObject ret = new JSONObject();
-		
-		//校验当前用户名是否存在
-		// TODO 校验用户名
-		boolean bool = userService.checkUserName(username);
-		if(bool){
-			//当前用户名存在
-			ret.put("0", "0");
-			ret.put("message", "当前用户已存在");
-			return ret.toString();
-		}
-		
-		//校验邮箱
-		boolean bool1 = userService.checkEmail(email);
-		if(!bool1){
-			ret.put("0", "0");
-			ret.put("message", "当前邮箱已经被注册");
-			return ret.toString();
-		}
-		
-		//如果之前使用过当前邮箱注册，但是审核失败了，可以重新用该邮箱注册。将原来的数据修改
-//		User preUser = userService.findByEmail(email);
-		
-		try {
-			User user = new User();
-			user.setUsername(username.trim());
-			user.setPassword(password.trim());
-			user.setEmail(email.trim());
-			user.setTel(tel.trim());
-			user.setUserType(Integer.parseInt(userType));
-			user.setState(1);
-			user.setRegtime(new Date());
-			String appsecret = Util.getRandomStrs(Constants.SECRET_LENGTH);
-			user.setAppSecret(appsecret);
-			userService.addUser(user);
-			ret.put("code", "1");
-			ret.put("message", "OK");
-			return ret.toString();
-		} catch (Exception ex) {
-			ret.put("code", "0");
-			ret.put("message", "ERROR");
-			ex.printStackTrace();
-			return ret.toString();
-		}
+		return userService.userRegister(userName,password,email,tel,userType);
 	}
 
 	@RequestMapping(value = "user/logout", method = RequestMethod.POST)
 	@ResponseBody
-	public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		logger.info("---------->> Action for logout");
-		JSONObject result = new JSONObject();
+	public Result<String> logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		_LOGGER.info("---------->> Action for logout");
+		Result<String> result = new Result<String>();
 		try {
 			session.invalidate();
-			result.put("code", Constants.SUCCESS);
-			result.put("message", Constants.RESULT_OK);
-			return result.toString();
-
+			result.setSuccessMessage("");
+			return result;
 		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("code", Constants.SUCCESS);
-			result.put("message", Constants.RESULT_ERROR);
-			return result.toString();
+			_LOGGER.info("error happens when execute user logout",e);
+			result.setErrorMessage("");
+			return result;
 		}
 	}
 
-	@RequestMapping(value = "user/checklogin", method = RequestMethod.POST)
+	@RequestMapping(value = "user/checkLogin", method = RequestMethod.POST)
 	@ResponseBody
-	public String checkLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		JSONObject result = new JSONObject();
+	public Result<User> checkLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		Result<User> result = new Result<User>();
 		try {
 			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-			JSONObject object = new JSONObject(user);
-			object.remove("password");
-			result.put("data", object);
-			result.put("code", Constants.SUCCESS);
-			result.put("message", Constants.RESULT_OK);
-			return result.toString();
+			user.setPassword("");
+			result.setSuccessData(user);
+			return result;
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("code", Constants.SUCCESS);
-			result.put("message", Constants.RESULT_ERROR);
-			return result.toString();
+			_LOGGER.info("error happens when execute user checklogin",e);
+			result.setErrorMessage("");
+			return result;
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package cn.ce.platform_manage.admin.controller;
+package cn.ce.platform_manage.gateway;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

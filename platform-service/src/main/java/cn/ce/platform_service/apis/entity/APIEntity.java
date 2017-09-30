@@ -337,5 +337,17 @@ public class APIEntity implements Serializable {
 	public void setApiversion(ApiVersion apiversion) {
 		this.apiversion = apiversion;
 	}
+
+	@Override
+	public String toString() {
+		return "APIEntity [id=" + id + ", appid=" + appid + ", userid=" + userid + ", username=" + username
+				+ ", apichname=" + apichname + ", apienname=" + apienname + ", testendpoint=" + testendpoint
+				+ ", endpoint=" + endpoint + ", httpmethod=" + httpmethod + ", headers=" + headers + ", args=" + args
+				+ ", result=" + result + ", retexample=" + retexample + ", errcodes=" + errcodes + ", apiversion="
+				+ apiversion + ", desc=" + desc + ", state=" + state + ", countbyday=" + countbyday + ", checkState="
+				+ checkState + ", checkMem=" + checkMem + ", quota_max=" + quota_max + ", quota_renewal_rate="
+				+ quota_renewal_rate + ", rate=" + rate + ", per=" + per + ", createtime=" + createtime + ", apiSecret="
+				+ apiSecret + ", app=" + app + "]";
+	}
 	
 }

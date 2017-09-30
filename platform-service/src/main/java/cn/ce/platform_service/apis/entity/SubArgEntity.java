@@ -57,5 +57,12 @@ public class SubArgEntity  implements Serializable{
     public void setDesc(String desc) {
         this.desc = desc;
     }
+	@Override
+	public String toString() {
+		return "SubArgEntity [argname=" + argname + ", argtype=" + argtype + ", required=" + required + ", example="
+				+ example + ", desc=" + desc + "]";
+	}
+    
+    
     
 }

@@ -36,4 +36,9 @@ public class ErrorCodeEntity implements Serializable{
         this.desc = desc;
     }
 
+	@Override
+	public String toString() {
+		return "ErrorCodeEntity [errname=" + errname + ", desc=" + desc + "]";
+	}
+    
 }

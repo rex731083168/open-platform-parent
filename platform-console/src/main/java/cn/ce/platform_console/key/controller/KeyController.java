@@ -25,7 +25,7 @@ import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.gateway.service.GatewayApiKeyService;
+import cn.ce.platform_service.gateway.service.impl.GatewayApiService;
 import cn.ce.platform_service.users.entity.User;
 
 /**
@@ -39,7 +39,7 @@ public class KeyController {
 	
 	private static Logger logger = Logger.getLogger(ApisController.class);
 	@Autowired
-	private GatewayApiKeyService gatewayApiKeyService;
+	private GatewayApiService gatewayApiService;
 	@Autowired
 	private IApiSecretKeyService secretKeyService;
 	@Autowired
@@ -64,7 +64,7 @@ public class KeyController {
 			return result;
 		}
 
-		return gatewayApiKeyService.auditKey(secretKey, checkState);
+		return gatewayApiService.auditKey(secretKey, checkState);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class KeyController {
 			return result;
 		}
 
-		return gatewayApiKeyService.deleKey(secretKey , applyId);
+		return gatewayApiService.deleKey(secretKey , applyId);
 	}
 	
 	/***

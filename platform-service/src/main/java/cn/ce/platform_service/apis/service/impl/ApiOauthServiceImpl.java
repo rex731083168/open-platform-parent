@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,15 +46,15 @@ import cn.ce.platform_service.util.HttpUtils;
 @Service(value = "apiOauthService")
 public class ApiOauthServiceImpl implements IApiOauthService{
 
-	@Autowired
+	@Resource
 	private IAPIService apiService;
-	@Autowired
+	@Resource
 	private IAppService appService;
-	@Autowired @Qualifier("applyDao")
+	@Resource
 	private IApplyDao applyDao;
-	@Autowired
+	@Resource
 	private IApiOauthDao apiOauthDao;
-	@Autowired
+	@Resource
 	private IUserService userService;
 	@Autowired
 	private MongoTemplate mongoTemplate;

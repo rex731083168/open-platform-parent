@@ -49,6 +49,10 @@ public class ApiVersion {
 	public void setNewVersion(boolean newVersion) {
 		this.newVersion = newVersion;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "ApiVersion [apiId=" + apiId + ", version=" + version + ", versionRemark=" + versionRemark
+				+ ", newVersion=" + newVersion + "]";
+	}
 }

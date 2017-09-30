@@ -1,7 +1,12 @@
 package cn.ce.platform_service.app.service;
 
 import java.util.List;
-import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
 
 import cn.ce.platform_service.app.entity.AppEntity;
 import cn.ce.platform_service.common.Result;
@@ -96,5 +101,27 @@ public interface IAppService {
     List<AppEntity> findAppsByEntity(AppEntity entity);
 
 	public Result<String> deleteById(String appId);
+
+	public Result<JSONObject> appList(HttpServletRequest request, HttpServletResponse response);
+
+	public Result<String> addGroup(HttpSession session, AppEntity app);
+
+	public Result<String> delGroup(String appId);
+
+	public Result<String> modifyGroup(AppEntity app);
+
+	public Result<Page<AppEntity>> groupList(String userId, int currentPage, int pageSize);
+
+	public Result<String> submitVerify(String id);
+
+	public Result<String> addGroup1(HttpSession session, AppEntity app);
+
+	public Result<String> deleteGroup(String id);
+
+	public Result<String> modifyGroup1(AppEntity app);
+
+	public Result<Page<AppEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize);
+
+	public Result<String> auditGroup(String id, int checkState, String remark);
 
 }

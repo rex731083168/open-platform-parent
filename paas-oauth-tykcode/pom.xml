@@ -14,6 +14,23 @@
 		<platform.service.version>1.0.1-SNAPSHOT</platform.service.version>
 	</properties>
 
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>${maven.plugin.version}</version>
+			<configuration>
+				<source>${java.version}</source>
+				<target>${java.version}</target>
+				<encoding>${project.build.sourceEncoding}</encoding>
+				<!-- export native libary -->
+				<compilerArguments>
+					<extdirs>src/main/webapp/WEB-INF/lib</extdirs>
+				</compilerArguments>
+			</configuration>
+		</plugin>
+	</plugins>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.ce</groupId>
@@ -21,6 +38,5 @@
 			<version>${platform.service.version}</version>
 		</dependency>
 	</dependencies>
-
 
 </project>

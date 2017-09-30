@@ -1,4 +1,4 @@
-package cn.ce.platform_manage.admin.controller;
+package cn.ce.platform_manage.gateway;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
-import cn.ce.platform_service.gateway.service.GatewayManageService;
+import cn.ce.platform_service.gateway.service.impl.GatewayManageService;
 import cn.ce.platform_service.page.Page;
 
 /**

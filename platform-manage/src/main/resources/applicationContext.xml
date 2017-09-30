@@ -52,6 +52,10 @@
 	
 	<bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
 	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    	<property name="maxUploadSize" value="100000"/>	
+	</bean>
+	
     <!-- Loads MongoDB configuraton -->  
     <import resource="mongo-config.xml"/>   
     

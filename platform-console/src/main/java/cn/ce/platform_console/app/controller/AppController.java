@@ -42,36 +42,12 @@ public class AppController {
     @Autowired
     private IAPIService apiService;
 
-	@RequestMapping(value = "/applist", method = RequestMethod.POST)
+	@RequestMapping(value = "/appList", method = RequestMethod.POST)
 	@ResponseBody
-	public String appList(HttpServletRequest request,
+	public Result<JSONObject> appList(HttpServletRequest request,
 			HttpServletResponse response) {
-		JSONObject result = new JSONObject();
 
-		try {
-			List<AppEntity> list = appService.getAll();
-
-			JSONArray jsonArray = new JSONArray();
-			JSONObject data = new JSONObject();
-			for (int i = 0; i < list.size(); i++) {
-				JSONObject obj = new JSONObject();
-				AppEntity app = list.get(i);
-				obj.put("id", app.getId());
-				obj.put("appname", app.getAppname());
-				jsonArray.put(obj);
-			}
-			data.put("items", jsonArray);
-			result.put("data", data);
-			result.put("code", "1");
-			result.put("message", "OK");
-
-			return result.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("code", "0");
-			result.put("message", "ERROR");
-			return result.toString();
-		}
+		return appService.appList(request,response);
 	}
 	
 	@RequestMapping(value="deleteById",method=RequestMethod.POST)
@@ -82,152 +58,46 @@ public class AppController {
 		return appService.deleteById(appId);
 	}
 	
-	@RequestMapping(value = "/addgroup", method = RequestMethod.POST)
+	@RequestMapping(value = "/addGroup", method = RequestMethod.POST)
 	@ResponseBody
-	public String addGroup(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+	public Result<String> addGroup(HttpSession session,
 			@RequestBody AppEntity app) {
 		logger.info("---------------->> Action Add new Group! app details: " + JSON.toJSONString(app));
-		JSONObject result = new JSONObject();
-		try {
-			
-			Result<AppEntity> checkAppIsHave = appService.checkAppIsHave(app);
-			
-			if (Status.SUCCESS == checkAppIsHave.getStatus()) {
-				User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-				String uuid = UUID.randomUUID().toString().replace("-", "");
-				app.setId(uuid);
-				app.setCreateDate(new Date());
-				if (user.getUserType() == 0) {
-					app.setCheckState(2); // 后台系统添加服务分类默认审核通过
-				} else {
-					app.setCheckState(0);
-				}
-				app.setUserid(user.getId());
-				app.setUsername(user.getUsername());
-
-				// appKey不能以/开头和结尾
-				if (app.getAppkey().startsWith("/") || app.getAppkey().endsWith("/")) {
-					result.put("message", "appKey不能以/开头和/结尾");
-					return result.toString();
-				}
-				appService.addApp(app);
-				result.put("code", "1");
-				result.put("message", "OK");
-				result.put("id", uuid);
-			} else{
-				result.put("code", "2");
-				result.put("message", checkAppIsHave.getMessage());
-				return result.toString();
-			}
-			return result.toString();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			result.put("code", "0");
-			result.put("message", "ERROR");
-			return result.toString();
-		}
+		
+		return appService.addGroup(session,app);
 	}
 	
-	@RequestMapping(value = "/delgroup", method = RequestMethod.GET)
+	@RequestMapping(value = "/delGroup", method = RequestMethod.GET)
 	@ResponseBody
-	public String delGroup(HttpServletRequest request, HttpServletResponse response, String id) {
-		logger.info("---------------->> Action del Group! GroupID: " + id);
-		JSONObject result = new JSONObject();
-		try {
-			/** 删除前要求分组内无API存在！ */
-			if (apiService.haveAPIs(id)) {
-				result.put("code", "2");
-				result.put("message", "当前服务分组中存在API接口定义!");
-				return result.toString();
-			}
-			appService.delById(id);
-			result.put("code", "1");
-			result.put("message", "OK");
-			return result.toString();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			result.put("code", "0");
-			result.put("message", "ERROR");
-			return result.toString();
-		}
+	public Result<String> delGroup(HttpServletRequest request, HttpServletResponse response, String appId) {
+		logger.info("---------------->> Action del Group! GroupID: " + appId);
+		
+		return appService.delGroup(appId);
 	}
 	
-	@RequestMapping(value = "/modifygroup", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyGroup", method = RequestMethod.POST)
 	@ResponseBody
-	public String modifyGroup(HttpServletRequest request, HttpServletResponse response, @RequestBody AppEntity app) {
+	public Result<String> modifyGroup(@RequestBody AppEntity app) {
 		logger.info("---------------->> Action modify Group! Param: " + JSON.toJSONString(app));
-		JSONObject result = new JSONObject();
-		try {
-			AppEntity appAfter = appService.findById(app.getId());
-			if (null == appAfter) {
-				result.put("code", "2");
-				result.put("message", "请求修改的分组不存在！");
-			} else {
-				app.setNeqId(app.getId());// 查询非当前修改数据进行判断
-				List<AppEntity> findAppsByEntity = appService.findAppsByEntity(app);
-				if (findAppsByEntity.isEmpty()) {
-					appAfter.setAppname(app.getAppname().trim());
-					appAfter.setAppkey(app.getAppkey().trim());
-					appService.modifyById(appAfter);
-					result.put("code", "1");
-					result.put("message", "OK");
-				} else {
-					result.put("code", "2");
-					result.put("message", "分组名称或分组key不可重复！");
-				}
-			}
-			return result.toString();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			result.put("code", "0");
-			result.put("message", "ERROR");
-			return result.toString();
-		}
+		
+		return appService.modifyGroup(app);
 	}
 	
-	@RequestMapping(value = "/grouplist", method = RequestMethod.POST)
+	@RequestMapping(value = "/groupList", method = RequestMethod.POST)
 	@ResponseBody
-	public String groupList(HttpServletRequest request, HttpServletResponse response, String userid,
+	public Result<Page<AppEntity>> groupList(HttpServletRequest request, HttpServletResponse response, String userId,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
-		logger.info("---------------->> Action Add new Group! userid: " + userid);
-		JSONObject result = new JSONObject();
-		try {
-			AppEntity entity = new AppEntity();
-			entity.setUserid(userid);
-			Page<AppEntity> ds = appService.findAppsByEntity(entity, currentPage, pageSize);
-			com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(JSON.toJSONString(ds));
-			result.put("data", jsonObject);
-			result.put("code", "1");
-			result.put("message", "OK");
-
-			return result.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("code", "0");
-			result.put("message", "ERROR");
-			return result.toString();
-		}
+		logger.info("---------------->> Action Add new Group! userid: " + userId);
+	
+		return appService.groupList(userId,currentPage,pageSize);
 	}
 
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.POST)
 	@ResponseBody
-	public String submitVerify(HttpServletRequest request, HttpServletResponse response, String id) {
+	public Result<String> submitVerify(HttpServletRequest request, HttpServletResponse response, String id) {
 		logger.info("---------------->> Action modify Group! GroupID: " + id + "  + id");
-		JSONObject result = new JSONObject();
-		try {
-			AppEntity app = appService.findById(id);
-			app.setCheckState(1);
-			appService.modifyById(app);
-			result.put("code", "1");
-			result.put("message", "OK");
-			return result.toString();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			result.put("code", "0");
-			result.put("message", "ERROR");
-			return result.toString();
-		}
-	}
 
+		return appService.submitVerify(id);
+	}
 }

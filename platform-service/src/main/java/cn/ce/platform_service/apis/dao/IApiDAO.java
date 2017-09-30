@@ -6,8 +6,6 @@ import java.util.Map;
 import org.springframework.data.mongodb.core.query.Query;
 
 import cn.ce.platform_service.apis.entity.APIEntity;
-import cn.ce.platform_service.apis.entity.ApiVersion;
-import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.page.Page;
 
 /**
@@ -137,5 +135,9 @@ public interface IApiDAO {
 	APIEntity findOneByFields(Map<String, Object> map);
 
 	boolean modifyApi(APIEntity apientity);
+
+	int updApiVersionByApiid(String apiid);
+
+	boolean exitsVersion(String apiId, String version);
     
 }  

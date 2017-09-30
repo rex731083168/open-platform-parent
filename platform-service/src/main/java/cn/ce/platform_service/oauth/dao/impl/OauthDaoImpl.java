@@ -16,7 +16,7 @@ import cn.ce.platform_service.oauth.dao.IOauthDao;
 * @Author : makangwei
 * @Date : 2017年8月22日
 */
-@Repository
+@Repository(value="oauthDao")
 public class OauthDaoImpl extends AbstractBaseMongoDao<ApiAuditEntity> implements IOauthDao{
 
 	@Override

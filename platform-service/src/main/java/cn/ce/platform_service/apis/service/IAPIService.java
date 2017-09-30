@@ -6,6 +6,7 @@ import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.apis.entity.ApiVersion;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.entity.User;
 
 /**
  * 
@@ -21,11 +22,11 @@ public interface IAPIService {
      */
     void addAPI(APIEntity api);
     
-    /**
-     * 判断某功能分组下是否有API
-     * @param groupId: 功能分组ID
-     * @return 功能分组下是否有API
-     */
+//    /**
+//     * 判断某功能分组下是否有API
+//     * @param groupId: 功能分组ID
+//     * @return 功能分组下是否有API
+//     */
     boolean haveAPIs(String groupId);
     
     /**
@@ -73,7 +74,7 @@ public interface IAPIService {
      * @return     返回审核API集合
      * @throws
      */
-    List<APIEntity> getGroupAPIs(String groupId, int checkState);
+//    List<APIEntity> getGroupAPIs(String groupId, int checkState);
     
     /**
      * @Description: 根据分组和审核状态查询API
@@ -94,14 +95,14 @@ public interface IAPIService {
      * @return     返回审核API数量
      * @throws
      */
-    int reviewGroupAPIs(String groupId, int checkState, String checkmem);
+//    int reviewGroupAPIs(String groupId, int checkState, String checkmem);
     
     /**
      * @Description: 根据中文名称或描述进行模糊匹配（大小写不区分）
      * @return List<APIEntity>    返回类型
      * @throws
      */
-    Page<APIEntity> searchApis(String nameDesc, int currentPage, int pageSize);
+//    Page<APIEntity> searchApis(String nameDesc, int currentPage, int pageSize);
     
     /**
      * @Description: 根据业务线和审核状态查询API
@@ -110,7 +111,7 @@ public interface IAPIService {
      * @return     返回审核API集合
      * @throws
      */
-    List<APIEntity> getCategoryAPIs(String categoryCode, int checkState);
+//    List<APIEntity> getCategoryAPIs(String categoryCode, int checkState);
     
     /***
      * 根据对象及分页信息查询API分页集合
@@ -143,5 +144,13 @@ public interface IAPIService {
 	Result<String> modifyApi(APIEntity apientity);
 
 	Result<String> checkApiChName(String apiChName, String appId);
+
+	Result<String> apiVerify(String apiid, String username, String password);
+
+	Result<String> publishAPI(User user, APIEntity apientity);
+
+	Result<String> show(String apiId);
+
+	Result<Page<APIEntity>> apiList(String apiId, String apiChName, String checkState, int currentPage, int pageSize);
     
 }

@@ -1,31 +1,23 @@
 package cn.ce.platform_service.admin.service;
 
-import cn.ce.platform_service.admin.entity.AdminEntity;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import cn.ce.platform_service.common.Result;
 
 /**
  * 
- * @ClassName: IAdminService
- * @Description: 管理员服务
- * @author dingjia@300.cn
+ * 
+ * @ClassName:  IAdminService   
+ * @Description:后台管理员相关接口   
+ * @author: makangwei 
+ * @date:   2017年9月29日 上午9:45:37   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  *
  */
 public interface IAdminService {
-	/**
-	 * 根据帐号查询管理员
-	 * 
-	 * @param userName
-	 *            : 管理员帐号
-	 * @return 管理员对象
-	 */
-	AdminEntity findByUserName(String userName);
-
-	/**
-	 * 修改管理员密码
-	 * 
-	 * @param admin
-	 *            : 修改后管理员对象
-	 */
-	void updatePassword(AdminEntity admin);
-
-	AdminEntity checkLogin(String username, String password);
+	
+	//后天管理员登录
+	Result<Map<String, Object>> login(HttpSession session, String userName, String password);
 }
