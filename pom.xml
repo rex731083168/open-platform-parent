@@ -95,25 +95,25 @@
 		<repository>
 			<id>platform-releases</id>
 			<name>openplatform Release Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>platform-snapshots</id>
 			<name>openplatform Snapshots Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 
 	<distributionManagement>
 		<repository>
-			<id>maven-releases</id>
+			<id>platform-releases</id>
 			<name>Maven Release Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
-			<id>maven-snapshots</id>
+			<id>platform-snapshots</id>
 			<name>Maven Snapshot Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>	
 
@@ -128,12 +128,12 @@
 		<repository>
 			<id>maven-releases</id>
 			<name>Maven Release Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>maven-snapshots</id>
 			<name>Maven Snapshot Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 
@@ -141,12 +141,12 @@
 		<repository>
 			<id>maven-releases</id>
 			<name>Maven Release Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/releases/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>maven-snapshots</id>
 			<name>Maven Snapshot Repository</name>
-			<url>http://172.10.1.59:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>	 -->
 
