@@ -52,11 +52,11 @@ public class ApisController {
 	@ResponseBody
 	public Result<String> apiVerify(
 			@RequestParam String apiid,
-			@RequestParam(required=false) String username,
+			@RequestParam(required=false) String userName,
 			@RequestParam(required=false) String password
 			) {
 
-		return apiService.apiVerify(apiid,username,password);
+		return apiService.apiVerify(apiid,userName,password);
 	}
 
 	@RequestMapping(value = "/publish", method = RequestMethod.POST)
@@ -129,13 +129,14 @@ public class ApisController {
 	public Result<String> showApis2(String appId,String userId,String applyId,int currentPage,int pageSize){
 		
 		APIEntity apiParam = new APIEntity();
-		apiParam.setAppid(appId);
-		apiParam.setUserid(userId);
+		apiParam.setAppId(appId);
+		apiParam.setUserId(userId);
 		Result<String> result = new Result<String>();
 
 		try{
 			Page<APIEntity> ds = apiService.findApisByEntity(apiParam, currentPage, pageSize);
 			
+			@SuppressWarnings("unchecked")
 			List<APIEntity> list = (List<APIEntity>) ds.getItems();
 			
 			Page<org.json.JSONObject> page = new Page<org.json.JSONObject>(ds.getCurrentPage(), ds.getTotalNumber(),ds.getPageSize());
@@ -144,7 +145,7 @@ public class ApisController {
 			
 			for (APIEntity apiEntity : list) {
 				//将正式的url地址设置为空，不能让用户看到
-				apiEntity.setTestendpoint("http://************");
+				apiEntity.setTestEndPoint("http://************");
 				
 				org.json.JSONObject tempJson = new org.json.JSONObject(apiEntity);
 				
@@ -179,10 +180,11 @@ public class ApisController {
 		JSONObject obj = new JSONObject();
 		try {
 			APIEntity apiParam = new APIEntity();
-			apiParam.setAppid(appid);
-			apiParam.setUserid(userid);
+			apiParam.setAppId(appid);
+			apiParam.setUserId(userid);
 
 			Page<APIEntity> ds = apiService.findApisByEntity(apiParam, currentPage, pageSize);
+			@SuppressWarnings("unchecked")
 			List<APIEntity> items = (List<APIEntity>) ds.getItems();
 			List<String> apiIdList = new ArrayList<>(items.size());
 			// 构建apiId集合
@@ -202,7 +204,7 @@ public class ApisController {
 						secretKeyList.add(apiSecretKey);
 					}
 				}
-				apiEntity.setApp(appService.findById(apiEntity.getAppid()));
+				apiEntity.setAppEntity((appService.findById(apiEntity.getAppId())));
 				apiEntity.setApiSecret(secretKeyList);
 			}
 
@@ -220,7 +222,8 @@ public class ApisController {
 		}
 	}
 
-    @Deprecated //使用密钥授权已过期。使用者查询api列表
+    @SuppressWarnings("unchecked")
+	@Deprecated //使用密钥授权已过期。使用者查询api列表
 	@RequestMapping(value = "/uselist", method = RequestMethod.GET)
 	@ResponseBody
 	public String showUseAPIs(HttpServletRequest request, HttpServletResponse response,
@@ -238,7 +241,7 @@ public class ApisController {
 			// 构建apiId集合
 			for (ApiSecretKey apiSecret : (List<ApiSecretKey>) ds.getItems()) {
 				api = apiService.findById(apiSecret.getApiId());
-				api.setApp(appService.findById(api.getAppid()));
+				api.setAppEntity(appService.findById(api.getAppId()));
 				apiSecret.setApi(api);
 			}
 			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(ds));

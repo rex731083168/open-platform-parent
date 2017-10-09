@@ -158,7 +158,7 @@ public class APIServiceImpl implements IAPIService {
 		
 		List<APIEntity> findApiListByQuery = apiDao.findApiListByQuery(query);
 		if(!findApiListByQuery.isEmpty()){
-			aVersion = findApiListByQuery.get(0).getApiversion();
+			aVersion = findApiListByQuery.get(0).getApiVersion();
 		}
 		return aVersion;
 	}
@@ -283,18 +283,18 @@ public class APIServiceImpl implements IAPIService {
 		}
 		
 		// 第一次添加接口,并且选择未开启版本控制
-		if (apientity.getApiversion() == null || StringUtils.isBlank(apientity.getApiversion().getVersion())) {
+		if (apientity.getApiVersion() == null || StringUtils.isBlank(apientity.getApiVersion().getVersion())) {
 			apientity.setId(UUID.randomUUID().toString().replace("-", ""));
-			apientity.setUserid(user.getId());
-			apientity.setUsername(user.getUsername());
-			apientity.setCreatetime(new Date());
+			apientity.setUserId(user.getId());
+			apientity.setUserName(user.getUserName());
+			apientity.setCreateTime(new Date());
 
 			ApiVersion version = new ApiVersion();
 			version.setApiId(apientity.getId());
-			apientity.setApiversion(version);
+			apientity.setApiVersion(version);
 
 			// 过滤apienname不能以/开头和结尾
-			apientity.setApienname(apientity.getApienname().replaceAll("/", ""));
+			apientity.setApiEnName(apientity.getApiEnName().replaceAll("/", ""));
 
 			addAPI(apientity);
 
@@ -302,20 +302,20 @@ public class APIServiceImpl implements IAPIService {
 			// 开启版本控制
 			
 			apientity.setId(UUID.randomUUID().toString().replace("-", ""));
-			apientity.setUserid(user.getId());
-			apientity.setUsername(user.getUsername());
-			apientity.setCreatetime(new Date());
+			apientity.setUserId(user.getId());
+			apientity.setUserName(user.getUserName());
+			apientity.setCreateTime(new Date());
 
 			
-			int num = updApiVersionByApiid(apientity.getApiversion().getApiId());
+			int num = updApiVersionByApiid(apientity.getApiVersion().getApiId());
 			_LOGGER.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");
 			
 			// TODO 前端传入版本号和newVersion字段吗？
-			apientity.getApiversion().setNewVersion(true);
+			apientity.getApiVersion().setNewVersion(true);
 
 			//如果没有传入版本的apiId则重新生成apiId
-			if(StringUtils.isBlank(apientity.getApiversion().getApiId())){
-				apientity.getApiversion().setApiId(apientity.getId());
+			if(StringUtils.isBlank(apientity.getApiVersion().getApiId())){
+				apientity.getApiVersion().setApiId(apientity.getId());
 			}
 			
 			addAPI(apientity);
@@ -338,24 +338,24 @@ public class APIServiceImpl implements IAPIService {
 				return result;
 			}
 
-			String appId = api.getAppid();
+			String appId = api.getAppId();
 			AppEntity app = appService.findById(appId);
 
 			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 
 			// 添加网关访问地址
-			AppEntity appEntity = appService.findById(api.getAppid());
+			AppEntity appEntity = appService.findById(api.getAppId());
 			
 			List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 			List<String> gatewayUrlList = new ArrayList<String>();
 
 			for (GatewayColonyEntity gatewayColonyEntity : colList) {
 				
-				gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+appEntity.getAppkey()+"/" + api.getApienname()+"/"+api.getApiversion().getVersion()+"/");
+				gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+appEntity.getAppKey()+"/" + api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
 			}
 			jsonObject.put("gatewayUrls", gatewayUrlList);
 
-			jsonObject.put("appname", app.getAppname());
+			jsonObject.put("appname", app.getAppName());
 			result.setSuccessMessage("");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -373,10 +373,10 @@ public class APIServiceImpl implements IAPIService {
 
 			APIEntity apiParam = new APIEntity();
 			if (org.springframework.util.StringUtils.hasText(apiId)) {
-				apiParam.setAppid(apiId);
+				apiParam.setAppId(apiId);
 			}
 			if (org.springframework.util.StringUtils.hasText(apiChName)) {
-				apiParam.setApichname(apiChName);
+				apiParam.setApiChName(apiChName);
 			}
 			if (org.springframework.util.StringUtils.hasText(checkState)) {
 				int state = Integer.parseInt(checkState);
@@ -384,11 +384,12 @@ public class APIServiceImpl implements IAPIService {
 			}
 
 			Page<APIEntity> ds = findApisByEntity(apiParam, currentPage, pageSize);
+			@SuppressWarnings("unchecked")
 			List<APIEntity> items = (List<APIEntity>) ds.getItems();
 			List<String> apiIdList = new ArrayList<>(items.size());
 			// 构建apiId集合
 			for (APIEntity apiEntity : items) {
-				apiEntity.setApp(appService.findById(apiEntity.getAppid()));
+				apiEntity.setAppEntity(appService.findById(apiEntity.getAppId()));
 				apiIdList.add(apiEntity.getId());
 			}
 

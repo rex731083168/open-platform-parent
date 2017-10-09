@@ -31,30 +31,30 @@ public class APIEntity implements Serializable {
 	private String id;
 	/** 所属功能分组的标识 */
 	@Field("appid")
-	private String appid;
+	private String appId;
 	/** 用户标识 */
-	@Field("userid")
-	private String userid;
+	@Field("userId")
+	private String userId;
 	
 	/** 用户姓名 */
-	@Field("username")
-	private String username;
+	@Field("userName")
+	private String userName;
 	
 	/** 接口名称 */
-	@Field("apichname")
-	private String apichname;
+	@Field("apiChName")
+	private String apiChName;
 	/** 接口中文名称 */
-	@Field("apienname")
-	private String apienname;
+	@Field("apiEnName")
+	private String apiEnName;
 	/** 接口地址 */
-	@Field("testendpoint")
-	private String testendpoint;
+	@Field("testEndPoint")
+	private String testEndPoint;
 	/** 接口地址 */
-	@Field("endpoint")
-	private String endpoint;
+	@Field("endPoint")
+	private String endPoint;
 	/** http方法GET或POST */
-	@Field("httpmethod")
-	private String httpmethod;
+	@Field("httpMethod")
+	private String httpMethod;
 	/** http header参数 */
 	@Field("headers")
 	private List<SubArgEntity> headers;
@@ -65,14 +65,14 @@ public class APIEntity implements Serializable {
 	@Field("result")
 	private List<RetEntity> result;
 	/** 返回结果示例 */
-	@Field("retexample")
-	private RetExamEntity retexample;
+	@Field("retExample")
+	private RetExamEntity retExample;
 	/** 错误代码描述 */
-	@Field("errcodes")
-	private List<ErrorCodeEntity> errcodes;
+	@Field("errCodes")
+	private List<ErrorCodeEntity> errCodes;
 	/** api接口版本信息 */
-	@Field("apiversion")
-	private ApiVersion apiversion;
+	@Field("apiVersion")
+	private ApiVersion apiVersion;
 	
 	/** 接口描述 */
 	@Field("desc")
@@ -81,24 +81,24 @@ public class APIEntity implements Serializable {
 	@Field("state")
 	private int state;
 	/** 调用次数限制（次/每天），0为不可调用，-1为无限制 */
-	@Field("countbyday")
-	private int countbyday;
+	@Field("countByDay")
+	private int countByDay;
 	
 	 /** 审核状态0:初始，1:提交审核，2:通过，3:未通过*/
-    @Field("checkstate")
+    @Field("checkState")
     private Integer checkState;
         
     /** 审核备注  */
-    @Field("checkmem")
+    @Field("checkMem")
     private String checkMem;
     
     /** 最大配额*/
-    @Field("quota_max")
-    private int quota_max;
+    @Field("quotaMax")
+    private int quotaMax;
     
     /** 最大配额 重置周期 */
-    @Field("quota_renewal_rate")
-    private int quota_renewal_rate;
+    @Field("quotaRenewalRate")
+    private int quotaRenewalRate;
     
     /** 频次  */
     @Field("rate")
@@ -108,8 +108,8 @@ public class APIEntity implements Serializable {
     @Field("per")
     private int per;
     
-    @Field("createtime")
-    private Date createtime;
+    @Field("createTime")
+    private Date createTime;
     
     /***
      * 密钥列表
@@ -119,32 +119,7 @@ public class APIEntity implements Serializable {
     
     /** 服务分类信息 */
     @Transient
-    private AppEntity app;
-    
-    
-	public AppEntity getApp() {
-		return app;
-	}
-
-	public void setApp(AppEntity app) {
-		this.app = app;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public Date getCreatetime() {
-		return createtime;
-	}
-
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
-	}
+    private AppEntity appEntity;
 
 	public String getId() {
 		return id;
@@ -154,60 +129,68 @@ public class APIEntity implements Serializable {
 		this.id = id;
 	}
 
-	public String getAppid() {
-		return appid;
+	public String getAppId() {
+		return appId;
 	}
 
-	public void setAppid(String appid) {
-		this.appid = appid;
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
-	public String getApichname() {
-		return apichname;
+	public String getUserId() {
+		return userId;
 	}
 
-	public String getUserid() {
-		return userid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public void setUserid(String userid) {
-		this.userid = userid;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setApichname(String apichname) {
-		this.apichname = apichname;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
-	public String getApienname() {
-		return apienname;
+	public String getApiChName() {
+		return apiChName;
 	}
 
-	public void setApienname(String apienname) {
-		this.apienname = apienname;
+	public void setApiChName(String apiChName) {
+		this.apiChName = apiChName;
 	}
 
-	public String getTestendpoint() {
-		return testendpoint;
+	public String getApiEnName() {
+		return apiEnName;
 	}
 
-	public void setTestendpoint(String testendpoint) {
-		this.testendpoint = testendpoint;
+	public void setApiEnName(String apiEnName) {
+		this.apiEnName = apiEnName;
 	}
 
-	public String getEndpoint() {
-		return endpoint;
+	public String getTestEndPoint() {
+		return testEndPoint;
 	}
 
-	public void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
+	public void setTestEndPoint(String testEndPoint) {
+		this.testEndPoint = testEndPoint;
 	}
 
-	public String getHttpmethod() {
-		return httpmethod;
+	public String getEndPoint() {
+		return endPoint;
 	}
 
-	public void setHttpmethod(String httpmethod) {
-		this.httpmethod = httpmethod;
+	public void setEndPoint(String endPoint) {
+		this.endPoint = endPoint;
+	}
+
+	public String getHttpMethod() {
+		return httpMethod;
+	}
+
+	public void setHttpMethod(String httpMethod) {
+		this.httpMethod = httpMethod;
 	}
 
 	public List<SubArgEntity> getHeaders() {
@@ -226,20 +209,36 @@ public class APIEntity implements Serializable {
 		this.args = args;
 	}
 
-	public RetExamEntity getRetexample() {
-		return retexample;
+	public List<RetEntity> getResult() {
+		return result;
 	}
 
-	public void setRetexample(RetExamEntity retexample) {
-		this.retexample = retexample;
+	public void setResult(List<RetEntity> result) {
+		this.result = result;
 	}
 
-	public List<ErrorCodeEntity> getErrcodes() {
-		return errcodes;
+	public RetExamEntity getRetExample() {
+		return retExample;
 	}
 
-	public void setErrcodes(List<ErrorCodeEntity> errcodes) {
-		this.errcodes = errcodes;
+	public void setRetExample(RetExamEntity retExample) {
+		this.retExample = retExample;
+	}
+
+	public List<ErrorCodeEntity> getErrCodes() {
+		return errCodes;
+	}
+
+	public void setErrCodes(List<ErrorCodeEntity> errCodes) {
+		this.errCodes = errCodes;
+	}
+
+	public ApiVersion getApiVersion() {
+		return apiVersion;
+	}
+
+	public void setApiVersion(ApiVersion apiVersion) {
+		this.apiVersion = apiVersion;
 	}
 
 	public String getDesc() {
@@ -258,20 +257,12 @@ public class APIEntity implements Serializable {
 		this.state = state;
 	}
 
-	public int getCountbyday() {
-		return countbyday;
+	public int getCountByDay() {
+		return countByDay;
 	}
 
-	public void setCountbyday(int countbyday) {
-		this.countbyday = countbyday;
-	}
-
-	public List<RetEntity> getResult() {
-		return result;
-	}
-
-	public void setResult(List<RetEntity> result) {
-		this.result = result;
+	public void setCountByDay(int countByDay) {
+		this.countByDay = countByDay;
 	}
 
 	public Integer getCheckState() {
@@ -290,20 +281,20 @@ public class APIEntity implements Serializable {
 		this.checkMem = checkMem;
 	}
 
-	public int getQuota_max() {
-		return quota_max;
+	public int getQuotaMax() {
+		return quotaMax;
 	}
 
-	public void setQuota_max(int quota_max) {
-		this.quota_max = quota_max;
+	public void setQuotaMax(int quotaMax) {
+		this.quotaMax = quotaMax;
 	}
 
-	public int getQuota_renewal_rate() {
-		return quota_renewal_rate;
+	public int getQuotaRenewalRate() {
+		return quotaRenewalRate;
 	}
 
-	public void setQuota_renewal_rate(int quota_renewal_rate) {
-		this.quota_renewal_rate = quota_renewal_rate;
+	public void setQuotaRenewalRate(int quotaRenewalRate) {
+		this.quotaRenewalRate = quotaRenewalRate;
 	}
 
 	public int getRate() {
@@ -322,6 +313,14 @@ public class APIEntity implements Serializable {
 		this.per = per;
 	}
 
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	public List<ApiSecretKey> getApiSecret() {
 		return apiSecret;
 	}
@@ -330,24 +329,27 @@ public class APIEntity implements Serializable {
 		this.apiSecret = apiSecret;
 	}
 
-	public ApiVersion getApiversion() {
-		return apiversion;
+	public AppEntity getAppEntity() {
+		return appEntity;
 	}
 
-	public void setApiversion(ApiVersion apiversion) {
-		this.apiversion = apiversion;
+	public void setAppEntity(AppEntity appEntity) {
+		this.appEntity = appEntity;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
 	public String toString() {
-		return "APIEntity [id=" + id + ", appid=" + appid + ", userid=" + userid + ", username=" + username
-				+ ", apichname=" + apichname + ", apienname=" + apienname + ", testendpoint=" + testendpoint
-				+ ", endpoint=" + endpoint + ", httpmethod=" + httpmethod + ", headers=" + headers + ", args=" + args
-				+ ", result=" + result + ", retexample=" + retexample + ", errcodes=" + errcodes + ", apiversion="
-				+ apiversion + ", desc=" + desc + ", state=" + state + ", countbyday=" + countbyday + ", checkState="
-				+ checkState + ", checkMem=" + checkMem + ", quota_max=" + quota_max + ", quota_renewal_rate="
-				+ quota_renewal_rate + ", rate=" + rate + ", per=" + per + ", createtime=" + createtime + ", apiSecret="
-				+ apiSecret + ", app=" + app + "]";
+		return "APIEntity [id=" + id + ", appId=" + appId + ", userId=" + userId + ", userName=" + userName
+				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", testEndPoint=" + testEndPoint
+				+ ", endPoint=" + endPoint + ", httpMethod=" + httpMethod + ", headers=" + headers + ", args=" + args
+				+ ", result=" + result + ", retExample=" + retExample + ", errCodes=" + errCodes + ", apiVersion="
+				+ apiVersion + ", desc=" + desc + ", state=" + state + ", countByDay=" + countByDay + ", checkState="
+				+ checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax + ", quotaRenewalRate="
+				+ quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime=" + createTime + ", apiSecret="
+				+ apiSecret + ", appEntity=" + appEntity + "]";
 	}
-	
 }

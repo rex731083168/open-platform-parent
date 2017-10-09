@@ -142,7 +142,7 @@ public class KeyController {
 			String key = UUID.randomUUID().toString();
 			secretKey.setSecretKey(key);
 			secretKey.setUserId(user.getId());
-			secretKey.setUserName(user.getUsername());
+			secretKey.setUserName(user.getUserName());
 			secretKey.setCreateDate(new Date());
 			secretKey.setApiId(apiId);
 			secretKey.setCheckState(1);

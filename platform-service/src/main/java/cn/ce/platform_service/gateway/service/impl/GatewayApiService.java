@@ -73,27 +73,27 @@ public class GatewayApiService {
 			
 		}else if(checkState == 2){
 	
-			List<APIEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiversion().getApiId());
+			List<APIEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiVersion().getApiId());
 
-			String apiName = apiList.get(0).getApienname();
+			String apiName = apiList.get(0).getApiEnName();
 			
 			//这里的apiId已经和传进来的参数apiId有了不用的有意义，传进来的apiId是具体到某一个版本的apiId
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
-			apiId = apiList.get(0).getApiversion().getApiId();
+			apiId = apiList.get(0).getApiVersion().getApiId();
 			
-			AppEntity appEntity = appService.findById(apiList.get(0).getAppid());
+			AppEntity appEntity = appService.findById(apiList.get(0).getAppId());
 			
 			// TODO 监听路径是否需要加上appKey
-			String listenPath = "/"+appEntity.getAppkey()+"/"+apiName+"/";
+			String listenPath = "/"+appEntity.getAppKey()+"/"+apiName+"/";
 			
 			Map<String,String> map = new HashMap<String,String>();
 			
 			for (APIEntity entity : apiList) {
 				if(entity.getCheckState() == 2 ){
-					map.put(entity.getApiversion().getVersion()+"", entity.getTestendpoint());
+					map.put(entity.getApiVersion().getVersion()+"", entity.getTestEndPoint());
 				}
 			}
-			map.put(tempEntity.getApiversion().getVersion()+"", tempEntity.getTestendpoint());
+			map.put(tempEntity.getApiVersion().getVersion()+"", tempEntity.getTestEndPoint());
 			
 			
 			for (String key : map.keySet()) {
@@ -157,8 +157,8 @@ public class GatewayApiService {
 			//2、如果存在先在网关中添加key，否则返回错误结果
 			
 			Result<String> res1 = GatewayUtils.addKeyToGateway(
-					null,apiEntity.getRate(),apiEntity.getPer(),apiEntity.getQuota_max(),apiEntity.getQuota_renewal_rate(),
-					apiEntity.getApienname(),apiEntity.getId(),secretKey,apiEntity.getApiversion().getVersion());
+					null,apiEntity.getRate(),apiEntity.getPer(),apiEntity.getQuotaMax(),apiEntity.getQuotaRenewalRate(),
+					apiEntity.getApiEnName(),apiEntity.getId(),secretKey,apiEntity.getApiVersion().getVersion());
 			
 			if(res1.getStatus() ==Status.FAILED){
 				result.setMessage("当前网关集群不可用。请稍后再试");
@@ -256,26 +256,26 @@ public class GatewayApiService {
 			
 		}else if(checkState == 2){ //添加api到网关后分配client和secret，发生异常回滚
 	
-			List<APIEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiversion().getApiId());
+			List<APIEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiVersion().getApiId());
 
-			String apiName = apiList.get(0).getApienname();
+			String apiName = apiList.get(0).getApiEnName();
 			
 			//这里的apiId已经和传进来的参数apiId有了不用的有意义，传进来的apiId是具体到某一个版本的apiId
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
-			apiId = apiList.get(0).getApiversion().getApiId();
+			apiId = apiList.get(0).getApiVersion().getApiId();
 			
-			AppEntity appEntity = appService.findById(apiList.get(0).getAppid());
+			AppEntity appEntity = appService.findById(apiList.get(0).getAppId());
 			// TODO 监听路径是否需要加上appKey
-			String listenPath = "/"+appEntity.getAppkey()+"/"+apiName+"/";
+			String listenPath = "/"+appEntity.getAppKey()+"/"+apiName+"/";
 			
 			Map<String,String> map = new HashMap<String,String>();
 			
 			for (APIEntity entity : apiList) {
 				if(entity.getCheckState() == 2 ){
-					map.put(entity.getApiversion().getVersion()+"", entity.getTestendpoint());
+					map.put(entity.getApiVersion().getVersion()+"", entity.getTestEndPoint());
 				}
 			}
-			map.put(tempEntity.getApiversion().getVersion()+"", tempEntity.getTestendpoint());
+			map.put(tempEntity.getApiVersion().getVersion()+"", tempEntity.getTestEndPoint());
 			
 			
 			for (String key : map.keySet()) {
@@ -289,7 +289,7 @@ public class GatewayApiService {
 //			}else{
 				//res1 = GatewayUtils.postApiToGateway2(apiName,apiId,listenPath,map,false);
 //			}
-				res1 = GatewayUtils.postApiToGateway3(tempEntity.getApienname(), apiId, listenPath, map,false);
+				res1 = GatewayUtils.postApiToGateway3(tempEntity.getApiEnName(), apiId, listenPath, map,false);
 			
 			
 			//1、修改网关,发生异常回滚
