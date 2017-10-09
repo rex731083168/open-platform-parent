@@ -18,11 +18,8 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
-<<<<<<< Upstream, based on branch 'feature/review' of http://gitlab.300.cn/paas-code/open-platform-parent.git
 import cn.ce.platform_service.util.SmsUtil;
-import cn.ce.platform_service.util.Util;
-=======
->>>>>>> 155a2fa 20170930
+
 
 /**
  * @author 作者 E -mail: dingjia@300.cn 创建时间：2017年7月17日 下午3:17:22
