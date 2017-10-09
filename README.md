@@ -1,1 +1,34 @@
-master
+运行环境》》》》》
+编译环境:jdk 1.8
+web容器:推荐tomcat 8.5以上
+
+项目结构说明》》》
+platform-console(前端访问)   >> war - tomcat
+platform-manage(后台审核)  >> war - tomcat
+platform-oauth-tykcode(对接cas系统,生成tykcode服务)   >> war - tomcat
+platform-service(jar包服务 为console / manage / oauth-tykcode)提供服务 >> jar
+
+项目开发手册及规范》》》
+具体项目规范常见wiki:http:${wiki.url}
+
+
+项目构建》》》
+进入 paas-parent目录下，执行命令：mvn clean install package –Plocal
+
+
+项目配置文件说明》》》
+项目采取profile环境自适应配置方式,本机开发时，查找对应应用的src.main.filters/local.properties配置文件
+mongo* = mongoDB相关配置
+base.log.dir 项目日志文件输出盘符目录
+error.report.mail 错误日志发送邮件地址 
+error.report.size 单位(k) 当错误日志文件达到${size}k时，发送邮件至${error.report.mail}邮箱中进行监控报警
+
+
+
+versions:
+1.0.0
+实现开放平台1期需求
+1.0.1
+整合es服务至platform-console服务中
+1.0.2
+重构代码，优化接口入参出参格式，log4j日志规范等
