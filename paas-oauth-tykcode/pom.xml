@@ -14,7 +14,6 @@
 		<platform.service.version>2.0.1-SNAPSHOT</platform.service.version>
 	</properties>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>cn.ce</groupId>

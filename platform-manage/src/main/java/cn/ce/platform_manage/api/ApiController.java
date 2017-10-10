@@ -128,14 +128,14 @@ public class ApiController {
 			org.json.JSONObject jsonObject = new org.json.JSONObject(api);
 
 			// 添加封装信息
-			AppEntity appEntity = appService.findById(api.getAppid());
+			AppEntity appEntity = appService.findById(api.getAppId());
 
 			List<String> gatewayUrlList = new ArrayList<String>();
 			for (GatewayColonyEntity gatewayColonyEntity : GatewayUtils.getAllGatewayColony()) {
 				gatewayUrlList
-						.add(gatewayColonyEntity.getColUrl() + "/" + appEntity.getAppkey() + "/" + api.getApienname());
+						.add(gatewayColonyEntity.getColUrl() + "/" + appEntity.getAppKey() + "/" + api.getApiEnName());
 			}
-			jsonObject.put("appname", appEntity.getAppname());
+			jsonObject.put("appName", appEntity.getAppName());
 			jsonObject.put("gatewayUrls", gatewayUrlList);
 			
 			result.setSuccessData(jsonObject);

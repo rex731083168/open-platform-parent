@@ -3,10 +3,10 @@ package cn.ce.platform_service.oauth.entity;
 public class AuthorizeClientEntity {
 
 	 /** 最大配额*/
-    private int quota_max;
+    private int quotaMax;
     
     /** 最大配额 重置周期 */
-    private int quota_renewal_rate;
+    private int quotaRenewalRate;
     
     /** 频次  */
     private int rate;
@@ -18,58 +18,24 @@ public class AuthorizeClientEntity {
     
     private Integer expires;
     
-    private int quota_renews;
+    private int quotaRenews;
     
-    private int quota_remaining;
-    
-    
+    private int quotaRemaining;
 
-	public int getAllowance() {
-		return allowance;
+	public int getQuotaMax() {
+		return quotaMax;
 	}
 
-	public void setAllowance(int allowance) {
-		this.allowance = allowance;
+	public void setQuotaMax(int quotaMax) {
+		this.quotaMax = quotaMax;
 	}
 
-	public Integer getExpires() {
-		return expires;
+	public int getQuotaRenewalRate() {
+		return quotaRenewalRate;
 	}
 
-	public void setExpires(Integer expires) {
-		this.expires = expires;
-	}
-
-	public int getQuota_renews() {
-		return quota_renews;
-	}
-
-	public void setQuota_renews(int quota_renews) {
-		this.quota_renews = quota_renews;
-	}
-
-	public int getQuota_remaining() {
-		return quota_remaining;
-	}
-
-	public void setQuota_remaining(int quota_remaining) {
-		this.quota_remaining = quota_remaining;
-	}
-
-	public int getQuota_max() {
-		return quota_max;
-	}
-
-	public void setQuota_max(int quota_max) {
-		this.quota_max = quota_max;
-	}
-
-	public int getQuota_renewal_rate() {
-		return quota_renewal_rate;
-	}
-
-	public void setQuota_renewal_rate(int quota_renewal_rate) {
-		this.quota_renewal_rate = quota_renewal_rate;
+	public void setQuotaRenewalRate(int quotaRenewalRate) {
+		this.quotaRenewalRate = quotaRenewalRate;
 	}
 
 	public int getRate() {
@@ -87,8 +53,44 @@ public class AuthorizeClientEntity {
 	public void setPer(int per) {
 		this.per = per;
 	}
-    
 
-    
+	public int getAllowance() {
+		return allowance;
+	}
+
+	public void setAllowance(int allowance) {
+		this.allowance = allowance;
+	}
+
+	public Integer getExpires() {
+		return expires;
+	}
+
+	public void setExpires(Integer expires) {
+		this.expires = expires;
+	}
+
+	public int getQuotaRenews() {
+		return quotaRenews;
+	}
+
+	public void setQuotaRenews(int quotaRenews) {
+		this.quotaRenews = quotaRenews;
+	}
+
+	public int getQuotaRemaining() {
+		return quotaRemaining;
+	}
+
+	public void setQuotaRemaining(int quotaRemaining) {
+		this.quotaRemaining = quotaRemaining;
+	}
+
+	@Override
+	public String toString() {
+		return "AuthorizeClientEntity [quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate + ", rate="
+				+ rate + ", per=" + per + ", allowance=" + allowance + ", expires=" + expires + ", quotaRenews="
+				+ quotaRenews + ", quotaRemaining=" + quotaRemaining + "]";
+	}
 	
 }

@@ -40,11 +40,11 @@ public class AdminEntity implements Serializable {
     private String mem;
 
     /** 创建时间 */
-    @Field("createdate")
+    @Field("createDate")
     private Date createDate;
 
     /** 修改时间 */
-    @Field("updatedate")
+    @Field("updateDate")
     private Date updateDate;
 
     public String getId() {

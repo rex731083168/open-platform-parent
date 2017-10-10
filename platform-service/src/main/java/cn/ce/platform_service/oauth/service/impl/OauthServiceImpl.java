@@ -73,14 +73,14 @@ public class OauthServiceImpl implements IOauthService{
 			//获取api信息中相关配额 频次等限定
 			AuthorizeClientEntity ace = new AuthorizeClientEntity();
 			ace.setPer(findApiByClientId.getPer());
-			ace.setQuota_max(findApiByClientId.getQuotaMax());
-			ace.setQuota_renewal_rate(findApiByClientId.getQuotaRenewalRate());
+			ace.setQuotaMax(findApiByClientId.getQuotaMax());
+			ace.setQuotaRenewalRate(findApiByClientId.getQuotaRenewalRate());
 			ace.setRate(findApiByClientId.getRate());
 			
 			ace.setAllowance(ace.getRate());//等同于rate
 			ace.setExpires(-1);//默认值
-			ace.setQuota_renews(0);//默认值
-			ace.setQuota_remaining(ace.getQuota_max());//等同与quota_max
+			ace.setQuotaRenews(0);//默认值
+			ace.setQuotaRemaining(ace.getQuotaMax());//等同与quota_max
 			
 			//根据clientId,responseType,redirectURI,api等信息生成json
 			JSONObject json = generalRequestJson(clientId,response_type,URLEncoder.encode(redirect_uri, "UTF-8"),findApiByClientId,ace);
@@ -96,7 +96,7 @@ public class OauthServiceImpl implements IOauthService{
 			AppEntity appEntity = appService.findById(findApiByClientId.getAppId());
 			
 			// TODO 监听路径是否需要加上appKey
-			String listenPath = appEntity.getAppkey()+"/"+findApiByClientId.getApiEnName();/*+"/"+findApiByClientId.getVersion();*/
+			String listenPath = appEntity.getAppKey()+"/"+findApiByClientId.getApiEnName();/*+"/"+findApiByClientId.getVersion();*/
 			
 			//请求tyk参数
 			String params = sb.substring(0, sb.length()-1);

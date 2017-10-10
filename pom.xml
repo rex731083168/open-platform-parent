@@ -97,6 +97,7 @@
 			<name>public-group</name>
 			<url>http://10.12.40.200:8081/nexus/content/groups/public/</url>
 		</repository>
+	
 	</repositories>
 
 	<distributionManagement>

@@ -42,12 +42,15 @@ public class AppsController extends BaseController {
 	@Resource
 	private IAppService appService;
 	
-	/***
-	 * 添加服务分类
-	 * @param request
-	 * @param response
-	 * @param appname 服务分类名称
-	 * @return
+
+	/**
+	 * 
+	 * @Title: addGroup
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param : @param app
+	 * @param : @return
+	 * @return: Result<String>
+	 * @throws
 	 */
 	@RequestMapping(value = "/addGroup", method = RequestMethod.POST)
 	public Result<String> addGroup(@RequestBody AppEntity app) {
@@ -71,13 +74,15 @@ public class AppsController extends BaseController {
 		return appService.deleteGroup(id);
 	}
 
-	/***
-	 * 修改服务分类信息
-	 * @param request
-	 * @param response
-	 * @param id 服务分类id
-	 * @param appname 服务分类名称
-	 * @return
+
+	/**
+	 * 
+	 * @Title: modifyGroup
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param : @param app
+	 * @param : @return
+	 * @return: Result<String>
+	 * @throws
 	 */
 	@RequestMapping(value = "/modifyGroup", method = RequestMethod.POST)
 	public Result<String> modifyGroup(@RequestBody AppEntity app) {
@@ -86,14 +91,15 @@ public class AppsController extends BaseController {
 		return appService.modifyGroup1(app);
 	}
 	
-	
-	/***
-	 * 修改服务分类信息
-	 * @param request
-	 * @param response
-	 * @param id 服务分类id
-	 * @param appname 服务分类名称
-	 * @return
+
+	/**
+	 * 
+	 * @Title: auditGroupState
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param : @param id
+	 * @param : @param checkState
+	 * @param : @param remark
+	 * @throws
 	 */
 	@RequestMapping(value = "/auditGroup", method = RequestMethod.POST)
 	public Result<String> auditGroupState(String id, int checkState,String remark) {

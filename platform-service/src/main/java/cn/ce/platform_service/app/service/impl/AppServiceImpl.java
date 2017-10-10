@@ -114,10 +114,10 @@ public class AppServiceImpl implements IAppService {
 	public Result<AppEntity> checkAppIsHave(AppEntity entity) {
 		boolean isTrue = false;
 		Result<AppEntity> result = new Result<>();
-		AppEntity findAppByAppName = this.findAppByAppName(entity.getAppname());
+		AppEntity findAppByAppName = this.findAppByAppName(entity.getAppName());
 		if(null == findAppByAppName){
 			AppEntity app = new AppEntity();
-			app.setAppkey(entity.getAppkey());
+			app.setAppKey(entity.getAppKey());
 			List<AppEntity> findAppsByEntity = findAppsByEntity(app);
 			if(findAppsByEntity.isEmpty()){
 				isTrue = true;
@@ -178,7 +178,7 @@ public class AppServiceImpl implements IAppService {
 				JSONObject obj = new JSONObject();
 				AppEntity app = list.get(i);
 				obj.put("id", app.getId());
-				obj.put("appname", app.getAppname());
+				obj.put("appname", app.getAppName());
 				jsonArray.put(obj);
 			}
 			data.put("items", jsonArray);
@@ -208,11 +208,11 @@ public class AppServiceImpl implements IAppService {
 				} else {
 					app.setCheckState(0);
 				}
-				app.setUserid(user.getId());
-				app.setUsername(user.getUsername());
+				app.setUserId(user.getId());
+				app.setUserName(user.getUserName());
 
 				// appKey不能以/开头和结尾
-				if (app.getAppkey().startsWith("/") || app.getAppkey().endsWith("/")) {
+				if (app.getAppKey().startsWith("/") || app.getAppKey().endsWith("/")) {
 					result.setErrorMessage("appKey不能以/开头和/结尾");
 					return result;
 				}
@@ -263,8 +263,8 @@ public class AppServiceImpl implements IAppService {
 				app.setNeqId(app.getId());// 查询非当前修改数据进行判断
 				List<AppEntity> findAppsByEntity = findAppsByEntity(app);
 				if (findAppsByEntity.isEmpty()) {
-					appAfter.setAppname(app.getAppname().trim());
-					appAfter.setAppkey(app.getAppkey().trim());
+					appAfter.setAppName(app.getAppName().trim());
+					appAfter.setAppKey(app.getAppKey().trim());
 					modifyById(appAfter);
 					result.setSuccessMessage("");
 				} else {
@@ -284,7 +284,7 @@ public class AppServiceImpl implements IAppService {
 		Result<Page<AppEntity>> result = new Result<Page<AppEntity>>();
 		try {
 			AppEntity entity = new AppEntity();
-			entity.setUserid(userId);
+			entity.setUserId(userId);
 			Page<AppEntity> ds = findAppsByEntity(entity, currentPage, pageSize);
 			result.setSuccessData(ds);
 			
@@ -327,8 +327,8 @@ public class AppServiceImpl implements IAppService {
 				app.setId(uuid);
 				app.setCreateDate(new Date());
 				app.setCheckState(2); //后台系统添加服务分类默认审核通过
-				app.setUserid(user.getId());
-				app.setUsername(user.getUserName());
+				app.setUserId(user.getId());
+				app.setUserName(user.getUserName());
 				addApp(app);
 				result.setSuccessData(uuid);
 			}else{
@@ -375,8 +375,8 @@ public class AppServiceImpl implements IAppService {
 				app.setNeqId(app.getId());//查询非当前修改数据进行判断
 				List<AppEntity> findAppsByEntity = findAppsByEntity(app);
 				if (findAppsByEntity.isEmpty()) {
-					appAfter.setAppname(app.getAppname().trim());
-					appAfter.setAppkey(app.getAppkey().trim());
+					appAfter.setAppName(app.getAppName().trim());
+					appAfter.setAppKey(app.getAppKey().trim());
 					modifyById(appAfter);
 					result.setSuccessMessage("");
 				}else{
@@ -399,7 +399,7 @@ public class AppServiceImpl implements IAppService {
 			AppEntity appParam = new AppEntity();
 			
 			if(StringUtils.isNotBlank(appName)){
-				appParam.setAppname(appName);
+				appParam.setAppName(appName);
 			}
 			
 			if(StringUtils.isNotBlank(checkState)){

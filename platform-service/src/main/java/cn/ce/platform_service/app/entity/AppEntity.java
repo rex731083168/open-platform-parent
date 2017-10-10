@@ -27,29 +27,29 @@ public class AppEntity implements Serializable{
 	private String id;
 	
 	/** 提供者标识 */
-	@Field("userid")
-	private String userid;
+	@Field("userId")
+	private String userId;
 	
 	/** 提供者姓名 */
-	@Field("username")
-	private String username;
+	@Field("userName")
+	private String userName;
 	
-	@Field("appkey")
-	private String appkey;
+	@Field("appKey")
+	private String appKey;
 	
 	/** 功能分组名称 */
-	@Field("appname")
-	private String appname;
+	@Field("appName")
+	private String appName;
 	
-	@Field("createdate")
+	@Field("createDate")
 	private Date createDate;
 	
 	 /** 审核状态0:初始，1:提交审核，2:通过，3:未通过*/
-    @Field("checkstate")
+    @Field("checkState")
     private Integer checkState;
         
     /** 审核备注  */
-    @Field("checkmem")
+    @Field("checkMem")
     private String checkMem;
     
     /** dao判断刨除当前修改id的数据进行判断时赋值 */
@@ -64,20 +64,44 @@ public class AppEntity implements Serializable{
 		this.id = id;
 	}
 
-	public String getUserid() {
-		return userid;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUserid(String userid) {
-		this.userid = userid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getAppname() {
-		return appname;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setAppname(String appname) {
-		this.appname = appname;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getAppKey() {
+		return appKey;
+	}
+
+	public void setAppKey(String appKey) {
+		this.appKey = appKey;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
 	public Integer getCheckState() {
@@ -96,30 +120,6 @@ public class AppEntity implements Serializable{
 		this.checkMem = checkMem;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getAppkey() {
-		return appkey;
-	}
-
-	public void setAppkey(String appkey) {
-		this.appkey = appkey;
-	}
-
 	public String getNeqId() {
 		return neqId;
 	}
@@ -127,7 +127,16 @@ public class AppEntity implements Serializable{
 	public void setNeqId(String neqId) {
 		this.neqId = neqId;
 	}
-	
-	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "AppEntity [id=" + id + ", userId=" + userId + ", userName=" + userName + ", appKey=" + appKey
+				+ ", appName=" + appName + ", createDate=" + createDate + ", checkState=" + checkState + ", checkMem="
+				+ checkMem + ", neqId=" + neqId + "]";
+	}
 
 }

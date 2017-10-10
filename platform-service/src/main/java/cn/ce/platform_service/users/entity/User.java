@@ -22,8 +22,8 @@ public class User implements Serializable {
 	@Id
 	private String id;
 	/** 用户名称 */
-	@Field("username")
-	private String username;
+	@Field("userName")
+	private String userName;
 	/** 密码 */
 	@Field("password")
 	private String password;
@@ -37,21 +37,21 @@ public class User implements Serializable {
 	@Field("state")
 	private int state;
 	/** 所属服务分类 */
-	@Field("appid")
-	private String appid;
+	@Field("appId")
+	private String appId;
 	/** 用户类型  0:管理员，1:普通用户，2:提供者 */
 	@Field("userType")
 	private int userType;
 	/** 注册时间 */
-	@Field("regtime")
-	private Date regtime;
+	@Field("regTime")
+	private Date regTime;
 
 	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
-	@Field("checkstate")
+	@Field("checkState")
 	private int checkState;
 
 	/** 审核备注 */
-	@Field("checkmem")
+	@Field("checkMem")
 	private String checkMem;
 
 	/** 签名秘钥 */
@@ -65,12 +65,12 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPassword() {
@@ -105,12 +105,12 @@ public class User implements Serializable {
 		this.state = state;
 	}
 
-	public String getAppid() {
-		return appid;
+	public String getAppId() {
+		return appId;
 	}
 
-	public void setAppid(String appid) {
-		this.appid = appid;
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
 	public int getUserType() {
@@ -121,20 +121,12 @@ public class User implements Serializable {
 		this.userType = userType;
 	}
 
-	public Date getRegtime() {
-		return regtime;
+	public Date getRegTime() {
+		return regTime;
 	}
 
-	public void setRegtime(Date regtime) {
-		this.regtime = regtime;
-	}
-
-	public String getAppSecret() {
-		return appSecret;
-	}
-
-	public void setAppSecret(String appSecret) {
-		this.appSecret = appSecret;
+	public void setRegTime(Date regTime) {
+		this.regTime = regTime;
 	}
 
 	public int getCheckState() {
@@ -151,6 +143,25 @@ public class User implements Serializable {
 
 	public void setCheckMem(String checkMem) {
 		this.checkMem = checkMem;
+	}
+
+	public String getAppSecret() {
+		return appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		this.appSecret = appSecret;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email + ", tel="
+				+ tel + ", state=" + state + ", appId=" + appId + ", userType=" + userType + ", regTime=" + regTime
+				+ ", checkState=" + checkState + ", checkMem=" + checkMem + ", appSecret=" + appSecret + "]";
 	}
 
 }

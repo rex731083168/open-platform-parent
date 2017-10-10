@@ -16,50 +16,44 @@ public class RetExamEntity implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	/** 示例名称  */
-    private String exname;
+    private String exName;
     /** 类型 */
-    private String extype;
+    private String exType;
     /** 状态码 */
-    private String statecode;
+    private String stateCode;
     /** 值  */
-    private String exvalue;
-    
-    public String getExname() {
-        return exname;
-    }
-
-    public void setExname(String exname) {
-        this.exname = exname;
-    }
-
-    public String getExtype() {
-        return extype;
-    }
-
-    public void setExtype(String extype) {
-        this.extype = extype;
-    }
-
-    public String getStatecode() {
-        return statecode;
-    }
-
-    public void setStatecode(String statecode) {
-        this.statecode = statecode;
-    }
-
-    public String getExvalue() {
-        return exvalue;
-    }
-
-    public void setExvalue(String exvalue) {
-        this.exvalue = exvalue;
-    }
-
+    private String exValue;
+	public String getExName() {
+		return exName;
+	}
+	public void setExName(String exName) {
+		this.exName = exName;
+	}
+	public String getExType() {
+		return exType;
+	}
+	public void setExType(String exType) {
+		this.exType = exType;
+	}
+	public String getStateCode() {
+		return stateCode;
+	}
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+	public String getExValue() {
+		return exValue;
+	}
+	public void setExValue(String exValue) {
+		this.exValue = exValue;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	@Override
 	public String toString() {
-		return "RetExamEntity [exname=" + exname + ", extype=" + extype + ", statecode=" + statecode + ", exvalue="
-				+ exvalue + "]";
+		return "RetExamEntity [exName=" + exName + ", exType=" + exType + ", stateCode=" + stateCode + ", exValue="
+				+ exValue + "]";
 	}
     
 }

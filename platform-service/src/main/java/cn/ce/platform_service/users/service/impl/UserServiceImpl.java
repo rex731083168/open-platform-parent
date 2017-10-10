@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,13 +200,13 @@ public class UserServiceImpl implements IUserService {
 		
 		try {
 			User user = new User();
-			user.setUsername(userName.trim());
+			user.setUserName(userName.trim());
 			user.setPassword(password.trim());
 			user.setEmail(email.trim());
 			user.setTel(tel.trim());
 			user.setUserType(Integer.parseInt(userType));
 			user.setState(1);
-			user.setRegtime(new Date());
+			user.setRegTime(new Date());
 			String appsecret = Util.getRandomStrs(Constants.SECRET_LENGTH);
 			user.setAppSecret(appsecret);
 			addUser(user);
@@ -228,6 +226,7 @@ public class UserServiceImpl implements IUserService {
 
 		Result<Page<User>> result = new Result<Page<User>>();
 		Page<User> userList = getUsers(role, userName, checkState,state,currentPage, pageSize);
+		@SuppressWarnings("unchecked")
 		List<User> items = (List<User>) userList.getItems();
 		for (User user : items) {
 			user.setPassword("");

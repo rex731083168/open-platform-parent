@@ -91,7 +91,7 @@ public class ApplyServiceImpl implements IApplyService {
 		//新增
 		if(StringUtils.isBlank(entity.getId())){
 			entity.setUserId(entity.getUser().getId());
-			entity.setUserName(entity.getUser().getUsername());
+			entity.setUserName(entity.getUser().getUserName());
 			entity.setCreateDate(new Date());
 
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));

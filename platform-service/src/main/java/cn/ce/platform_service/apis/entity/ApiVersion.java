@@ -13,10 +13,16 @@ public class ApiVersion {
 	
 	private String version ;//api版本号
 	
-	private String versionRemark = "第一版";//版本说明
+	private String versionRemark;//版本说明
 	
-	private boolean newVersion = true;//是否为当前最新版本 true为是 false为否 
+	private boolean newVersion;//是否为当前最新版本 true为是 false为否 
 
+	
+	public ApiVersion(){
+		this.version = "第一版";
+		this.newVersion = true;
+	}
+	
 	public String getApiId() {
 		return apiId;
 	}

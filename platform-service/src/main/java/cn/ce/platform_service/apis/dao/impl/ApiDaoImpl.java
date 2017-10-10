@@ -22,7 +22,6 @@ import com.mongodb.WriteResult;
 import cn.ce.platform_service.apis.dao.IApiDAO;
 import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.common.Constants;
-import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.page.PageContext;
@@ -34,6 +33,7 @@ import cn.ce.platform_service.page.PageContext;
  * @author dingjia@300.cn
  *
  */
+@SuppressWarnings("deprecation")
 @Repository(value ="apiDao")
 public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiDAO {
     /** 定义 */
@@ -49,7 +49,8 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
         PageContext.init(1, Constants.PAGE_SIZE);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<APIEntity> getAPIs(String groupId) {
     	
         return super.findByField(appIdField, groupId, APIEntity.class);
@@ -117,7 +118,7 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
     }
 
 
-    @PostConstruct
+	@PostConstruct
     public void init() {
         boolean ext = mongoTemplate.collectionExists(APIEntity.class);
         if (!ext) {
@@ -164,20 +165,20 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 		//构建查询对象
 		Criteria c = new Criteria();
 		
-		if(StringUtils.isNotBlank(entity.getAppid())){
-			c.and("appid").is(entity.getAppid());
+		if(StringUtils.isNotBlank(entity.getAppId())){
+			c.and("appid").is(entity.getAppId());
 		}
 		
 		if(null != entity.getCheckState()){
 			c.and("checkstate").is(entity.getCheckState());
 		}
 		
-		if(StringUtils.isNotBlank(entity.getApichname())){
-			c.and("apichname").regex(entity.getApichname());
+		if(StringUtils.isNotBlank(entity.getApiChName())){
+			c.and("apichname").regex(entity.getApiChName());
 		}
 		
-		if(StringUtils.isNotBlank(entity.getUserid())){
-			c.and("userid").is(entity.getUserid());
+		if(StringUtils.isNotBlank(entity.getUserId())){
+			c.and("userid").is(entity.getUserId());
 		}
 		
 		//构建排序对象
@@ -206,6 +207,7 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 		return super.findInAsList("id", ids, "createtime", APIEntity.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public APIEntity findOneByFields(Map<String, Object> map) {
 		

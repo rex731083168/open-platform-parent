@@ -3,7 +3,6 @@ package cn.ce.platform_service.app.dao.impl;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Sort;
@@ -12,7 +11,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.app.dao.IAppDAO;
 import cn.ce.platform_service.app.entity.AppEntity;
 import cn.ce.platform_service.common.Constants;
@@ -141,13 +139,13 @@ public class AppDaoImpl extends AbstractBaseMongoDao<AppEntity> implements IAppD
 		//构建查询对象
 		Criteria c = new Criteria();
 		
-		if(StringUtils.isNotBlank(entity.getUserid())){
-			c.and("userid").is(entity.getUserid());
+		if(StringUtils.isNotBlank(entity.getUserId())){
+			c.and("userid").is(entity.getUserId());
 		}
 		
-		if(StringUtils.isNotBlank(entity.getAppname())){
-			Criteria c1 = Criteria.where("appname").regex(".*?"+entity.getAppname()+".*","i");
-			Criteria c2 = Criteria.where("appkey").regex(".*?"+entity.getAppname()+".*","i");
+		if(StringUtils.isNotBlank(entity.getAppName())){
+			Criteria c1 = Criteria.where("appname").regex(".*?"+entity.getAppName()+".*","i");
+			Criteria c2 = Criteria.where("appkey").regex(".*?"+entity.getAppName()+".*","i");
 			c.orOperator(c1,c2);
 		}
 		
@@ -155,8 +153,8 @@ public class AppDaoImpl extends AbstractBaseMongoDao<AppEntity> implements IAppD
 			c.and("id").ne(entity.getNeqId());
 		}
 		
-		if(StringUtils.isNotBlank(entity.getAppkey())){
-			c.and("appkey").is(entity.getAppkey());
+		if(StringUtils.isNotBlank(entity.getAppKey())){
+			c.and("appkey").is(entity.getAppKey());
 		}
 		
 		if(null != entity.getCheckState()){

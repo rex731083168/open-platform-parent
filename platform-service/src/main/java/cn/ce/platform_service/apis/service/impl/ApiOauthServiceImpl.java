@@ -95,33 +95,33 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		}
 		
 		
-		AppEntity appEntity = appService.findById(apiEntity.getAppid());
+		AppEntity appEntity = appService.findById(apiEntity.getAppId());
 
 		//拼接对象
 		ApiAuditEntity auditEntity = new ApiAuditEntity();
 		//auditEntity.setId(UUID.randomUUID().toString().replace("-", ""));
 		//auditEntity.setApiId(apiEntity.getApiversion().getApiId()); // TODO 这里的apiId是apiVersion里面的apiId，这是错误的
 		auditEntity.setApiId(apiEntity.getId());
-		auditEntity.setVersionApiId(apiEntity.getApiversion().getApiId());
-		auditEntity.setApiChName(apiEntity.getApichname());
-		auditEntity.setApiEnName(apiEntity.getApienname());
+		auditEntity.setVersionApiId(apiEntity.getApiVersion().getApiId());
+		auditEntity.setApiChName(apiEntity.getApiChName());
+		auditEntity.setApiEnName(apiEntity.getApiEnName());
 		auditEntity.setAppId(appEntity.getId());
-		auditEntity.setAppName(appEntity.getAppname());
-		auditEntity.setAppKey(appEntity.getAppkey());
+		auditEntity.setAppName(appEntity.getAppName());
+		auditEntity.setAppKey(appEntity.getAppKey());
 		auditEntity.setCheckState(1);
 		auditEntity.setUserId(user.getId());
-		auditEntity.setSupplier_id(apiEntity.getUserid());
-		auditEntity.setUserName(user.getUsername());
+		auditEntity.setSupplierId(apiEntity.getUserId());
+		auditEntity.setUserName(user.getUserName());
 		auditEntity.setPer(apiEntity.getPer());
 		auditEntity.setRate(apiEntity.getRate());
-		auditEntity.setQuotaMax(apiEntity.getQuota_max());
-		auditEntity.setQuotaRenewalRate(apiEntity.getQuota_renewal_rate());
+		auditEntity.setQuotaMax(apiEntity.getQuotaMax());
+		auditEntity.setQuotaRenewalRate(apiEntity.getQuotaRenewalRate());
 		auditEntity.setApplyId(applyEntity.getId());
 		auditEntity.setApplyTime(new Date());
 		auditEntity.setApplyName(applyEntity.getApplyName());
 		
-		if(apiEntity.getApiversion() != null && StringUtils.isNotBlank(apiEntity.getApiversion().getVersion())){
-			auditEntity.setVersion(apiEntity.getApiversion().getVersion());
+		if(apiEntity.getApiVersion() != null && StringUtils.isNotBlank(apiEntity.getApiVersion().getVersion())){
+			auditEntity.setVersion(apiEntity.getApiVersion().getVersion());
 		}
 		auditEntity.setClientId("");
 		auditEntity.setSecret("");
@@ -202,7 +202,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		try{
 			JSONObject job = new JSONObject();
 			//job.put("api_id", auditEntity.getApiId());
-			job.put("api_id", apiEntity.getApiversion().getApiId()); // TODO 这里申请client_id需要输入版本的api_id
+			job.put("api_id", apiEntity.getApiVersion().getApiId()); // TODO 这里申请client_id需要输入版本的api_id
 			
 			// TODO 这里的值是写死的，需要后期修改
 			//job.put("redirect_uri", URLEncoder.encode("/","UTF-8"));
