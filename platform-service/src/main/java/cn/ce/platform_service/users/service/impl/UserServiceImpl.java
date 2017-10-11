@@ -1,20 +1,16 @@
 package cn.ce.platform_service.users.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import cn.ce.platform_service.common.Constants;
-import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.mail.MailInfo;
@@ -24,7 +20,6 @@ import cn.ce.platform_service.users.dao.INewUserDao;
 import cn.ce.platform_service.users.dao.IUserDAO;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
-import cn.ce.platform_service.util.Util;
 
 /**
  * 
@@ -123,91 +118,17 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	
-	@Override
-	public Result<?> checkUserName(String username) {
-		
-		Result<String> result = new Result<String>();
-		User user = userDao.findUserByUserName(username);
-		
-		if(user != null){
-			result.setErrorMessage("当前用户名已存在，请重新输入");
-		}else{
-			result.setSuccessMessage("当前用户名可以使用");
-		}
-		return result;
-	}
+
 	
-	@Override
-	public boolean checkEmail(String email) {
-		
-		User user = userDao.findUserByEmail(email);
-		
-		//if(user != null && user.getCheckState() != 3){ // 当前email已经存在，且审核状态为审核失败，当前email仍然可以使用
-		if(user != null) {
-			return false;
-		}
-		return true;
-	}
+
+	
+
+
 
 	@Override
 	public User findByEmail(String email) {
 		
 		return userDao.findUserByEmail(email);
-	}
-
-	@Override
-	public Result<User> login(HttpSession session,String userName, String password) {
-
-		Result<User> result = new Result<User>();
-		User user = newUserDao.findUserByUsernameAndPwd(userName, password);
-		if (user == null) {
-			result.setErrorMessage("用户名或者密码错误", ErrorCodeNo.SYS008);
-			return result;
-		}
-		
-		_LOGGER.info("账号密码正确");
-		user.setPassword("");
-		session.setAttribute(Constants.SES_LOGIN_USER, user);
-		result.setSuccessData(user);
-		return result;
-	}
-
-	@Override
-	public Result<String> userRegister(String userName, String password, String email, String telNumber, Integer userType) {
-		
-		Result<String> result = new Result<String>();
-		
-		//校验用户名
-		User user1= userDao.findUserByUserName(userName);
-		if(user1 != null){
-			result.setErrorMessage("当前用户名已经存在", ErrorCodeNo.SYS009);
-			return result;
-		}
-		//校验邮箱
-		User user2 = userDao.findUserByEmail(email);
-		if(user2 != null){
-			result.setErrorMessage("当前邮箱已经被注册", ErrorCodeNo.SYS009);
-			return result;
-		}
-		//校验手机号
-		User user3 = newUserDao.findUserByTelNumber(telNumber);
-		if(user3 != null){
-			result.setErrorMessage("当前手机号已经被使用", ErrorCodeNo.SYS009);
-			return result;
-		}
-		
-		try {
-			// TODO appSecret使用Util生成的，这里有什么作用？
-			// TODO userType为int类型
-			User user = new User(null,userName,password,email,telNumber,1,null,userType,new Date(),0
-					,null,Util.getRandomStrs(Constants.SECRET_LENGTH));
-			newUserDao.save(user);
-			result.setSuccessMessage("添加成功");
-		} catch (Exception e) {
-			_LOGGER.error("error happens when execute save user to db",e);
-			result.setErrorMessage("");
-		}
-		return result;
 	}
 
 
@@ -282,4 +203,6 @@ public class UserServiceImpl implements IUserService {
 		}
 		return result;
 	}
+
+
 }

@@ -19,7 +19,6 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.entity.User;
-import cn.ce.platform_service.users.service.IUserService;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.SmsUtil;
 
@@ -44,7 +43,6 @@ public class UserController {
 	@Resource
 	private IConsoleUserService consoleUserService;
 
-	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public Result<?> userRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 			@RequestBody User user) {
@@ -77,6 +75,17 @@ public class UserController {
 		return consoleUserService.userRegister(user);
 	}
 
+	//用户登陆后认证信息
+	@RequestMapping(value="/authenticate", method=RequestMethod.POST)
+	public Result<?> userAuthenticate(
+			@RequestParam String userId,
+			@RequestParam String enterpriseName, //企业名称 
+			@RequestParam String idCard, //用户身份证号码
+			@RequestParam String userRealName //用户真实姓名
+			){
+			
+		return consoleUserService.authenticate(userId,enterpriseName,idCard,userRealName);
+	}
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Result<?> login(HttpSession session, 
 			@RequestParam String userName, 
