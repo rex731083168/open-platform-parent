@@ -28,5 +28,7 @@ public interface IConsoleUserService {
 	Result<?> checkUserName(String userName);
 
 	Result<?> modifyPassword(String telNumber, String newPassword);
+	//用户认证信息
+	Result<?> authenticate(String userId, String enterpriseName, String idCard, String userRealName);
 
 }
