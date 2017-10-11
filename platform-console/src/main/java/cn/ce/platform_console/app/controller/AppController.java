@@ -1,17 +1,12 @@
 package cn.ce.platform_console.app.controller;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +19,8 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.app.entity.AppEntity;
 import cn.ce.platform_service.app.service.IAppService;
-import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.page.Page;
-import cn.ce.platform_service.users.entity.User;
 
 @Controller
 @RequestMapping("/app")
@@ -37,9 +29,9 @@ public class AppController {
 	/** 日志对象 */
 	private static Logger logger = Logger.getLogger(AppController.class);
 
-	@Autowired
+	@Resource
 	private IAppService appService;
-    @Autowired
+    @Resource
     private IAPIService apiService;
 
 	@RequestMapping(value = "/appList", method = RequestMethod.POST)

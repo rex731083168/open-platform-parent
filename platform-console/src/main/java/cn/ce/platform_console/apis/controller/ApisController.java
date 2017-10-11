@@ -3,19 +3,18 @@ package cn.ce.platform_console.apis.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -32,36 +31,54 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
-@Controller
+/**
+ * @ClassName:  ApisController   
+ * @Description:前台api 控制类
+ * @author: makangwei
+ * @date:   2017年10月10日 下午8:15:17   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
+ *
+ */
+@RestController
 @RequestMapping("/apis")
 public class ApisController {
 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ApisController.class);
 
-	@Autowired
+	@Resource
 	private IAPIService apiService;
-	@Autowired
+	@Resource
 	private IAppService appService;
-	@Autowired
+	@Resource
 	private IApiSecretKeyService apiSecretKeyService;
-	@Autowired
+	@Resource
 	private IApiOauthService oauthService;
 
 	@RequestMapping(value = "/apiVerify", method = RequestMethod.POST)
-	@ResponseBody
 	public Result<String> apiVerify(
-			@RequestParam String apiid,
+			@RequestParam String apiId,
 			@RequestParam(required=false) String userName,
 			@RequestParam(required=false) String password
 			) {
 
-		return apiService.apiVerify(apiid,userName,password);
+		return apiService.apiVerify(apiId,userName,password);
 	}
-
+	
+	/**
+	 * 
+	 * @Title: publishApi
+	 * @Description: 提供者发布一个api，这时候还未审核
+	 * @author: makangwei
+	 * @date:   2017年10月10日 下午8:17:41  
+	 * @param : @param session
+	 * @param : @param apiEntity
+	 * @param : @return
+	 * @return: Result<String>
+	 * @throws
+	 */
 	@RequestMapping(value = "/publish", method = RequestMethod.POST)
-	@ResponseBody
-	public Result<String> publishAPI(HttpSession session, @RequestBody APIEntity apiEntity) {
+	public Result<String> publishApi(HttpSession session, @RequestBody APIEntity apiEntity) {
 			
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		
@@ -69,64 +86,33 @@ public class ApisController {
 		
 		return apiService.publishAPI(user, apiEntity);
 	}
-
+	
+	/**
+	 * 
+	 * @Title: modifyApi
+	 * @Description: 修改api，由前端控制，未发布到网关才可修改
+	 * @author: makangwei
+	 * @date:   2017年10月10日 下午8:19:15  
+	 * @param : @param apiEntity
+	 * @param : @return
+	 * @return: Result<String>
+	 * @throws
+	 */
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
-	@ResponseBody
 	public Result<String> modifyApi(@RequestBody APIEntity apiEntity){
 		
-		//校验参数
 		return apiService.modifyApi(apiEntity);
 	}
+	
 	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
-	@ResponseBody
-	public Result<String> show(String apiId) {
+	public Result<?> show(String apiId) {
 		
 		return apiService.show(apiId);
 	}
 
-	@RequestMapping(value = "/delApi", method = RequestMethod.GET)
-	@ResponseBody
-	public Result<String> delAPI(String apiId) {
-
-		return apiService.delById(apiId);
-	}
-
-	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
-	@ResponseBody
-	public Result<String> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
-			String appId,
-			String apiEnName){
-		
-		return apiService.checkApiEnName(apiEnName,appId);
-	}
-	
-	@RequestMapping(value="/checkApiChName",method=RequestMethod.POST)
-	@ResponseBody
-	public Result<String> checkApiChName(HttpServletRequest request,HttpServletResponse response,
-			@RequestParam String appId,
-			@RequestParam String apiChName){
-		
-		return apiService.checkApiChName(apiChName,appId);
-	}
-	@RequestMapping(value="/checkVersion",method=RequestMethod.GET,produces="application/json;charset=utf-8")
-	@ResponseBody
-	public Result<String> checkVersion(String apiId, String version){
-		
-		Result<String> result = new Result<String>();
-		if(StringUtils.isBlank(apiId)){
-			result.setMessage("apiId不能为空");
-			return result;
-		}if(StringUtils.isBlank(version)){
-			result.setMessage("version不能为空");
-			return result;
-		}
-		
-		return apiService.checkVersion(apiId,version);
-	}
-
 	@RequestMapping(value="/list2",method=RequestMethod.GET)
-	@ResponseBody
-	public Result<String> showApis2(String appId,String userId,String applyId,int currentPage,int pageSize){
+	public Result<String> showApis2(String appId, String userId, 
+			String applyId, int currentPage, int pageSize){
 		
 		APIEntity apiParam = new APIEntity();
 		apiParam.setAppId(appId);
@@ -169,9 +155,45 @@ public class ApisController {
 			return result;
 		}
 	}
+	
+	@RequestMapping(value = "/delApi", method = RequestMethod.GET)
+	public Result<String> delApi(String apiId) {
+		return apiService.delById(apiId);
+	}
+
+	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
+	public Result<String> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
+			String appId,
+			String apiEnName){
+		
+		return apiService.checkApiEnName(apiEnName,appId);
+	}
+	
+	@RequestMapping(value="/checkApiChName",method=RequestMethod.POST)
+	public Result<String> checkApiChName(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam String appId,
+			@RequestParam String apiChName){
+		
+		return apiService.checkApiChName(apiChName,appId);
+	}
+	
+	@RequestMapping(value="/checkVersion",method=RequestMethod.GET,produces="application/json;charset=utf-8")
+	public Result<String> checkVersion(String apiId, String version){
+		
+		Result<String> result = new Result<String>();
+		if(StringUtils.isBlank(apiId)){
+			result.setMessage("apiId不能为空");
+			return result;
+		}if(StringUtils.isBlank(version)){
+			result.setMessage("version不能为空");
+			return result;
+		}
+		
+		return apiService.checkVersion(apiId,version);
+	}
+	
 	@Deprecated //使用密钥授权，已过期
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	@ResponseBody
 	public String showAPIs(HttpServletRequest request, HttpServletResponse response, String appid, String userid,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
@@ -225,7 +247,6 @@ public class ApisController {
     @SuppressWarnings("unchecked")
 	@Deprecated //使用密钥授权已过期。使用者查询api列表
 	@RequestMapping(value = "/uselist", method = RequestMethod.GET)
-	@ResponseBody
 	public String showUseAPIs(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(required = true) String userid,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,

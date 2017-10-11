@@ -7,19 +7,19 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.gateway.dao.GatewayManageDao;
-import cn.ce.platform_service.gateway.dao.GatewayNodeManageDao;
+import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
+import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayKeyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
@@ -38,10 +38,10 @@ public class GatewayUtils {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(GatewayUtils.class);
 	
-	@Autowired
-	private GatewayManageDao gatewayManageDao;
-	@Autowired
-	private GatewayNodeManageDao gatewayNodeManageDao;
+	@Resource
+	private IGatewayManageDao gatewayManageDao;
+	@Resource
+	private IGatewayNodeManageDao gatewayNodeManageDao;
 	
 	private static GatewayUtils utils;
 	
@@ -153,7 +153,6 @@ public class GatewayUtils {
 		return result;
 	}
 	
-
 	public static Result<String> postApiToGateway2(String apiName, String apiId, String listenPath,Map<String,String> versionUrl, boolean notVersioned){
 		
 		Result<String> result = new Result<String>();
@@ -270,8 +269,6 @@ public class GatewayUtils {
 		return result;
 	}
 	
-	
-	
 	/**
 	 * 根据id删除api
 	 * @param apiId
@@ -313,9 +310,6 @@ public class GatewayUtils {
 		return result;
 		
 	}
-	
-
-	
 	
 	/**
 	 * 根据apiId修改网关，如果当前apiId在网关中不存在则在网关注册新的api

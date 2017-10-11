@@ -26,7 +26,7 @@
     </mongo:mongo-client>   
   
     <!-- Specify the database to use -->
-    <mongo:db-factory dbname="common" mongo-ref="mongo"/>  
+    <mongo:db-factory dbname="${mongo.database.name}" mongo-ref="mongo"/>  
   
 
    <bean id="mappingContext"  

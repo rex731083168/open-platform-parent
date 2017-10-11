@@ -9,10 +9,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.IndexOperations;
-import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -128,13 +125,13 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
             /* super.shardCollection("OPC_API", "_id"); */
 
             /** 创建唯一索引 ，失败，分片后无法创建唯一索引*/
-            IndexOperations io = mongoTemplate.indexOps(APIEntity.class);
-            Index index = new Index();
-            // 为name属性加上 索引
-            index.on("apienname", Order.ASCENDING);
-            // 唯一索引
-            index.unique();
-            io.ensureIndex(index);
+//            IndexOperations io = mongoTemplate.indexOps(APIEntity.class);
+//            Index index = new Index();
+//            // 为name属性加上 索引
+//            index.on("apienname", Order.ASCENDING);
+//            // 唯一索引
+//            index.unique();
+//            io.ensureIndex(index);
         }
     }
 

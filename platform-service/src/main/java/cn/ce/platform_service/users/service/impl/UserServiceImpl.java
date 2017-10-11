@@ -118,15 +118,20 @@ public class UserServiceImpl implements IUserService {
 			return result;
 		}
 	}
+	
+	
 	@Override
-	public boolean checkUserName(String username) {
+	public Result<?> checkUserName(String username) {
 		
+		Result<String> result = new Result<String>();
 		User user = userDAO.findUserByUserName(username);
 		
 		if(user != null){
-			return true;
+			result.setErrorMessage("当前用户名已存在，请重新输入");
+		}else{
+			result.setSuccessMessage("当前用户名可以使用");
 		}
-		return false;
+		return result;
 	}
 	
 	@Override
@@ -181,8 +186,8 @@ public class UserServiceImpl implements IUserService {
 		
 		//校验当前用户名是否存在
 		// TODO 校验用户名
-		boolean bool = checkUserName(userName);
-		if(bool){
+		User user1= userDAO.findUserByUserName(userName);
+		if(user1 != null){
 			//当前用户名存在
 			result.setErrorMessage("当前用户名已经存在", ErrorCodeNo.SYS009);
 			return result;
@@ -194,9 +199,6 @@ public class UserServiceImpl implements IUserService {
 			result.setErrorMessage("当前邮箱已经被注册", ErrorCodeNo.SYS009);
 			return result;
 		}
-		
-		//如果之前使用过当前邮箱注册，但是审核失败了，可以重新用该邮箱注册。将原来的数据修改
-//		User preUser = userService.findByEmail(email);
 		
 		try {
 			User user = new User();

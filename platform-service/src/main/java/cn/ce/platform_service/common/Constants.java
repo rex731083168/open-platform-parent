@@ -94,7 +94,7 @@ public class Constants {
 	/** 登录类型-管理员 */
 	public static final int USER_ROLE_ADMIN = 0;
 	/** 登录用户 */
-	public static final String SES_LOGIN_USER = "loginuser";
+	public static final String SES_LOGIN_USER = "login_user";
 	/** 加密长度 */
 	public static final int SECRET_LENGTH = 32;
 	/** 分页长度 */

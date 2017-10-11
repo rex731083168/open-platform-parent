@@ -357,7 +357,7 @@ public class AppServiceImpl implements IAppService {
 			result.setSuccessMessage("");
 			return result;
 		} catch (Exception e) {
-			_LOGGER.info("error happens when execute admin logout",e);
+			_LOGGER.info("error happens when execute admin log out",e);
 			result.setErrorMessage("");
 			return result;
 		}

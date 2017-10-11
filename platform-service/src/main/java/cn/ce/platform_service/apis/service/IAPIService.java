@@ -149,7 +149,7 @@ public interface IAPIService {
 
 	Result<String> publishAPI(User user, APIEntity apientity);
 
-	Result<String> show(String apiId);
+	Result<?> show(String apiId);
 
 	Result<Page<APIEntity>> apiList(String apiId, String apiChName, String checkState, int currentPage, int pageSize);
     

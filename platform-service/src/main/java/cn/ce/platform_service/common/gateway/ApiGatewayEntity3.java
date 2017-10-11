@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import com.alibaba.fastjson.JSONArray;
 
 /**
-* @Description : 添加api到网关，使用oauth授权
+* @Description : 添加api到网关，使用oauth授权,多版本
 * @Author : makangwei
 * @Date : 2017年8月21日
 */

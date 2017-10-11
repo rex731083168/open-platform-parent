@@ -53,7 +53,8 @@ public class SmsUtil {
 	 * @param content
 	 * void
 	 */
-	public static boolean messageSend(String phone, String content) {
+	public static String messageSend(String phone, String content) {
+		String postJson = "";
 		Map<String,String> headers = new HashMap<>();
 		String username = PropertiesUtil.getInstance().getValue("sms.username");
 		String pwd = PropertiesUtil.getInstance().getValue("sms.pwd");
@@ -67,9 +68,8 @@ public class SmsUtil {
 			params.put("providerId", "1");
 			
 			
-			String postJson = HttpUtils.postJsonNew(uri, params.toString(), headers);
+			postJson = HttpUtils.postJsonNew(uri, params.toString(), headers);
 			log.info(postJson);
-			return true;
 			
 			/*
 			PostMethod postMethod = new PostMethod(uri);
@@ -102,7 +102,7 @@ public class SmsUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
+		return postJson;
 	}
 	
 	/**

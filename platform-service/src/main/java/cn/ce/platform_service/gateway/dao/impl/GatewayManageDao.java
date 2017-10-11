@@ -1,4 +1,4 @@
-package cn.ce.platform_service.gateway.dao;
+package cn.ce.platform_service.gateway.dao.impl;
 
 
 
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.page.Page;
 
@@ -21,7 +22,7 @@ import cn.ce.platform_service.page.Page;
  * 2017-8-4
  */
 @Repository
-public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> {
+public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> implements IGatewayManageDao {
 
 	Logger LOGGER = LoggerFactory.getLogger(GatewayManageDao.class);
 	
@@ -53,7 +54,6 @@ public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> 
 		}
 
 	}
-
 
     /**
      * 查询所有网关集群

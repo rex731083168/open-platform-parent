@@ -22,6 +22,7 @@ import cn.ce.platform_service.apply.entity.ApplyEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.gateway.service.IGatewayApiService;
 
 /**
 * @Description : 网关api和密钥的管理
@@ -29,7 +30,7 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 * @Date : 2017年8月14日
 */
 @Service("gatewayApiService")
-public class GatewayApiService {
+public class GatewayApiService implements IGatewayApiService{
 
 	@Autowired
 	private IAPIService apiService;
@@ -43,7 +44,7 @@ public class GatewayApiService {
 	private static Logger logger = LoggerFactory.getLogger(GatewayApiService.class);
 	/**
 	 * 
-	 * @Description : 添加版本后的api审核
+	 * @Description : 添加版本后的api审
 	 * @Author : makangwei
 	 * @Date : 2017年8月17日
 	 * @param apiId
@@ -63,14 +64,9 @@ public class GatewayApiService {
 		}
 		
 		if(checkState == 3){
-			//修改数据库状态
 			tempEntity.setCheckState(3);
-			
-			// TODO 字段重复，去掉其中一个即可
 			tempEntity.setCheckMem(checkMem);
-			
 			apiService.updateAPI(tempEntity);
-			
 		}else if(checkState == 2){
 	
 			List<APIEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiVersion().getApiId());
@@ -237,6 +233,16 @@ public class GatewayApiService {
 		return result;
 	}
 
+	/**
+	 * 审核后推送网关是多版本+oauth
+	 * <p>Title: auditApi2</p>   
+	 * <p>Description: </p>   
+	 * @param apiId
+	 * @param checkState
+	 * @param checkMem
+	 * @return   
+	 * @see cn.ce.platform_service.gateway.service.IGatewayApiService#auditApi2(java.lang.String, java.lang.Integer, java.lang.String)
+	 */
 	public Result<String> auditApi2(String apiId, Integer checkState, String checkMem) {
 
 		Result<String> result = new Result<String>();
