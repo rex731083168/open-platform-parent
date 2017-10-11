@@ -18,7 +18,6 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
-import cn.ce.platform_service.util.SmsUtil;
 
 
 /**
@@ -154,14 +153,5 @@ public class UserController {
 		}
 		return result;
 	}
-	
-	@RequestMapping(value="user/sendSms",method=RequestMethod.POST)
-	@ResponseBody
-	public Result<String> sendSms(HttpServletRequest request,HttpServletResponse response,
-			String phone,String content){
-		Result<String> result = new Result<String>();
-		result.setSuccessMessage(SmsUtil.messageSend(phone, content));
-		return result;
-	}
-	
+
 }

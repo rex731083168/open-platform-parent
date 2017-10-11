@@ -1,122 +1,132 @@
 package cn.ce.platform_service.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 
-/**
+/***
  * 
- * @类描述: 短信工具类
- * @作者 dingjia@300.cn
- * @日期 2016-7-4 下午5:28:40
+ * 
+ * @ClassName:  SmsUtil   
+ * @Description: 发送短信工具类   
+ * @author: lida 
+ * @date:   2017年10月11日 下午3:11:41   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
+ *
  */
 public class SmsUtil {
 
-	/**
-	 * 设置连接超期时间3s
-	 */
-	private final static int CONNECTION_TIMEOUT = 3000;
-	/**
-	 * 设置响应超期时间5s
-	 */
-	private final static int SO_TIMEOUT = 5000;
+	private static String webSiteId;
+	
+	private static String sign;
+	
+	private static String providerId;
+
+	
 	private static final Logger log = LoggerFactory.getLogger(SmsUtil.class);
+	
+	
 
-	/**
-	 * 发送邮件
-	 * @param synchFlag 是否同步发送
-	 * 
-	 */
-	public static void send(final String phone, final String content, boolean synchFlag) {
-		if (synchFlag) {// 同步发送
-			messageSend(phone, content);
-		} else {// 异步发送
-			new Thread() {
-				public void run() {
-					messageSend(phone, content);
-				};
-			}.start();
-		}
-
+	public SmsUtil(String webSiteId,String sign,String providerId) {
+		SmsUtil.webSiteId = webSiteId;
+		SmsUtil.sign = sign;
+		SmsUtil.providerId = providerId;
 	}
 
-	/**
+
+	/***
 	 * 
-	 * @方法描述：发送短信
-	 * @作者：dingjia@300.cn
-	 * @日期：2016-7-4 下午5:28:48
-	 * @param phone
-	 * @param content
-	 * void
+	 * @Title: send
+	 * @Description: 异步发送方法
+	 * @param : @param phone：手机号码
+	 * @param : @param content：发送内容
+	 * @return: void
+	 * @throws
 	 */
-	public static String messageSend(String phone, String content) {
-		String postJson = "";
+	public static void notSyncSend(final String phone, final String content) {
+		new Thread() {
+			public void run() {
+				messageSend(phone, content);
+			};
+		}.start();
+	}
+
+	/***
+	 * 
+	 * @Title: messageSend
+	 * @Description: 发送短信方法
+	 * @param : @param phone 手机号码
+	 * @param : @param content 发送内容
+	 * @return: boolean true为发送成功 false为发送失败
+	 * @throws
+	 */
+	public static boolean messageSend(String phone, String content) {
+		boolean retBo = false;
 		Map<String,String> headers = new HashMap<>();
 		String username = PropertiesUtil.getInstance().getValue("sms.username");
 		String pwd = PropertiesUtil.getInstance().getValue("sms.pwd");
 		String uri = PropertiesUtil.getInstance().getValue("sms.uri");
 		try {
 			headers.put("Authorization", "Basic " + Base64Utils.encode((username + ":" + pwd).getBytes()));
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("content", content));
+			params.add(new BasicNameValuePair("phone", phone));
 			
-			JSONObject params = new JSONObject();
-			params.put("content", content);
-			params.put("phone", phone);
-			params.put("providerId", "1");
-			
-			
-			postJson = HttpUtils.postJsonNew(uri, params.toString(), headers);
-			log.info(postJson);
-			
-			/*
-			PostMethod postMethod = new PostMethod(uri);
-			postMethod.addRequestHeader("Authorization", authorizationHeader);
-			// 处理中文乱码
-			postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
-			// 请求参数
-			NameValuePair contentPair = new NameValuePair("content", content);
-			NameValuePair phonePair = new NameValuePair("phone", phone);
-			NameValuePair providerIdPair = new NameValuePair("providerId", "1");
-			NameValuePair[] params = { contentPair, phonePair, providerIdPair };
-			postMethod.setRequestBody(params);
-			HttpClient client = new HttpClient();
-			HttpConnectionManagerParams hcmp = client.getHttpConnectionManager().getParams();
-			hcmp.setConnectionTimeout(CONNECTION_TIMEOUT);
-			hcmp.setSoTimeout(SO_TIMEOUT);
-			client.executeMethod(postMethod);
-			String responseXml = new String(postMethod.getResponseBodyAsString().getBytes("UTF-8"));// 返回结果
-			postMethod.releaseConnection();
-			if (responseXml.contains("status")) {
-				Document doc = null;
-				doc = DocumentHelper.parseText(responseXml); // 将字符串转为XML
-				Element rootElt = doc.getRootElement(); // 获取根节点
-				String status = rootElt.element("status").getStringValue();
-				if ("1".equals(status)) {
-					return true;
-				}
+			if(StringUtils.isNotBlank(webSiteId)){
+				params.add(new BasicNameValuePair("websiteid", webSiteId));
 			}
-			log.error(responseXml);*/
+			
+			if(StringUtils.isNotBlank(sign)){
+				params.add(new BasicNameValuePair("sign", sign));
+			}
+			
+			if(StringUtils.isNotBlank(providerId)){
+				params.add(new BasicNameValuePair("providerId", providerId));
+			}
+			
+			log.info("sendSms param:" + JSON.toJSONString(params));
+			
+			String postJson = "";
+			
+			// TODO 
+			//生产环境时调用短信网关
+			if(StringUtils.isNotBlank(webSiteId) && StringUtils.isNotBlank(sign) && "2" == providerId.trim()){
+				postJson = HttpUtils.postJsonNew(uri, params, headers);
+			}else{
+			//非生产环境写死报文	
+				postJson = "<response><phone>*****</phone><oid>1102</oid><status>1</status></response>";
+			}
+			
+			log.info("sendSms returnXml:" + postJson);
+			
+            Document doc = DocumentHelper.parseText(postJson);
+            if(doc != null){
+            	Element rootElt = doc.getRootElement();
+            	String status = rootElt.element("status").getStringValue();
+            	if("1" == status || "1".equals(status)){
+	        		log.info("sendSms success!");
+	        		retBo = true;
+	        	}
+            }
+            
 		} catch (Exception e) {
+			log.error("sendSms error,e:" + e.toString());
 			e.printStackTrace();
 		}
-		return postJson;
-	}
-	
-	/**
-	 * 
-	 * @方法描述：生成四位随机数
-	 * @return
-	 * String
-	 */
-	public static String getValidateCode() {
-		String code = String.valueOf(Math.round(Math.random() * 10)) + String.valueOf(Math.round(Math.random() * 10))
-		                + String.valueOf(Math.round(Math.random() * 10))
-		                + String.valueOf(Math.round(Math.random() * 10));
-		code = code.substring(0, 4);
-		return code;
+		
+		return retBo;
 	}
 	
 }

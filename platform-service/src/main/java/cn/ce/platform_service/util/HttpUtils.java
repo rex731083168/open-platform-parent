@@ -1,14 +1,19 @@
 package cn.ce.platform_service.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Registry;
@@ -89,17 +94,27 @@ public class HttpUtils {
 		}
 	}
 	
-	public static String postJsonNew(String url,String params,Map<String,String> headers){
+	public static String postJsonNew(String url,List<NameValuePair> params,Map<String,String> headers) throws ClientProtocolException, IOException{
+		
+//		params.add(new BasicNameValuePair("content", "abc"));
+//		params.add(new BasicNameValuePair("phone", "18246096962"));
+//		params.add(new BasicNameValuePair("websiteid", websiteid));
+//		params.add(new BasicNameValuePair("sign", "中企动力销售管理部"));
+//		params.add(new BasicNameValuePair("providerId", "1"));
+//		HttpPost httpPost = new HttpPost("");
+//		httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+//		HttpResponse response = client.execute(httpPost);
+		
 	    String backMes = null;  
 	    HttpPost post = new HttpPost(url);
-	    CloseableHttpClient client = HttpClients.createDefault();
 	    try {  
+	    	CloseableHttpClient client = HttpClients.createDefault();
 			//添加头信息
 			for (String key : headers.keySet()) {
 				post.addHeader(key, headers.get(key));
 			}
-	        StringEntity reqEntity = new StringEntity(params);  
-	        post.setEntity(reqEntity);  
+			UrlEncodedFormEntity reqEntity = new UrlEncodedFormEntity(params,"UTF-8");  
+	        post.setEntity( reqEntity);  
 	        HttpResponse httpResponse = client.execute(post);  
 	        HttpEntity entity = httpResponse.getEntity();  
 	        backMes = EntityUtils.toString(entity, "UTF-8").toString();  

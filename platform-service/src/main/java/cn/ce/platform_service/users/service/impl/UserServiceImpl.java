@@ -199,8 +199,9 @@ public class UserServiceImpl implements IUserService {
 		try {
 			// TODO appSecret使用Util生成的，这里有什么作用？
 			// TODO userType为int类型
-			User user = new User(null,userName,password,email,telNumber,1,null,userType,new Date(),0
-					,null,Util.getRandomStrs(Constants.SECRET_LENGTH));
+//			User user = new User(null,userName,password,email,telNumber,1,null,userType,new Date(),0
+//					,null,Util.getRandomStrs(Constants.SECRET_LENGTH));
+			User user = null;
 			newUserDao.save(user);
 			result.setSuccessMessage("添加成功");
 		} catch (Exception e) {

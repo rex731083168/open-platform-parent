@@ -39,6 +39,7 @@
 		<alibaba.fastjson.version>1.2.35</alibaba.fastjson.version>
 		<org.json.version>20170516</org.json.version>
 		<javax.mail.version>1.4.5</javax.mail.version>
+		<dom4j.version>1.6.1</dom4j.version>
 
 	</properties>
 
@@ -601,7 +602,13 @@
 			<type>maven-plugin</type>
 		</dependency>
 
-
+		<!-- dom4j -->
+		<dependency>
+		    <groupId>dom4j</groupId>
+		    <artifactId>dom4j</artifactId>
+		    <version>${dom4j.version}</version>
+		</dependency>
+		
 	</dependencies>
 
 
