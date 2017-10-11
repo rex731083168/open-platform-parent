@@ -31,8 +31,8 @@ public class User implements Serializable {
 	@Field("email")
 	private String email;
 	/** 电话 */
-	@Field("tel")
-	private String tel;
+	@Field("telNumber")
+	private String telNumber;
 	/** 状态 */
 	@Field("state")
 	private int state;
@@ -56,6 +56,29 @@ public class User implements Serializable {
 
 	/** 签名秘钥 */
 	private String appSecret;
+
+	
+	public User() {
+		super();
+	}
+	
+	public User(String id, String userName, String password, String email, String telNumber, int state, String appId,
+			int userType, Date regTime, int checkState, String checkMem, String appSecret) {
+		super();
+		this.id = id;
+		this.userName = userName;
+		this.password = password;
+		this.email = email;
+		this.telNumber = telNumber;
+		this.state = state;
+		this.appId = appId;
+		this.userType = userType;
+		this.regTime = regTime;
+		this.checkState = checkState;
+		this.checkMem = checkMem;
+		this.appSecret = appSecret;
+	}
+	
 
 	public String getId() {
 		return id;
@@ -89,12 +112,12 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public String getTel() {
-		return tel;
+	public String getTelNumber() {
+		return telNumber;
 	}
 
-	public void setTel(String tel) {
-		this.tel = tel;
+	public void setTelNumber(String telNumber) {
+		this.telNumber = telNumber;
 	}
 
 	public int getState() {
@@ -160,8 +183,11 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email + ", tel="
-				+ tel + ", state=" + state + ", appId=" + appId + ", userType=" + userType + ", regTime=" + regTime
+				+ telNumber + ", state=" + state + ", appId=" + appId + ", userType=" + userType + ", regTime=" + regTime
 				+ ", checkState=" + checkState + ", checkMem=" + checkMem + ", appSecret=" + appSecret + "]";
 	}
+
+
+	
 
 }

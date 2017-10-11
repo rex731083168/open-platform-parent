@@ -315,7 +315,8 @@ public abstract class AbstractBaseMongoDao<T> implements BaseMongoDao<T> {
         return (T) mongoTemplate.findOne(query, entityclass);
     }
 
-    public T findOneByFieldsAnd(Map<String, Object> fields, Class<?> entityclass) {
+    @SuppressWarnings("unchecked")
+	public T findOneByFieldsAnd(Map<String, Object> fields, Class<?> entityclass) {
         if (fields == null || fields.size() == 0) {
             return null;
         }
