@@ -56,6 +56,14 @@ public class User implements Serializable {
 	@Field("checkMem")
 	private String checkMem;
 	
+	
+	/********************认证时需要的信息************************/
+	private String enterpriseName; // 企业名称
+	
+	private String IDCard; //身份证号码
+	
+	private String userRealName; //真实姓名
+	
 	/** 
 	 * 组织机构编码,标识当前用户的组织
 	 * */
@@ -218,22 +226,38 @@ public class User implements Serializable {
 	public void setOrgName(String orgName) {
 		this.orgName = orgName;
 	}
+	
+	public String getEnterpriseName() {
+		return enterpriseName;
+	}
+
+	public void setEnterpriseName(String enterpriseName) {
+		this.enterpriseName = enterpriseName;
+	}
+
+	public String getIDCard() {
+		return IDCard;
+	}
+
+	public void setIDCard(String iDCard) {
+		IDCard = iDCard;
+	}
+
+	public String getUserRealName() {
+		return userRealName;
+	}
+
+	public void setUserRealName(String userRealName) {
+		this.userRealName = userRealName;
+	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
 				+ ", telNumber=" + telNumber + ", state=" + state + ", appId=" + appId + ", userType=" + userType
 				+ ", regTime=" + regTime + ", checkCode=" + checkCode + ", checkState=" + checkState + ", checkMem="
-				+ checkMem + ", orgId=" + orgId + ", orgName=" + orgName + ", appSecret=" + appSecret + ", getOrgId()="
-				+ getOrgId() + ", getId()=" + getId() + ", getUserName()=" + getUserName() + ", getPassword()="
-				+ getPassword() + ", getEmail()=" + getEmail() + ", getTelNumber()=" + getTelNumber() + ", getState()="
-				+ getState() + ", getAppId()=" + getAppId() + ", getUserType()=" + getUserType() + ", getRegTime()="
-				+ getRegTime() + ", getCheckState()=" + getCheckState() + ", getCheckMem()=" + getCheckMem()
-				+ ", getAppSecret()=" + getAppSecret() + ", getCheckCode()=" + getCheckCode() + ", getOrgName()="
-				+ getOrgName() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+				+ checkMem + ", enterpriseName=" + enterpriseName + ", IDCard=" + IDCard + ", userRealName="
+				+ userRealName + ", orgId=" + orgId + ", orgName=" + orgName + ", appSecret=" + appSecret + "]";
 	}
 
-
-	
 }

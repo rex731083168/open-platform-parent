@@ -24,13 +24,13 @@ import cn.ce.platform_service.apis.dao.IApiDAO;
 import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.apis.entity.ApiVersion;
 import cn.ce.platform_service.apis.service.IAPIService;
-import cn.ce.platform_service.app.entity.AppEntity;
-import cn.ce.platform_service.app.service.IAppService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.oauth.dao.IOauthDao;
+import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.service.IAppService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
@@ -338,12 +338,12 @@ public class APIServiceImpl implements IAPIService {
 			}
 
 			String appId = api.getAppId();
-			AppEntity app = appService.findById(appId);
+			DevApplyEntity app = appService.findById(appId);
 
 			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 
 			// 添加网关访问地址
-			AppEntity appEntity = appService.findById(api.getAppId());
+			DevApplyEntity appEntity = appService.findById(api.getAppId());
 			
 			List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 			
@@ -351,11 +351,11 @@ public class APIServiceImpl implements IAPIService {
 
 			for (GatewayColonyEntity gatewayColonyEntity : colList) {
 				
-				gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+appEntity.getAppKey()+"/" + api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
+				gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+appEntity.getApplyKey()+"/" + api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
 			}
 			
 			jsonObject.put("gatewayUrls", gatewayUrlList);
-			jsonObject.put("appName", app.getAppName());
+			jsonObject.put("appName", app.getApplyName());
 			result.setSuccessData(jsonObject);
 		} catch (Exception e) {
 			e.printStackTrace();

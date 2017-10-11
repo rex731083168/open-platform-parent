@@ -12,7 +12,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,14 +24,14 @@ import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
-import cn.ce.platform_service.app.entity.AppEntity;
-import cn.ce.platform_service.app.service.IAppService;
-import cn.ce.platform_service.apply.dao.IDiyApplyDao;
-import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
+import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.service.IAppService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
@@ -95,7 +94,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		}
 		
 		
-		AppEntity appEntity = appService.findById(apiEntity.getAppId());
+		DevApplyEntity appEntity = appService.findById(apiEntity.getAppId());
 
 		//拼接对象
 		ApiAuditEntity auditEntity = new ApiAuditEntity();
@@ -106,8 +105,8 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		auditEntity.setApiChName(apiEntity.getApiChName());
 		auditEntity.setApiEnName(apiEntity.getApiEnName());
 		auditEntity.setAppId(appEntity.getId());
-		auditEntity.setAppName(appEntity.getAppName());
-		auditEntity.setAppKey(appEntity.getAppKey());
+		auditEntity.setAppName(appEntity.getApplyName());
+		auditEntity.setAppKey(appEntity.getApplyKey());
 		auditEntity.setCheckState(1);
 		auditEntity.setUserId(user.getId());
 		auditEntity.setSupplierId(apiEntity.getUserId());

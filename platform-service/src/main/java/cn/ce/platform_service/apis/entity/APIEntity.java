@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
-import cn.ce.platform_service.app.entity.AppEntity;
+import cn.ce.platform_service.openApply.entity.DevApplyEntity;
 
 /**
  * 
@@ -119,7 +119,7 @@ public class APIEntity implements Serializable {
     
     /** 服务分类信息 */
     @Transient
-    private AppEntity appEntity;
+    private DevApplyEntity appEntity;
 
 	public String getId() {
 		return id;
@@ -329,11 +329,11 @@ public class APIEntity implements Serializable {
 		this.apiSecret = apiSecret;
 	}
 
-	public AppEntity getAppEntity() {
+	public DevApplyEntity getAppEntity() {
 		return appEntity;
 	}
 
-	public void setAppEntity(AppEntity appEntity) {
+	public void setAppEntity(DevApplyEntity appEntity) {
 		this.appEntity = appEntity;
 	}
 

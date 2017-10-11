@@ -23,6 +23,8 @@ public interface INewUserDao{
 	User findUserByEmail(String email);
 
 	User findUserByUserName(String userName);
+
+	User findUserById(String userId);
 	
 
 }

@@ -24,10 +24,10 @@ import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
-import cn.ce.platform_service.app.service.IAppService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.openApply.service.IAppService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 

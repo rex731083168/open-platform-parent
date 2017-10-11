@@ -15,14 +15,14 @@ import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
-import cn.ce.platform_service.app.entity.AppEntity;
-import cn.ce.platform_service.app.service.IAppService;
-import cn.ce.platform_service.apply.dao.IDiyApplyDao;
-import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
+import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
+import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.service.IAppService;
 
 /**
 * @Description : 网关api和密钥的管理
@@ -77,10 +77,10 @@ public class GatewayApiService implements IGatewayApiService{
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
 			apiId = apiList.get(0).getApiVersion().getApiId();
 			
-			AppEntity appEntity = appService.findById(apiList.get(0).getAppId());
+			DevApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
 			
 			// TODO 监听路径是否需要加上appKey
-			String listenPath = "/"+appEntity.getAppKey()+"/"+apiName+"/";
+			String listenPath = "/"+appEntity.getApplyKey()+"/"+apiName+"/";
 			
 			Map<String,String> map = new HashMap<String,String>();
 			
@@ -270,9 +270,9 @@ public class GatewayApiService implements IGatewayApiService{
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
 			apiId = apiList.get(0).getApiVersion().getApiId();
 			
-			AppEntity appEntity = appService.findById(apiList.get(0).getAppId());
+			DevApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
 			// TODO 监听路径是否需要加上appKey
-			String listenPath = "/"+appEntity.getAppKey()+"/"+apiName+"/";
+			String listenPath = "/"+appEntity.getApplyKey()+"/"+apiName+"/";
 			
 			Map<String,String> map = new HashMap<String,String>();
 			

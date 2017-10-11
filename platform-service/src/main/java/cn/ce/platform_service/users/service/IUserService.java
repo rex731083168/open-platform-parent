@@ -1,7 +1,5 @@
 package cn.ce.platform_service.users.service;
 
-import javax.servlet.http.HttpSession;
-
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;

@@ -17,10 +17,10 @@ import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_manage.base.BaseController;
 import cn.ce.platform_service.apis.service.IAPIService;
-import cn.ce.platform_service.app.entity.AppEntity;
-import cn.ce.platform_service.app.service.IAppService;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.service.IAppService;
 import cn.ce.platform_service.page.Page;
 
 /***
@@ -53,7 +53,7 @@ public class AppsController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/addGroup", method = RequestMethod.POST)
-	public Result<String> addGroup(@RequestBody AppEntity app) {
+	public Result<String> addGroup(@RequestBody DevApplyEntity app) {
 		_LOGGER.info("---------------->> Action Add new Group! param: " + JSON.toJSONString(app));
 		
 		return appService.addGroup1(session,app);
@@ -85,7 +85,7 @@ public class AppsController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/modifyGroup", method = RequestMethod.POST)
-	public Result<String> modifyGroup(@RequestBody AppEntity app) {
+	public Result<String> modifyGroup(@RequestBody DevApplyEntity app) {
 		_LOGGER.info("---------------->> Action modify Group! Param: " + JSON.toJSONString(app));
 
 		return appService.modifyGroup1(app);
@@ -122,7 +122,7 @@ public class AppsController extends BaseController {
 	 */
 	@RequestMapping(value = "/groupList", method = RequestMethod.POST)
 	@ResponseBody
-	public Result<Page<AppEntity>> groupList(HttpServletRequest request, HttpServletResponse response,String appName,String checkState,
+	public Result<Page<DevApplyEntity>> groupList(HttpServletRequest request, HttpServletResponse response,String appName,String checkState,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
 		_LOGGER.info("---------------->> Action Search GroupList! appname: " + appName + "; checkState:" + checkState);

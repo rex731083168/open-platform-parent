@@ -58,7 +58,7 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		
 		try {
 			// TODO appSecret使用Util生成的，这里有什么作用？
-			// TODO userType为int类型
+			// TODO userType为int类型 ；/** 用户类型  0:管理员，1:普通用户，2:提供者 */
 			// state 保留字段
 			user.setState(1);
 			user.setRegTime(new Date());
@@ -74,6 +74,24 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	}
 
 
+	@Override
+	public Result<?> authenticate(String userId, String enterpriseName, String idCard, String userRealName) {
+		Result<String> result = new Result<String>();
+		User user = newUserDao.findUserById(userId);
+		
+		if(user == null){
+			result.setErrorMessage("当前用户不存在", ErrorCodeNo.SYS006);
+			return result;
+		}
+		
+		user.setEnterpriseName(enterpriseName);
+		user.setIDCard(idCard);
+		user.setUserRealName(userRealName);
+		user.setCheckState(1);
+		newUserDao.save(user);
+		result.setSuccessMessage("");;
+		return result;
+	}
 	@Override
 	public Result<User> login(HttpSession session,String userName, String password) {
 
@@ -174,7 +192,7 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		return result;
 	}
 
-
+	
 	@Override
 	public Result<?> modifyPassword(String telNumber, String newPassword) {
 		
@@ -190,6 +208,5 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		result.setSuccessMessage("修改成功");
 		return result;
 	}
-
 	
 }

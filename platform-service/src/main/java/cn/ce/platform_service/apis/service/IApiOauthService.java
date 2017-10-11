@@ -3,8 +3,8 @@ package cn.ce.platform_service.apis.service;
 import java.util.List;
 
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
-import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.page.Page;
 
 /**

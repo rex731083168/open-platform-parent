@@ -54,4 +54,10 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 		return super.findOne(query);
 	}
 
+	@Override
+	public User findUserById(String userId) {
+		
+		return super.findById(userId);
+	}
+
 }

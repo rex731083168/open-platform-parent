@@ -15,14 +15,14 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IApiOauthService;
-import cn.ce.platform_service.app.entity.AppEntity;
-import cn.ce.platform_service.app.service.IAppService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.oauth.dao.IOauthDao;
 import cn.ce.platform_service.oauth.entity.AuthorizeClientEntity;
 import cn.ce.platform_service.oauth.service.IOauthService;
+import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.service.IAppService;
 import cn.ce.platform_service.util.HttpUtils;
 
 /**
@@ -93,10 +93,10 @@ public class OauthServiceImpl implements IOauthService{
 				sb.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
 			}
 			
-			AppEntity appEntity = appService.findById(findApiByClientId.getAppId());
+			DevApplyEntity appEntity = appService.findById(findApiByClientId.getAppId());
 			
 			// TODO 监听路径是否需要加上appKey
-			String listenPath = appEntity.getAppKey()+"/"+findApiByClientId.getApiEnName();/*+"/"+findApiByClientId.getVersion();*/
+			String listenPath = appEntity.getApplyKey()+"/"+findApiByClientId.getApiEnName();/*+"/"+findApiByClientId.getVersion();*/
 			
 			//请求tyk参数
 			String params = sb.substring(0, sb.length()-1);

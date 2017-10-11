@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
-import cn.ce.platform_service.app.entity.AppEntity;
-import cn.ce.platform_service.app.service.IAppService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.impl.GatewayApiService;
+import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.service.IAppService;
 import cn.ce.platform_service.page.Page;
 
 /**
@@ -128,14 +128,14 @@ public class ApiController {
 			org.json.JSONObject jsonObject = new org.json.JSONObject(api);
 
 			// 添加封装信息
-			AppEntity appEntity = appService.findById(api.getAppId());
+			DevApplyEntity appEntity = appService.findById(api.getAppId());
 
 			List<String> gatewayUrlList = new ArrayList<String>();
 			for (GatewayColonyEntity gatewayColonyEntity : GatewayUtils.getAllGatewayColony()) {
 				gatewayUrlList
-						.add(gatewayColonyEntity.getColUrl() + "/" + appEntity.getAppKey() + "/" + api.getApiEnName());
+						.add(gatewayColonyEntity.getColUrl() + "/" + appEntity.getApplyKey() + "/" + api.getApiEnName());
 			}
-			jsonObject.put("appName", appEntity.getAppName());
+			jsonObject.put("appName", appEntity.getApplyName());
 			jsonObject.put("gatewayUrls", gatewayUrlList);
 			
 			result.setSuccessData(jsonObject);
