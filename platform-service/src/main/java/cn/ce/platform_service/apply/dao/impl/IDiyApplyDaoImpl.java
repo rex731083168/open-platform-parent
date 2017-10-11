@@ -6,8 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.platform_service.apply.dao.IApplyDao;
-import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.dao.IDiyApplyDao;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.page.Page;
 
@@ -23,10 +23,10 @@ import cn.ce.platform_service.page.Page;
  *
  */
 @Repository("applyDao")
-public class ApplyDaoImpl extends BaseMongoDaoImpl<ApplyEntity> implements IApplyDao {
+public class IDiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements IDiyApplyDao {
 
 	@Override
-	public void saveOrUpdate(ApplyEntity entity) {
+	public void saveOrUpdate(DiyApplyEntity entity) {
 		// TODO Auto-generated method stub
 		if(StringUtils.isNotBlank(entity.getId())){
 			super.update(entity);
@@ -41,18 +41,18 @@ public class ApplyDaoImpl extends BaseMongoDaoImpl<ApplyEntity> implements IAppl
 	}
 
 	@Override
-	public Page<ApplyEntity> findPageByEntity(Query query,Page<ApplyEntity> page) {
+	public Page<DiyApplyEntity> findPageByEntity(Query query,Page<DiyApplyEntity> page) {
 		return super.findPage(page, query);
 	}
 
 	@Override
-	public List<ApplyEntity> findListByEntity(Query query) {
+	public List<DiyApplyEntity> findListByEntity(Query query) {
 		return super.find(query);
 	}
 
 
 	@Override
-	public ApplyEntity findById(String id) {
+	public DiyApplyEntity findById(String id) {
 		return super.findById(id);
 	}
 

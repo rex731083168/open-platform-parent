@@ -18,9 +18,9 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
-import cn.ce.platform_service.apply.dao.IApplyDao;
-import cn.ce.platform_service.apply.entity.ApplyEntity;
-import cn.ce.platform_service.apply.service.IApplyService;
+import cn.ce.platform_service.apply.dao.IDiyApplyDao;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
+import cn.ce.platform_service.apply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.page.Page;
 
@@ -32,22 +32,22 @@ import cn.ce.platform_service.page.Page;
  *
  */
 @Service("applyService")
-public class ApplyServiceImpl implements IApplyService {
+public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 
 	/** 日志对象 */
-	private static Logger logger = Logger.getLogger(ApplyServiceImpl.class);
+	private static Logger logger = Logger.getLogger(IConsoleDiyApplyServiceImpl.class);
 	
 	@Autowired @Qualifier("apiService")
 	private IAPIService apiService;
 	
 	@Autowired @Qualifier("applyDao")
-	private IApplyDao applyDao;
+	private IDiyApplyDao applyDao;
 	@Autowired
 	private IApiOauthService oauthService;
 	
 	@Override
-	public Result<String> saveApply(ApplyEntity entity) {
+	public Result<String> saveApply(DiyApplyEntity entity) {
 		Result<String> result = new Result<>();
 		
 		//构建查询对象
@@ -64,7 +64,7 @@ public class ApplyServiceImpl implements IApplyService {
 		Query query = new Query(c).with(new Sort(Direction.DESC,"createDate"));
 		
 		
-		List<ApplyEntity> findPageByList = applyDao.findListByEntity(query);
+		List<DiyApplyEntity> findPageByList = applyDao.findListByEntity(query);
 		
 		
 		if(StringUtils.isBlank(entity.getApplyName())){
@@ -80,7 +80,7 @@ public class ApplyServiceImpl implements IApplyService {
 			}
 		}else{
 			//修改时 判断是否数据库中重复 排除修改对象本身
-			for (ApplyEntity applyEntity : findPageByList) {
+			for (DiyApplyEntity applyEntity : findPageByList) {
 				if(!applyEntity.getId().equals(entity.getId())){
 					result.setErrorMessage("应用名称不可重复!");
 					return result;
@@ -100,7 +100,7 @@ public class ApplyServiceImpl implements IApplyService {
 			
 		}else{
 		//修改
-			ApplyEntity applyById = applyDao.findById(entity.getId());
+			DiyApplyEntity applyById = applyDao.findById(entity.getId());
 			
 			if(null == applyById){
 				result.setErrorMessage("请求的应用信息不存在!");
@@ -130,7 +130,7 @@ public class ApplyServiceImpl implements IApplyService {
 	public Result<String> deleteApplyByid(String id) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<>();
-		ApplyEntity apply = applyDao.findById(id);
+		DiyApplyEntity apply = applyDao.findById(id);
 		if(null == apply){
 			result.setErrorMessage("请求删除的应用不存在!");
 			return result;
@@ -147,9 +147,9 @@ public class ApplyServiceImpl implements IApplyService {
 	}
 
 	@Override
-	public Result<Page<ApplyEntity>> findApplyList(ApplyEntity entity,Page<ApplyEntity> page) {
-		Result<Page<ApplyEntity>> result = new Result<>();
-		Page<ApplyEntity> findPageByEntity = applyDao.findPageByEntity(generalApplyQuery(entity,null), page);
+	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity,Page<DiyApplyEntity> page) {
+		Result<Page<DiyApplyEntity>> result = new Result<>();
+		Page<DiyApplyEntity> findPageByEntity = applyDao.findPageByEntity(generalApplyQuery(entity,null), page);
 		result.setData(findPageByEntity);
 		return result;
 	}
@@ -157,16 +157,16 @@ public class ApplyServiceImpl implements IApplyService {
 
 
 	@Override
-	public Result<List<ApplyEntity>> findApplyList(ApplyEntity entity) {
+	public Result<List<DiyApplyEntity>> findApplyList(DiyApplyEntity entity) {
 		return null;
 	}
 
 
 
 	@Override
-	public Result<ApplyEntity> getApplyById(String id,int pageSize,int currentPage) {
-		Result<ApplyEntity> result = new Result<>(); 
-		ApplyEntity apply = applyDao.findById(id);
+	public Result<DiyApplyEntity> getApplyById(String id,int pageSize,int currentPage) {
+		Result<DiyApplyEntity> result = new Result<>(); 
+		DiyApplyEntity apply = applyDao.findById(id);
 		
 		if(null == apply){
 			result.setErrorMessage("该应用不存在!");
@@ -200,7 +200,7 @@ public class ApplyServiceImpl implements IApplyService {
 	 * @author lida
 	 * @return
 	 */
-	private Criteria generalApplyCriteria(ApplyEntity entity){
+	private Criteria generalApplyCriteria(DiyApplyEntity entity){
 		//构建查询对象
 		Criteria c = new Criteria();
 		
@@ -219,7 +219,7 @@ public class ApplyServiceImpl implements IApplyService {
 		return c;
 	}
 
-	private Query generalApplyQuery(ApplyEntity apply,Sort sort){
+	private Query generalApplyQuery(DiyApplyEntity apply,Sort sort){
 		if(sort == null){
 			sort = new Sort(Direction.DESC,"createDate");
 		}
@@ -229,7 +229,7 @@ public class ApplyServiceImpl implements IApplyService {
 
 
 	@Override
-	public ApplyEntity findById(String applyId) {
+	public DiyApplyEntity findById(String applyId) {
 		return applyDao.findById(applyId);
 	}
 

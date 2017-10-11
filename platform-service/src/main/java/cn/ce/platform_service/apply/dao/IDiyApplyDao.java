@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.query.Query;
 
-import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.page.Page;
 
 /***
@@ -13,13 +13,13 @@ import cn.ce.platform_service.page.Page;
  * @date 2017年8月23日14:15:12
  *
  */
-public interface IApplyDao {
+public interface IDiyApplyDao {
 
 	/***
 	 * 更新/添加实体
 	 * @param entity
 	 */
-	void saveOrUpdate(ApplyEntity entity);
+	void saveOrUpdate(DiyApplyEntity entity);
 	
 	/***
 	 * 根据id删除实体
@@ -34,19 +34,19 @@ public interface IApplyDao {
 	 * @param pageSize
 	 * @return
 	 */
-	Page<ApplyEntity> findPageByEntity(Query query,Page<ApplyEntity> page);
+	Page<DiyApplyEntity> findPageByEntity(Query query,Page<DiyApplyEntity> page);
 	
 	/***
 	 * 根据条件查询应用列表
 	 * @param query
 	 * @return
 	 */
-	List<ApplyEntity> findListByEntity(Query query);
+	List<DiyApplyEntity> findListByEntity(Query query);
 	
 	/**
 	 * 根据id加载应用信息
 	 * @param id
 	 * @return
 	 */
-	ApplyEntity findById(String id);
+	DiyApplyEntity findById(String id);
 }

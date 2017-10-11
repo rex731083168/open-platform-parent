@@ -3,7 +3,7 @@ package cn.ce.platform_service.apis.dao;
 import java.util.List;
 
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
-import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.page.Page;
 
 /**
@@ -25,7 +25,7 @@ public interface IApiOauthDao {
 
 	Page<ApiAuditEntity> findAsPage1(String userId, int currentPage, int pageSize);
 
-	List<ApplyEntity> findByApplyId(String applyId, String apiId);
+	List<DiyApplyEntity> findByApplyId(String applyId, String apiId);
 
 	List<ApiAuditEntity> getListByApiId(List<String> apiIds);
 
