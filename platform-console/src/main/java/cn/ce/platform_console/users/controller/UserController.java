@@ -26,10 +26,10 @@ import cn.ce.platform_service.util.SmsUtil;
  * @version V1.0 类说明
  */
 @RestController
-public class LoginController {
+public class UserController {
 
 	/** 日志对象 */
-	private static Logger _LOGGER = Logger.getLogger(LoginController.class);
+	private static Logger _LOGGER = Logger.getLogger(UserController.class);
 
 	@Resource
 	private IUserService userService;
@@ -86,13 +86,17 @@ public class LoginController {
 	@RequestMapping(value = "user/register", method = RequestMethod.POST)
 	@ResponseBody
 	public Result<String> userRegister(HttpServletRequest request, HttpServletResponse response, 
-			String userName,String password, String email, String tel,String userType) {
+			@RequestParam String userName,
+			@RequestParam String password, 
+			@RequestParam String email, 
+			@RequestParam String telNumber,
+			@RequestParam Integer userType) {
 		
 		_LOGGER.info("userName:"+userName);
 		_LOGGER.info("email:"+email);
-		_LOGGER.info("tel:"+tel);
+		_LOGGER.info("tel:"+telNumber);
 		
-		return userService.userRegister(userName,password,email,tel,userType);
+		return userService.userRegister(userName,password,email,telNumber,userType);
 	}
 
 	@RequestMapping(value = "user/logOut", method = RequestMethod.POST)

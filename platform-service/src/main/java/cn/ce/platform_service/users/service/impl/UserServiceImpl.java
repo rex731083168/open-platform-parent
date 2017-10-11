@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.Constants;
@@ -20,6 +20,7 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.mail.MailInfo;
 import cn.ce.platform_service.common.mail.MailUtil;
 import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.users.dao.INewUserDao;
 import cn.ce.platform_service.users.dao.IUserDAO;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
@@ -38,39 +39,41 @@ public class UserServiceImpl implements IUserService {
     
 	private static final Logger _LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     /** 提供者数据库操作类型 */
-    @Autowired
-    private IUserDAO userDAO;
-
+    @Resource
+    private IUserDAO userDao;
+    @Resource
+    private INewUserDao newUserDao;
+    
 	@Override
 	public void addUser(User user) {
-		userDAO.addUser(user);
+		userDao.addUser(user);
 		
 	}
 
 	@Override
 	public User findOne(String id) {
-		return userDAO.findOne(id);
+		return userDao.findOne(id);
 	}
 
 	@Override
 	public int modifyById(String id, User user) {
-		return userDAO.modifyById(id, user);
+		return userDao.modifyById(id, user);
 	}
 
 	@Override
 	public User findByUserName(String username) {
-		return userDAO.findUserByUserName(username);
+		return userDao.findUserByUserName(username);
 	}
 
 	@Override
 	public User findUserByUserNameAndPWD(String username, String password) {
-		return userDAO.findUserByUserNameAndPWD(username, password);
+		return userDao.findUserByUserNameAndPWD(username, password);
 	}
 
 	@Override
 	public Page<User> getUsers(int roleType, String uname, String checkstate,String state,
 			int currentPage, int pageSize) {
-		return userDAO.getUsers(roleType, uname, checkstate, state, currentPage, pageSize);
+		return userDao.getUsers(roleType, uname, checkstate, state, currentPage, pageSize);
 	}
 
 
@@ -83,7 +86,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public int modifyPasswordById(String id, String newPassword) {
 		
-		return userDAO.modifyPasswordById(id,newPassword);
+		return userDao.modifyPasswordById(id,newPassword);
 	}
 
 	/**
@@ -107,7 +110,7 @@ public class UserServiceImpl implements IUserService {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("password", newPassword);
 		
-		int i = userDAO.updateById(userId,map);
+		int i = userDao.updateById(userId,map);
 		
 		if(i > 0){
 			result.setMessage("修改成功");
@@ -124,7 +127,7 @@ public class UserServiceImpl implements IUserService {
 	public Result<?> checkUserName(String username) {
 		
 		Result<String> result = new Result<String>();
-		User user = userDAO.findUserByUserName(username);
+		User user = userDao.findUserByUserName(username);
 		
 		if(user != null){
 			result.setErrorMessage("当前用户名已存在，请重新输入");
@@ -137,7 +140,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public boolean checkEmail(String email) {
 		
-		User user = userDAO.findUserByEmail(email);
+		User user = userDao.findUserByEmail(email);
 		
 		//if(user != null && user.getCheckState() != 3){ // 当前email已经存在，且审核状态为审核失败，当前email仍然可以使用
 		if(user != null) {
@@ -149,71 +152,59 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public User findByEmail(String email) {
 		
-		return userDAO.findUserByEmail(email);
+		return userDao.findUserByEmail(email);
 	}
 
 	@Override
 	public Result<User> login(HttpSession session,String userName, String password) {
 
 		Result<User> result = new Result<User>();
-		User user = findUserByUserNameAndPWD(userName, password);
-
+		User user = newUserDao.findUserByUsernameAndPwd(userName, password);
 		if (user == null) {
-			_LOGGER.info("---------->> not found user name");
 			result.setErrorMessage("用户名或者密码错误", ErrorCodeNo.SYS008);
-			return result;
-		} else if (user.getPassword().equals(password.toUpperCase())) {
-			_LOGGER.info("---------->> not found user name");
-			result.setErrorMessage("用户名或者密码错误", ErrorCodeNo.SYS008);
-			return result;
-		} else {
-			if (user.getState() == 1 && (2 == user.getUserType() || 1 == user.getUserType())
-					&& 2 == user.getCheckState()) {
-				result.setSuccessMessage("登录成功");
-				session.setAttribute(Constants.SES_LOGIN_USER, user);
-				user.setPassword("");
-				result.setSuccessData(user);
-				return result;
-			}
-			result.setErrorMessage("用户状态不可用");
 			return result;
 		}
+		
+		_LOGGER.info("账号密码正确");
+		user.setPassword("");
+		session.setAttribute(Constants.SES_LOGIN_USER, user);
+		result.setSuccessData(user);
+		return result;
 	}
 
 	@Override
-	public Result<String> userRegister(String userName, String password, String email, String tel, String userType) {
+	public Result<String> userRegister(String userName, String password, String email, String telNumber, Integer userType) {
+		
 		Result<String> result = new Result<String>();
 		
-		//校验当前用户名是否存在
-		// TODO 校验用户名
-		User user1= userDAO.findUserByUserName(userName);
+		//校验用户名
+		User user1= userDao.findUserByUserName(userName);
 		if(user1 != null){
-			//当前用户名存在
 			result.setErrorMessage("当前用户名已经存在", ErrorCodeNo.SYS009);
 			return result;
 		}
-		
 		//校验邮箱
-		boolean bool1 = checkEmail(email);
-		if(!bool1){
+		User user2 = userDao.findUserByEmail(email);
+		if(user2 != null){
 			result.setErrorMessage("当前邮箱已经被注册", ErrorCodeNo.SYS009);
+			return result;
+		}
+		//校验手机号
+		User user3 = newUserDao.findUserByTelNumber(telNumber);
+		if(user3 != null){
+			result.setErrorMessage("当前手机号已经被使用", ErrorCodeNo.SYS009);
 			return result;
 		}
 		
 		try {
-			User user = new User();
-			user.setUserName(userName.trim());
-			user.setPassword(password.trim());
-			user.setEmail(email.trim());
-			user.setTel(tel.trim());
-			user.setUserType(Integer.parseInt(userType));
-			user.setState(1);
-			user.setRegTime(new Date());
-			String appsecret = Util.getRandomStrs(Constants.SECRET_LENGTH);
-			user.setAppSecret(appsecret);
-			addUser(user);
-			result.setSuccessMessage("");
-		} catch (Exception ex) {
+			// TODO appSecret使用Util生成的，这里有什么作用？
+			// TODO userType为int类型
+			User user = new User(null,userName,password,email,telNumber,1,null,userType,new Date(),0
+					,null,Util.getRandomStrs(Constants.SECRET_LENGTH));
+			newUserDao.save(user);
+			result.setSuccessMessage("添加成功");
+		} catch (Exception e) {
+			_LOGGER.error("error happens when execute save user to db",e);
 			result.setErrorMessage("");
 		}
 		return result;

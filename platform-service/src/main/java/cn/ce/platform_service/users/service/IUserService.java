@@ -44,7 +44,7 @@ public interface IUserService {
 
 	Result<User> login(HttpSession session, String userName, String password);
 
-	Result<String> userRegister(String userName, String password, String email, String tel, String userType);
+	Result<String> userRegister(String userName, String password, String email, String telNumber, Integer userType);
 
 	Result<Page<User>> approveUsers(String roleType, String userName, String checkState, String state, int currentPage,
 			int pageSize);
