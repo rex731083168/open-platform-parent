@@ -104,4 +104,19 @@ public class SmsUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @方法描述：生成四位随机数
+	 * @return
+	 * String
+	 */
+	public static String getValidateCode() {
+		String code = String.valueOf(Math.round(Math.random() * 10)) + String.valueOf(Math.round(Math.random() * 10))
+		                + String.valueOf(Math.round(Math.random() * 10))
+		                + String.valueOf(Math.round(Math.random() * 10));
+		code = code.substring(0, 4);
+		return code;
+	}
+	
 }

@@ -69,6 +69,14 @@
 	<!-- Swagger Configue -->
     <bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
     
+    <!-- interface properties -->
+    <bean id="interface_addr" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:interface_addr.properties</value>
+            </list>
+        </property>
+    </bean>    
    	
 	<!-- es -->
 	<bean id="esclient" class="cn.ce.es.util.ElasticsearchUtils">

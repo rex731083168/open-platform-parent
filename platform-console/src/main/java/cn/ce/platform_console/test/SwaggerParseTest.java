@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,10 +22,13 @@ import io.swagger.parser.SwaggerParser;
 @RequestMapping(value= "/test" )
 public class SwaggerParseTest {
 
+	@Value("#{interface_addr['testUrl']}")
+    private String consoleAddr;
+	
 	@RequestMapping(value= "/testSwaggerParser" )
 	public Result<?> testSwaggerParser(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam String str){
-
+		System.out.println(consoleAddr);
 		Swagger swagger = null;
 		try{
 			swagger = new SwaggerParser().parse(str);
