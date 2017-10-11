@@ -45,7 +45,9 @@ public class User implements Serializable {
 	/** 注册时间 */
 	@Field("regTime")
 	private Date regTime;
-
+	@Field("checkCode")
+	private String checkCode; //短信校验码
+	
 	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
 	@Field("checkState")
 	private int checkState;
@@ -201,14 +203,37 @@ public class User implements Serializable {
 		return serialVersionUID;
 	}
 
+	public String getCheckCode() {
+		return checkCode;
+	}
+
+	public void setCheckCode(String checkCode) {
+		this.checkCode = checkCode;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email + ", tel="
-				+ telNumber + ", state=" + state + ", appId=" + appId + ", userType=" + userType + ", regTime=" + regTime
-				+ ", checkState=" + checkState + ", checkMem=" + checkMem + ", appSecret=" + appSecret + "]";
+		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
+				+ ", telNumber=" + telNumber + ", state=" + state + ", appId=" + appId + ", userType=" + userType
+				+ ", regTime=" + regTime + ", checkCode=" + checkCode + ", checkState=" + checkState + ", checkMem="
+				+ checkMem + ", orgId=" + orgId + ", orgName=" + orgName + ", appSecret=" + appSecret + ", getOrgId()="
+				+ getOrgId() + ", getId()=" + getId() + ", getUserName()=" + getUserName() + ", getPassword()="
+				+ getPassword() + ", getEmail()=" + getEmail() + ", getTelNumber()=" + getTelNumber() + ", getState()="
+				+ getState() + ", getAppId()=" + getAppId() + ", getUserType()=" + getUserType() + ", getRegTime()="
+				+ getRegTime() + ", getCheckState()=" + getCheckState() + ", getCheckMem()=" + getCheckMem()
+				+ ", getAppSecret()=" + getAppSecret() + ", getCheckCode()=" + getCheckCode() + ", getOrgName()="
+				+ getOrgName() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+				+ super.toString() + "]";
 	}
 
 
 	
-
 }

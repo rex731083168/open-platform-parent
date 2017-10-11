@@ -18,6 +18,7 @@ public enum ErrorCodeNo {
 	,SYS008("部分参数错误")
 	,SYS009("已存在")
 	,SYS010("不可重复")
+	,SYS011("数据已过期")
 	;
 	
 	

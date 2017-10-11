@@ -17,12 +17,7 @@ import cn.ce.platform_service.users.entity.User;
 @Service(value="newUserDao")
 public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDao{
 
-	@Override
-	public User findUserByTelNumber(String telNumber) {
-		Query query = new Query();
-		query.addCriteria(Criteria.where("telNumber").is(telNumber));
-		return super.findOne(query);
-	}
+
 
 	public User save(User user) {
 		return super.save(user);
@@ -36,6 +31,27 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 		Query query = new Query().addCriteria(c);
 		super.findOne(query);
 		return null;
+	}
+
+	@Override
+	public User findUserByEmail(String email) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("email").is(email));
+		return super.findOne(query);
+	}
+
+	@Override
+	public User findUserByUserName(String userName) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("userName").is(userName));
+		return super.findOne(query);
+	}
+	
+	@Override
+	public User findUserByTelNumber(String telNumber) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("telNumber").is(telNumber));
+		return super.findOne(query);
 	}
 
 }

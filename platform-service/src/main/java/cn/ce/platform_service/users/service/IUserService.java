@@ -27,24 +27,13 @@ public interface IUserService {
 	
 	Page<User> getUsers(int roleType, String uname, String checkstate, String state, int currentPage, int pageSize);
 
-
-
 	Result<String> deleteById(String userId);
 
 	int modifyPasswordById(String id, String newPassword);
 
-
 	Result<String> resetUserPassword(String userId,String newpassword);
 
-	boolean checkEmail(String email);
-	
-	Result<?> checkUserName(String userName);
-
 	User findByEmail(String email);
-
-	Result<User> login(HttpSession session, String userName, String password);
-
-	Result<String> userRegister(String userName, String password, String email, String telNumber, Integer userType);
 
 	Result<Page<User>> approveUsers(String roleType, String userName, String checkState, String state, int currentPage,
 			int pageSize);
@@ -52,5 +41,9 @@ public interface IUserService {
 	Result<String> approve(String id, String checkMem, String checkState);
 
 	Result<String> forbid(String userId, String state);
+
+	
+
+
 
 }

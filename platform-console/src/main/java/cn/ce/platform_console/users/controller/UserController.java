@@ -1,5 +1,7 @@
 package cn.ce.platform_console.users.controller;
 
+import java.util.UUID;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -7,116 +9,82 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.users.entity.User;
-import cn.ce.platform_service.users.service.IUserService;
+import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.SmsUtil;
 
 
 /**
- * @author 作者 E -mail: dingjia@300.cn 创建时间：2017年7月17日 下午3:17:22
- * @version V1.0 类说明
+ * 
+ * 
+ * @ClassName:  UserController   
+ * @Description:TODO(这里用一句话描述这个类的作用)   
+ * @author: makangwei
+ * @date:   2017年10月11日 下午2:27:28   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
+ *
  */
 @RestController
+@RequestMapping(value="/user")
 public class UserController {
 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(UserController.class);
 
 	@Resource
-	private IUserService userService;
+	private IConsoleUserService consoleUserService;
 
 	
-	@RequestMapping(value = "/user/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public Result<?> userRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+			@RequestBody User user) {
+		
+		_LOGGER.info("userName:"+user.getUserName());
+		_LOGGER.info("email:"+user.getEmail());
+		_LOGGER.info("tel:"+user.getTelNumber());
+		
+		_LOGGER.info("校验验证码是否正确");
+		Integer checkCode1 = (Integer)session.getAttribute(user.getTelNumber());
+		
+		
+		//短信验证码校验
+		Result<String> result = new Result<String>();
+		
+		if(checkCode1 == null){
+			result.setErrorMessage("session数据不存在", ErrorCodeNo.SYS001);
+			return result;
+		}
+		if(!user.getCheckCode().equals(checkCode1)){
+			result.setErrorMessage("验证码错误", ErrorCodeNo.SYS008);
+			return result;
+		}
+		Long codeTime = (Long)session.getAttribute(user.getTelNumber()+"TransTime");
+		if((codeTime+Constants.TEL_VALIDITY) < System.currentTimeMillis()){
+			result.setErrorMessage("验证码已过期",ErrorCodeNo.SYS011);
+			return result;
+		}
+		 
+		return consoleUserService.userRegister(user);
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Result<?> login(HttpSession session, 
 			@RequestParam String userName, 
 			@RequestParam String password) {
 
-		return userService.login(session, userName,password);
+		return consoleUserService.login(session, userName,password);
 	}
 	
-	
-	@RequestMapping(value="/user/checkUserName",method=RequestMethod.GET)
-	public Result<?> checkUserName(String userName){
-		
-		if(StringUtils.isBlank(userName)){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("当前用户名不能为空");
-			return result;
-		}
-		
-		return userService.checkUserName(userName);
-	}
-	
-	@RequestMapping(value="/user/resetPwd",method=RequestMethod.POST)
-	public Result<String> resetPwd(HttpServletRequest request,HttpServletResponse response,
-			@RequestParam(required=true)String userName,
-			@RequestParam(required=true)String password,
-			@RequestParam(required=true)String newPassword
-			){
-		
-		_LOGGER.info("---------->用户名："+userName);
-		_LOGGER.info("---------->旧密码："+password);
-		_LOGGER.info("---------->新密码："+newPassword);
-		
-		Result<String> result = new Result<String>();
-		
-		User user = userService.findUserByUserNameAndPWD(userName, password);
-		if(user != null){
-			user.setPassword(newPassword);
-			int i = userService.modifyPasswordById(user.getId(), newPassword);
-			_LOGGER.info("修改了"+i+"个用户");
-			result.setStatus(Status.SUCCESS);
-			result.setMessage("修改成功");
-			return result;
-		}else{
-			result.setMessage("当前用户名或密码错误");
-			return result;
-		}
-	}
-	
-	@RequestMapping(value = "user/register", method = RequestMethod.POST)
-	@ResponseBody
-	public Result<String> userRegister(HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam String userName,
-			@RequestParam String password, 
-			@RequestParam String email, 
-			@RequestParam String telNumber,
-			@RequestParam Integer userType) {
-		
-		_LOGGER.info("userName:"+userName);
-		_LOGGER.info("email:"+email);
-		_LOGGER.info("tel:"+telNumber);
-		
-		return userService.userRegister(userName,password,email,telNumber,userType);
-	}
-
-	@RequestMapping(value = "user/logOut", method = RequestMethod.POST)
-	@ResponseBody
-	public Result<String> logOut(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		_LOGGER.info("---------->> Action for logout");
-		Result<String> result = new Result<String>();
-		try {
-			session.invalidate();
-			result.setSuccessMessage("");
-			return result;
-		} catch (Exception e) {
-			_LOGGER.info("error happens when execute user logout",e);
-			result.setErrorMessage("");
-			return result;
-		}
-	}
-
-	@RequestMapping(value = "user/checkLogin", method = RequestMethod.POST)
-	@ResponseBody
+	@RequestMapping(value = "/checkLogin", method = RequestMethod.POST)
 	public Result<User> checkLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		
 		Result<User> result = new Result<User>();
@@ -136,32 +104,127 @@ public class UserController {
 		}
 		return result;
 	}
-	
-	@RequestMapping(value="user/checkEmail",method=RequestMethod.GET)
-	@ResponseBody
-	public Result<String> checkEmail(HttpServletRequest request,HttpServletResponse response,
-			String email){
-		
+
+	@RequestMapping(value = "/logOut", method = RequestMethod.POST)
+	public Result<?> logOut(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		_LOGGER.info("---------->> Action for logout");
 		Result<String> result = new Result<String>();
-		
-		boolean bool = userService.checkEmail(email);
-		
-		if(bool){
-			result.setStatus(Status.SUCCESS);
-			result.setMessage("当前邮箱可用");
-		}else{
-			result.setMessage("当前邮箱已经被注册");
+		try {
+			session.invalidate();
+			result.setSuccessMessage("");
+			return result;
+		} catch (Exception e) {
+			_LOGGER.info("error happens when execute user logout",e);
+			result.setErrorMessage("");
+			return result;
 		}
-		return result;
 	}
 	
-	@RequestMapping(value="user/sendSms",method=RequestMethod.POST)
-	@ResponseBody
+	//忘记密码后重置密码(已经校验完成)
+	@RequestMapping(value="modifyPassword",method=RequestMethod.POST)
+	public Result<?> modifyPassword(HttpSession session,
+			@RequestParam String telNumber,
+			@RequestParam String newPassword,
+			@RequestParam String uuid){
+		
+		String uuid1 = (String)session.getAttribute("uuid");
+		if(!uuid.equals(uuid1)){
+			Result<String> result = new Result<String>();
+			result.setSuccessMessage("uuid错误");
+			return result;
+		}
+		
+		return consoleUserService.modifyPassword(telNumber,newPassword);
+	}
+	
+	//注册时发送短信验证码
+	@RequestMapping(value="/sendRegistSms", method=RequestMethod.POST)
+	public Result<?> sendRegistSms(HttpSession session, @RequestParam String telNumber){
+		
+		return consoleUserService.sendRegistSms(telNumber,session);
+	}
+	
+	//忘记密码时发送短信验证码
+	@RequestMapping(value="/sendRePwdSms", method=RequestMethod.POST)
+	public Result<?> sendRePwdSms(HttpSession session, @RequestParam String telNumber){
+		
+		return consoleUserService.sendRePwdSms(telNumber,session);
+	}
+	
+	@RequestMapping(value="/sendSms",method=RequestMethod.POST)
 	public Result<String> sendSms(HttpServletRequest request,HttpServletResponse response,
 			String phone,String content){
 		Result<String> result = new Result<String>();
 		result.setSuccessMessage(SmsUtil.messageSend(phone, content));
 		return result;
+	}
+	
+	//校验忘记密码时发送的验证码，判断页面是否可以跳转到可以输入新密码的页面
+	@RequestMapping(value="checkTelVerifyCode",method=RequestMethod.POST)
+	public Result<?> checkTelVerifyCode(HttpSession session,
+			@RequestParam String telNumber,
+			@RequestParam String telVerifyCode){
+		
+		Integer verifyCode = (Integer) session.getAttribute(telNumber);
+		Long transTime = (Long) session.getAttribute(telNumber+"TransTime");
+		
+		Result<String> result = new Result<String>();
+		if(verifyCode == null || transTime == null){
+			result.setErrorMessage("当前是新的session");
+			return result;
+		}
+		if(!telVerifyCode.equals(verifyCode)){
+			result.setErrorMessage("验证码错误",ErrorCodeNo.SYS008);
+			return result;
+		}
+		if((transTime + Constants.TEL_VALIDITY) < System.currentTimeMillis()){
+			result.setErrorMessage("验证码过期",ErrorCodeNo.SYS011);
+			return result;
+		}
+		
+		String uuid = UUID.randomUUID().toString();
+		session.setAttribute("uuid", uuid);
+		result.setSuccessData(uuid);
+		return result;
+	}
+	
+	//校验邮箱
+	@RequestMapping(value="/checkEmail",method=RequestMethod.GET)
+	public Result<?> checkEmail(HttpServletRequest request,HttpServletResponse response,
+			String email){
+	
+		if(StringUtils.isBlank(email)){
+			Result<String> result = new Result<String>();
+			result.setErrorMessage("邮箱不能为空",ErrorCodeNo.SYS005);
+			return result;
+		}
+		return consoleUserService.checkEmail(email);
+	}
+	
+	//校验用户名
+	@RequestMapping(value="/checkUserName",method=RequestMethod.GET)
+	public Result<?> checkUserName(String userName){
+		
+		if(StringUtils.isBlank(userName)){
+			Result<String> result = new Result<String>();
+			result.setErrorMessage("当前用户名不能为空",ErrorCodeNo.SYS005);
+			return result;
+		}
+		
+		return consoleUserService.checkUserName(userName);
+	}
+	
+	//校验手机号
+	@RequestMapping(value="/checkTelNumber",method=RequestMethod.GET)
+	public Result<?> checkTelNumber(String telNumber){
+		
+		if(StringUtils.isBlank(telNumber)){
+			Result<String> result = new Result<String>();
+			result.setErrorMessage("手机号不能为空",ErrorCodeNo.SYS005);
+			return result;
+		}
+		
+		return consoleUserService.checkTelNumber(telNumber);
 	}
 	
 }

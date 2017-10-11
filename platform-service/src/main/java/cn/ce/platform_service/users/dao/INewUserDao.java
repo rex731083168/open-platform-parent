@@ -19,6 +19,10 @@ public interface INewUserDao{
 	User save(User user);
 
 	User findUserByUsernameAndPwd(String userName, String password);
+
+	User findUserByEmail(String email);
+
+	User findUserByUserName(String userName);
 	
 
 }
