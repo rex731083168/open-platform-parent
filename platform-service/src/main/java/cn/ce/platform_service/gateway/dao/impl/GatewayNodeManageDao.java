@@ -1,4 +1,6 @@
-package cn.ce.platform_service.gateway.dao;
+package cn.ce.platform_service.gateway.dao.impl;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 import cn.ce.platform_service.page.Page;
 
@@ -18,7 +21,7 @@ import cn.ce.platform_service.page.Page;
  * 2017-8-4
  */
 @Repository
-public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity> {
+public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity> implements IGatewayNodeManageDao {
 
 	Logger LOGGER = LoggerFactory.getLogger(GatewayNodeManageDao.class);
 	
@@ -69,8 +72,6 @@ public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity
 		}
 		return false;
 	}
-
-
 
 
 }

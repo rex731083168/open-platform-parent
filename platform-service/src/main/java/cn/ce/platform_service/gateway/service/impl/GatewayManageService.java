@@ -4,20 +4,22 @@ package cn.ce.platform_service.gateway.service.impl;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
-import cn.ce.platform_service.gateway.dao.GatewayManageDao;
-import cn.ce.platform_service.gateway.dao.GatewayNodeManageDao;
+import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
+import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
+import cn.ce.platform_service.gateway.service.IGatewayManageService;
 import cn.ce.platform_service.page.Page;
 
 /**
@@ -25,14 +27,14 @@ import cn.ce.platform_service.page.Page;
  * @author makangwei
  * 2017-8-4
  */
-@Service
-public class GatewayManageService {
+@Service(value="gatewayManageService")
+public class GatewayManageService implements IGatewayManageService{
 
 	
-	@Autowired
-	private GatewayManageDao gatewayManageDao;
-	@Autowired
-	private GatewayNodeManageDao gatewayNodeManageDao;
+	@Resource
+	private IGatewayManageDao gatewayManageDao;
+	@Resource
+	private IGatewayNodeManageDao gatewayNodeManageDao;
 	
 	Logger _LOGGER = LoggerFactory.getLogger(GatewayManageService.class);
 	/**
@@ -40,7 +42,6 @@ public class GatewayManageService {
 	 * @param colEntity
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public Result<GatewayColonyEntity> addGatewayCol(GatewayColonyEntity colEntity) {
 		
 		Result<GatewayColonyEntity> result = new Result<GatewayColonyEntity>();
@@ -98,7 +99,6 @@ public class GatewayManageService {
 	 * @param colEntity
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public Result<GatewayColonyEntity> modifyGatewayCol(GatewayColonyEntity colEntity) {
 		
 		Result<GatewayColonyEntity> result = new Result<GatewayColonyEntity>();
@@ -145,7 +145,6 @@ public class GatewayManageService {
 		result.setSuccessData(colEntity);
 		return result;
 	}
-	
 	
 	/**
 	 * 查询网关集群
@@ -222,8 +221,7 @@ public class GatewayManageService {
 			return result;
 		}
 		
-		@SuppressWarnings("unchecked")
-		List<GatewayNodeEntity> urlList = gatewayManageDao.findByField("nodeUrl", nodeEntity.getNodeUrl(), GatewayNodeEntity.class);
+		List<GatewayNodeEntity> urlList = gatewayNodeManageDao.findByField("nodeUrl", nodeEntity.getNodeUrl(), GatewayNodeEntity.class);
 		if(urlList.size()>0){
 			result.setMessage("当前节点url已经存在，无需重复添加");
 			return result;
@@ -306,7 +304,6 @@ public class GatewayManageService {
 			return result;
 		}
 	
-		@SuppressWarnings("unchecked")
 		List<GatewayNodeEntity> nodeEntitys = gatewayNodeManageDao.findByField("_id", nodeEntity.getNodeId(), GatewayNodeEntity.class);
 	
 		if(nodeEntitys.size() < 1){
@@ -321,8 +318,7 @@ public class GatewayManageService {
 			return result;
 		}
 		
-		@SuppressWarnings("unchecked")
-		List<GatewayNodeEntity> urlList = gatewayManageDao.findByField("nodeUrl", nodeEntity.getNodeUrl(), GatewayNodeEntity.class);
+		List<GatewayNodeEntity> urlList = gatewayNodeManageDao.findByField("nodeUrl", nodeEntity.getNodeUrl(), GatewayNodeEntity.class);
 		if(urlList.size()>0){
 			result.setMessage("当前节点url已经存在，无需重复添加");
 			return result;
@@ -350,6 +346,7 @@ public class GatewayManageService {
 		}
 		
 	}
+
 
 
 }

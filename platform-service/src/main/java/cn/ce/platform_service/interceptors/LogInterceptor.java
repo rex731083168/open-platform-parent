@@ -2,18 +2,14 @@ package cn.ce.platform_service.interceptors;
 
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import cn.ce.platform_service.common.IOUtils;
 
 /**
 * @Description : 每次调用controller，debug记录当前调用信息，以及调用时间等
@@ -34,20 +30,19 @@ public class LogInterceptor extends HandlerInterceptorAdapter{
 		
 		millLong = System.currentTimeMillis();
 		// TODO 是否将日志信息保存到数据库中
-		_LOGGER.debug("_____________>request uri:"+request.getRequestURI());
-		_LOGGER.debug("_____________>invoke time:"+new Date());
-		_LOGGER.debug("_____________>request method:"+request.getMethod());
+		_LOGGER.info("_____________>request uri:"+request.getRequestURI());
+		_LOGGER.info("_____________>invoke time:"+new Date());
+		_LOGGER.info("_____________>request method:"+request.getMethod());
 		
 		// TODO 如何从request中多次读取流信息
 		//_LOGGER.debug("_____________>request body:"+IOUtils.convertStreamToString(IOUtils.deepCopyInputStream(request.getInputStream())));
-		_LOGGER.debug("_____________>request parameters:");
-		@SuppressWarnings("unchecked")
+		_LOGGER.info("_____________>request parameters:");
 		Enumeration<String> enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();  
-			_LOGGER.debug(paraName+": "+request.getParameter(paraName));  
+			_LOGGER.info(paraName+": "+request.getParameter(paraName));  
 		}
-		_LOGGER.debug("_____________>log interceptor finished");
+		_LOGGER.info("_____________>log interceptor finished");
 		return true;
 	}
 

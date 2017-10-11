@@ -34,8 +34,8 @@ public class AdminController extends BaseController{
 	
     
     
-	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public Result<String> logout(HttpSession session) {
+	@RequestMapping(value = "/logOut", method = RequestMethod.POST)
+	public Result<String> logOut(HttpSession session) {
 		
 		Result<String> result = new Result<String>();
 		session.invalidate();

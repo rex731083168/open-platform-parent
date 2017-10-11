@@ -38,7 +38,7 @@ public interface IUserService {
 
 	boolean checkEmail(String email);
 	
-	boolean checkUserName(String username);
+	Result<?> checkUserName(String userName);
 
 	User findByEmail(String email);
 

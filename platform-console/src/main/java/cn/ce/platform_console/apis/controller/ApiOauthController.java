@@ -39,8 +39,6 @@ public class ApiOauthController {
 			@RequestParam String apiId,
 			@RequestParam String applyId){
 		
-		
-		
 		return apiOauthService.applyApi(userId,apiId,applyId);
 		
 	}

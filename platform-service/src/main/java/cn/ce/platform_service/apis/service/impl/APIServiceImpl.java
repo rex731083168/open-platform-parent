@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -255,14 +254,14 @@ public class APIServiceImpl implements IAPIService {
 	}
 
 	@Override
-	public Result<String> apiVerify(String apiid, String username, String password) {
+	public Result<String> apiVerify(String apiId, String username, String password) {
 		
 		Result<String> result = new Result<String>();
 		try {
-			APIEntity api = findById(apiid);
+			APIEntity api = findById(apiId);
 			api.setCheckState(1);
 			updateAPI(api);
-			result.setSuccessMessage("修改成功");;
+			result.setSuccessMessage("修改成功");
 		} catch (Exception e) {
 			_LOGGER.error("_____________>error happens when excute apiVerify service :", e);
 			result.setErrorMessage("修改失败");
@@ -284,7 +283,7 @@ public class APIServiceImpl implements IAPIService {
 		
 		// 第一次添加接口,并且选择未开启版本控制
 		if (apientity.getApiVersion() == null || StringUtils.isBlank(apientity.getApiVersion().getVersion())) {
-			apientity.setId(UUID.randomUUID().toString().replace("-", ""));
+//			apientity.setId(UUID.randomUUID().toString().replace("-", ""));
 			apientity.setUserId(user.getId());
 			apientity.setUserName(user.getUserName());
 			apientity.setCreateTime(new Date());
@@ -301,7 +300,7 @@ public class APIServiceImpl implements IAPIService {
 		} else {
 			// 开启版本控制
 			
-			apientity.setId(UUID.randomUUID().toString().replace("-", ""));
+//			apientity.setId(UUID.randomUUID().toString().replace("-", ""));
 			apientity.setUserId(user.getId());
 			apientity.setUserName(user.getUserName());
 			apientity.setCreateTime(new Date());
@@ -327,9 +326,9 @@ public class APIServiceImpl implements IAPIService {
 	}
 
 	@Override
-	public Result<String> show(String apiId) {
+	public Result<?> show(String apiId) {
 		
-		Result<String> result = new Result<String>();
+		Result<JSONObject> result = new Result<JSONObject>();
 		try {
 			APIEntity api = findById(apiId);
 
@@ -347,19 +346,20 @@ public class APIServiceImpl implements IAPIService {
 			AppEntity appEntity = appService.findById(api.getAppId());
 			
 			List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
+			
 			List<String> gatewayUrlList = new ArrayList<String>();
 
 			for (GatewayColonyEntity gatewayColonyEntity : colList) {
 				
 				gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+appEntity.getAppKey()+"/" + api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
 			}
+			
 			jsonObject.put("gatewayUrls", gatewayUrlList);
-
-			jsonObject.put("appname", app.getAppName());
-			result.setSuccessMessage("");
+			jsonObject.put("appName", app.getAppName());
+			result.setSuccessData(jsonObject);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.setErrorMessage("ERROR");;
+			result.setErrorMessage("");
 		}
 		return result;
 	}
