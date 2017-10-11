@@ -53,6 +53,16 @@ public class User implements Serializable {
 	/** 审核备注 */
 	@Field("checkMem")
 	private String checkMem;
+	
+	/** 
+	 * 组织机构编码,标识当前用户的组织
+	 * */
+	@Field("orgId")
+	private String orgId;
+	
+	/** 组织机构名称 冗余字段 */
+	@Field("orgName")
+	private String orgName;
 
 	/** 签名秘钥 */
 	private String appSecret;
@@ -61,9 +71,9 @@ public class User implements Serializable {
 	public User() {
 		super();
 	}
-	
+
 	public User(String id, String userName, String password, String email, String telNumber, int state, String appId,
-			int userType, Date regTime, int checkState, String checkMem, String appSecret) {
+			int userType, Date regTime, int checkState, String checkMem, String orgId, String appSecret) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -76,9 +86,20 @@ public class User implements Serializable {
 		this.regTime = regTime;
 		this.checkState = checkState;
 		this.checkMem = checkMem;
+		this.orgId = orgId;
 		this.appSecret = appSecret;
 	}
-	
+
+
+
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
 
 	public String getId() {
 		return id;
