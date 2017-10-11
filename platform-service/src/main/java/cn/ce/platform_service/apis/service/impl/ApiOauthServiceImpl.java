@@ -27,8 +27,8 @@ import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.app.entity.AppEntity;
 import cn.ce.platform_service.app.service.IAppService;
-import cn.ce.platform_service.apply.dao.IApplyDao;
-import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.dao.IDiyApplyDao;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
@@ -51,7 +51,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 	@Resource
 	private IAppService appService;
 	@Resource
-	private IApplyDao applyDao;
+	private IDiyApplyDao applyDao;
 	@Resource
 	private IApiOauthDao apiOauthDao;
 	@Resource
@@ -87,7 +87,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 			return result;
 		}
 		
-		ApplyEntity applyEntity = applyDao.findById(applyId);
+		DiyApplyEntity applyEntity = applyDao.findById(applyId);
 		
 		if(null == applyEntity){
 			result.setErrorMessage("应用信息不存在!");
@@ -178,7 +178,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		
 		String applyId = auditEntity.getApplyId();
 		
-		ApplyEntity applyEntity = applyDao.findById(applyId);
+		DiyApplyEntity applyEntity = applyDao.findById(applyId);
 		
 		if(applyEntity == null){
 			//当前应用已经删除，删除审核记录
@@ -263,7 +263,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		List<ApiAuditEntity> list = (List<ApiAuditEntity>)page.getItems();
 		for (ApiAuditEntity apiAuditEntity : list) {
 			String applyId = apiAuditEntity.getApplyId();
-			ApplyEntity applyEntity = applyDao.findById(applyId);
+			DiyApplyEntity applyEntity = applyDao.findById(applyId);
 			if(applyEntity != null){
 				apiAuditEntity.setApplyName(applyEntity.getApplyName());
 			}
@@ -280,7 +280,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 	}
 
 	@Override
-	public List<ApplyEntity> findByApplyId(String applyId,String apiId) {
+	public List<DiyApplyEntity> findByApplyId(String applyId,String apiId) {
 		
 		return apiOauthDao.findByApplyId(applyId,apiId);
 	}
@@ -306,7 +306,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 			return result;
 		}
 		
-		ApplyEntity applyEntity = applyDao.findById(auditEntity.getApplyId());
+		DiyApplyEntity applyEntity = applyDao.findById(auditEntity.getApplyId());
 		
 		/***
 		 * 删除将api与应用Apply建立关系

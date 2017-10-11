@@ -2,7 +2,7 @@ package cn.ce.platform_service.apply.service;
 
 import java.util.List;
 
-import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.page.Page;
 
@@ -13,13 +13,13 @@ import cn.ce.platform_service.page.Page;
  * @date 2017年8月23日14:32:35
  *
  */
-public interface IApplyService {
+public interface IConsoleDiyApplyService {
 
 	/***
 	 * 更新/添加实体
 	 * @param entity
 	 */
-	Result<String> saveApply(ApplyEntity entity);
+	Result<String> saveApply(DiyApplyEntity entity);
 	
 	/***
 	 * 根据id删除实体
@@ -34,21 +34,21 @@ public interface IApplyService {
 	 * @param pageSize
 	 * @return
 	 */
-	Result<Page<ApplyEntity>> findApplyList(ApplyEntity entity,Page<ApplyEntity> page);
+	Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity,Page<DiyApplyEntity> page);
 	
 	/***
 	 * 根据条件查询应用列表
 	 * @param query
 	 * @return
 	 */
-	Result<List<ApplyEntity>> findApplyList(ApplyEntity entity);
+	Result<List<DiyApplyEntity>> findApplyList(DiyApplyEntity entity);
 	
 	/**
 	 * 根据id加载应用信息
 	 * @param id
 	 * @return
 	 */
-	Result<ApplyEntity> getApplyById(String id,int pageSize,int currentPage);
+	Result<DiyApplyEntity> getApplyById(String id,int pageSize,int currentPage);
 	
 	/***
 	 * 
@@ -59,6 +59,6 @@ public interface IApplyService {
 	 * @return: ApplyEntity
 	 * @throws
 	 */
-	public ApplyEntity findById(String applyId);
+	public DiyApplyEntity findById(String applyId);
 	
 }

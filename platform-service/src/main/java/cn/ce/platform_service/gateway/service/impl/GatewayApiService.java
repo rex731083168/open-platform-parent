@@ -17,8 +17,8 @@ import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.app.entity.AppEntity;
 import cn.ce.platform_service.app.service.IAppService;
-import cn.ce.platform_service.apply.dao.IApplyDao;
-import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.dao.IDiyApplyDao;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
@@ -37,7 +37,7 @@ public class GatewayApiService implements IGatewayApiService{
 	@Autowired
 	private IAppService appService;
 	@Autowired @Qualifier("applyDao")
-	private IApplyDao applyDao;
+	private IDiyApplyDao applyDao;
 	@Autowired
 	private IApiSecretKeyDao apiSecretKeyDao;
 	
@@ -184,7 +184,7 @@ public class GatewayApiService implements IGatewayApiService{
 			return result;
 		}
 		
-		ApplyEntity applyById = applyDao.findById(applyId);
+		DiyApplyEntity applyById = applyDao.findById(applyId);
 		if(null == applyById){
 			result.setErrorMessage("应用信息不存在!");
 			return result;

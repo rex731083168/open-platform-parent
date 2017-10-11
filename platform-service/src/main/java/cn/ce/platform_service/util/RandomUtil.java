@@ -38,5 +38,16 @@ public class RandomUtil {
 		
 		return rm;
 	}
+	
+	public static Integer random6Number(){
+		
+		Integer rm = 0;
+		for(int i=0; i<6; i++){
+			int temp = random.nextInt(10);
+			rm = rm*10+temp;
+		}
+		
+		return rm;
+	}
 
 }

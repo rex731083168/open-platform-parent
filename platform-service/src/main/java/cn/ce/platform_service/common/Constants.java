@@ -101,5 +101,9 @@ public class Constants {
 	public static final int PAGE_SIZE = 8;
 	/** 发生异常时将跳转到的页面地址 **/
 	public static final String ERROR_PAGE = "www.baidu.com";
+	/** 手机校验码过期时间（ms）**/
+	public static final long TEL_VALIDITY = 300000;
+	
+	
 	
 }

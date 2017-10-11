@@ -16,7 +16,7 @@ import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.apis.dao.IApiOauthDao;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
-import cn.ce.platform_service.apply.entity.ApplyEntity;
+import cn.ce.platform_service.apply.entity.DiyApplyEntity;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.page.Page;
 
@@ -80,7 +80,7 @@ public class ApiOauthDaoImpl extends AbstractBaseMongoDao<ApiAuditEntity>  imple
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ApplyEntity> findByApplyId(String applyId,String apiId) {
+	public List<DiyApplyEntity> findByApplyId(String applyId,String apiId) {
 		
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("apply_id", applyId);
