@@ -158,49 +158,50 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 		remove(query);
 	}
 
-    /***
-     * 
-     * 根据多个字段值构建查询条件器
-     * @author lida
-     * @param condMap 查询条件Map key=字段 value=值 method=查询方式
-     * @see {@link MongoDBWhereEntity } {@link ConditionEnum}
-     * @return
-     * 
-     */
-    protected Criteria getCriteriaByWhereEntity(final Map<String,MongoDBWhereEntity> condMap){
-    	Criteria criteria = new Criteria();
-    	if(!condMap.isEmpty()){
-    		Iterator<String> iterator = condMap.keySet().iterator();
-    		MongoDBWhereEntity entity = null;
-    		String k = "";
-    		while(iterator.hasNext()){
-    			k = iterator.next();
-    			entity = condMap.get(k);
-    			if(entity.getMethod() == ConditionEnum.LIKE){
-    				criteria.and(k).regex(entity.getValue().toString());
-    			}else if(entity.getMethod() == ConditionEnum.EQ){
-    				criteria.and(k).is(entity.getValue());
-    			}else if(entity.getMethod() == ConditionEnum.NEQ){
-    				criteria.and(k).ne(entity.getValue());
-    			}else if(entity.getMethod() == ConditionEnum.IN){
-    				criteria.and(k).in(entity.getValue());
-    			}else if(entity.getMethod() == ConditionEnum.NOTIN){
-    				criteria.and(k).nin(entity.getValue());
-    			}
-    		}
-    	}
-    	return criteria;
-    }
-	
-    
-    /****bathupdate code begain****/
-	/*
-	 * how to use
-	 * List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>(); 
-	 * list.add(new BathUpdateOptions(Query.query(Criteria.where("author").is("yinjihuan")), Update.update("title", "批量更新"), true, true)); 
-	 * list.add(new BathUpdateOptions(Query.query(Criteria.where("author").is("jason")), Update.update("title", "批量更新"), true, true)); 
-	 * int n = MongoBaseDao.bathUpdate(mongoTemplate, Article.class, list); 
-	 * System.out.println("受影响的行数："+n);
+	/***
+	 * 
+	 * 根据多个字段值构建查询条件器
+	 * 
+	 * @author lida
+	 * @param condMap
+	 *            查询条件Map key=字段 value=值 method=查询方式
+	 * @see {@link MongoDBWhereEntity } {@link ConditionEnum}
+	 * @return
+	 * 
+	 */
+	protected Criteria getCriteriaByWhereEntity(final Map<String, MongoDBWhereEntity> condMap) {
+		Criteria criteria = new Criteria();
+		if (!condMap.isEmpty()) {
+			Iterator<String> iterator = condMap.keySet().iterator();
+			MongoDBWhereEntity entity = null;
+			String k = "";
+			while (iterator.hasNext()) {
+				k = iterator.next();
+				entity = condMap.get(k);
+				if (entity.getMethod() == ConditionEnum.LIKE) {
+					criteria.and(k).regex(entity.getValue().toString());
+				} else if (entity.getMethod() == ConditionEnum.EQ) {
+					criteria.and(k).is(entity.getValue());
+				} else if (entity.getMethod() == ConditionEnum.NEQ) {
+					criteria.and(k).ne(entity.getValue());
+				} else if (entity.getMethod() == ConditionEnum.IN) {
+					criteria.and(k).in(entity.getValue());
+				} else if (entity.getMethod() == ConditionEnum.NOTIN) {
+					criteria.and(k).nin(entity.getValue());
+				}
+			}
+		}
+		return criteria;
+	}
+
+	/**** bathupdate code begain ****/
+	/**
+	 * 
+	 * @param dbCollection
+	 * @param collName
+	 * @param options  BathUpdateOptions
+	 * @param ordered
+	 * @return 受影响的行数
 	 */
 	private static int doBathUpdate(DBCollection dbCollection, String collName, List<BathUpdateOptions> options,
 			boolean ordered) {
@@ -221,6 +222,11 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 		return Integer.parseInt(commandResult.get("n").toString());
 	}
 
+	/**
+	 * 
+	 * @param entityClass
+	 * @return collectionName
+	 */
 	private static String determineCollectionName(Class<?> entityClass) {
 		if (entityClass == null) {
 			throw new InvalidDataAccessApiUsageException(
@@ -236,43 +242,47 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 		return collName;
 	}
 
-	public static int bathUpdate(MongoTemplate mongoTemplate, String collName, List<BathUpdateOptions> options,
-			boolean ordered) {
-		return doBathUpdate(mongoTemplate.getCollection(collName), collName, options, ordered);
-	}
-
-	public static int bathUpdate(DBCollection dbCollection, String collName, List<BathUpdateOptions> options,
-			boolean ordered) {
-		return doBathUpdate(dbCollection, collName, options, ordered);
-	}
-
-	public static int bathUpdate(MongoTemplate mongoTemplate, Class<?> entityClass, List<BathUpdateOptions> options,
-			boolean ordered) {
-		String collectionName = determineCollectionName(entityClass);
-		return doBathUpdate(mongoTemplate.getCollection(collectionName), collectionName, options, ordered);
-	}
-
-	public static int bathUpdate(DBCollection dbCollection, Class<?> entityClass, List<BathUpdateOptions> options,
-			boolean ordered) {
-		return doBathUpdate(dbCollection, determineCollectionName(entityClass), options, ordered);
-	}
-
-	public static int bathUpdate(MongoTemplate mongoTemplate, String collName, List<BathUpdateOptions> options) {
-		return doBathUpdate(mongoTemplate.getCollection(collName), collName, options, true);
-	}
-
-	public static int bathUpdate(DBCollection dbCollection, String collName, List<BathUpdateOptions> options) {
-		return doBathUpdate(dbCollection, collName, options, true);
-	}
-
+	/**
+	 * 
+	 * @param mongoTemplate
+	 * @param entityClass
+	 * @param options
+	 * @return 受影响的行數
+	 * 
+	 * how to use: 
+	 *         List<BathUpdateOptions> list = new
+	 *         ArrayList<BathUpdateOptions>(); list.add(new
+	 *         BathUpdateOptions(Query.query(Criteria.where("author").is("yinjihuan")),
+	 *         Update.update("title", "批量更新"), true, true)); list.add(new
+	 *         BathUpdateOptions(Query.query(Criteria.where("author").is("jason")),
+	 *         Update.update("title", "批量更新"), true, true)); int n =
+	 *         MongoBaseDao.bathUpdate(mongoTemplate, Article.class, list);
+	 *         System.out.println("受影响的行数："+n);
+	 */
 	public static int bathUpdate(MongoTemplate mongoTemplate, Class<?> entityClass, List<BathUpdateOptions> options) {
 		String collectionName = determineCollectionName(entityClass);
 		return doBathUpdate(mongoTemplate.getCollection(collectionName), collectionName, options, true);
 	}
-
+	/**
+	 * 
+	 * @param dbCollection
+	 * @param entityClass
+	 * @param options  BathUpdateOptions
+	 * @return 受影响的行數
+	 * 
+	 *  how to use: 
+	 *         List<BathUpdateOptions> list = new
+	 *         ArrayList<BathUpdateOptions>(); list.add(new
+	 *         BathUpdateOptions(Query.query(Criteria.where("author").is("yinjihuan")),
+	 *         Update.update("title", "批量更新"), true, true)); list.add(new
+	 *         BathUpdateOptions(Query.query(Criteria.where("author").is("jason")),
+	 *         Update.update("title", "批量更新"), true, true)); int n =
+	 *         MongoBaseDao.bathUpdate(mongoTemplate, Article.class, list);
+	 *         System.out.println("受影响的行数："+n);
+	 */
 	public static int bathUpdate(DBCollection dbCollection, Class<?> entityClass, List<BathUpdateOptions> options) {
 		return doBathUpdate(dbCollection, determineCollectionName(entityClass), options, true);
 	}
-	
-	/****bathupdate code begain****/
+
+	/**** bathupdate code begain ****/
 }

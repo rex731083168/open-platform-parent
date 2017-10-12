@@ -20,8 +20,8 @@ public class BathUpdateOptions {
 
 	/**
 	 * 
-	 * @param query
-	 * @param update
+	 * @param query org.springframework.data.mongodb.core.query.Query
+	 * @param update org.springframework.data.mongodb.core.query。Update
 	 * @param upsert 如果不存在update的记录，是否插入objNew,true为插入，默认是false，不插入
 	 * @param multi  false,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新
 	 */
