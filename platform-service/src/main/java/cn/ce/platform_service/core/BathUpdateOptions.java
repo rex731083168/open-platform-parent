@@ -18,6 +18,13 @@ public class BathUpdateOptions {
 	private boolean upsert = false;
 	private boolean multi = false;
 
+	/**
+	 * 
+	 * @param query
+	 * @param update
+	 * @param upsert 如果不存在update的记录，是否插入objNew,true为插入，默认是false，不插入
+	 * @param multi  false,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新
+	 */
 	public BathUpdateOptions(Query query, Update update, boolean upsert, boolean multi) {
 		// TODO Auto-generated constructor stub
 		this.query = query;

@@ -194,7 +194,7 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("id").is(ids.get(i))),
-					Update.update("checkState", "2"), true, true));
+					Update.update("checkState", "2"), false, true));
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list));
 
