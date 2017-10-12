@@ -16,7 +16,7 @@ public class Page<T> implements Serializable {
 	private static final long serialVersionUID = 428978435560977887L;
 	
     /** 每页显示条数 */  
-    private Integer pageSize = 8;  
+    private Integer pageSize = 10;  
   
     /** 当前页 */  
     private Integer currentPage = 1;  

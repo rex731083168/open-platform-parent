@@ -14,7 +14,16 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -32,6 +41,7 @@ import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayKeyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 import cn.ce.platform_service.util.RandomUtil;
+import io.netty.handler.codec.http.HttpMethod;
 
 
 
@@ -691,7 +701,7 @@ public class GatewayUtils {
 	
 	/** >>>>>>>>>>>>>>>>>>>>>>>>>>> 网关路由操作开始  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 	
-	public static String getRouteBySaasId(String saasId){
+	public static String getRouteBySaasId(String saasId,String method){
 		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
 		Result<String> result = new Result<>();
 		if(null == colonySingle){
@@ -702,9 +712,9 @@ public class GatewayUtils {
 		
 		String jsonStr = null;
 		try {
-			jsonStr = getGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId);
+			jsonStr = getOrDelGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId,method);
 		}catch(Exception e){
-			LOGGER.error("调用网关时出现错误,地址为:" + jsonStr + ",异常:" + e.toString());
+			LOGGER.error("调用网关时出现错误,信息为:" + jsonStr + ",异常:" + e.toString());
 			result.setErrorMessage("服务异常!");
 			jsonStr = result.toString();
 		}
@@ -723,31 +733,19 @@ public class GatewayUtils {
 			return result.toString();
 		}
 		
-		String jsonStr = null;
-		boolean b = false;
 		try {
 			JSONObject params = new JSONObject();
 			params.put("target_url", targetUrl);
-			if(method == "put"){
-				b = ApiCallUtils.putGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params);
-			} else {
-				b = ApiCallUtils.postGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params);
-			}
-			if(b){
-				result.setSuccessMessage("保存成功!");
-			}else{
-				result.setSuccessMessage("保存失败!");
-			}	
-			gwJsonApi = result.toString();
+			gwJsonApi = putOrPostGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params,method);
 		}catch(Exception e){
-			LOGGER.error("调用网关时出现错误,地址为:" + jsonStr + ",异常:" + e.toString());
+			LOGGER.error("调用网关时出现错误,信息为:" + gwJsonApi + ",异常:" + e.toString());
 			result.setErrorMessage("服务异常!");
 			gwJsonApi = result.toString();
 		}
 		return gwJsonApi;
 	}
 	
-	public static String deleteRoute(String saasId){
+	public static String deleteRoute(String saasId,String method){
 		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
 		Result<String> result = new Result<>();
 		String gwJsonApi = "";
@@ -759,7 +757,7 @@ public class GatewayUtils {
 		
 		String jsonStr = null;
 		try {
-			jsonStr = ApiCallUtils.getGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId);
+			jsonStr = getOrDelGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId,method);
 		}catch(Exception e){
 			LOGGER.error("调用网关时出现错误,地址为:" + jsonStr + ",异常:" + e.toString());
 			result.setErrorMessage("服务异常!");
@@ -769,28 +767,34 @@ public class GatewayUtils {
 	}
 	
 	
-	public static String getGwJsonApi(String url) throws Exception {
-
+	
+	/** >>>>>>>>>>>>>>>>>>>>>>>>>>> 网关路由操作结束  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+	
+	
+	
+	public static String getOrDelGwJsonApi(String url,String method) throws Exception {
+		
+		LOGGER.info("***********在java中调用http/get/json请求***********");
+		LOGGER.info("url:"+url);
+		
 		HttpClient httpClient = null;
 		
-		try{
-			httpClient = ApiCallUtils.getHttpClient();
-		}catch(Exception e){
-			LOGGER.info("get httpclient error");
-			return null;
+		httpClient = ApiCallUtils.getHttpClient();
+		
+		HttpRequestBase hrb;
+		
+		if(HttpMethod.DELETE.toString().equals(method)){
+			hrb = new HttpDelete(url);
+		}else{
+			hrb = new HttpGet(url);
 		}
 		
-		HttpGet httpGet = new HttpGet(url);
 		
-		httpGet.addHeader(Constants.HEADER_KEY,Constants.HEADER_VALUE);
+		hrb.addHeader(Constants.HEADER_KEY,Constants.HEADER_VALUE);
 		
 		HttpResponse response = null;
 		
-		try{
-			response = httpClient.execute(httpGet);
-		}catch(Exception e){
-			LOGGER.info("error happens when execute http get");
-		}
+		response = httpClient.execute(hrb);
 		
 		StatusLine statusLine = response.getStatusLine();
 		
@@ -803,7 +807,50 @@ public class GatewayUtils {
 		return str;
 	}
 	
-	/** >>>>>>>>>>>>>>>>>>>>>>>>>>> 网关路由操作结束  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
+	/**
+	 * 向网关发送httpPut请求
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public static String putOrPostGwJson(String url, JSONObject params, String method) throws Exception{
+		
+		LOGGER.info("***********在java中调用http/" + method + "/json请求***********");
+		LOGGER.info("url:"+url);
+		LOGGER.info("params:"+params.toString());
+		String str = "";
+		HttpClient httpClient = null;
+		
+		try{
+			httpClient = ApiCallUtils.getHttpClient();
+		}catch(Exception e){
+			LOGGER.info("create httpClient error");
+			return null;
+		}
+		
+		HttpEntityEnclosingRequestBase hrb;
+		if(HttpMethod.POST.toString().equals(method)){
+			hrb = new HttpPost(url);
+		} else {
+			hrb = new HttpPut(url);
+		}
+		
+		hrb.setHeader(HTTP.CONTENT_TYPE,"application/json");
+		hrb.setHeader(Constants.HEADER_KEY,Constants.HEADER_VALUE);
+		
+		StringEntity strEntity =  new StringEntity(params.toString(),ContentType.APPLICATION_JSON);
+		strEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_ENCODING,"utf-8"));
+		
+		hrb.setEntity(strEntity);
+		
+		HttpResponse response = null;
+		response = httpClient.execute(hrb);
+		//解析返回实体
+		HttpEntity entity = response.getEntity();
+		InputStream is = entity.getContent();
+		str = IOUtils.convertStreamToString(is);
+		return str;
+	}
 }
 
