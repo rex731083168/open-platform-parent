@@ -28,13 +28,13 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
-import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
-import cn.ce.platform_service.users.service.IUserService;
+import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.HttpUtils;
 
 /**
@@ -54,7 +54,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 	@Resource
 	private IApiOauthDao apiOauthDao;
 	@Resource
-	private IUserService userService;
+	private IConsoleUserService consoleUserService;
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
@@ -72,7 +72,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 			return result;
 		}
 
-		User user = userService.findOne(userId);
+		User user = consoleUserService.findUserById(userId);
 		
 		if(user == null){
 			result.setMessage("当前用户不存在");

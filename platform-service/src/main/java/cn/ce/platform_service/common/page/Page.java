@@ -1,4 +1,4 @@
-package cn.ce.platform_service.page;
+package cn.ce.platform_service.common.page;
 
 import java.io.Serializable;
 import java.util.List;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 /***
  *

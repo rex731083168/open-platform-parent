@@ -10,7 +10,7 @@ import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 @Service("apiSecretKeyService")
 public class ApiSecretKeyServiceImpl implements IApiSecretKeyService {

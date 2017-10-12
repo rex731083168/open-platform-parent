@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.data.mongodb.core.query.Query;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 /**
  * 

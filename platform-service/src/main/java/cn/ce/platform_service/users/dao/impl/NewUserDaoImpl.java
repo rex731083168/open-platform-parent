@@ -1,9 +1,15 @@
 package cn.ce.platform_service.users.dao.impl;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import cn.ce.platform_service.common.DBFieldsConstants;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.users.dao.INewUserDao;
 import cn.ce.platform_service.users.entity.User;
@@ -54,6 +60,38 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 	public User findUserById(String userId) {
 
 		return super.findById(userId);
+	}
+
+	@Override
+	public Page<User> getUserList(Integer userType, String userName, String email, String telNumber,
+			String enterpriseName, Integer checkState, Integer state, int currentPage, int pageSize) {
+		//构建查询对象
+		Criteria c = new Criteria();
+		
+		if(0 != userType){
+			c.and(DBFieldsConstants.USER_USERTYPE).is(userType);
+		}
+		if(null != checkState){
+			c.and(DBFieldsConstants.USER_CHECKSTATE).is(Integer.valueOf(checkState));
+		}
+		if(null != state){
+			c.and(DBFieldsConstants.USER_STATE).is(Integer.valueOf(state));
+		}
+		if(StringUtils.isNotBlank(userName)){
+			c.and(DBFieldsConstants.USER_USERNAME).regex(userName);
+		}
+		if(StringUtils.isNotBlank(email)){
+			c.and(DBFieldsConstants.USER_EMAIL).regex(email);
+		}
+		if(StringUtils.isNotBlank(telNumber)){
+			c.and(DBFieldsConstants.USER_TELNUMBER).regex(telNumber);
+		}
+		if(StringUtils.isNotBlank(enterpriseName)){
+			c.and(DBFieldsConstants.USER_ENTERPRISE_NAME).regex(enterpriseName);
+		}
+        Query query = new Query(c).with(new Sort(new Order(Direction.DESC,DBFieldsConstants.USER_REGTIME)));
+        
+        return super.findPage(new Page<User>(currentPage, 0,pageSize),query);
 	}
 
 }

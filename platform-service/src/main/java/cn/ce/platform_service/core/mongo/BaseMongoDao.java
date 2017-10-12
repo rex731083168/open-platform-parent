@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import com.mongodb.WriteResult;
 
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 /***
  * 

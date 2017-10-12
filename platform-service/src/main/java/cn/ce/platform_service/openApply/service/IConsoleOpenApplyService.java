@@ -3,8 +3,8 @@ package cn.ce.platform_service.openApply.service;
 import javax.servlet.http.HttpSession;
 
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : 说明

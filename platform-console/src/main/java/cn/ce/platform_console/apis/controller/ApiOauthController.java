@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 /**
 * @Description : api审核管理

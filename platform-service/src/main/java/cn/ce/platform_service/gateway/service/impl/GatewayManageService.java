@@ -15,12 +15,12 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
 import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 import cn.ce.platform_service.gateway.service.IGatewayManageService;
-import cn.ce.platform_service.page.Page;
 
 /**
  *

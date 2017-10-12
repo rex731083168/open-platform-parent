@@ -21,10 +21,10 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.bean.ConditionEnum;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
-import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.util.ReflectionUtils;
 
 public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {

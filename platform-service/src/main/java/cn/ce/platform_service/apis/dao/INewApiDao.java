@@ -3,7 +3,7 @@ package cn.ce.platform_service.apis.dao;
 import java.util.Map;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 /**
 * @Description : 说明

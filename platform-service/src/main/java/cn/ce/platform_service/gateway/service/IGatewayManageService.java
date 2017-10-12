@@ -1,9 +1,9 @@
 package cn.ce.platform_service.gateway.service;
 
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
-import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : 说明

@@ -18,9 +18,9 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
-import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 import io.swagger.annotations.ApiOperation;
 

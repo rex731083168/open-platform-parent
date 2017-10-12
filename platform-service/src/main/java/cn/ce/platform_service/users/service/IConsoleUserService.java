@@ -31,4 +31,5 @@ public interface IConsoleUserService {
 	//用户认证信息
 	Result<?> authenticate(String userId, String enterpriseName, String idCard, String userRealName);
 
+	User findUserById(String userId);
 }

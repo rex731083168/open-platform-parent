@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.WriteResult;
 
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
-import cn.ce.platform_service.page.Page;
 
 /**
  *
