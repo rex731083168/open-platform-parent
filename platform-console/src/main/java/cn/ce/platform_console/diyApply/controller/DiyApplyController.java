@@ -1,13 +1,12 @@
 package cn.ce.platform_console.diyApply.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,9 +39,11 @@ public class DiyApplyController{
 	/** 日志对象 */
 	private static Logger logger = LogManager.getLogger(DiyApplyController.class);
 	
-	@Autowired @Qualifier("applyService") private IConsoleDiyApplyService applyService;
+	@Resource
+	private IConsoleDiyApplyService consoleDiyApplyService;
 	
-	@Autowired @Qualifier("apiService") private IAPIService apiService;
+	@Resource
+	private IAPIService apiService;
 
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
 	@ApiOperation(value = "根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
@@ -51,7 +52,7 @@ public class DiyApplyController{
 			@RequestParam(required=false,defaultValue="1") int currentPage) {
 		Page<DiyApplyEntity> page = new Page<>(currentPage, 0, pageSize);
 		logger.info("findApplyList start,parameter:{},{}",pageSize,currentPage);
-		Result<Page<DiyApplyEntity>> result = applyService.findApplyList(apply, page);
+		Result<Page<DiyApplyEntity>> result = consoleDiyApplyService.findApplyList(apply, page);
 		return result;
 	}
 
@@ -64,7 +65,7 @@ public class DiyApplyController{
 		Result<String> result = new Result<>();
 		
 		try {
-			result = applyService.deleteApplyByid(id);
+			result = consoleDiyApplyService.deleteApplyByid(id);
 		} catch (Exception e) {
 			logger.error("saveApply system error,e:" + e.toString());
 			result.setErrorMessage("系统错误!");
@@ -86,7 +87,7 @@ public class DiyApplyController{
 		Result<DiyApplyEntity> result = new Result<>();
 		
 		try {
-			result = applyService.getApplyById(id,pageSize,currentPage);
+			result = consoleDiyApplyService.getApplyById(id,pageSize,currentPage);
 		} catch (Exception e) {
 			logger.error("saveApply system error,e:" + e.toString());
 			result.setErrorMessage("系统错误!");
@@ -105,7 +106,7 @@ public class DiyApplyController{
 		try {
 			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 			apply.setUser(user);
-			result = applyService.saveApply(apply);
+			result = consoleDiyApplyService.saveApply(apply);
 		} catch (Exception e) {
 			logger.error("saveApply system error,e:" + e.toString());
 			result.setErrorMessage("系统错误!");

@@ -33,43 +33,23 @@ public class User implements Serializable {
 	/** 电话 */
 	@Field("telNumber")
 	private String telNumber;
-	/** 状态 */
-	@Field("state")
-	private int state;
-	/** 所属服务分类 */
-	@Field("appId")
-	private String appId;
-	/** 用户类型  0:管理员，1:普通用户，2:提供者 */
-	@Field("userType")
-	private int userType;
-	/** 注册时间 */
-	@Field("regTime")
-	private Date regTime;
-	@Field("checkCode")
-	private String checkCode; //短信校验码
-	
-	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
-	@Field("checkState")
-	private int checkState;
 
-	/** 审核备注 */
-	@Field("checkMem")
-	private String checkMem;
-	
-	
-	/********************认证时需要的信息************************/
+	/******************** 认证时需要的信息 ************************/
+	@Field("enterpriseName")
 	private String enterpriseName; // 企业名称
-	
-	private String IDCard; //身份证号码
-	
-	private String userRealName; //真实姓名
-	
-	/** 
+
+	@Field("idCard")
+	private String idCard; // 身份证号码
+
+	@Field("userRealName")
+	private String userRealName; // 真实姓名
+
+	/**
 	 * 组织机构编码,标识当前用户的组织
-	 * */
+	 */
 	@Field("orgId")
 	private String orgId;
-	
+
 	/** 组织机构名称 冗余字段 */
 	@Field("orgName")
 	private String orgName;
@@ -77,7 +57,29 @@ public class User implements Serializable {
 	/** 签名秘钥 */
 	private String appSecret;
 
-	
+	/** 状态 */
+	@Field("state")
+	private int state;
+	/** 所属服务分类 */
+	@Field("appId")
+	private String appId;
+	/** 用户类型 0:管理员，1:普通用户，2:提供者 */
+	@Field("userType")
+	private int userType;
+	/** 注册时间 */
+	@Field("regTime")
+	private Date regTime;
+	@Field("checkCode")
+	private String checkCode; // 短信校验码
+
+	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
+	@Field("checkState")
+	private int checkState;
+
+	/** 审核备注 */
+	@Field("checkMem")
+	private String checkMem;
+
 	public User() {
 		super();
 	}
@@ -99,9 +101,6 @@ public class User implements Serializable {
 		this.orgId = orgId;
 		this.appSecret = appSecret;
 	}
-
-
-
 
 	public String getOrgId() {
 		return orgId;
@@ -226,21 +225,13 @@ public class User implements Serializable {
 	public void setOrgName(String orgName) {
 		this.orgName = orgName;
 	}
-	
+
 	public String getEnterpriseName() {
 		return enterpriseName;
 	}
 
 	public void setEnterpriseName(String enterpriseName) {
 		this.enterpriseName = enterpriseName;
-	}
-
-	public String getIDCard() {
-		return IDCard;
-	}
-
-	public void setIDCard(String iDCard) {
-		IDCard = iDCard;
 	}
 
 	public String getUserRealName() {
@@ -251,12 +242,20 @@ public class User implements Serializable {
 		this.userRealName = userRealName;
 	}
 
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
 				+ ", telNumber=" + telNumber + ", state=" + state + ", appId=" + appId + ", userType=" + userType
 				+ ", regTime=" + regTime + ", checkCode=" + checkCode + ", checkState=" + checkState + ", checkMem="
-				+ checkMem + ", enterpriseName=" + enterpriseName + ", IDCard=" + IDCard + ", userRealName="
+				+ checkMem + ", enterpriseName=" + enterpriseName + ", IDCard=" + idCard + ", userRealName="
 				+ userRealName + ", orgId=" + orgId + ", orgName=" + orgName + ", appSecret=" + appSecret + "]";
 	}
 

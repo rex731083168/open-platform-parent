@@ -51,6 +51,9 @@ public class DiyApplyEntity {
 	@Field("userName")
 	private String userName;// 创建用户名
 
+	@Field("enterpriseName")
+	private String enterpriseName; // 企业名称
+
 	@Field("authIds")
 	private List<String> authIds;
 
@@ -132,4 +135,35 @@ public class DiyApplyEntity {
 		this.auditList = auditList;
 	}
 
+	public String getProductAuthCode() {
+		return productAuthCode;
+	}
+
+	public void setProductAuthCode(String productAuthCode) {
+		this.productAuthCode = productAuthCode;
+	}
+
+	public String getDomainUrl() {
+		return domainUrl;
+	}
+
+	public void setDomainUrl(String domainUrl) {
+		this.domainUrl = domainUrl;
+	}
+
+	public byte[] getLogoImage() {
+		return logoImage;
+	}
+
+	public void setLogoImage(byte[] logoImage) {
+		this.logoImage = logoImage;
+	}
+
+	public String getEnterpriseName() {
+		return enterpriseName;
+	}
+
+	public void setEnterpriseName(String enterpriseName) {
+		this.enterpriseName = enterpriseName;
+	}
 }

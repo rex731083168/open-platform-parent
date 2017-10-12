@@ -40,10 +40,10 @@
 			<mvc:exclude-mapping path="/swagger/index.html"/> 
 			<bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
 		</mvc:interceptor> -->
-		<mvc:interceptor>
+		<!-- <mvc:interceptor>
         	<mvc:mapping path="/**"/>
         	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
-        </mvc:interceptor>
+        </mvc:interceptor> -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
 			<bean class="cn.ce.platform_service.interceptors.ExceptionInterceptor"/>

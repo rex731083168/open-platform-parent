@@ -85,7 +85,7 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		}
 		
 		user.setEnterpriseName(enterpriseName);
-		user.setIDCard(idCard);
+		user.setIdCard(idCard);
 		user.setUserRealName(userRealName);
 		user.setCheckState(1);
 		newUserDao.save(user);

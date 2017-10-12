@@ -22,8 +22,8 @@ import cn.ce.platform_service.page.Page;
  * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  *
  */
-@Repository("applyDao")
-public class IDiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements IDiyApplyDao {
+@Repository("diyApplyDao")
+public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements IDiyApplyDao {
 
 	@Override
 	public void saveOrUpdate(DiyApplyEntity entity) {

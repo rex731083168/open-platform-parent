@@ -22,7 +22,7 @@ import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.openApply.service.IOpenApplyService;
+import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 
 /**
 * @Description : 网关api和密钥的管理
@@ -35,8 +35,8 @@ public class GatewayApiService implements IGatewayApiService{
 	@Autowired
 	private IAPIService apiService;
 	@Autowired
-	private IOpenApplyService appService;
-	@Autowired @Qualifier("applyDao")
+	private IManageOpenApplyService appService;
+	@Autowired @Qualifier("diyApplyDao")
 	private IDiyApplyDao applyDao;
 	@Autowired
 	private IApiSecretKeyDao apiSecretKeyDao;

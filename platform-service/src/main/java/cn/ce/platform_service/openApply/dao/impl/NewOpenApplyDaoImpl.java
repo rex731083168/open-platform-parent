@@ -1,13 +1,12 @@
 package cn.ce.platform_service.openApply.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.mongodb.core.query.BasicUpdate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
 
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
@@ -21,6 +20,8 @@ import cn.ce.platform_service.page.Page;
 * @Author : makangwei
 * @Date : 2017年10月11日
 */
+
+@Repository(value = "newOpenApplyDao")
 public class NewOpenApplyDaoImpl extends  BaseMongoDaoImpl<OpenApplyEntity> implements INewOpenApplyDao{
 
 	@Override

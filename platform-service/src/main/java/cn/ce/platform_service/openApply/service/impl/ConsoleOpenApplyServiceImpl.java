@@ -76,7 +76,8 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 		} catch (Exception e) {
 			_LOGGER.error("添加应用时出现错误,e:" + e.toString());
 			result.setErrorMessage("保存失败!");
-		}		
+		}	
+		
 		return result;
 	}
 
