@@ -115,7 +115,8 @@ public class ApisController {
 			@RequestParam(required=false) String userId,
 			@RequestParam(required=false) Integer checkState,
 			@RequestParam(required=false) String apiNameLike,
-			int currentPage, int pageSize){
+			@RequestParam(required=false,defaultValue= "1") int currentPage, 
+			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
 		_LOGGER.info("当前开放应用："+openApplyId);
 		_LOGGER.info("当前用户类型："+userType);

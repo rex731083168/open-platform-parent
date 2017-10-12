@@ -124,7 +124,7 @@ public class AppsController extends BaseController {
 	@ResponseBody
 	public Result<Page<OpenApplyEntity>> groupList(HttpServletRequest request, HttpServletResponse response,String appName,String checkState,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false, defaultValue = "8") int pageSize) {
+			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		_LOGGER.info("---------------->> Action Search GroupList! appname: " + appName + "; checkState:" + checkState);
 
 		return openApplyService.groupList1(appName,checkState,currentPage,pageSize);

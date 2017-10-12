@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
@@ -28,7 +29,9 @@ public class UserController {
 	// 后台获取使用者列表
 	@RequestMapping(value = "/approveUsers", method = RequestMethod.POST)
 	public Result<Page<User>> approveUsers(String roleType, String userName, String email, String telNumber,
-			String enterpriseName, String checkState, String state, int currentPage, int pageSize) {
+			String enterpriseName, String checkState, String state, 
+			@RequestParam(required=false,defaultValue = "1")int currentPage, 
+			@RequestParam(required=false,defaultValue = "10")int pageSize) {
 
 		return userService.approveUsers(roleType, userName, email, telNumber, enterpriseName, checkState, state,
 				currentPage, pageSize);

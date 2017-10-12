@@ -46,6 +46,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Resource
 	private IManageOpenApplyService manageOpenApplyService;
 	
+	
 	/**
 	 * 
 	 * @Title: publishApi
@@ -108,7 +109,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		result.setSuccessData("添加成功");
 		return result;
 	}
-
 	
 	
 	/**
@@ -130,8 +130,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
-
-
 	
 	/**
 	 * 
@@ -152,6 +150,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
+	
 	/**
 	 * @Title: showApi
 	 * @Description: 单个api信息显示
@@ -186,6 +185,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
+	
 	/**
 	 * @Title: showApiList
 	 * @Description: 提供者查看api列表
@@ -211,7 +211,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		result.setSuccessData(page);
 		return result;
 	}
-
 
 
 	/**
@@ -240,7 +239,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		return result;
 	}
-
 
 
 	/**

@@ -149,8 +149,9 @@ public class ApiController {
 	@RequestMapping(value = "/apiList", method = RequestMethod.POST)
 	@ResponseBody
 	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, String apiId,
-			String apiChName, String checkState, @RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false, defaultValue = "8") int pageSize) {
+			String apiChName, String checkState, 
+			@RequestParam(required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 
 		_LOGGER.info("-------------->appid:" + apiId);
 		_LOGGER.info("-------------->apichname:" + apiChName);

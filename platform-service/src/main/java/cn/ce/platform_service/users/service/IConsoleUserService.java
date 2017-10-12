@@ -13,9 +13,9 @@ import cn.ce.platform_service.users.entity.User;
 
 public interface IConsoleUserService {
 
-	Result<String> userRegister(User user);
+	Result<?> userRegister(User user);
 	
-	Result<User> login(HttpSession session, String userName, String password);
+	Result<?> login(HttpSession session, String userName, String password);
 	
 	Result<?> sendRegistSms(String telNumber, HttpSession session);
 

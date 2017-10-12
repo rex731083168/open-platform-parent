@@ -13,7 +13,6 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.dao.INewUserDao;
-import cn.ce.platform_service.users.dao.IUserDAO;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.Util;
@@ -29,22 +28,21 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ConsoleUserServiceImpl.class);
 	
     @Resource
-    private IUserDAO userDao;
-    @Resource
     private INewUserDao newUserDao;
+    
 	@Override
 	public Result<String> userRegister(User user) {
 		
 		Result<String> result = new Result<String>();
 		
 		//校验用户名
-		User user1= userDao.findUserByUserName(user.getUserName());
+		User user1= newUserDao.findUserByUserName(user.getUserName());
 		if(user1 != null){
 			result.setErrorMessage("当前用户名已经存在", ErrorCodeNo.SYS009);
 			return result;
 		}
 		//校验邮箱
-		User user2 = userDao.findUserByEmail(user.getEmail());
+		User user2 = newUserDao.findUserByEmail(user.getEmail());
 		if(user2 != null){
 			result.setErrorMessage("当前邮箱已经被注册", ErrorCodeNo.SYS009);
 			return result;
@@ -92,6 +90,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		result.setSuccessMessage("");;
 		return result;
 	}
+	
+	
 	@Override
 	public Result<User> login(HttpSession session,String userName, String password) {
 
@@ -109,7 +109,6 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		return result;
 	}
 
-	
 	
 	@Override
 	public Result<?> sendRegistSms(String telNumber, HttpSession session) {
@@ -131,7 +130,6 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	}
 
 	
-	
 	@Override
 	public Result<?> sendRePwdSms(String telNumber, HttpSession session) {
 		
@@ -152,7 +150,6 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		return result;
 	}
 
-	
 	
 	@Override
 	public Result<?> checkTelNumber(String telNumber) {

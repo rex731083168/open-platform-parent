@@ -54,7 +54,7 @@ public class OpenApplyController {
 	@RequestMapping(value = "/applyList", method = RequestMethod.POST)
 	public Result<?> applyList(@RequestBody OpenApplyEntity entity,
 			@RequestParam(required = false , defaultValue = "1") int currentPage,
-			@RequestParam(required = false , defaultValue = "8") int pageSize) {
+			@RequestParam(required = false , defaultValue = "10") int pageSize) {
 		Page<OpenApplyEntity> page = new Page<>(currentPage, 0, pageSize);
 		return consoleOpenApplyService.applyList(entity,page);
 	}
