@@ -18,30 +18,27 @@ public interface IUserService {
 	User findOne(String id);
 
 	int modifyById(String id, User user);
-	
+
 	User findByUserName(String username);
-	
-	User findUserByUserNameAndPWD(String username,String password);
-	
-	Page<User> getUsers(int roleType, String uname, String checkstate, String state, int currentPage, int pageSize);
+
+	User findUserByUserNameAndPWD(String username, String password);
+
+	Page<User> getUsers(int roleType, String uname, String email, String telNumber, String enterpriseName,
+			String checkstate, String state, int currentPage, int pageSize);
 
 	Result<String> deleteById(String userId);
 
 	int modifyPasswordById(String id, String newPassword);
 
-	Result<String> resetUserPassword(String userId,String newpassword);
+	Result<String> resetUserPassword(String userId, String newpassword);
 
 	User findByEmail(String email);
 
-	Result<Page<User>> approveUsers(String roleType, String userName, String checkState, String state, int currentPage,
-			int pageSize);
+	Result<Page<User>> approveUsers(String roleType, String userName, String email, String telNumber,
+			String enterpriseName, String checkState, String state, int currentPage, int pageSize);
 
 	Result<String> approve(String id, String checkMem, String checkState);
 
 	Result<String> forbid(String userId, String state);
-
-	
-
-
 
 }

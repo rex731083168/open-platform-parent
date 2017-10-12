@@ -30,7 +30,7 @@ public interface IUserDAO {
 
 	User findUserByUserNameAndPWD(String username, String password);
 	
-	Page<User> getUsers(int roleType, String uname, String checkstate, 
+	Page<User> getUsers(int roleType, String uname, String email,String telNumber,String enterpriseName, String checkstate, 
 			String state, int currentPage, int pageSize);
 
 	int modifyPasswordById(String id, String newPassword);

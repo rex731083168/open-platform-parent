@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.Result;
@@ -66,9 +67,9 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public Page<User> getUsers(int roleType, String uname, String checkstate,String state,
+	public Page<User> getUsers(int roleType, String uname,  String email,String telNumber,String enterpriseName, String checkstate,String state,
 			int currentPage, int pageSize) {
-		return userDao.getUsers(roleType, uname, checkstate, state, currentPage, pageSize);
+		return userDao.getUsers(roleType, uname, email,telNumber,enterpriseName,checkstate, state, currentPage, pageSize);
 	}
 
 
@@ -116,14 +117,6 @@ public class UserServiceImpl implements IUserService {
 			return result;
 		}
 	}
-	
-	
-
-	
-
-	
-
-
 
 	@Override
 	public User findByEmail(String email) {
@@ -133,13 +126,15 @@ public class UserServiceImpl implements IUserService {
 
 
 	@Override
-	public Result<Page<User>> approveUsers(String roleType, String userName, String checkState, String state,
+	public Result<Page<User>> approveUsers(String roleType, String userName, String email,String telNumber,String enterpriseName,String checkState, String state,
 			int currentPage, int pageSize) {
+		
+		
 		// TODO 解决异常处理
 		int role = Integer.parseInt(roleType.trim());
 
 		Result<Page<User>> result = new Result<Page<User>>();
-		Page<User> userList = getUsers(role, userName, checkState,state,currentPage, pageSize);
+		Page<User> userList = getUsers(role, userName, email,telNumber,enterpriseName, checkState,state,currentPage, pageSize);
 		@SuppressWarnings("unchecked")
 		List<User> items = (List<User>) userList.getItems();
 		for (User user : items) {

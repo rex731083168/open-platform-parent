@@ -33,46 +33,23 @@ public class User implements Serializable {
 	/** 电话 */
 	@Field("telNumber")
 	private String telNumber;
-	/** 状态 */
-	@Field("state")
-	private int state;
-	/** 所属服务分类 */
-	@Field("appId")
-	private String appId;
-	/** 用户类型  0:管理员，1:普通用户，2:提供者 */
-	@Field("userType")
-	private int userType;
-	/** 注册时间 */
-	@Field("regTime")
-	private Date regTime;
-	@Field("checkCode")
-	private String checkCode; //短信校验码
-	
-	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
-	@Field("checkState")
-	private int checkState;
 
-	/** 审核备注 */
-	@Field("checkMem")
-	private String checkMem;
-	
-	
-	/********************认证时需要的信息************************/
+	/******************** 认证时需要的信息 ************************/
 	@Field("enterpriseName")
 	private String enterpriseName; // 企业名称
-	
+
 	@Field("idCard")
-	private String idCard; //身份证号码
-	
+	private String idCard; // 身份证号码
+
 	@Field("userRealName")
-	private String userRealName; //真实姓名
-	
-	/** 
+	private String userRealName; // 真实姓名
+
+	/**
 	 * 组织机构编码,标识当前用户的组织
-	 * */
+	 */
 	@Field("orgId")
 	private String orgId;
-	
+
 	/** 组织机构名称 冗余字段 */
 	@Field("orgName")
 	private String orgName;
@@ -80,7 +57,29 @@ public class User implements Serializable {
 	/** 签名秘钥 */
 	private String appSecret;
 
-	
+	/** 状态 */
+	@Field("state")
+	private int state;
+	/** 所属服务分类 */
+	@Field("appId")
+	private String appId;
+	/** 用户类型 0:管理员，1:普通用户，2:提供者 */
+	@Field("userType")
+	private int userType;
+	/** 注册时间 */
+	@Field("regTime")
+	private Date regTime;
+	@Field("checkCode")
+	private String checkCode; // 短信校验码
+
+	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
+	@Field("checkState")
+	private int checkState;
+
+	/** 审核备注 */
+	@Field("checkMem")
+	private String checkMem;
+
 	public User() {
 		super();
 	}
@@ -102,9 +101,6 @@ public class User implements Serializable {
 		this.orgId = orgId;
 		this.appSecret = appSecret;
 	}
-
-
-
 
 	public String getOrgId() {
 		return orgId;
@@ -229,7 +225,7 @@ public class User implements Serializable {
 	public void setOrgName(String orgName) {
 		this.orgName = orgName;
 	}
-	
+
 	public String getEnterpriseName() {
 		return enterpriseName;
 	}
@@ -238,8 +234,6 @@ public class User implements Serializable {
 		this.enterpriseName = enterpriseName;
 	}
 
-
-
 	public String getUserRealName() {
 		return userRealName;
 	}
@@ -247,7 +241,7 @@ public class User implements Serializable {
 	public void setUserRealName(String userRealName) {
 		this.userRealName = userRealName;
 	}
-	
+
 	public String getIdCard() {
 		return idCard;
 	}

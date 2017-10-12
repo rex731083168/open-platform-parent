@@ -84,13 +84,13 @@ public class AppsController extends BaseController {
 	 * @return: Result<String>
 	 * @throws
 	 */
-	@RequestMapping(value = "/modifyGroup", method = RequestMethod.POST)
-	public Result<String> modifyGroup(@RequestBody OpenApplyEntity app) {
-		_LOGGER.info("---------------->> Action modify Group! Param: " + JSON.toJSONString(app));
-
-		return openApplyService.modifyGroup1(app);
-	}
-	
+//	@RequestMapping(value = "/modifyGroup", method = RequestMethod.POST)
+//	public Result<String> modifyGroup(@RequestBody OpenApplyEntity app) {
+//		_LOGGER.info("---------------->> Action modify Group! Param: " + JSON.toJSONString(app));
+//
+//		return openApplyService.modifyGroup1(app);
+//	}
+//	
 
 	/**
 	 * 
