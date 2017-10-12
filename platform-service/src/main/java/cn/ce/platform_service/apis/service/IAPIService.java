@@ -2,7 +2,7 @@ package cn.ce.platform_service.apis.service;
 
 import java.util.List;
 
-import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.ApiVersion;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.page.Page;
@@ -20,7 +20,7 @@ public interface IAPIService {
      * 新增API
      * @param api: 新增API对象
      */
-    void addAPI(APIEntity api);
+    void addAPI(ApiEntity api);
     
 //    /**
 //     * 判断某功能分组下是否有API
@@ -41,22 +41,22 @@ public interface IAPIService {
      * @param id: API ID
      * @return
      */
-    APIEntity findById(String id);
+    ApiEntity findById(String id);
     
     /**
      * 修改API
      * @param api: 修改后的API对象
      */
-    void updateAPI(APIEntity api);
+    void updateAPI(ApiEntity api);
     
     /**
      * 查询某功能分组的API集合，不分页
      * @param groupId: 功能分组ID
      * @return API集合
      */
-    List<APIEntity>  getAPIs(String groupId);
+    List<ApiEntity>  getAPIs(String groupId);
     
-    List<APIEntity> getApiListByIds(List<String> ids);
+    List<ApiEntity> getApiListByIds(List<String> ids);
     
     /**
      * 查询某功能分组的API集合，分页
@@ -65,7 +65,7 @@ public interface IAPIService {
      * @param pageSize: 每页记录数
      * @return
      */
-    Page<APIEntity>  getAPIsAsPage(String groupId, int currentPage, int pageSize);
+    Page<ApiEntity>  getAPIsAsPage(String groupId, int currentPage, int pageSize);
     
     /**
      * @Description: 根据分组和审核状态查询API
@@ -84,7 +84,7 @@ public interface IAPIService {
      * @return     返回审核API集合Page
      * @throws
      */
-    Page<APIEntity> getGroupAPIsAsPage(String groupId, int checkState, int state, int currentPage, int pageSize);
+    Page<ApiEntity> getGroupAPIsAsPage(String groupId, int checkState, int state, int currentPage, int pageSize);
     
     
     /**
@@ -120,9 +120,9 @@ public interface IAPIService {
      * @param pageSize
      * @return
      */
-    Page<APIEntity> findApisByEntity(APIEntity entity,int currentPage,int pageSize);
+    Page<ApiEntity> findApisByEntity(ApiEntity entity,int currentPage,int pageSize);
 
-	List<APIEntity> findByField(String key, String value);
+	List<ApiEntity> findByField(String key, String value);
     
     /***
      * 根据版本信息查询api版本信息
@@ -137,20 +137,20 @@ public interface IAPIService {
      */
     int updApiVersionByApiid(String apiid);
 
-	Result<String> checkVersion(String apiId, String version);
+////	Result<String> checkVersion(String apiId, String version);
 
-	Result<String> checkApiEnName(String apiEnName, String appId);
+////	Result<String> checkApiEnName(String apiEnName, String appId);
 
-	Result<String> modifyApi(APIEntity apientity);
+////	Result<String> modifyApi(ApiEntity apientity);
 
-	Result<String> checkApiChName(String apiChName, String appId);
+////	Result<String> checkApiChName(String apiChName, String appId);
 
-	Result<String> apiVerify(String apiid, String username, String password);
+////	Result<String> apiVerify(String apiid, String username, String password);
 
-	Result<String> publishAPI(User user, APIEntity apientity);
+////	Result<String> publishAPI(User user, APIEntity apientity);
 
-	Result<?> show(String apiId);
+//	Result<?> show(String apiId);
 
-	Result<Page<APIEntity>> apiList(String apiId, String apiChName, String checkState, int currentPage, int pageSize);
+	Result<Page<ApiEntity>> apiList(String apiId, String apiChName, String checkState, int currentPage, int pageSize);
     
 }

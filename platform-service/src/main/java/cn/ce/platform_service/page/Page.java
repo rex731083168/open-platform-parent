@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class Page<T> implements Serializable {  
       
+	private static final long serialVersionUID = 428978435560977887L;
+	
     /** 每页显示条数 */  
     private Integer pageSize = 8;  
   
@@ -26,7 +28,7 @@ public class Page<T> implements Serializable {
     private Integer totalNumber = 0;  
   
     /** 数据集 */  
-    private List<?> items;  
+    private List<T> items;  
   
     public Page(int currentPaget, int totalNumbert, int pageSizet) {
         
@@ -64,19 +66,19 @@ public class Page<T> implements Serializable {
         this.totalNumber = totalNumber;
     }
 
-    public List<?> getItems() {
+    public List<T> getItems() {
         return items;
     }
 
-    public void setItems(List<?> items) {
-        this.items = items;
-    }
-
     public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
+		this.pageSize = pageSize;
+	}
 
-    public void build(List<?> titems) {  
+	public void setItems(List<T> items) {
+		this.items = items;
+	}
+
+	public void build(List<T> titems) {  
         this.setItems(titems);  
         int count =  this.getTotalNumber();  
         int divisor = count / this.getPageSize();  

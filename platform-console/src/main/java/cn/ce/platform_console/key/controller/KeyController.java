@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.ce.platform_console.apis.controller.ApisController;
-import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
@@ -129,7 +129,7 @@ public class KeyController {
 			}
 
 			// 检查api是否存在
-			APIEntity findById = apiService.findById(apiId);
+			ApiEntity findById = apiService.findById(apiId);
 			if (null == findById) {
 				errorStr = "申请的api不存在!";
 				result.put("code", "0");

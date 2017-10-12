@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 
 /**
  * 
@@ -68,7 +68,7 @@ public class ApiSecretKey implements Serializable{
     private String checkMem;
 	
 	@Transient
-	private APIEntity api;
+	private ApiEntity api;
 	
 
 	public String getId() {
@@ -135,11 +135,11 @@ public class ApiSecretKey implements Serializable{
 		this.checkMem = checkMem;
 	}
 
-	public APIEntity getApi() {
+	public ApiEntity getApi() {
 		return api;
 	}
 
-	public void setApi(APIEntity api) {
+	public void setApi(ApiEntity api) {
 		this.api = api;
 	}
 

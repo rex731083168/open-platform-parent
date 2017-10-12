@@ -9,7 +9,7 @@ package cn.ce.platform_service.apis.entity;
  */
 public class ApiVersion {
 
-	private String apiId; //api接口id
+	private String versionId; //api接口id
 	
 	private String version ;//api版本号
 	
@@ -23,13 +23,21 @@ public class ApiVersion {
 		this.newVersion = true;
 	}
 	
-	public String getApiId() {
-		return apiId;
+
+
+
+	public String getVersionId() {
+		return versionId;
 	}
 
-	public void setApiId(String apiId) {
-		this.apiId = apiId;
+
+
+
+	public void setVersionId(String versionId) {
+		this.versionId = versionId;
 	}
+
+
 
 
 	public String getVersion() {
@@ -58,7 +66,7 @@ public class ApiVersion {
 
 	@Override
 	public String toString() {
-		return "ApiVersion [apiId=" + apiId + ", version=" + version + ", versionRemark=" + versionRemark
+		return "ApiVersion [apiId=" + versionId + ", version=" + version + ", versionRemark=" + versionRemark
 				+ ", newVersion=" + newVersion + "]";
 	}
 }

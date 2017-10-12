@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.apis.dao.IApiDAO;
-import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.page.Page;
@@ -32,7 +32,7 @@ import cn.ce.platform_service.page.PageContext;
  */
 @SuppressWarnings("deprecation")
 @Repository(value ="apiDao")
-public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiDAO {
+public class ApiDaoImpl extends AbstractBaseMongoDao<ApiEntity> implements IApiDAO {
     /** 定义 */
     private String appIdField = "appid";
 
@@ -48,79 +48,79 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 
     @SuppressWarnings("unchecked")
 	@Override
-    public List<APIEntity> getAPIs(String groupId) {
+    public List<ApiEntity> getAPIs(String groupId) {
     	
-        return super.findByField(appIdField, groupId, APIEntity.class);
+        return super.findByField(appIdField, groupId, ApiEntity.class);
     }
 
     @Override
-    public List<APIEntity> getAPIs(String groupId, int checkState) {
+    public List<ApiEntity> getAPIs(String groupId, int checkState) {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put(appIdField, groupId);
         fields.put(checkSta, checkState);
-        return super.findByFieldsAnd(fields, APIEntity.class);
+        return super.findByFieldsAnd(fields, ApiEntity.class);
     }
 
     @Override
-    public List<APIEntity> getCategoryAPIs(String categoryCode, int checkState) {
+    public List<ApiEntity> getCategoryAPIs(String categoryCode, int checkState) {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put(categoryCodeField, categoryCode);
         fields.put(checkSta, checkState);
-        return super.findByFieldsAnd(fields, APIEntity.class);
+        return super.findByFieldsAnd(fields, ApiEntity.class);
     }
 
     @Override
-    public List<APIEntity> getAPIs(int checkState) {
+    public List<ApiEntity> getAPIs(int checkState) {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put(checkSta, checkState);
-        return super.findByFieldsAnd(fields, APIEntity.class);
+        return super.findByFieldsAnd(fields, ApiEntity.class);
     }
 
     @Override
-    public void addAPI(APIEntity api) {
+    public void addAPI(ApiEntity api) {
         super.add(api);
     }
 
     @Override
-    public APIEntity findOne(String apgrpId) {
-        return super.findOneByField(appIdField, apgrpId, APIEntity.class);
+    public ApiEntity findOne(String apgrpId) {
+        return super.findOneByField(appIdField, apgrpId, ApiEntity.class);
     }
 
     @Override
-    public APIEntity findOneByEnName(String enName) {
-        return super.findOneByField("apienname", enName, APIEntity.class);
+    public ApiEntity findOneByEnName(String enName) {
+        return super.findOneByField("apienname", enName, ApiEntity.class);
     }
 
     @Override
     public int delApi(String id) {
-        return super.delById(id, APIEntity.class);
+        return super.delById(id, ApiEntity.class);
     }
 
     @Override
-    public APIEntity findOneById(String id) {
-        return super.findById(id, APIEntity.class);
+    public ApiEntity findOneById(String id) {
+        return super.findById(id, ApiEntity.class);
     }
 
     @Override
-    public int updateAPI(APIEntity api) {
+    public int updateAPI(ApiEntity api) {
         super.updateById(api.getId(), api);
         return 1;
     }
 
     @Override
-    public Page<APIEntity> getAPIsAsPage(String groupId) {
+    public Page<ApiEntity> getAPIsAsPage(String groupId) {
         return super.findAsPage(appIdField, groupId, PageContext.getCuurentPage(), PageContext.getPageSize(),
-                        APIEntity.class);
+                        ApiEntity.class);
 
     }
 
 
 	@PostConstruct
     public void init() {
-        boolean ext = mongoTemplate.collectionExists(APIEntity.class);
+        boolean ext = mongoTemplate.collectionExists(ApiEntity.class);
         if (!ext) {
             System.out.println("=========>> Init Create Collection : APIMG_APIS ....");
-            mongoTemplate.createCollection(APIEntity.class);
+            mongoTemplate.createCollection(ApiEntity.class);
             /** 配置分片 */
             /* super.shardCollection("OPC_API", "_id"); */
 
@@ -136,34 +136,34 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
     }
 
     @Override
-    public Page<APIEntity> searchApis(String nameDesc, int currentPage, int pageSize) {
+    public Page<ApiEntity> searchApis(String nameDesc, int currentPage, int pageSize) {
         // 2 为降序排列
         return super.findLikeOrLikeAsPage("apichname", nameDesc, "desc", nameDesc, 2, "createdate", currentPage,
-                        pageSize, APIEntity.class);
+                        pageSize, ApiEntity.class);
     }
 
     @Override
-    public Page<APIEntity> getGroupAPIsAsPage(String groId, int checkState, int state, int currentPage, int pageSize) {
+    public Page<ApiEntity> getGroupAPIsAsPage(String groId, int checkState, int state, int currentPage, int pageSize) {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("groupid", groId);
         fields.put("checkstate", checkState);
         fields.put("state", state);
-        return super.findByFieldsAsPage(fields, currentPage, pageSize, APIEntity.class);
+        return super.findByFieldsAsPage(fields, currentPage, pageSize, ApiEntity.class);
     }
 
 	@Override
-	public APIEntity findByApiCnName(String cnname) {
-		return super.findOneByField("apichname", cnname, APIEntity.class);
+	public ApiEntity findByApiCnName(String cnname) {
+		return super.findOneByField("apichname", cnname, ApiEntity.class);
 	}
 
 	@Override
-	public Page<APIEntity> findApisByEntity(APIEntity entity,int currentPage,int pageSize) {
+	public Page<ApiEntity> findApisByEntity(ApiEntity entity,int currentPage,int pageSize) {
 		
 		//构建查询对象
 		Criteria c = new Criteria();
 		
-		if(StringUtils.isNotBlank(entity.getAppId())){
-			c.and("appid").is(entity.getAppId());
+		if(StringUtils.isNotBlank(entity.getOpenApplyId())){
+			c.and("appid").is(entity.getOpenApplyId());
 		}
 		
 		if(null != entity.getCheckState()){
@@ -182,33 +182,33 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 		Query query = new Query(c).with(new Sort(Direction.DESC, "createtime"));
 		
 		//分页
-		Page<APIEntity> findAsPage = super.findAsPage(query, currentPage, pageSize, APIEntity.class);
+		Page<ApiEntity> findAsPage = super.findAsPage(query, currentPage, pageSize, ApiEntity.class);
 		
 		return findAsPage;
 	}
 	
 	@Override
-	public List<APIEntity> findApiListByQuery(Query query) {
-		return super.find(query, APIEntity.class);
+	public List<ApiEntity> findApiListByQuery(Query query) {
+		return super.find(query, ApiEntity.class);
 	}
 
 	@Override
-	public List<APIEntity> findByField(String key, String value) {
+	public List<ApiEntity> findByField(String key, String value) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where(key).is(value));
-		return super.find(query, APIEntity.class);
+		return super.find(query, ApiEntity.class);
 	}
 
 	@Override
-	public List<APIEntity> findApiListByIds(List<String> ids) {
-		return super.findInAsList("id", ids, "createtime", APIEntity.class);
+	public List<ApiEntity> findApiListByIds(List<String> ids) {
+		return super.findInAsList("id", ids, "createtime", ApiEntity.class);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public APIEntity findOneByFields(Map<String, Object> map) {
+	public ApiEntity findOneByFields(Map<String, Object> map) {
 		
-		List<APIEntity> list = super.findByFields(map, APIEntity.class);
+		List<ApiEntity> list = super.findByFields(map, ApiEntity.class);
 		if(list.size()>0){
 			return list.get(0);
 		}
@@ -216,7 +216,7 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 	}
 
 	@Override
-	public boolean modifyApi(APIEntity apientity) {
+	public boolean modifyApi(ApiEntity apientity) {
 		
 		try{
 			mongoTemplate.save(apientity);
@@ -230,7 +230,7 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 	public int updApiVersionByApiid(String apiid) {
 		Query query = new Query();
         query.addCriteria(Criteria.where("apiversion.apiId").is(apiid));
-        WriteResult rt = mongoTemplate.updateMulti(query, Update.update("apiversion.newVersion", false), APIEntity.class);
+        WriteResult rt = mongoTemplate.updateMulti(query, Update.update("apiversion.newVersion", false), ApiEntity.class);
         return rt.getN();
 	}
 
@@ -240,7 +240,7 @@ public class ApiDaoImpl extends AbstractBaseMongoDao<APIEntity> implements IApiD
 		c.and("apiversion.apiId").is(apiId);
 		c.and("apiversion.version").is(version);
 		Query query = new Query(c);
-		return mongoTemplate.exists(query, APIEntity.class);
+		return mongoTemplate.exists(query, ApiEntity.class);
 	}
 
 }

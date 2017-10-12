@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
@@ -56,7 +56,7 @@ public class GatewayApiService implements IGatewayApiService{
 		
 		Result<String> result = new Result<String>();
 
-		APIEntity tempEntity = apiService.findById(apiId);
+		ApiEntity tempEntity = apiService.findById(apiId);
 		
 		if(tempEntity == null){
 			result.setMessage("当前api不存在，请检查apiId");
@@ -69,22 +69,22 @@ public class GatewayApiService implements IGatewayApiService{
 			apiService.updateAPI(tempEntity);
 		}else if(checkState == 2){
 	
-			List<APIEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiVersion().getApiId());
+			List<ApiEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiVersion().getVersionId());
 
 			String apiName = apiList.get(0).getApiEnName();
 			
 			//这里的apiId已经和传进来的参数apiId有了不用的有意义，传进来的apiId是具体到某一个版本的apiId
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
-			apiId = apiList.get(0).getApiVersion().getApiId();
+			apiId = apiList.get(0).getApiVersion().getVersionId();
 			
-			OpenApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
+			OpenApplyEntity appEntity = appService.findById(apiList.get(0).getOpenApplyId());
 			
 			// TODO 监听路径是否需要加上appKey
 			String listenPath = "/"+appEntity.getApplyKey()+"/"+apiName+"/";
 			
 			Map<String,String> map = new HashMap<String,String>();
 			
-			for (APIEntity entity : apiList) {
+			for (ApiEntity entity : apiList) {
 				if(entity.getCheckState() == 2 ){
 					map.put(entity.getApiVersion().getVersion()+"", entity.getTestEndPoint());
 				}
@@ -136,7 +136,7 @@ public class GatewayApiService implements IGatewayApiService{
 			return result;
 		}
 		
-		APIEntity apiEntity = apiService.findById(secretEntity.getApiId());
+		ApiEntity apiEntity = apiService.findById(secretEntity.getApiId());
 		
 		if(apiEntity == null){
 			result.setMessage("当前secretKey没有和api绑定。请重新申请");
@@ -247,7 +247,7 @@ public class GatewayApiService implements IGatewayApiService{
 
 		Result<String> result = new Result<String>();
 
-		APIEntity tempEntity = apiService.findById(apiId);
+		ApiEntity tempEntity = apiService.findById(apiId);
 		
 		if(tempEntity == null){
 			result.setMessage("当前api不存在，请检查apiId");
@@ -262,21 +262,21 @@ public class GatewayApiService implements IGatewayApiService{
 			
 		}else if(checkState == 2){ //添加api到网关后分配client和secret，发生异常回滚
 	
-			List<APIEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiVersion().getApiId());
+			List<ApiEntity> apiList = apiService.findByField("apiversion.apiId", tempEntity.getApiVersion().getVersionId());
 
 			String apiName = apiList.get(0).getApiEnName();
 			
 			//这里的apiId已经和传进来的参数apiId有了不用的有意义，传进来的apiId是具体到某一个版本的apiId
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
-			apiId = apiList.get(0).getApiVersion().getApiId();
+			apiId = apiList.get(0).getApiVersion().getVersionId();
 			
-			OpenApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
+			OpenApplyEntity appEntity = appService.findById(apiList.get(0).getOpenApplyId());
 			// TODO 监听路径是否需要加上appKey
 			String listenPath = "/"+appEntity.getApplyKey()+"/"+apiName+"/";
 			
 			Map<String,String> map = new HashMap<String,String>();
 			
-			for (APIEntity entity : apiList) {
+			for (ApiEntity entity : apiList) {
 				if(entity.getCheckState() == 2 ){
 					map.put(entity.getApiVersion().getVersion()+"", entity.getTestEndPoint());
 				}

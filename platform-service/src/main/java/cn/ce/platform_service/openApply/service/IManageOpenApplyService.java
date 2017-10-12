@@ -120,5 +120,8 @@ public interface IManageOpenApplyService {
 	public Result<String> auditGroup(String id, int checkState, String remark);
 	
 	public Result<String> batchUpdate(List<String> ids);
+	//public Result<String> modifyGroup1(OpenApplyEntity app);
+
+	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize);
 
 }

@@ -107,6 +107,10 @@ public class Constants {
 	/** 手机校验码过期时间（ms）**/
 	public static final long TEL_VALIDITY = 300000;
 	
+//	-----------------------分页相关-------------------------------------------------
+	public static final int PAGE_COMMON_SIZE = 10;
+	
+	public static final int PAGE_MAX_SIZE = 30;
 	
 	
 }

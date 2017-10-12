@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;

@@ -20,7 +20,7 @@ import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
  *
  */
 @Document(collection = "APIMG_APIS")
-public class APIEntity implements Serializable {
+public class ApiEntity implements Serializable {
 
 	/**
 	 * 
@@ -30,8 +30,8 @@ public class APIEntity implements Serializable {
 	@Id
 	private String id;
 	/** 所属功能分组的标识 */
-	@Field("appid")
-	private String appId;
+	@Field("openApplyId")
+	private String openApplyId;
 	/** 用户标识 */
 	@Field("userId")
 	private String userId;
@@ -119,7 +119,7 @@ public class APIEntity implements Serializable {
     
     /** 服务分类信息 */
     @Transient
-    private OpenApplyEntity appEntity;
+    private OpenApplyEntity openApplyEntity;
 
 	public String getId() {
 		return id;
@@ -129,12 +129,12 @@ public class APIEntity implements Serializable {
 		this.id = id;
 	}
 
-	public String getAppId() {
-		return appId;
+	public String getOpenApplyId() {
+		return openApplyId;
 	}
 
-	public void setAppId(String appId) {
-		this.appId = appId;
+	public void setOpenApplyId(String openApplyId) {
+		this.openApplyId = openApplyId;
 	}
 
 	public String getUserId() {
@@ -329,12 +329,14 @@ public class APIEntity implements Serializable {
 		this.apiSecret = apiSecret;
 	}
 
-	public OpenApplyEntity getAppEntity() {
-		return appEntity;
+
+
+	public OpenApplyEntity getOpenApplyEntity() {
+		return openApplyEntity;
 	}
 
-	public void setAppEntity(OpenApplyEntity appEntity) {
-		this.appEntity = appEntity;
+	public void setOpenApplyEntity(OpenApplyEntity openApplyEntity) {
+		this.openApplyEntity = openApplyEntity;
 	}
 
 	public static long getSerialversionuid() {
@@ -343,13 +345,13 @@ public class APIEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "APIEntity [id=" + id + ", appId=" + appId + ", userId=" + userId + ", userName=" + userName
+		return "APIEntity [id=" + id + ", appId=" + openApplyId + ", userId=" + userId + ", userName=" + userName
 				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", testEndPoint=" + testEndPoint
 				+ ", endPoint=" + endPoint + ", httpMethod=" + httpMethod + ", headers=" + headers + ", args=" + args
 				+ ", result=" + result + ", retExample=" + retExample + ", errCodes=" + errCodes + ", apiVersion="
 				+ apiVersion + ", desc=" + desc + ", state=" + state + ", countByDay=" + countByDay + ", checkState="
 				+ checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax + ", quotaRenewalRate="
 				+ quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime=" + createTime + ", apiSecret="
-				+ apiSecret + ", appEntity=" + appEntity + "]";
+				+ apiSecret + ", appEntity=" + openApplyEntity + "]";
 	}
 }

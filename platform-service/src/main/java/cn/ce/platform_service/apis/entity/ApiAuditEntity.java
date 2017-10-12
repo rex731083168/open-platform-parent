@@ -66,7 +66,7 @@ public class ApiAuditEntity implements Serializable{
 	private String checkMem; //审核失败原因
 	
 	@Transient
-	private APIEntity apiEntity;
+	private ApiEntity apiEntity;
 
 	public String getId() {
 		return id;
@@ -252,11 +252,11 @@ public class ApiAuditEntity implements Serializable{
 		this.checkMem = checkMem;
 	}
 
-	public APIEntity getApiEntity() {
+	public ApiEntity getApiEntity() {
 		return apiEntity;
 	}
 
-	public void setApiEntity(APIEntity apiEntity) {
+	public void setApiEntity(ApiEntity apiEntity) {
 		this.apiEntity = apiEntity;
 	}
 

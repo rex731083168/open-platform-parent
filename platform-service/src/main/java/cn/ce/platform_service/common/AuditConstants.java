@@ -24,5 +24,11 @@ public class AuditConstants {
 	public static final int USER_DEVELOPER= 1; //开发者
 	public static final int USER_PROVIDER = 2;	//提供者
 	
+	/********** api审核状态  **********/
+	public static final int API_CHECK_STATE_UNCOMMITED = 0; //未审核
+	public static final int API_CHECK_STATE_UNAUDITED = 1; //待审核
+	public static final int API_CHECK_STATE_SUCCESS = 2; //审核通过
+	public static final int API_CHECK_STATE_DENY = 3; //审核不通过
+	
 	
 }

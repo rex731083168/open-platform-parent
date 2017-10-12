@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.apis.entity.APIEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
@@ -44,7 +44,7 @@ public class ApiController {
     @Resource
     private IAPIService apiService;
     @Resource
-    private IManageOpenApplyService openApplyService;
+    private IManageOpenApplyService manageOpenApplyService;
     
 	/**
 	 * @Description : 审核后推送网关是多版本+密钥授权
@@ -121,14 +121,14 @@ public class ApiController {
 
 		Result<JSONObject> result= new Result<JSONObject>();
 		try {
-			APIEntity api = apiService.findById(apiid);
+			ApiEntity api = apiService.findById(apiid);
 
 //			com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject
 //					.parseObject(JSON.toJSONString(api));
 			org.json.JSONObject jsonObject = new org.json.JSONObject(api);
 
 			// 添加封装信息
-			OpenApplyEntity appEntity = openApplyService.findById(api.getAppId());
+			OpenApplyEntity appEntity = manageOpenApplyService.findById(api.getOpenApplyId());
 
 			List<String> gatewayUrlList = new ArrayList<String>();
 			for (GatewayColonyEntity gatewayColonyEntity : GatewayUtils.getAllGatewayColony()) {
@@ -148,7 +148,7 @@ public class ApiController {
 
 	@RequestMapping(value = "/apiList", method = RequestMethod.POST)
 	@ResponseBody
-	public Result<Page<APIEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, String apiId,
+	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, String apiId,
 			String apiChName, String checkState, @RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
 

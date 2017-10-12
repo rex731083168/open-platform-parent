@@ -1,8 +1,5 @@
 package cn.ce.platform_console.apis.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,19 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
-import cn.ce.platform_service.apis.entity.APIEntity;
-import cn.ce.platform_service.apis.service.IAPIService;
-import cn.ce.platform_service.apis.service.IApiOauthService;
-import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
-import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
+import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.service.IConsoleApiService;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
-import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
 /**
@@ -40,145 +30,127 @@ import cn.ce.platform_service.users.entity.User;
  *
  */
 @RestController
-@RequestMapping("/apis")
+@RequestMapping("/api")
 public class ApisController {
 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ApisController.class);
 
 	@Resource
-	private IAPIService apiService;
-	@Resource
-	private IManageOpenApplyService openApplyService;
-	@Resource
-	private IApiSecretKeyService apiSecretKeyService;
-	@Resource
-	private IApiOauthService oauthService;
+	private IConsoleApiService consoleApiService;
 
-	@RequestMapping(value = "/apiVerify", method = RequestMethod.POST)
-	public Result<String> apiVerify(
-			@RequestParam String apiId,
-			@RequestParam(required=false) String userName,
-			@RequestParam(required=false) String password
-			) {
-
-		return apiService.apiVerify(apiId,userName,password);
-	}
-	
 	/**
 	 * 
 	 * @Title: publishApi
 	 * @Description: 提供者发布一个api，这时候还未审核
 	 * @author: makangwei
 	 * @date:   2017年10月10日 下午8:17:41  
-	 * @param : @param session
-	 * @param : @param apiEntity
-	 * @param : @return
-	 * @return: Result<String>
-	 * @throws
 	 */
-	@RequestMapping(value = "/publish", method = RequestMethod.POST)
-	public Result<String> publishApi(HttpSession session, @RequestBody APIEntity apiEntity) {
+	@RequestMapping(value = "/publishApi", method = RequestMethod.POST)
+	public Result<?> publishApi(HttpSession session, @RequestBody ApiEntity apiEntity) {
 			
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		
-		_LOGGER.info(JSONObject.toJSONString(apiEntity));
+		_LOGGER.info(apiEntity.toString());
 		
-		return apiService.publishAPI(user, apiEntity);
+		return consoleApiService.publishApi(user, apiEntity);
 	}
 	
 	/**
 	 * 
+	 * @Title: submitApi
+	 * @Description: 提供者提交审核，修改api状态为待审核
+	 * @author: makangwei
+	 * @date:   2017年10月12日 上午11:23:58  
+	 */
+	@RequestMapping(value = "/submitApi", method = RequestMethod.POST)
+	public Result<?> submitApi(@RequestParam String apiIds) {
+
+		// DOTO 多个参数将参数用逗号隔开传入
+		String[] apiId = apiIds.split(",");
+		
+		return consoleApiService.submitApi(apiId);
+	}
+	
+	/**
 	 * @Title: modifyApi
 	 * @Description: 修改api，由前端控制，未发布到网关才可修改
 	 * @author: makangwei
 	 * @date:   2017年10月10日 下午8:19:15  
-	 * @param : @param apiEntity
-	 * @param : @return
-	 * @return: Result<String>
-	 * @throws
 	 */
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
-	public Result<String> modifyApi(@RequestBody APIEntity apiEntity){
+	public Result<?> modifyApi(@RequestBody ApiEntity apiEntity){
 		
-		return apiService.modifyApi(apiEntity);
-	}
-	
-	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
-	public Result<?> show(String apiId) {
-		
-		return apiService.show(apiId);
-	}
-
-	@RequestMapping(value="/list2",method=RequestMethod.GET)
-	public Result<String> showApis2(String appId, String userId, 
-			String applyId, int currentPage, int pageSize){
-		
-		APIEntity apiParam = new APIEntity();
-		apiParam.setAppId(appId);
-		apiParam.setUserId(userId);
-		Result<String> result = new Result<String>();
-
-		try{
-			Page<APIEntity> ds = apiService.findApisByEntity(apiParam, currentPage, pageSize);
-			
-			@SuppressWarnings("unchecked")
-			List<APIEntity> list = (List<APIEntity>) ds.getItems();
-			
-			Page<org.json.JSONObject> page = new Page<org.json.JSONObject>(ds.getCurrentPage(), ds.getTotalNumber(),ds.getPageSize());
-			
-			List<org.json.JSONObject> list1 = new ArrayList<org.json.JSONObject>();
-			
-			for (APIEntity apiEntity : list) {
-				//将正式的url地址设置为空，不能让用户看到
-				apiEntity.setTestEndPoint("http://************");
-				
-				org.json.JSONObject tempJson = new org.json.JSONObject(apiEntity);
-				
-				int size = oauthService.findByApplyId(applyId,apiEntity.getId()).size();
-				if(size > 0){
-					tempJson.put("isUseful", false);//可申请
-				}else{
-					tempJson.put("isUseful", true);//不可申请
-				}
-				_LOGGER.info(tempJson.get("isUseful"));
-				list1.add(tempJson);
-			}
-			page.setItems(list1);
-			
-			result.setStatus(Status.SUCCESS);
-			result.setMessage("获取数据成功");
-			result.setData(new org.json.JSONObject(page).toString());
-			return result;
-		}catch(Exception e){
-			result.setMessage("系统发生异常");
+		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNCOMMITED){
+			Result<String> result = new Result<String>();
+			result.setErrorMessage("当前状态不支持修改", ErrorCodeNo.SYS012);
 			return result;
 		}
+		
+		return consoleApiService.modifyApi(apiEntity);
 	}
 	
-	@RequestMapping(value = "/delApi", method = RequestMethod.GET)
-	public Result<String> delApi(String apiId) {
-		return apiService.delById(apiId);
+	/**
+	 * @Title: showApi
+	 * @Description: 单个api的查询
+	 * @author: makangwei
+	 * @date:   2017年10月12日 下午1:17:55  
+	 */
+	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
+	public Result<?> showApi(String apiId) {
+		
+		return consoleApiService.showApi(apiId);
 	}
 
+	/**
+	 * @Title: showApiList
+	 * @Description: api列表
+	 * @author: makangwei
+	 * @date:   2017年10月12日 下午1:42:41  
+	 */
+	@RequestMapping(value="/showApiList",method=RequestMethod.GET)
+	public Result<?> showApiList(
+			@RequestParam String openApplyId, 
+			@RequestParam Integer userType,
+			@RequestParam(required=false) String userId,
+			@RequestParam(required=false) Integer checkState,
+			@RequestParam(required=false) String apiNameLike,
+			int currentPage, int pageSize){
+		
+		_LOGGER.info("当前开放应用："+openApplyId);
+		_LOGGER.info("当前用户类型："+userType);
+		_LOGGER.info("当前用户："+userId);
+		_LOGGER.info("审核状态："+checkState);
+		_LOGGER.info("模糊名称"+apiNameLike);
+		
+		if(pageSize == 0){
+			pageSize = Constants.PAGE_COMMON_SIZE;
+		}else if(pageSize > 30){
+			pageSize = Constants.PAGE_MAX_SIZE; //最大超过三十
+		}
+		
+		return consoleApiService.showApiList(openApplyId,userId,checkState,apiNameLike,currentPage,pageSize);
+	}
+	
+	
 	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
-	public Result<String> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
+	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
 			String appId,
 			String apiEnName){
 		
-		return apiService.checkApiEnName(apiEnName,appId);
+		return consoleApiService.checkApiEnName(apiEnName,appId);
 	}
 	
 	@RequestMapping(value="/checkApiChName",method=RequestMethod.POST)
-	public Result<String> checkApiChName(HttpServletRequest request,HttpServletResponse response,
+	public Result<?> checkApiChName(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam String appId,
 			@RequestParam String apiChName){
 		
-		return apiService.checkApiChName(apiChName,appId);
+		return consoleApiService.checkApiChName(apiChName,appId);
 	}
 	
 	@RequestMapping(value="/checkVersion",method=RequestMethod.GET,produces="application/json;charset=utf-8")
-	public Result<String> checkVersion(String apiId, String version){
+	public Result<?> checkVersion(String apiId, String version){
 		
 		Result<String> result = new Result<String>();
 		if(StringUtils.isBlank(apiId)){
@@ -189,92 +161,7 @@ public class ApisController {
 			return result;
 		}
 		
-		return apiService.checkVersion(apiId,version);
+		return consoleApiService.checkVersion(apiId,version);
 	}
-	
-	@Deprecated //使用密钥授权，已过期
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String showAPIs(HttpServletRequest request, HttpServletResponse response, String appid, String userid,
-			@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false, defaultValue = "8") int pageSize) {
-		_LOGGER.info("-------------->> Action!  show apis.  ======>> appid: " + appid + " userid:" + userid);
-		_LOGGER.info("-------------->> Action!  show apis. currentPage: " + currentPage + "  pageSize:" + pageSize);
-		JSONObject obj = new JSONObject();
-		try {
-			APIEntity apiParam = new APIEntity();
-			apiParam.setAppId(appid);
-			apiParam.setUserId(userid);
-
-			Page<APIEntity> ds = apiService.findApisByEntity(apiParam, currentPage, pageSize);
-			@SuppressWarnings("unchecked")
-			List<APIEntity> items = (List<APIEntity>) ds.getItems();
-			List<String> apiIdList = new ArrayList<>(items.size());
-			// 构建apiId集合
-			for (APIEntity apiEntity : items) {
-				apiIdList.add(apiEntity.getId());
-			}
-
-			// 根据apiId加载秘钥信息
-			List<ApiSecretKey> findSecretKeyByApiIds = apiSecretKeyService.findSecretKeyByApiIds(apiIdList);
-			List<ApiSecretKey> secretKeyList;
-
-			// 循环Api集合查找秘钥apiSecretKeyList进行组装Api信息
-			for (APIEntity apiEntity : items) {
-				secretKeyList = new ArrayList<>();
-				for (ApiSecretKey apiSecretKey : findSecretKeyByApiIds) {
-					if (apiSecretKey.getApiId().equals(apiEntity.getId())) {
-						secretKeyList.add(apiSecretKey);
-					}
-				}
-				apiEntity.setAppEntity((openApplyService.findById(apiEntity.getAppId())));
-				apiEntity.setApiSecret(secretKeyList);
-			}
-
-			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(ds));
-
-			obj.put("code", "1");
-			obj.put("message", "OK");
-			obj.put("data", jsonObject);
-			return obj.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			obj.put("code", "0");
-			obj.put("message", "ERROR");
-			return obj.toString();
-		}
-	}
-
-    @SuppressWarnings("unchecked")
-	@Deprecated //使用密钥授权已过期。使用者查询api列表
-	@RequestMapping(value = "/uselist", method = RequestMethod.GET)
-	public String showUseAPIs(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(required = true) String userid,
-			@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false, defaultValue = "8") int pageSize) {
-		_LOGGER.info("-------------->> Action!  show use apis.  ======>> userid:" + userid);
-		_LOGGER.info("-------------->> Action!  show use. currentPage: " + currentPage + "  pageSize:" + pageSize);
-		JSONObject obj = new JSONObject();
-		try {
-			ApiSecretKey param = new ApiSecretKey();
-			param.setUserId(userid);
-			Page<ApiSecretKey> ds = apiSecretKeyService.findSecretKeyEntityPage(param, currentPage, pageSize);
-			APIEntity api = new APIEntity();
-			// 构建apiId集合
-			for (ApiSecretKey apiSecret : (List<ApiSecretKey>) ds.getItems()) {
-				api = apiService.findById(apiSecret.getApiId());
-				api.setAppEntity(openApplyService.findById(api.getAppId()));
-				apiSecret.setApi(api);
-			}
-			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(ds));
-			obj.put("code", "1");
-			obj.put("message", "OK");
-			obj.put("data", jsonObject);
-		} catch (Exception e) {
-			e.printStackTrace();
-			obj.put("code", "0");
-			obj.put("message", "ERROR");
-		}
-		return obj.toString();
-	}
-
+		
 }

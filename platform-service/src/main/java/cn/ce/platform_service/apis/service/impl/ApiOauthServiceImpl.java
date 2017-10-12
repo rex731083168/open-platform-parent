@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.ce.platform_service.apis.dao.IApiOauthDao;
-import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.common.Constants;
@@ -79,7 +79,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 			return result;
 		}
 		
-		APIEntity apiEntity = apiService.findById(apiId);
+		ApiEntity apiEntity = apiService.findById(apiId);
 		
 		if(apiEntity == null){
 			result.setMessage("当前api不存在");
@@ -94,14 +94,14 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		}
 		
 		
-		OpenApplyEntity appEntity = appService.findById(apiEntity.getAppId());
+		OpenApplyEntity appEntity = appService.findById(apiEntity.getOpenApplyId());
 
 		//拼接对象
 		ApiAuditEntity auditEntity = new ApiAuditEntity();
 		//auditEntity.setId(UUID.randomUUID().toString().replace("-", ""));
 		//auditEntity.setApiId(apiEntity.getApiversion().getApiId()); // TODO 这里的apiId是apiVersion里面的apiId，这是错误的
 		auditEntity.setApiId(apiEntity.getId());
-		auditEntity.setVersionApiId(apiEntity.getApiVersion().getApiId());
+		auditEntity.setVersionApiId(apiEntity.getApiVersion().getVersionId());
 		auditEntity.setApiChName(apiEntity.getApiChName());
 		auditEntity.setApiEnName(apiEntity.getApiEnName());
 		auditEntity.setAppId(appEntity.getId());
@@ -197,11 +197,11 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		}
 		
 		
-		APIEntity apiEntity = apiService.findById(auditEntity.getApiId());
+		ApiEntity apiEntity = apiService.findById(auditEntity.getApiId());
 		try{
 			JSONObject job = new JSONObject();
 			//job.put("api_id", auditEntity.getApiId());
-			job.put("api_id", apiEntity.getApiVersion().getApiId()); // TODO 这里申请client_id需要输入版本的api_id
+			job.put("api_id", apiEntity.getApiVersion().getVersionId()); // TODO 这里申请client_id需要输入版本的api_id
 			
 			// TODO 这里的值是写死的，需要后期修改
 			//job.put("redirect_uri", URLEncoder.encode("/","UTF-8"));
