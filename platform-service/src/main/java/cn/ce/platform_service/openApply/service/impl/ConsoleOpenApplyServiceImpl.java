@@ -41,8 +41,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 	@Resource
 	private INewOpenApplyDao newOpenApplyDao;
 	
-	@Resource
-	
 	@Override
 	public Result<?> addApply(HttpSession session,OpenApplyEntity apply) {
 		
