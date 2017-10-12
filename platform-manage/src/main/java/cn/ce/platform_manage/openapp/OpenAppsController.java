@@ -36,10 +36,10 @@ import net.sf.json.JSONArray;
  * @see jdk 1.8
  */
 @RestController
-@RequestMapping("/app")
-public class AppsController extends BaseController {
+@RequestMapping("/openapp")
+public class OpenAppsController extends BaseController {
 
-	private static Logger _LOGGER = Logger.getLogger(AppsController.class);
+	private static Logger _LOGGER = Logger.getLogger(OpenAppsController.class);
 
 	@Resource
 	private IAPIService apiService;
@@ -50,7 +50,7 @@ public class AppsController extends BaseController {
 	/**
 	 * 
 	 * @param ids
-	 *            jsondemo{"1","2","3"}
+	 *            jsondemo["1","2","3"]
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -59,46 +59,6 @@ public class AppsController extends BaseController {
 		JSONArray jsonArray = JSONArray.fromObject(ids);
 		List<String> lisids = jsonArray.toList(jsonArray);
 		return openApplyService.batchUpdate(lisids);
-	}
-
-	/**
-	 * 
-	 * @Title: addGroup @Description: TODO(这里用一句话描述这个方法的作用) @param : @param
-	 *         app @param : @return @return: Result<String> @throws
-	 */
-	@RequestMapping(value = "/addGroup", method = RequestMethod.POST)
-	public Result<String> addGroup(@RequestBody OpenApplyEntity app) {
-		_LOGGER.info("---------------->> Action Add new Group! param: " + JSON.toJSONString(app));
-
-		return openApplyService.addGroup1(session, app);
-	}
-
-	/***
-	 * 根据服务分类id删除
-	 * 
-	 * @param request
-	 * @param response
-	 * @param id
-	 *            服务分类id
-	 * @return
-	 */
-	@RequestMapping(value = "/delGroup", method = RequestMethod.GET)
-	public Result<String> delGroup(@RequestParam String id) {
-		_LOGGER.info("---------------->> Action del Group! GroupID: " + id);
-
-		return openApplyService.deleteGroup(id);
-	}
-
-	/**
-	 * 
-	 * @Title: modifyGroup @Description: TODO(这里用一句话描述这个方法的作用) @param : @param
-	 *         app @param : @return @return: Result<String> @throws
-	 */
-	@RequestMapping(value = "/modifyGroup", method = RequestMethod.POST)
-	public Result<String> modifyGroup(@RequestBody OpenApplyEntity app) {
-		_LOGGER.info("---------------->> Action modify Group! Param: " + JSON.toJSONString(app));
-
-		return openApplyService.modifyGroup1(app);
 	}
 
 	/**
