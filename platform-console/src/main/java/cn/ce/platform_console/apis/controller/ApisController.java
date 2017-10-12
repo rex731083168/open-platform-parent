@@ -27,7 +27,7 @@ import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.openApply.service.IOpenApplyService;
+import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
@@ -49,7 +49,7 @@ public class ApisController {
 	@Resource
 	private IAPIService apiService;
 	@Resource
-	private IOpenApplyService openApplyService;
+	private IManageOpenApplyService openApplyService;
 	@Resource
 	private IApiSecretKeyService apiSecretKeyService;
 	@Resource

@@ -31,7 +31,7 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.openApply.service.IOpenApplyService;
+import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
@@ -48,7 +48,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 	@Resource
 	private IAPIService apiService;
 	@Resource
-	private IOpenApplyService appService;
+	private IManageOpenApplyService appService;
 	@Resource
 	private IDiyApplyDao applyDao;
 	@Resource

@@ -13,8 +13,8 @@
 		<springfox-swagger>2.7.0</springfox-swagger>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<spring.data.mongodb.version>1.8.4.RELEASE</spring.data.mongodb.version>
-		<spring.data.commons.version>1.11.4.RELEASE</spring.data.commons.version>
+		<spring.data.mongodb.version>1.10.7.RELEASE</spring.data.mongodb.version>
+		<spring.data.commons.version>1.13.7.RELEASE</spring.data.commons.version>
 		<commons.codec.version>1.10</commons.codec.version>
 		<spring.version>4.2.9.RELEASE</spring.version>
 		<maven.plugin.version>2.3.2</maven.plugin.version>
@@ -98,7 +98,7 @@
 			<name>public-group</name>
 			<url>http://10.12.40.200:8081/nexus/content/groups/public/</url>
 		</repository>
-	
+
 	</repositories>
 
 	<distributionManagement>
@@ -127,36 +127,17 @@
 		</repository> <snapshotRepository> <id>maven-snapshots</id> <name>Maven Snapshot 
 		Repository</name> <url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url> 
 		</snapshotRepository> </distributionManagement> -->
-<!-- 	<scm>
-		<connection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</connection>
-		<developerConnection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</developerConnection>
-	</scm>
-	
-	<repositories>
-		<repository>
-			<id>maven-releases</id>
-			<name>Maven Release Repository</name>
-			<url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url>
-		</repository>
-		<repository>
-			<id>maven-snapshots</id>
-			<name>Maven Snapshot Repository</name>
-			<url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>maven-releases</id>
-			<name>Maven Release Repository</name>
-			<url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>maven-snapshots</id>
-			<name>Maven Snapshot Repository</name>
-			<url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>	 -->
+	<!-- <scm> <connection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</connection> 
+		<developerConnection>scm:git:http://gitlab.300.cn/paas-code/open-platform-parent.git</developerConnection> 
+		</scm> <repositories> <repository> <id>maven-releases</id> <name>Maven Release 
+		Repository</name> <url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url> 
+		</repository> <repository> <id>maven-snapshots</id> <name>Maven Snapshot 
+		Repository</name> <url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url> 
+		</repository> </repositories> <distributionManagement> <repository> <id>maven-releases</id> 
+		<name>Maven Release Repository</name> <url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url> 
+		</repository> <snapshotRepository> <id>maven-snapshots</id> <name>Maven Snapshot 
+		Repository</name> <url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url> 
+		</snapshotRepository> </distributionManagement> -->
 
 
 	<!-- build config -->
@@ -410,14 +391,14 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j.version}</version>
 		</dependency>
-		
+
 		<!-- log4j -->
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>${log4j.core.version}</version>
-		</dependency>	
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -465,18 +446,18 @@
 
 
 		<!-- httpclient servlet -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>javax.servlet</groupId> -->
-<!-- 			<artifactId>servlet-api</artifactId> -->
-<!-- 			<version>${java.servlet.api.version}</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
-  		<dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>javax.servlet</groupId> -->
+		<!-- <artifactId>servlet-api</artifactId> -->
+		<!-- <version>${java.servlet.api.version}</version> -->
+		<!-- <scope>provided</scope> -->
+		<!-- </dependency> -->
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
-      	</dependency>		
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -604,11 +585,11 @@
 
 		<!-- dom4j -->
 		<dependency>
-		    <groupId>dom4j</groupId>
-		    <artifactId>dom4j</artifactId>
-		    <version>${dom4j.version}</version>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>${dom4j.version}</version>
 		</dependency>
-		
+
 	</dependencies>
 
 

@@ -91,6 +91,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		if(StringUtils.isBlank(entity.getId())){
 			entity.setUserId(entity.getUser().getId());
 			entity.setUserName(entity.getUser().getUserName());
+			entity.setEnterpriseName(entity.getUser().getEnterpriseName());
 			entity.setCreateDate(new Date());
 
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));

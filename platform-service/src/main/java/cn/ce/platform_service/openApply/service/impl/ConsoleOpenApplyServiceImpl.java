@@ -51,6 +51,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 			apply.setCreateDate(new Date());
 			apply.setUserId(user.getId());
 			apply.setUserName(user.getUserName());
+			apply.setEnterpriseName(user.getEnterpriseName());
 
 			// appKey不能以/开头和结尾
 			if (apply.getApplyKey().startsWith("/") || apply.getApplyKey().endsWith("/")) {

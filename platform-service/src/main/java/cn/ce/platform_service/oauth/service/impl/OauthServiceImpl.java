@@ -22,7 +22,7 @@ import cn.ce.platform_service.oauth.dao.IOauthDao;
 import cn.ce.platform_service.oauth.entity.AuthorizeClientEntity;
 import cn.ce.platform_service.oauth.service.IOauthService;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.openApply.service.IOpenApplyService;
+import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.HttpUtils;
 
 /**
@@ -38,7 +38,7 @@ public class OauthServiceImpl implements IOauthService{
 	private IOauthDao oauthDao;
 	
 	@Autowired 
-	private IOpenApplyService appService;
+	private IManageOpenApplyService appService;
     
     @Autowired 
     private IApiOauthService apiAuditService;

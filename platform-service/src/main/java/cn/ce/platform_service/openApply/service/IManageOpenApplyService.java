@@ -19,7 +19,7 @@ import cn.ce.platform_service.page.Page;
  * @author dingjia@300.cn
  *
  */
-public interface IOpenApplyService {
+public interface IManageOpenApplyService {
 
 
     /**
@@ -113,10 +113,12 @@ public interface IOpenApplyService {
 
 	public Result<String> deleteGroup(String id);
 
-	//public Result<String> modifyGroup1(OpenApplyEntity app);
+	public Result<String> modifyGroup1(OpenApplyEntity app);
 
-	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize);
+	public Result<Page<OpenApplyEntity>> groupList1(String appName,String userName,String enterpriseName,String checkState, int currentPage, int pageSize);
 
 	public Result<String> auditGroup(String id, int checkState, String remark);
+	
+	public Result<String> batchUpdate(List<String> ids);
 
 }

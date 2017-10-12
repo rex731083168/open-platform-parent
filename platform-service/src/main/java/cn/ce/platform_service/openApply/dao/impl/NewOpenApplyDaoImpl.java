@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.openApply.dao.INewOpenApplyDao;
@@ -14,6 +15,8 @@ import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 * @Author : makangwei
 * @Date : 2017年10月11日
 */
+
+@Repository(value = "newOpenApplyDao")
 public class NewOpenApplyDaoImpl extends  BaseMongoDaoImpl<OpenApplyEntity> implements INewOpenApplyDao{
 
 	@Override

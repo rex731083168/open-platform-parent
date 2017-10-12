@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  */
 @Document(collection = "OPEN_APPLY")
-public class OpenApplyEntity implements Serializable{
+public class OpenApplyEntity implements Serializable {
 
 	/**
 	 * 
@@ -25,40 +25,43 @@ public class OpenApplyEntity implements Serializable{
 	/** 唯一标识 */
 	@Id
 	private String id;
-	
+
 	/** 提供者标识 */
 	@Field("userId")
 	private String userId;
-	
+
 	/** 提供者姓名 */
 	@Field("userName")
 	private String userName;
-	
+
+	@Field("enterpriseName")
+	private String enterpriseName; // 企业名称
+
 	@Field("applyKey")
 	private String applyKey;
-	
+
 	/** 开放应用名称 */
 	@Field("applyName")
 	private String applyName;
-	
-	/** 服务描述*/
+
+	/** 服务描述 */
 	@Field("applyDesc")
 	private String applyDesc;
-	
+
 	@Field("createDate")
 	private Date createDate;
-	
-	 /** 审核状态0:初始，1:提交审核，2:通过，3:未通过*/
-    @Field("checkState")
-    private Integer checkState;
-        
-    /** 审核备注  */
-    @Field("checkMem")
-    private String checkMem;
-    
-    /** dao判断刨除当前修改id的数据进行判断时赋值 */
-    @Transient
-    private String neqId;
+
+	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
+	@Field("checkState")
+	private Integer checkState;
+
+	/** 审核备注 */
+	@Field("checkMem")
+	private String checkMem;
+
+	/** dao判断刨除当前修改id的数据进行判断时赋值 */
+	@Transient
+	private String neqId;
 
 	public String getId() {
 		return id;
@@ -134,6 +137,22 @@ public class OpenApplyEntity implements Serializable{
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getEnterpriseName() {
+		return enterpriseName;
+	}
+
+	public void setEnterpriseName(String enterpriseName) {
+		this.enterpriseName = enterpriseName;
+	}
+
+	public String getApplyDesc() {
+		return applyDesc;
+	}
+
+	public void setApplyDesc(String applyDesc) {
+		this.applyDesc = applyDesc;
 	}
 
 	@Override

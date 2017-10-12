@@ -117,8 +117,6 @@ public class UserDAOImpl extends AbstractBaseMongoDao<User> implements IUserDAO 
 			}
 			
 			
-
-			
 	        Query query = new Query(c).with(new Sort(new Order(Direction.DESC,"regtime")));
 	        
 	        return this.findAsPage(query, currentPage, pageSize, User.class);
