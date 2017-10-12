@@ -3,10 +3,10 @@ package cn.ce.platform_service.diyApply.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,20 +31,19 @@ import cn.ce.platform_service.page.Page;
  * @date 2017年8月23日14:32:48
  *
  */
-@Service("applyService")
-public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
+@Service("consoleDiyApplyService")
+public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 
 	/** 日志对象 */
-	private static Logger logger = Logger.getLogger(IConsoleDiyApplyServiceImpl.class);
+	private static Logger logger = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
 	
-	@Autowired @Qualifier("apiService")
+	@Resource
 	private IAPIService apiService;
-	
-	@Autowired @Qualifier("applyDao")
-	private IDiyApplyDao applyDao;
-	@Autowired
-	private IApiOauthService oauthService;
+	@Resource
+	private IDiyApplyDao diyApplyDao;
+	@Resource
+	private IApiOauthService apiOauthService;
 	
 	@Override
 	public Result<String> saveApply(DiyApplyEntity entity) {
@@ -64,7 +63,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		Query query = new Query(c).with(new Sort(Direction.DESC,"createDate"));
 		
 		
-		List<DiyApplyEntity> findPageByList = applyDao.findListByEntity(query);
+		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(query);
 		
 		
 		if(StringUtils.isBlank(entity.getApplyName())){
@@ -95,12 +94,12 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setCreateDate(new Date());
 
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));
-			applyDao.saveOrUpdate(entity);
+			diyApplyDao.saveOrUpdate(entity);
 			logger.info("save end");
 			
 		}else{
 		//修改
-			DiyApplyEntity applyById = applyDao.findById(entity.getId());
+			DiyApplyEntity applyById = diyApplyDao.findById(entity.getId());
 			
 			if(null == applyById){
 				result.setErrorMessage("请求的应用信息不存在!");
@@ -117,7 +116,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			}
 			
 			logger.info("update apply begin : " + JSON.toJSONString(applyById));
-			applyDao.saveOrUpdate(applyById);
+			diyApplyDao.saveOrUpdate(applyById);
 			logger.info("save end");
 			
 		}
@@ -130,7 +129,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<String> deleteApplyByid(String id) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<>();
-		DiyApplyEntity apply = applyDao.findById(id);
+		DiyApplyEntity apply = diyApplyDao.findById(id);
 		if(null == apply){
 			result.setErrorMessage("请求删除的应用不存在!");
 			return result;
@@ -139,7 +138,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		} else {
 			logger.info("delete apply begin applyId:" + id);
-			applyDao.delete(id);
+			diyApplyDao.delete(id);
 			logger.info("delete apply end");
 			result.setSuccessMessage("删除成功!");
 		}
@@ -149,7 +148,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	@Override
 	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity,Page<DiyApplyEntity> page) {
 		Result<Page<DiyApplyEntity>> result = new Result<>();
-		Page<DiyApplyEntity> findPageByEntity = applyDao.findPageByEntity(generalApplyQuery(entity,null), page);
+		Page<DiyApplyEntity> findPageByEntity = diyApplyDao.findPageByEntity(generalApplyQuery(entity,null), page);
 		result.setData(findPageByEntity);
 		return result;
 	}
@@ -166,7 +165,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	@Override
 	public Result<DiyApplyEntity> getApplyById(String id,int pageSize,int currentPage) {
 		Result<DiyApplyEntity> result = new Result<>(); 
-		DiyApplyEntity apply = applyDao.findById(id);
+		DiyApplyEntity apply = diyApplyDao.findById(id);
 		
 		if(null == apply){
 			result.setErrorMessage("该应用不存在!");
@@ -185,7 +184,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				
 				authIds = authIds.subList(begin, end);
 				
-				List<ApiAuditEntity> apiAuditList = oauthService.getApiAuditEntity(authIds);
+				List<ApiAuditEntity> apiAuditList = apiOauthService.getApiAuditEntity(authIds);
 				
 				apply.setAuditList(apiAuditList);
 				result.setSuccessData(apply);
@@ -230,7 +229,7 @@ public class IConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Override
 	public DiyApplyEntity findById(String applyId) {
-		return applyDao.findById(applyId);
+		return diyApplyDao.findById(applyId);
 	}
 
 

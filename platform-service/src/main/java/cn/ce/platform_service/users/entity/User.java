@@ -58,10 +58,13 @@ public class User implements Serializable {
 	
 	
 	/********************认证时需要的信息************************/
+	@Field("enterpriseName")
 	private String enterpriseName; // 企业名称
 	
-	private String IDCard; //身份证号码
+	@Field("idCard")
+	private String idCard; //身份证号码
 	
+	@Field("userRealName")
 	private String userRealName; //真实姓名
 	
 	/** 
@@ -235,13 +238,7 @@ public class User implements Serializable {
 		this.enterpriseName = enterpriseName;
 	}
 
-	public String getIDCard() {
-		return IDCard;
-	}
 
-	public void setIDCard(String iDCard) {
-		IDCard = iDCard;
-	}
 
 	public String getUserRealName() {
 		return userRealName;
@@ -250,13 +247,21 @@ public class User implements Serializable {
 	public void setUserRealName(String userRealName) {
 		this.userRealName = userRealName;
 	}
+	
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
 				+ ", telNumber=" + telNumber + ", state=" + state + ", appId=" + appId + ", userType=" + userType
 				+ ", regTime=" + regTime + ", checkCode=" + checkCode + ", checkState=" + checkState + ", checkMem="
-				+ checkMem + ", enterpriseName=" + enterpriseName + ", IDCard=" + IDCard + ", userRealName="
+				+ checkMem + ", enterpriseName=" + enterpriseName + ", IDCard=" + idCard + ", userRealName="
 				+ userRealName + ", orgId=" + orgId + ", orgName=" + orgName + ", appSecret=" + appSecret + "]";
 	}
 
