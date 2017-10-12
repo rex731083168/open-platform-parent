@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
-import cn.ce.platform_service.openApply.dao.IAppDAO;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.page.PageContext;
 
@@ -26,8 +26,8 @@ import cn.ce.platform_service.page.PageContext;
  * @author dingjia@300.cn
  *
  */
-@Repository(value ="appDao")
-public class AppDaoImpl extends AbstractBaseMongoDao<DevApplyEntity> implements IAppDAO {
+@Repository(value ="openApplyDao")
+public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> implements IOpenApplyDao {
     /** 定义 */
     private String clientName = "client_name";
 
@@ -35,70 +35,70 @@ public class AppDaoImpl extends AbstractBaseMongoDao<DevApplyEntity> implements 
     private String createTime = "create_time";
 
      @Override
-    public void addApp(DevApplyEntity app) {
+    public void addApp(OpenApplyEntity app) {
         this.add(app);
     }
 
      @Override
-    public DevApplyEntity findById(String id) {
-        return super.findById(id, DevApplyEntity.class);
+    public OpenApplyEntity findById(String id) {
+        return super.findById(id, OpenApplyEntity.class);
     }
 
      @Override
-    public int modifyById(String id, DevApplyEntity app) {
+    public int modifyById(String id, OpenApplyEntity app) {
         super.updateById(id, app);
         return 1;
     }
 
      @Override
-    public List<DevApplyEntity> getAll() {
-        return super.getAll(DevApplyEntity.class);
+    public List<OpenApplyEntity> getAll() {
+        return super.getAll(OpenApplyEntity.class);
     }
 
      @Override
     public int delById(String id) {
-        return super.delById(id, DevApplyEntity.class);
+        return super.delById(id, OpenApplyEntity.class);
     }
 
     @Override
-    public Page<DevApplyEntity> getAppList(String userid) {
+    public Page<OpenApplyEntity> getAppList(String userid) {
         return super.findAsPage("userid", userid, PageContext.getCuurentPage(), PageContext.getPageSize(),
-                        DevApplyEntity.class);
+                        OpenApplyEntity.class);
     }
 
 
     @Override
-    public DevApplyEntity findByAppKey(String appKey) {
-        return super.findOneByField("client_id", appKey, DevApplyEntity.class);
+    public OpenApplyEntity findByAppKey(String appKey) {
+        return super.findOneByField("client_id", appKey, OpenApplyEntity.class);
     }
 
     @Override
-    public Page<DevApplyEntity> getAsPage(String appName, int currentPage, int pageSize) {
+    public Page<OpenApplyEntity> getAsPage(String appName, int currentPage, int pageSize) {
         return super.findLikeAsPage(clientName, appName, Constants.SORT_TYPE_DESC, createTime, currentPage,
-                        pageSize, DevApplyEntity.class);
+                        pageSize, OpenApplyEntity.class);
     }
 
     @Override
-    public Page<DevApplyEntity> getAsPage(String appName, Integer appCheckstate, int currentPage, int pageSize) {
+    public Page<OpenApplyEntity> getAsPage(String appName, Integer appCheckstate, int currentPage, int pageSize) {
         return super.findLikeAndIsAsPage(clientName, appName, "checkState", appCheckstate, Constants.SORT_TYPE_DESC,
-                        createTime, currentPage, pageSize, DevApplyEntity.class);
+                        createTime, currentPage, pageSize, OpenApplyEntity.class);
     }
 
     @Override
     public List<?> getAppWithGroups(String appName, int groupCheckstate) {
-        return super.findArrayElemAsPage("groups", "approvedstate", groupCheckstate, DevApplyEntity.class);
+        return super.findArrayElemAsPage("groups", "approvedstate", groupCheckstate, OpenApplyEntity.class);
     }
 
     @Override
-    public Page<DevApplyEntity> findInAsPage(String appname, Collection<?> ids, int currentPage, int pageSize) {
+    public Page<OpenApplyEntity> findInAsPage(String appname, Collection<?> ids, int currentPage, int pageSize) {
         return super.findLikeAndInAsPage(clientName, appname, "_id", ids, Constants.SORT_TYPE_DESC, createTime,
-                        currentPage, pageSize, DevApplyEntity.class);
+                        currentPage, pageSize, OpenApplyEntity.class);
     }
 
     @Override
-    public Page<DevApplyEntity> findNotInAsPage(String appname, Collection<?> ids, int currentPage, int pageSize) {
+    public Page<OpenApplyEntity> findNotInAsPage(String appname, Collection<?> ids, int currentPage, int pageSize) {
         return super.findLikeAndNotInAsPage(clientName, appname, "_id", ids, Constants.SORT_TYPE_DESC,
-                        createTime, currentPage, pageSize, DevApplyEntity.class);
+                        createTime, currentPage, pageSize, OpenApplyEntity.class);
     }
 
 	@Override
@@ -107,35 +107,35 @@ public class AppDaoImpl extends AbstractBaseMongoDao<DevApplyEntity> implements 
 		
 	}
 	
-	public DevApplyEntity findAppByAppName(String appName) {
-		return super.findOneByField("appname", appName, DevApplyEntity.class);
+	public OpenApplyEntity findAppByAppName(String appName) {
+		return super.findOneByField("appname", appName, OpenApplyEntity.class);
 	}
 
 	@Override
-	public Page<DevApplyEntity> findAppListPageByDBWhere(int currentPage, int pageSize,
+	public Page<OpenApplyEntity> findAppListPageByDBWhere(int currentPage, int pageSize,
 			Map<String, MongoDBWhereEntity> condMap) {
-		return super.findPageListByWhereEntity(currentPage, pageSize, condMap, DevApplyEntity.class);
+		return super.findPageListByWhereEntity(currentPage, pageSize, condMap, OpenApplyEntity.class);
 	}
 
 	@Override
-	public List<DevApplyEntity> findAppListByDBWhere(Map<String, MongoDBWhereEntity> condMap) {
-		return super.findListByWhereEntity(condMap, DevApplyEntity.class);
+	public List<OpenApplyEntity> findAppListByDBWhere(Map<String, MongoDBWhereEntity> condMap) {
+		return super.findListByWhereEntity(condMap, OpenApplyEntity.class);
 	}
 	
 	@Override
-	public Page<DevApplyEntity> findAppListByMapCondition(Map<String,Object> condMap, int currentPage, int pageSize) {
-        return super.findByFieldsAsPage(condMap, currentPage, pageSize, DevApplyEntity.class);
+	public Page<OpenApplyEntity> findAppListByMapCondition(Map<String,Object> condMap, int currentPage, int pageSize) {
+        return super.findByFieldsAsPage(condMap, currentPage, pageSize, OpenApplyEntity.class);
 	}
 
 	@Override
-	public Page<DevApplyEntity> findAppsByEntity(DevApplyEntity entity, int currentPage, int pageSize) {
+	public Page<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity, int currentPage, int pageSize) {
 		//分页
-		Page<DevApplyEntity> findAsPage = super.findAsPage(generalSecretQueryBean(entity).with(new Sort(Direction.DESC, "createdate")), currentPage, pageSize, DevApplyEntity.class);
+		Page<OpenApplyEntity> findAsPage = super.findAsPage(generalSecretQueryBean(entity).with(new Sort(Direction.DESC, "createdate")), currentPage, pageSize, OpenApplyEntity.class);
 		
 		return findAsPage;
 	}
 	
-	private Query generalSecretQueryBean(DevApplyEntity entity){
+	private Query generalSecretQueryBean(OpenApplyEntity entity){
 		//构建查询对象
 		Criteria c = new Criteria();
 		
@@ -168,8 +168,8 @@ public class AppDaoImpl extends AbstractBaseMongoDao<DevApplyEntity> implements 
 	}
 
 	@Override
-	public List<DevApplyEntity> findAppsByEntity(DevApplyEntity entity) {
-		List<DevApplyEntity> listApp = super.find(generalSecretQueryBean(entity), DevApplyEntity.class);
+	public List<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity) {
+		List<OpenApplyEntity> listApp = super.find(generalSecretQueryBean(entity), OpenApplyEntity.class);
 		return listApp;
 	}
 

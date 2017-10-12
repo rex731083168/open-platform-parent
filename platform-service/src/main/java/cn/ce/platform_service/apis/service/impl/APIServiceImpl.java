@@ -29,8 +29,8 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.oauth.dao.IOauthDao;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
@@ -45,7 +45,7 @@ import cn.ce.platform_service.users.entity.User;
 public class APIServiceImpl implements IAPIService {
 	
 	@Resource
-	private IAppService appService;
+	private IOpenApplyService appService;
 	@Resource
 	private IApiDAO  apiDao;
 	@Resource
@@ -338,12 +338,12 @@ public class APIServiceImpl implements IAPIService {
 			}
 
 			String appId = api.getAppId();
-			DevApplyEntity app = appService.findById(appId);
+			OpenApplyEntity app = appService.findById(appId);
 
 			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 
 			// 添加网关访问地址
-			DevApplyEntity appEntity = appService.findById(api.getAppId());
+			OpenApplyEntity appEntity = appService.findById(api.getAppId());
 			
 			List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 			

@@ -19,8 +19,8 @@ import cn.ce.platform_manage.base.BaseController;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 import cn.ce.platform_service.page.Page;
 
 /***
@@ -40,7 +40,7 @@ public class AppsController extends BaseController {
 	private IAPIService apiService;
 
 	@Resource
-	private IAppService appService;
+	private IOpenApplyService openApplyService;
 	
 
 	/**
@@ -53,10 +53,10 @@ public class AppsController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/addGroup", method = RequestMethod.POST)
-	public Result<String> addGroup(@RequestBody DevApplyEntity app) {
+	public Result<String> addGroup(@RequestBody OpenApplyEntity app) {
 		_LOGGER.info("---------------->> Action Add new Group! param: " + JSON.toJSONString(app));
 		
-		return appService.addGroup1(session,app);
+		return openApplyService.addGroup1(session,app);
 	}
 
 	
@@ -71,7 +71,7 @@ public class AppsController extends BaseController {
 	public Result<String> delGroup(@RequestParam String id) {
 		_LOGGER.info("---------------->> Action del Group! GroupID: " + id);
 		
-		return appService.deleteGroup(id);
+		return openApplyService.deleteGroup(id);
 	}
 
 
@@ -85,10 +85,10 @@ public class AppsController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/modifyGroup", method = RequestMethod.POST)
-	public Result<String> modifyGroup(@RequestBody DevApplyEntity app) {
+	public Result<String> modifyGroup(@RequestBody OpenApplyEntity app) {
 		_LOGGER.info("---------------->> Action modify Group! Param: " + JSON.toJSONString(app));
 
-		return appService.modifyGroup1(app);
+		return openApplyService.modifyGroup1(app);
 	}
 	
 
@@ -105,7 +105,7 @@ public class AppsController extends BaseController {
 	public Result<String> auditGroupState(String id, int checkState,String remark) {
 		_LOGGER.info("---------------->> Action audit Group! GroupID: " + id + " ; group state: " + checkState + "; remark:" + remark);
 		
-		return appService.auditGroup(id,checkState,remark);
+		return openApplyService.auditGroup(id,checkState,remark);
 	}
 
 	/***
@@ -122,11 +122,11 @@ public class AppsController extends BaseController {
 	 */
 	@RequestMapping(value = "/groupList", method = RequestMethod.POST)
 	@ResponseBody
-	public Result<Page<DevApplyEntity>> groupList(HttpServletRequest request, HttpServletResponse response,String appName,String checkState,
+	public Result<Page<OpenApplyEntity>> groupList(HttpServletRequest request, HttpServletResponse response,String appName,String checkState,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "8") int pageSize) {
 		_LOGGER.info("---------------->> Action Search GroupList! appname: " + appName + "; checkState:" + checkState);
 
-		return appService.groupList1(appName,checkState,currentPage,pageSize);
+		return openApplyService.groupList1(appName,checkState,currentPage,pageSize);
 	}
 }

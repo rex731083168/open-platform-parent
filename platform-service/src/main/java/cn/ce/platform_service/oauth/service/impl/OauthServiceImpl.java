@@ -21,8 +21,8 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.oauth.dao.IOauthDao;
 import cn.ce.platform_service.oauth.entity.AuthorizeClientEntity;
 import cn.ce.platform_service.oauth.service.IOauthService;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 import cn.ce.platform_service.util.HttpUtils;
 
 /**
@@ -38,7 +38,7 @@ public class OauthServiceImpl implements IOauthService{
 	private IOauthDao oauthDao;
 	
 	@Autowired 
-	private IAppService appService;
+	private IOpenApplyService appService;
     
     @Autowired 
     private IApiOauthService apiAuditService;
@@ -93,7 +93,7 @@ public class OauthServiceImpl implements IOauthService{
 				sb.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
 			}
 			
-			DevApplyEntity appEntity = appService.findById(findApiByClientId.getAppId());
+			OpenApplyEntity appEntity = appService.findById(findApiByClientId.getAppId());
 			
 			// TODO 监听路径是否需要加上appKey
 			String listenPath = appEntity.getApplyKey()+"/"+findApiByClientId.getApiEnName();/*+"/"+findApiByClientId.getVersion();*/

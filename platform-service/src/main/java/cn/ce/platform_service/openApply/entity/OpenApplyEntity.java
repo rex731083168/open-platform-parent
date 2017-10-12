@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  */
 @Document(collection = "OPEN_APPLY")
-public class DevApplyEntity implements Serializable{
+public class OpenApplyEntity implements Serializable{
 
 	/**
 	 * 
@@ -40,6 +40,10 @@ public class DevApplyEntity implements Serializable{
 	/** 开放应用名称 */
 	@Field("applyName")
 	private String applyName;
+	
+	/** 服务描述*/
+	@Field("applyDesc")
+	private String applyDesc;
 	
 	@Field("createDate")
 	private Date createDate;

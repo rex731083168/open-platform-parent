@@ -30,8 +30,8 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IUserService;
@@ -48,7 +48,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 	@Resource
 	private IAPIService apiService;
 	@Resource
-	private IAppService appService;
+	private IOpenApplyService appService;
 	@Resource
 	private IDiyApplyDao applyDao;
 	@Resource
@@ -94,7 +94,7 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		}
 		
 		
-		DevApplyEntity appEntity = appService.findById(apiEntity.getAppId());
+		OpenApplyEntity appEntity = appService.findById(apiEntity.getAppId());
 
 		//拼接对象
 		ApiAuditEntity auditEntity = new ApiAuditEntity();

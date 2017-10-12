@@ -21,8 +21,8 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 
 /**
 * @Description : 网关api和密钥的管理
@@ -35,7 +35,7 @@ public class GatewayApiService implements IGatewayApiService{
 	@Autowired
 	private IAPIService apiService;
 	@Autowired
-	private IAppService appService;
+	private IOpenApplyService appService;
 	@Autowired @Qualifier("applyDao")
 	private IDiyApplyDao applyDao;
 	@Autowired
@@ -77,7 +77,7 @@ public class GatewayApiService implements IGatewayApiService{
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
 			apiId = apiList.get(0).getApiVersion().getApiId();
 			
-			DevApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
+			OpenApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
 			
 			// TODO 监听路径是否需要加上appKey
 			String listenPath = "/"+appEntity.getApplyKey()+"/"+apiName+"/";
@@ -270,7 +270,7 @@ public class GatewayApiService implements IGatewayApiService{
 			//而这里的apiId已经转化成为不同版本的api所共同拥有的apiId,在这里转换了一下意义
 			apiId = apiList.get(0).getApiVersion().getApiId();
 			
-			DevApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
+			OpenApplyEntity appEntity = appService.findById(apiList.get(0).getAppId());
 			// TODO 监听路径是否需要加上appKey
 			String listenPath = "/"+appEntity.getApplyKey()+"/"+apiName+"/";
 			

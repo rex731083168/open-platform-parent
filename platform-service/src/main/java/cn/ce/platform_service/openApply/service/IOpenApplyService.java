@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.page.Page;
 
 /**
@@ -19,13 +19,8 @@ import cn.ce.platform_service.page.Page;
  * @author dingjia@300.cn
  *
  */
-public interface IAppService {
-	/**
-     * @Description: 添加应用
-     * @param  app: 应用信息
-     * @throws
-     */
-    public void addApp(DevApplyEntity app);
+public interface IOpenApplyService {
+
 
     /**
      * @Description: 根据应用Id查询应用信息
@@ -33,21 +28,21 @@ public interface IAppService {
      * @return     返回应用对象
      * @throws
      */
-    public DevApplyEntity findById(String id);
+    public OpenApplyEntity findById(String id);
 
     /**
      * @Description: 修改应用信息
      * @param  app: 应用对象
      * @throws
      */
-    public void modifyById(DevApplyEntity app);
+    public void modifyById(OpenApplyEntity app);
 
     /**
      * @Description: 查询所有应用
      * @return     返回应用集合
      * @throws
      */
-    public List<DevApplyEntity> getAll();
+    public List<OpenApplyEntity> getAll();
 
     /**
      * @Description: 根据用户查询应用列表（翻页）
@@ -57,7 +52,7 @@ public interface IAppService {
      * @return     返回应用集合
      * @throws
      */
-    public Page<DevApplyEntity> getAppList(String userId, int currentPage, int pageSize);
+    public Page<OpenApplyEntity> getAppList(String userId, int currentPage, int pageSize);
     
     
     /**
@@ -69,7 +64,7 @@ public interface IAppService {
      * @throws
      */
 //    public Page<AppEntity> getAppListByDBWhere(Map<String,MongoDBWhereEntity> condition, int currentPage, int pageSize);
-    public Page<DevApplyEntity> getAppListByDBWhere(DevApplyEntity appentity, int currentPage, int pageSize);
+    public Page<OpenApplyEntity> getAppListByDBWhere(OpenApplyEntity appentity, int currentPage, int pageSize);
     
 
     /**
@@ -80,7 +75,7 @@ public interface IAppService {
     public void delById(String id);
     
     
-    public DevApplyEntity findAppByAppName(String appName);
+    public OpenApplyEntity findAppByAppName(String appName);
     
     /***
      * 根据实体对象分页查询App集合
@@ -89,38 +84,38 @@ public interface IAppService {
      * @param pageSize
      * @return
      */
-    Page<DevApplyEntity> findAppsByEntity(DevApplyEntity entity,int currentPage,int pageSize);
+    Page<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity,int currentPage,int pageSize);
     
     /***
      * 根据app实体中appName及appKey检测是否已经存在
      * @param entity App实体
      * @return
      */
-    Result<DevApplyEntity> checkAppIsHave(DevApplyEntity entity);
+    Result<OpenApplyEntity> checkAppIsHave(OpenApplyEntity entity);
     
-    List<DevApplyEntity> findAppsByEntity(DevApplyEntity entity);
+    List<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity);
 
 	public Result<String> deleteById(String appId);
 
 	public Result<JSONObject> appList(HttpServletRequest request, HttpServletResponse response);
 
-	public Result<String> addGroup(HttpSession session, DevApplyEntity app);
+	//public Result<String> addGroup(HttpSession session, OpenApplyEntity app);
 
 	public Result<String> delGroup(String appId);
 
-	public Result<String> modifyGroup(DevApplyEntity app);
+	//public Result<String> modifyGroup(OpenApplyEntity app);
 
-	public Result<Page<DevApplyEntity>> groupList(String userId, int currentPage, int pageSize);
+	public Result<Page<OpenApplyEntity>> groupList(String userId, int currentPage, int pageSize);
 
 	public Result<String> submitVerify(String id);
 
-	public Result<String> addGroup1(HttpSession session, DevApplyEntity app);
+	public Result<String> addGroup1(HttpSession session, OpenApplyEntity app);
 
 	public Result<String> deleteGroup(String id);
 
-	public Result<String> modifyGroup1(DevApplyEntity app);
+	//public Result<String> modifyGroup1(OpenApplyEntity app);
 
-	public Result<Page<DevApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize);
+	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize);
 
 	public Result<String> auditGroup(String id, int checkState, String remark);
 

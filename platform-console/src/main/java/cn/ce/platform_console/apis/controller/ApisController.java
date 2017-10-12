@@ -27,7 +27,7 @@ import cn.ce.platform_service.apisecret.service.IApiSecretKeyService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
@@ -49,7 +49,7 @@ public class ApisController {
 	@Resource
 	private IAPIService apiService;
 	@Resource
-	private IAppService appService;
+	private IOpenApplyService openApplyService;
 	@Resource
 	private IApiSecretKeyService apiSecretKeyService;
 	@Resource
@@ -226,7 +226,7 @@ public class ApisController {
 						secretKeyList.add(apiSecretKey);
 					}
 				}
-				apiEntity.setAppEntity((appService.findById(apiEntity.getAppId())));
+				apiEntity.setAppEntity((openApplyService.findById(apiEntity.getAppId())));
 				apiEntity.setApiSecret(secretKeyList);
 			}
 
@@ -262,7 +262,7 @@ public class ApisController {
 			// 构建apiId集合
 			for (ApiSecretKey apiSecret : (List<ApiSecretKey>) ds.getItems()) {
 				api = apiService.findById(apiSecret.getApiId());
-				api.setAppEntity(appService.findById(api.getAppId()));
+				api.setAppEntity(openApplyService.findById(api.getAppId()));
 				apiSecret.setApi(api);
 			}
 			JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(ds));

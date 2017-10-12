@@ -24,101 +24,98 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.oauth.service.IOauthService;
-import cn.ce.platform_service.openApply.dao.IAppDAO;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.page.PageContext;
-import cn.ce.platform_service.users.entity.User;
-
 
 /**
- * 
- * @ClassName: AppServiceImpl
- * @Description: 服务分组实现类型
- * @author dingjia@300.cn
- *
+ * @ClassName:  openApplyServiceImpl   
+ * @Description:TODO(这里用一句话描述这个类的作用)   
+ * @author: author 
+ * @date:   2017年10月11日 下午5:24:58   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  */
-@Service(value = "appService")
-public class AppServiceImpl implements IAppService {
+@Service(value = "openApplyService")
+public class OpenApplyServiceImpl implements IOpenApplyService {
 
     /** 日志对象 */
-    private static Logger _LOGGER = Logger.getLogger(AppServiceImpl.class);
+    private static Logger _LOGGER = Logger.getLogger(OpenApplyServiceImpl.class);
     
     /** 功能分组数据库操作对象 */
     @Resource
-    private IAppDAO appDao;
+    private IOpenApplyDao openApplyDao;
     @Resource
     private IOauthService oauthService;
     @Resource
     private IAPIService apiService;
     
 
-    @Override
-    public void addApp(DevApplyEntity app) {
-        appDao.addApp(app);
+    public void addApp(OpenApplyEntity app) {
+        openApplyDao.addApp(app);
     }
 
     @Override
-    public void modifyById(DevApplyEntity app) {
-        appDao.modifyById(app.getId(), app);
+    public void modifyById(OpenApplyEntity app) {
+        openApplyDao.modifyById(app.getId(), app);
     }
 
     @Override
-    public DevApplyEntity findById(String id) {
-        return appDao.findById(id);
+    public OpenApplyEntity findById(String id) {
+        return openApplyDao.findById(id);
     }
 
     @Override
-    public List<DevApplyEntity> getAll() {
-        return appDao.getAll();
+    public List<OpenApplyEntity> getAll() {
+        return openApplyDao.getAll();
     }
 
   
     @Override
-    public Page<DevApplyEntity> getAppList(String userId, int currentPage, int pageSize) {
+    public Page<OpenApplyEntity> getAppList(String userId, int currentPage, int pageSize) {
         PageContext.setCuurentPage(currentPage);
         PageContext.setPageSize(pageSize);
-        return appDao.getAppList(userId);
+        return openApplyDao.getAppList(userId);
     }
 
 	@Override
 	public void delById(String id) {
-		appDao.delById(id);
+		openApplyDao.delById(id);
 		
 	}
 
 	@Override
-	public DevApplyEntity findAppByAppName(String appName) {
-		return appDao.findAppByAppName(appName);
+	public OpenApplyEntity findAppByAppName(String appName) {
+		return openApplyDao.findAppByAppName(appName);
 	}
 
 
 	@Override
-	public Page<DevApplyEntity> getAppListByDBWhere(DevApplyEntity appentity, int currentPage,
+	public Page<OpenApplyEntity> getAppListByDBWhere(OpenApplyEntity appentity, int currentPage,
 			int pageSize) {
-		return appDao.findAppsByEntity(appentity, currentPage, pageSize);
+		return openApplyDao.findAppsByEntity(appentity, currentPage, pageSize);
 	}
 
 	@Override
-	public Page<DevApplyEntity> findAppsByEntity(DevApplyEntity entity, int currentPage, int pageSize) {
-		return appDao.findAppsByEntity(entity, currentPage, pageSize);
+	public Page<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity, int currentPage, int pageSize) {
+		return openApplyDao.findAppsByEntity(entity, currentPage, pageSize);
 	}
 	
 	@Override
-	public List<DevApplyEntity> findAppsByEntity(DevApplyEntity entity) {
-		return appDao.findAppsByEntity(entity);
+	public List<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity) {
+		return openApplyDao.findAppsByEntity(entity);
 	}
 
 	@Override
-	public Result<DevApplyEntity> checkAppIsHave(DevApplyEntity entity) {
+	public Result<OpenApplyEntity> checkAppIsHave(OpenApplyEntity entity) {
 		boolean isTrue = false;
-		Result<DevApplyEntity> result = new Result<>();
-		DevApplyEntity findAppByAppName = this.findAppByAppName(entity.getApplyName());
+		Result<OpenApplyEntity> result = new Result<>();
+		OpenApplyEntity findAppByAppName = this.findAppByAppName(entity.getApplyName());
 		if(null == findAppByAppName){
-			DevApplyEntity app = new DevApplyEntity();
+			OpenApplyEntity app = new OpenApplyEntity();
 			app.setApplyKey(entity.getApplyKey());
-			List<DevApplyEntity> findAppsByEntity = findAppsByEntity(app);
+			List<OpenApplyEntity> findAppsByEntity = findAppsByEntity(app);
 			if(findAppsByEntity.isEmpty()){
 				isTrue = true;
 			}else{
@@ -156,7 +153,7 @@ public class AppServiceImpl implements IAppService {
 			return result;
 		}else{
 			//删除
-			int i = appDao.delById(appId);
+			int i = openApplyDao.delById(appId);
 			_LOGGER.info("删除了"+i+"条app分组数据");
 			result.setStatus(Status.SUCCESS);
 			result.setMessage("删除成功");
@@ -170,13 +167,13 @@ public class AppServiceImpl implements IAppService {
 		Result<JSONObject> result = new Result<JSONObject>();
 		
 		try {
-			List<DevApplyEntity> list = getAll();
+			List<OpenApplyEntity> list = getAll();
 
 			JSONArray jsonArray = new JSONArray();
 			JSONObject data = new JSONObject();
 			for (int i = 0; i < list.size(); i++) {
 				JSONObject obj = new JSONObject();
-				DevApplyEntity app = list.get(i);
+				OpenApplyEntity app = list.get(i);
 				obj.put("id", app.getId());
 				obj.put("appname", app.getApplyName());
 				jsonArray.put(obj);
@@ -191,46 +188,46 @@ public class AppServiceImpl implements IAppService {
 		}
 	}
 
-	@Override
-	public Result<String> addGroup(HttpSession session,DevApplyEntity app) {
-		
-		Result<String> result = new Result<String>();
-		try {
-			Result<DevApplyEntity> checkAppIsHave = checkAppIsHave(app);
-			
-			if (Status.SUCCESS == checkAppIsHave.getStatus()) {
-				User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-				String uuid = UUID.randomUUID().toString().replace("-", "");
-				app.setId(uuid);
-				app.setCreateDate(new Date());
-				if (user.getUserType() == 0) {
-					app.setCheckState(2); // 后台系统添加服务分类默认审核通过
-				} else {
-					app.setCheckState(0);
-				}
-				app.setUserId(user.getId());
-				app.setUserName(user.getUserName());
-
-				// appKey不能以/开头和结尾
-				if (app.getApplyKey().startsWith("/") || app.getApplyKey().endsWith("/")) {
-					result.setErrorMessage("appKey不能以/开头和/结尾");
-					return result;
-				}
-				addApp(app);
-				result.setSuccessMessage("");
-				return result;
-			} else{
-				// TODO
-				result.setErrorMessage(checkAppIsHave.getMessage());
-			}
-			return result;
-		} catch (Exception e) {
-			// TODO
-			_LOGGER.error("error happens when add group", e);
-			result.setErrorMessage("");
-			return result;
-		}
-	}
+//	@Override
+//	public Result<?> addApply(HttpSession session,OpenApplyEntity apply) {
+//		
+//		Result<String> result = new Result<String>();
+//		try {
+//			Result<OpenApplyEntity> checkAppIsHave = checkAppIsHave(apply);
+//			
+//			if (Status.SUCCESS == checkAppIsHave.getStatus()) {
+//				User user = (User) session. getAttribute(Constants.SES_LOGIN_USER);
+//				String uuid = UUID.randomUUID().toString().replace("-", "");
+//				apply.setId(uuid);
+//				apply.setCreateDate(new Date());
+//				if (user.getUserType() == 0) {
+//					apply.setCheckState(2); // 后台系统添加服务分类默认审核通过
+//				} else {
+//					apply.setCheckState(0);
+//				}
+//				apply.setUserId(user.getId());
+//				apply.setUserName(user.getUserName());
+//
+//				// appKey不能以/开头和结尾
+//				if (apply.getApplyKey().startsWith("/") || apply.getApplyKey().endsWith("/")) {
+//					result.setErrorMessage("appKey不能以/开头和/结尾");
+//					return result;
+//				}
+//				addApp(apply);
+//				result.setSuccessMessage("");
+//				return result;
+//			} else{
+//				// TODO
+//				result.setErrorMessage(checkAppIsHave.getMessage());
+//			}
+//			return result;
+//		} catch (Exception e) {
+//			// TODO
+//			_LOGGER.error("error happens when add group", e);
+//			result.setErrorMessage("");
+//			return result;
+//		}
+//	}
 
 	@Override
 	public Result<String> delGroup(String appId) {
@@ -252,40 +249,40 @@ public class AppServiceImpl implements IAppService {
 		return result;
 	}
 
-	@Override
-	public Result<String> modifyGroup(DevApplyEntity app) {
-		Result<String> result = new Result<String>();
-		try {
-			DevApplyEntity appAfter = findById(app.getId());
-			if (null == appAfter) {
-				result.setErrorMessage("当前分组不存在", ErrorCodeNo.SYS006);
-			} else {
-				app.setNeqId(app.getId());// 查询非当前修改数据进行判断
-				List<DevApplyEntity> findAppsByEntity = findAppsByEntity(app);
-				if (findAppsByEntity.isEmpty()) {
-					appAfter.setApplyName(app.getApplyName().trim());
-					appAfter.setApplyKey(app.getApplyKey().trim());
-					modifyById(appAfter);
-					result.setSuccessMessage("");
-				} else {
-					result.setErrorMessage("");
-				}
-			}
-			return result;
-		} catch (Exception e) {
-			_LOGGER.error("error happeen when execute app service modify group",e);
-			result.setErrorMessage("");
-			return result;
-		}
-	}
+//	@Override
+//	public Result<String> modifyGroup(OpenApplyEntity app) {
+//		Result<String> result = new Result<String>();
+//		try {
+//			OpenApplyEntity appAfter = findById(app.getId());
+//			if (null == appAfter) {
+//				result.setErrorMessage("当前分组不存在", ErrorCodeNo.SYS006);
+//			} else {
+//				app.setNeqId(app.getId());// 查询非当前修改数据进行判断
+//				List<OpenApplyEntity> findAppsByEntity = findAppsByEntity(app);
+//				if (findAppsByEntity.isEmpty()) {
+//					appAfter.setApplyName(app.getApplyName().trim());
+//					appAfter.setApplyKey(app.getApplyKey().trim());
+//					modifyById(appAfter);
+//					result.setSuccessMessage("");
+//				} else {
+//					result.setErrorMessage("");
+//				}
+//			}
+//			return result;
+//		} catch (Exception e) {
+//			_LOGGER.error("error happeen when execute app service modify group",e);
+//			result.setErrorMessage("");
+//			return result;
+//		}
+//	}
 
 	@Override
-	public Result<Page<DevApplyEntity>> groupList(String userId, int currentPage, int pageSize) {
-		Result<Page<DevApplyEntity>> result = new Result<Page<DevApplyEntity>>();
+	public Result<Page<OpenApplyEntity>> groupList(String userId, int currentPage, int pageSize) {
+		Result<Page<OpenApplyEntity>> result = new Result<Page<OpenApplyEntity>>();
 		try {
-			DevApplyEntity entity = new DevApplyEntity();
+			OpenApplyEntity entity = new OpenApplyEntity();
 			entity.setUserId(userId);
-			Page<DevApplyEntity> ds = findAppsByEntity(entity, currentPage, pageSize);
+			Page<OpenApplyEntity> ds = findAppsByEntity(entity, currentPage, pageSize);
 			result.setSuccessData(ds);
 			
 		} catch (Exception e) {
@@ -300,7 +297,7 @@ public class AppServiceImpl implements IAppService {
 	public Result<String> submitVerify(String id) {
 		Result<String> result = new Result<String>();
 		try {
-			DevApplyEntity app = findById(id);
+			OpenApplyEntity app = findById(id);
 			app.setCheckState(1);
 			modifyById(app);
 			
@@ -315,11 +312,11 @@ public class AppServiceImpl implements IAppService {
 	}
 
 	@Override
-	public Result<String> addGroup1(HttpSession session,DevApplyEntity app) {
+	public Result<String> addGroup1(HttpSession session,OpenApplyEntity app) {
 		Result<String> result = new Result<String>();
 		try {
 			
-			Result<DevApplyEntity> checkAppIsHave = checkAppIsHave(app);
+			Result<OpenApplyEntity> checkAppIsHave = checkAppIsHave(app);
 			
 			if (Status.SUCCESS == checkAppIsHave.getStatus()) {
 				AdminEntity user = (AdminEntity) session.getAttribute(Constants.SES_LOGIN_USER);
@@ -363,40 +360,40 @@ public class AppServiceImpl implements IAppService {
 		}
 	}
 
-	@Override
-	public Result<String> modifyGroup1(DevApplyEntity app) {
-		Result<String> result = new Result<String>();
-		try {
-			
-			DevApplyEntity appAfter = findById(app.getId());
-			if(null == appAfter){
-				result.setErrorMessage("当前分组不存在", ErrorCodeNo.SYS006);
-			}else{
-				app.setNeqId(app.getId());//查询非当前修改数据进行判断
-				List<DevApplyEntity> findAppsByEntity = findAppsByEntity(app);
-				if (findAppsByEntity.isEmpty()) {
-					appAfter.setApplyName(app.getApplyName().trim());
-					appAfter.setApplyKey(app.getApplyKey().trim());
-					modifyById(appAfter);
-					result.setSuccessMessage("");
-				}else{
-					result.setErrorMessage("分组名称或分组key不可重复！", ErrorCodeNo.SYS010);
-				}
-			}
-		} catch (Exception e) {
-			_LOGGER.info("error happens when execute modify app group ",e);
-			result.setErrorMessage("");
-		}
-		return result;
-	}
+//	@Override
+//	public Result<String> modifyGroup1(OpenApplyEntity app) {
+//		Result<String> result = new Result<String>();
+//		try {
+//			
+//			OpenApplyEntity appAfter = findById(app.getId());
+//			if(null == appAfter){
+//				result.setErrorMessage("当前分组不存在", ErrorCodeNo.SYS006);
+//			}else{
+//				app.setNeqId(app.getId());//查询非当前修改数据进行判断
+//				List<OpenApplyEntity> findAppsByEntity = findAppsByEntity(app);
+//				if (findAppsByEntity.isEmpty()) {
+//					appAfter.setApplyName(app.getApplyName().trim());
+//					appAfter.setApplyKey(app.getApplyKey().trim());
+//					modifyById(appAfter);
+//					result.setSuccessMessage("");
+//				}else{
+//					result.setErrorMessage("分组名称或分组key不可重复！", ErrorCodeNo.SYS010);
+//				}
+//			}
+//		} catch (Exception e) {
+//			_LOGGER.info("error happens when execute modify app group ",e);
+//			result.setErrorMessage("");
+//		}
+//		return result;
+//	}
 
 	@Override
-	public Result<Page<DevApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize) {
-		Result<Page<DevApplyEntity>> result = new Result<Page<DevApplyEntity>>();
+	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize) {
+		Result<Page<OpenApplyEntity>> result = new Result<Page<OpenApplyEntity>>();
 
 		try {
 //			Map<String,Object> condMap = new HashMap<String, Object>(2);
-			DevApplyEntity appParam = new DevApplyEntity();
+			OpenApplyEntity appParam = new OpenApplyEntity();
 			
 			if(StringUtils.isNotBlank(appName)){
 				appParam.setApplyName(appName);
@@ -406,7 +403,7 @@ public class AppServiceImpl implements IAppService {
 				appParam.setCheckState(Integer.valueOf(checkState));
 			}
 			
-			Page<DevApplyEntity> ds = getAppListByDBWhere(appParam, currentPage, pageSize);
+			Page<OpenApplyEntity> ds = getAppListByDBWhere(appParam, currentPage, pageSize);
 
 			result.setSuccessData(ds);
 		} catch (Exception e) {
@@ -420,7 +417,7 @@ public class AppServiceImpl implements IAppService {
 	public Result<String> auditGroup(String id, int checkState, String remark) {
 		Result<String> result = new Result<String>();
 		try {
-			DevApplyEntity app = findById(id);
+			OpenApplyEntity app = findById(id);
 			if(null == app){
 				result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);
 			}else{

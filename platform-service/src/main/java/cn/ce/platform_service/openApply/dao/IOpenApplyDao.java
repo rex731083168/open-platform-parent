@@ -6,7 +6,7 @@ import java.util.Map;
 
 import cn.ce.platform_service.apis.entity.APIEntity;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.page.Page;
 
 /**
@@ -16,12 +16,12 @@ import cn.ce.platform_service.page.Page;
  * @author dingjia@300.cn
  *
  */
-public interface IAppDAO {
+public interface IOpenApplyDao {
 	 /**
      * @Description 添加应用
      * @param  app 应用信息
      */
-    void addApp(DevApplyEntity app);
+    void addApp(OpenApplyEntity app);
 
     /**
      * @Description 根据应用Id查询应用信息
@@ -29,7 +29,7 @@ public interface IAppDAO {
      * @return     返回应用对象
      * @throws
      */
-    DevApplyEntity findById(String id);
+    OpenApplyEntity findById(String id);
 
     /**
      * @Description 修改应用信息
@@ -38,14 +38,14 @@ public interface IAppDAO {
      * @return     返回
      * @throws
      */
-    int modifyById(String id, DevApplyEntity app);
+    int modifyById(String id, OpenApplyEntity app);
 
     /**
      * @Description 获取某个会员所有应用列表
      * @return     返回应用集合
      * @throws
      */
-    List<DevApplyEntity> getAll();
+    List<OpenApplyEntity> getAll();
 
     /**
      * @Description 根据应用id获取应用列表
@@ -53,7 +53,7 @@ public interface IAppDAO {
      * @return     返回应用信息
      * @throws
      */
-    Page<DevApplyEntity> getAppList(String userId);
+    Page<OpenApplyEntity> getAppList(String userId);
     
     /***
      * 根据查询条件实体构建Apps集合（分页）
@@ -64,7 +64,7 @@ public interface IAppDAO {
      * @param condMap 查询条件实体
      * @return
      */
-    Page<DevApplyEntity> findAppListPageByDBWhere(int currentPage, int pageSize,Map<String,MongoDBWhereEntity> condMap);
+    Page<OpenApplyEntity> findAppListPageByDBWhere(int currentPage, int pageSize,Map<String,MongoDBWhereEntity> condMap);
     
     /***
      * 根据查询条件实体构建Apps集合
@@ -73,7 +73,7 @@ public interface IAppDAO {
      * @param condMap 查询条件实体
      * @return
      */
-    List<DevApplyEntity> findAppListByDBWhere(Map<String,MongoDBWhereEntity> condMap);
+    List<OpenApplyEntity> findAppListByDBWhere(Map<String,MongoDBWhereEntity> condMap);
 
     /**
      * @Description 删除应用
@@ -89,7 +89,7 @@ public interface IAppDAO {
      * @return     返回应用信息
      * @throws
      */
-    DevApplyEntity findByAppKey(String appKey);
+    OpenApplyEntity findByAppKey(String appKey);
 
     
     /**
@@ -100,7 +100,7 @@ public interface IAppDAO {
      * @return Page<AppEntity>    返回类型
      * @throws
      */
-    Page<DevApplyEntity> getAsPage(String appName, int currentPage, int pageSize);
+    Page<OpenApplyEntity> getAsPage(String appName, int currentPage, int pageSize);
 
     /**
      * @Description: 查询APP集合
@@ -111,7 +111,7 @@ public interface IAppDAO {
      * @return Page<AppEntity>    返回类型
      * @throws
      */
-    Page<DevApplyEntity> getAsPage(String appName, Integer appCheckstate, int currentPage, int pageSize);
+    Page<OpenApplyEntity> getAsPage(String appName, Integer appCheckstate, int currentPage, int pageSize);
 
     /**
      * @Description: 查询APP集合
@@ -131,7 +131,7 @@ public interface IAppDAO {
      * @return Page    返回类型
      * @throws
      */
-    Page<DevApplyEntity> findInAsPage(String appName, Collection<?> ids, int currentPage, int pageSize);
+    Page<OpenApplyEntity> findInAsPage(String appName, Collection<?> ids, int currentPage, int pageSize);
 
     /**
      * @Description: 查询APP集合
@@ -142,7 +142,7 @@ public interface IAppDAO {
      * @return Page    返回类型
      * @throws
      */
-    Page<DevApplyEntity> findNotInAsPage(String appName, Collection<?> ids, int currentPage, int pageSize);
+    Page<OpenApplyEntity> findNotInAsPage(String appName, Collection<?> ids, int currentPage, int pageSize);
     
     /***
      * 根据实体对象分页查询App集合
@@ -151,11 +151,11 @@ public interface IAppDAO {
      * @param pageSize
      * @return
      */
-    Page<DevApplyEntity> findAppsByEntity(DevApplyEntity entity,int currentPage,int pageSize);
+    Page<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity,int currentPage,int pageSize);
     
-    List<DevApplyEntity> findAppsByEntity(DevApplyEntity entity);
+    List<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity);
     
-    Page<DevApplyEntity> findAppListByMapCondition(Map<String,Object> condMap, int currentPage, int pageSize);
+    Page<OpenApplyEntity> findAppListByMapCondition(Map<String,Object> condMap, int currentPage, int pageSize);
     
-    DevApplyEntity findAppByAppName(String appName);
+    OpenApplyEntity findAppByAppName(String appName);
 }

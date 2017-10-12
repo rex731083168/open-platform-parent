@@ -23,8 +23,8 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.impl.GatewayApiService;
-import cn.ce.platform_service.openApply.entity.DevApplyEntity;
-import cn.ce.platform_service.openApply.service.IAppService;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.service.IOpenApplyService;
 import cn.ce.platform_service.page.Page;
 
 /**
@@ -44,7 +44,7 @@ public class ApiController {
     @Resource
     private IAPIService apiService;
     @Resource
-    private IAppService appService;
+    private IOpenApplyService openApplyService;
     
 	/**
 	 * @Description : 审核后推送网关是多版本+密钥授权
@@ -128,7 +128,7 @@ public class ApiController {
 			org.json.JSONObject jsonObject = new org.json.JSONObject(api);
 
 			// 添加封装信息
-			DevApplyEntity appEntity = appService.findById(api.getAppId());
+			OpenApplyEntity appEntity = openApplyService.findById(api.getAppId());
 
 			List<String> gatewayUrlList = new ArrayList<String>();
 			for (GatewayColonyEntity gatewayColonyEntity : GatewayUtils.getAllGatewayColony()) {
