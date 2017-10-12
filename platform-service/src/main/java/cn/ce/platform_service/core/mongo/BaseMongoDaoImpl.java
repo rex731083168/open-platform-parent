@@ -1,19 +1,27 @@
 package cn.ce.platform_service.core.mongo;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
+import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.bean.ConditionEnum;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
 import cn.ce.platform_service.page.Page;
@@ -184,4 +192,87 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
     	return criteria;
     }
 	
+    
+    /****bathupdate code begain****/
+	/*
+	 * how to use
+	 * List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>(); 
+	 * list.add(new BathUpdateOptions(Query.query(Criteria.where("author").is("yinjihuan")), Update.update("title", "批量更新"), true, true)); 
+	 * list.add(new BathUpdateOptions(Query.query(Criteria.where("author").is("jason")), Update.update("title", "批量更新"), true, true)); 
+	 * int n = MongoBaseDao.bathUpdate(mongoTemplate, Article.class, list); 
+	 * System.out.println("受影响的行数："+n);
+	 */
+	private static int doBathUpdate(DBCollection dbCollection, String collName, List<BathUpdateOptions> options,
+			boolean ordered) {
+		DBObject command = new BasicDBObject();
+		command.put("update", collName);
+		List<BasicDBObject> updateList = new ArrayList<BasicDBObject>();
+		for (BathUpdateOptions option : options) {
+			BasicDBObject update = new BasicDBObject();
+			update.put("q", option.getQuery().getQueryObject());
+			update.put("u", option.getUpdate().getUpdateObject());
+			update.put("upsert", option.isUpsert());
+			update.put("multi", option.isMulti());
+			updateList.add(update);
+		}
+		command.put("updates", updateList);
+		command.put("ordered", ordered);
+		CommandResult commandResult = dbCollection.getDB().command(command);
+		return Integer.parseInt(commandResult.get("n").toString());
+	}
+
+	private static String determineCollectionName(Class<?> entityClass) {
+		if (entityClass == null) {
+			throw new InvalidDataAccessApiUsageException(
+					"No class parameter provided, entity collection can't be determined!");
+		}
+		String collName = entityClass.getSimpleName();
+		if (entityClass.isAnnotationPresent(Document.class)) {
+			Document document = entityClass.getAnnotation(Document.class);
+			collName = document.collection();
+		} else {
+			collName = collName.replaceFirst(collName.substring(0, 1), collName.substring(0, 1).toLowerCase());
+		}
+		return collName;
+	}
+
+	public static int bathUpdate(MongoTemplate mongoTemplate, String collName, List<BathUpdateOptions> options,
+			boolean ordered) {
+		return doBathUpdate(mongoTemplate.getCollection(collName), collName, options, ordered);
+	}
+
+	public static int bathUpdate(DBCollection dbCollection, String collName, List<BathUpdateOptions> options,
+			boolean ordered) {
+		return doBathUpdate(dbCollection, collName, options, ordered);
+	}
+
+	public static int bathUpdate(MongoTemplate mongoTemplate, Class<?> entityClass, List<BathUpdateOptions> options,
+			boolean ordered) {
+		String collectionName = determineCollectionName(entityClass);
+		return doBathUpdate(mongoTemplate.getCollection(collectionName), collectionName, options, ordered);
+	}
+
+	public static int bathUpdate(DBCollection dbCollection, Class<?> entityClass, List<BathUpdateOptions> options,
+			boolean ordered) {
+		return doBathUpdate(dbCollection, determineCollectionName(entityClass), options, ordered);
+	}
+
+	public static int bathUpdate(MongoTemplate mongoTemplate, String collName, List<BathUpdateOptions> options) {
+		return doBathUpdate(mongoTemplate.getCollection(collName), collName, options, true);
+	}
+
+	public static int bathUpdate(DBCollection dbCollection, String collName, List<BathUpdateOptions> options) {
+		return doBathUpdate(dbCollection, collName, options, true);
+	}
+
+	public static int bathUpdate(MongoTemplate mongoTemplate, Class<?> entityClass, List<BathUpdateOptions> options) {
+		String collectionName = determineCollectionName(entityClass);
+		return doBathUpdate(mongoTemplate.getCollection(collectionName), collectionName, options, true);
+	}
+
+	public static int bathUpdate(DBCollection dbCollection, Class<?> entityClass, List<BathUpdateOptions> options) {
+		return doBathUpdate(dbCollection, determineCollectionName(entityClass), options, true);
+	}
+	
+	/****bathupdate code begain****/
 }
