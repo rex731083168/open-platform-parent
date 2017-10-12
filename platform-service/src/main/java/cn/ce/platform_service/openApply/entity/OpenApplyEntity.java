@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import cn.ce.platform_service.common.MongoFiledConstants;
+
 /**
  * 
  * @ClassName: AppEntity
@@ -34,8 +36,9 @@ public class OpenApplyEntity implements Serializable{
 	@Field("userName")
 	private String userName;
 	
-	@Field("applyKey")
+	@Field(MongoFiledConstants.OPEN_APPLY_APPLYKEY)
 	private String applyKey;
+	
 	
 	/** 开放应用名称 */
 	@Field("applyName")
