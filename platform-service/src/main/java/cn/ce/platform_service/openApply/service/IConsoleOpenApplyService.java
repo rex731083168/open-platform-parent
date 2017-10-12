@@ -1,11 +1,10 @@
 package cn.ce.platform_service.openApply.service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.page.Page;
 
 /**
 * @Description : 说明
@@ -21,9 +20,9 @@ public interface IConsoleOpenApplyService {
 	
 	public Result<?> deleteApplyById(String appId);
 
-	public Result<?> applyList(HttpServletRequest request, HttpServletResponse response);
+	public Result<?> applyList(OpenApplyEntity entity);
+	
+	public Result<?> applyList(OpenApplyEntity entity,Page<OpenApplyEntity> page);
 
-	public Result<?> groupList(String userId, int currentPage, int pageSize);
-
-	public Result<?> submitVerify(String id);
+	public Result<?> submitVerify(String id,Integer checkState);
 }

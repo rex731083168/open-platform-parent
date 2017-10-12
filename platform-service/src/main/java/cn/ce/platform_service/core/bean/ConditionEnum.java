@@ -16,5 +16,7 @@ public enum ConditionEnum {
 	LT, // <
 	LTE, // <=
 	BE, // >
+	IN,
+	NOTIN,
 	BTE; // >=
 }

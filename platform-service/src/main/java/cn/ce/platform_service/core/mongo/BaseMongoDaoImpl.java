@@ -1,7 +1,9 @@
 package cn.ce.platform_service.core.mongo;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,6 +14,8 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import com.mongodb.WriteResult;
 
+import cn.ce.platform_service.core.bean.ConditionEnum;
+import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
 import cn.ce.platform_service.page.Page;
 import cn.ce.platform_service.util.ReflectionUtils;
 
@@ -145,4 +149,39 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 		query.addCriteria(Criteria.where("_id").is(id));
 		remove(query);
 	}
+
+    /***
+     * 
+     * 根据多个字段值构建查询条件器
+     * @author lida
+     * @param condMap 查询条件Map key=字段 value=值 method=查询方式
+     * @see {@link MongoDBWhereEntity } {@link ConditionEnum}
+     * @return
+     * 
+     */
+    protected Criteria getCriteriaByWhereEntity(final Map<String,MongoDBWhereEntity> condMap){
+    	Criteria criteria = new Criteria();
+    	if(!condMap.isEmpty()){
+    		Iterator<String> iterator = condMap.keySet().iterator();
+    		MongoDBWhereEntity entity = null;
+    		String k = "";
+    		while(iterator.hasNext()){
+    			k = iterator.next();
+    			entity = condMap.get(k);
+    			if(entity.getMethod() == ConditionEnum.LIKE){
+    				criteria.and(k).regex(entity.getValue().toString());
+    			}else if(entity.getMethod() == ConditionEnum.EQ){
+    				criteria.and(k).is(entity.getValue());
+    			}else if(entity.getMethod() == ConditionEnum.NEQ){
+    				criteria.and(k).ne(entity.getValue());
+    			}else if(entity.getMethod() == ConditionEnum.IN){
+    				criteria.and(k).in(entity.getValue());
+    			}else if(entity.getMethod() == ConditionEnum.NOTIN){
+    				criteria.and(k).nin(entity.getValue());
+    			}
+    		}
+    	}
+    	return criteria;
+    }
+	
 }
