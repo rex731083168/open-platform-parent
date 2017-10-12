@@ -2,6 +2,7 @@ package cn.ce.platform_service.common.gateway;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,11 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -16,8 +22,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.IOUtils;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.gateway.dao.IGatewayColonyManageDao;
 import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
 import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
@@ -42,6 +50,9 @@ public class GatewayUtils {
 	private IGatewayManageDao gatewayManageDao;
 	@Resource
 	private IGatewayNodeManageDao gatewayNodeManageDao;
+	@Resource
+	private IGatewayColonyManageDao gatewayColonyManageDao;
+	
 	
 	private static GatewayUtils utils;
 	
@@ -50,6 +61,7 @@ public class GatewayUtils {
 		utils = this;
 		utils.gatewayManageDao = this.gatewayManageDao;
 		utils.gatewayNodeManageDao = this.gatewayNodeManageDao;
+		utils.gatewayColonyManageDao = this.gatewayColonyManageDao;
 	}
 	
 	/**
@@ -676,6 +688,122 @@ public class GatewayUtils {
 		
 		return jsonStr;
 	}
+	
+	/** >>>>>>>>>>>>>>>>>>>>>>>>>>> 网关路由操作开始  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+	
+	public static String getRouteBySaasId(String saasId){
+		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		Result<String> result = new Result<>();
+		if(null == colonySingle){
+			LOGGER.error("网关集群信息为空!");
+			result.setErrorMessage("网关集群信息为空！");
+			return result.toString();
+		}
+		
+		String jsonStr = null;
+		try {
+			jsonStr = getGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId);
+		}catch(Exception e){
+			LOGGER.error("调用网关时出现错误,地址为:" + jsonStr + ",异常:" + e.toString());
+			result.setErrorMessage("服务异常!");
+			jsonStr = result.toString();
+		}
+		
+		return jsonStr;
+		
+	}
+	
+	public static String saveRoute(String saasId,String targetUrl,String method){
+		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		Result<String> result = new Result<>();
+		String gwJsonApi = "";
+		if(null == colonySingle){
+			LOGGER.error("网关集群信息为空!");
+			result.setErrorMessage("网关集群信息为空！");
+			return result.toString();
+		}
+		
+		String jsonStr = null;
+		boolean b = false;
+		try {
+			JSONObject params = new JSONObject();
+			params.put("target_url", targetUrl);
+			if(method == "put"){
+				b = ApiCallUtils.putGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params);
+			} else {
+				b = ApiCallUtils.postGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params);
+			}
+			if(b){
+				result.setSuccessMessage("保存成功!");
+			}else{
+				result.setSuccessMessage("保存失败!");
+			}	
+			gwJsonApi = result.toString();
+		}catch(Exception e){
+			LOGGER.error("调用网关时出现错误,地址为:" + jsonStr + ",异常:" + e.toString());
+			result.setErrorMessage("服务异常!");
+			gwJsonApi = result.toString();
+		}
+		return gwJsonApi;
+	}
+	
+	public static String deleteRoute(String saasId){
+		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		Result<String> result = new Result<>();
+		String gwJsonApi = "";
+		if(null == colonySingle){
+			LOGGER.error("网关集群信息为空!");
+			result.setErrorMessage("网关集群信息为空！");
+			return result.toString();
+		}
+		
+		String jsonStr = null;
+		try {
+			jsonStr = ApiCallUtils.getGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId);
+		}catch(Exception e){
+			LOGGER.error("调用网关时出现错误,地址为:" + jsonStr + ",异常:" + e.toString());
+			result.setErrorMessage("服务异常!");
+			gwJsonApi = result.toString();
+		}
+		return gwJsonApi;
+	}
+	
+	
+	public static String getGwJsonApi(String url) throws Exception {
+
+		HttpClient httpClient = null;
+		
+		try{
+			httpClient = ApiCallUtils.getHttpClient();
+		}catch(Exception e){
+			LOGGER.info("get httpclient error");
+			return null;
+		}
+		
+		HttpGet httpGet = new HttpGet(url);
+		
+		httpGet.addHeader(Constants.HEADER_KEY,Constants.HEADER_VALUE);
+		
+		HttpResponse response = null;
+		
+		try{
+			response = httpClient.execute(httpGet);
+		}catch(Exception e){
+			LOGGER.info("error happens when execute http get");
+		}
+		
+		StatusLine statusLine = response.getStatusLine();
+		
+		LOGGER.info("get status:"+statusLine.getStatusCode());
+		
+		HttpEntity entity = response.getEntity();
+		InputStream is = entity.getContent();
+		String str = IOUtils.convertStreamToString(is);
+		
+		return str;
+	}
+	
+	/** >>>>>>>>>>>>>>>>>>>>>>>>>>> 网关路由操作结束  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
 }
 

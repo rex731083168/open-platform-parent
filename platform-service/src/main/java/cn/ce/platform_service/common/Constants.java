@@ -34,6 +34,9 @@ public class Constants {
 
 	public static final String NETWORK_DEL_KEY_PATH = "/tyk/keys";
 	
+	// 网关路由相关接口
+	public static final String NETWORK_ROUTE_URL = "/tyk/router/saas";
+	
 	
 //	-----------------------HTTP请求相关-------------------------------------------------
 	public static final String HEADER_CONTENT_TYPE = "Content-type";
