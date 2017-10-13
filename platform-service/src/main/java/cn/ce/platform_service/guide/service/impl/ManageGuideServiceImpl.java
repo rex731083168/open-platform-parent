@@ -3,7 +3,6 @@ package cn.ce.platform_service.guide.service.impl;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,11 +62,12 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 			JSONArray jsonArray = JSONArray.fromObject(ids);
 			List<String> lisids = jsonArray.toList(jsonArray);
 			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(lisids));
-			_LOGGER.info("bachUpdate message " + message + " count");
+			_LOGGER.info("bachUpdate guide message " + message + " count");
 			result.setMessage("审核成功:" + message + "条");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception
+			_LOGGER.info("bachUpdate guide message faile " + e + " ");
 			result.setErrorMessage("审核失败");
 			return result;
 		}

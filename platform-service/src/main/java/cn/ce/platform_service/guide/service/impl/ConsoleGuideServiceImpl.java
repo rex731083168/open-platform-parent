@@ -49,10 +49,11 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			g.setCreatTime(new Date());
 			guideDaoImpl.saveOrUpdateGuide(g);
 			result.setSuccessMessage("添加成功");
-			_LOGGER.info("add guide message");
+			_LOGGER.info("add guide message success");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception
+			_LOGGER.error("add guide message faile " + e + "");
 			result.setErrorMessage("添加失败");
 			return result;
 		}
@@ -77,6 +78,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			_LOGGER.error("update guide message faile " + e + "");
 			result.setErrorMessage("修改失败");
 			return result;
 		}
@@ -118,6 +120,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			}
 		} catch (Exception e) {
 			// TODO: handle
+			_LOGGER.error("delete guide message faile " + e + "");
 			result.setErrorMessage("删除失败");
 			return result;
 		}
