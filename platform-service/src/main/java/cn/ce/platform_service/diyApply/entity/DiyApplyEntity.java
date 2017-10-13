@@ -36,10 +36,10 @@ public class DiyApplyEntity {
 	@Field("domainUrl")
 	private String domainUrl;
 
-	/** 访问频次类型  0:标准，1:定制，2:高定制 */ 
+	/** 访问频次类型 0:标准，1:定制，2:高定制 */
 	@Field("frequencyType")
 	private String frequencyType;
-	/** 访问域名 */
+	/** 访问频次 */
 	@Field("frequencyCount")
 	private String frequencyCount;
 
