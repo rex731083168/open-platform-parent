@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.users.entity.User;
-import cn.ce.platform_service.users.service.IUserService;
+import cn.ce.platform_service.users.service.IManageUserService;
 
 /**
  * @Description : 说明
@@ -24,41 +24,38 @@ import cn.ce.platform_service.users.service.IUserService;
 public class UserController {
 
 	@Resource
-	private IUserService userService;
-
+	private IManageUserService manageUserService;
+	
 	// 后台获取使用者列表
-	@RequestMapping(value = "/approveUsers", method = RequestMethod.POST)
-	public Result<Page<User>> approveUsers(String roleType, String userName, String email, String telNumber,
-			String enterpriseName, String checkState, String state, 
+	@RequestMapping(value = "/userList", method = RequestMethod.POST)
+	public Result<Page<User>> userList(
+			Integer userType, //用户类型，必传
+			String userName, //用户名，支持模糊查询
+			String email, //email支持模糊查询
+			String telNumber,	//手机号,支持模糊查询
+			String enterpriseName, //企业名称，支持模糊查询
+			Integer checkState, //审核状态
+			Integer state, //启用禁用状态
 			@RequestParam(required=false,defaultValue = "1")int currentPage, 
 			@RequestParam(required=false,defaultValue = "10")int pageSize) {
 
-		return userService.approveUsers(roleType, userName, email, telNumber, enterpriseName, checkState, state,
+		return manageUserService.userList(userType, userName, email, telNumber, enterpriseName, checkState, state,
 				currentPage, pageSize);
 	}
 
-	@RequestMapping(value = "deleteUserById", method = RequestMethod.GET)
-	public Result<String> deleteUserById(String userId) {
 
-		return userService.deleteById(userId);
+	@RequestMapping(value = "/auditUsers", method = RequestMethod.POST)
+	public Result<?> approveUsers(String userIds, String checkMem, Integer checkState) {
+
+		String[] userIdArray = userIds.split(",");
+		return manageUserService.auditUsers(userIdArray, checkMem, checkState);
 	}
 
-	@RequestMapping(value = "/resetUserPassword", method = RequestMethod.POST)
-	public Result<String> resetUserPassword(HttpServletRequest request, HttpServletResponse response, String userId,
-			String newPassword) {
+	@RequestMapping(value = "/activeOrForbidUsers", method = RequestMethod.POST)
+	public Result<String> activeOrForbidUsers(
+			@RequestParam String userId, 
+			@RequestParam Integer state) {
 
-		return userService.resetUserPassword(userId, newPassword);
-	}
-
-	@RequestMapping(value = "/approve", method = RequestMethod.POST)
-	public Result<String> approve(String id, String checkMem, String checkState) {
-
-		return userService.approve(id, checkMem, checkState);
-	}
-
-	@RequestMapping(value = "/forbid", method = RequestMethod.POST)
-	public Result<String> forbid(String userId, String state) {
-
-		return userService.forbid(userId, state);
+		return manageUserService.activeOrForbidUsers(userId, state);
 	}
 }

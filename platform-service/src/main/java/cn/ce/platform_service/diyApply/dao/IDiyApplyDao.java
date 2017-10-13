@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.query.Query;
 
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.page.Page;
 
 /***
  * 应用dao 

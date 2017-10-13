@@ -1,5 +1,6 @@
 package cn.ce.platform_service.users.dao;
 
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
 /**
@@ -25,6 +26,9 @@ public interface INewUserDao{
 	User findUserByUserName(String userName);
 
 	User findUserById(String userId);
+
+	Page<User> getUserList(Integer userType, String userName, String email, String telNumber, String enterpriseName,
+			Integer checkState, Integer state, int currentPage, int pageSize);
 	
 
 }

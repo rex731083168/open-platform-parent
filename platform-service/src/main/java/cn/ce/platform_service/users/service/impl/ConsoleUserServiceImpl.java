@@ -205,5 +205,11 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		result.setSuccessMessage("修改成功");
 		return result;
 	}
+
+
+	@Override
+	public User findUserById(String userId) {
+		return newUserDao.findUserById(userId);
+	}
 	
 }

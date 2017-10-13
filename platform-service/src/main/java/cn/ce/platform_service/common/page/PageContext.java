@@ -1,11 +1,11 @@
-package cn.ce.platform_service.page;
+package cn.ce.platform_service.common.page;
 
 /**
- * 
- * @ClassName: PageContext
- * @Description: 分页上下文
- * @author dingjia@300.cn
- *
+ * @ClassName:  PageContext   
+ * @Description:
+ * @author: makangwei 
+ * @date:   2017年10月12日 下午7:32:34   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  */
 public class PageContext {
 

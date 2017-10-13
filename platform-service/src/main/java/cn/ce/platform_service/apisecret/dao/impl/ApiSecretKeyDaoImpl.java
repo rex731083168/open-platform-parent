@@ -15,8 +15,8 @@ import org.springframework.stereotype.Repository;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
 import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
-import cn.ce.platform_service.page.Page;
 
 @Repository(value ="apiSecretDao")
 public class ApiSecretKeyDaoImpl extends AbstractBaseMongoDao<ApiSecretKey> implements IApiSecretKeyDao {

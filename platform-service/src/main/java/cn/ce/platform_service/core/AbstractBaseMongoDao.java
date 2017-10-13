@@ -27,9 +27,9 @@ import com.mongodb.Mongo;
 import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.bean.ConditionEnum;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
-import cn.ce.platform_service.page.Page;
 
 /**
  * 

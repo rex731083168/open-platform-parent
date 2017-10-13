@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 import cn.ce.platform_service.gateway.service.impl.GatewayManageService;
-import cn.ce.platform_service.page.Page;
 
 /**
  *	
