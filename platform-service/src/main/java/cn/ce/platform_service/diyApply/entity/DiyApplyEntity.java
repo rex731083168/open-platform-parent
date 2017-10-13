@@ -35,6 +35,14 @@ public class DiyApplyEntity {
 	/** 访问域名 */
 	@Field("domainUrl")
 	private String domainUrl;
+
+	/** 访问频次类型  0:标准，1:定制，2:高定制 */ 
+	@Field("frequencyType")
+	private String frequencyType;
+	/** 访问域名 */
+	@Field("frequencyCount")
+	private String frequencyCount;
+
 	/** 应用logo */
 	@Field("logoImage")
 	private byte[] logoImage;
@@ -165,5 +173,21 @@ public class DiyApplyEntity {
 
 	public void setEnterpriseName(String enterpriseName) {
 		this.enterpriseName = enterpriseName;
+	}
+
+	public String getFrequencyType() {
+		return frequencyType;
+	}
+
+	public void setFrequencyType(String frequencyType) {
+		this.frequencyType = frequencyType;
+	}
+
+	public String getFrequencyCount() {
+		return frequencyCount;
+	}
+
+	public void setFrequencyCount(String frequencyCount) {
+		this.frequencyCount = frequencyCount;
 	}
 }
