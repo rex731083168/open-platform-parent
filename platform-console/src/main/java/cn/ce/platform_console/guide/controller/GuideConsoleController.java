@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_console.users.controller.UserController;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
 
@@ -30,10 +28,10 @@ import cn.ce.platform_service.guide.service.IConsoleGuideService;
  **/
 @RestController
 @RequestMapping("/guideConsole")
-public class GuideController {
+public class GuideConsoleController {
 
 	/** 日志对象 */
-	private static Logger _LOGGER = Logger.getLogger(UserController.class);
+	private static Logger _LOGGER = Logger.getLogger(GuideConsoleController.class);
 
 	@Resource
 	private IConsoleGuideService iConsoleGuideService;

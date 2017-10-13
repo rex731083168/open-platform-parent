@@ -17,6 +17,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
+import net.sf.json.JSONArray;
 import cn.ce.platform_service.common.page.Page;
 
 /**
@@ -36,10 +37,9 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	private IGuideDao guideDaoImpl;
 
 	@Override
-	public Page<GuideEntity> guideList(HttpSession session, String guideName, String creatUserName, int currentPage,
-			int pageSize) {
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
-		Result<String> result = new Result<String>();
+		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
 		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
 		Criteria c = new Criteria();
 		if (StringUtils.isNotBlank(guideName)) {
@@ -51,18 +51,26 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 			c.and("creatUserName").regex(creatUserName);
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));
-
-		return guideDaoImpl.list(page, query);
+		result.setData(guideDaoImpl.list(page, query));
+		return result;
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids) {
+	public Result<String> batchUpdate(String ids) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
-		String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids));
-		_LOGGER.info("bachUpdate message " + message + " count");
-		result.setMessage(message);
-		return result;
+		try {
+			JSONArray jsonArray = JSONArray.fromObject(ids);
+			List<String> lisids = jsonArray.toList(jsonArray);
+			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(lisids));
+			_LOGGER.info("bachUpdate message " + message + " count");
+			result.setMessage("审核成功:" + message + "条");
+			return result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			result.setErrorMessage("审核失败");
+			return result;
+		}
 	}
 
 	@Override
