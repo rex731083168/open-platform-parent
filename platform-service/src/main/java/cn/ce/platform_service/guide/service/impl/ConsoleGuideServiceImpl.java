@@ -43,13 +43,18 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-			g.setCreatUserName(user.getUserName());
-			g.setCreatTime(new Date());
-			guideDaoImpl.saveOrUpdateGuide(g);
-			result.setSuccessMessage("添加成功");
-			_LOGGER.info("add guide message success");
-			return result;
+			if (guideDaoImpl.getById(g.getId()).getGuideName().equals(g.getGuideName())) {
+				result.setErrorMessage("指南已存在");
+				return result;
+			} else {
+				User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+				g.setCreatUserName(user.getUserName());
+				g.setCreatTime(new Date());
+				guideDaoImpl.saveOrUpdateGuide(g);
+				result.setSuccessMessage("添加成功");
+				_LOGGER.info("add guide message success");
+				return result;
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			_LOGGER.error("add guide message faile " + e + "");
@@ -64,11 +69,8 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Result<String> result = new Result<String>();
 		try {
 			_LOGGER.info("update guide message");
-			if (guideDaoImpl.getById(g.getId()).getCheckState().equals(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS)) {
+			if (guideDaoImpl.getById(g.getId()).getCheckState().equals(AuditConstants.GUIDE_SUCCESS)) {
 				result.setErrorMessage("指南已审核");
-				return result;
-			} else if (guideDaoImpl.getById(g.getId()).getGuideName().equals(g.getGuideName())) {
-				result.setErrorMessage("指南已存在");
 				return result;
 			} else {
 				guideDaoImpl.saveOrUpdateGuide(g);
@@ -91,11 +93,9 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Criteria c = new Criteria();
 
 		if (StringUtils.isNotBlank(guideName)) {
-
 			c.and("guideName").regex(guideName);
 		}
 		if (StringUtils.isNotBlank(creatUserName)) {
-
 			c.and("creatUserName").regex(creatUserName);
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));

@@ -13,7 +13,9 @@ import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.page.Page;
+
 /**
  *
  * @Title: GuideDaoImpl.java
@@ -48,7 +50,7 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("id").is(ids.get(i))),
-					Update.update("checkState", "2"), false, true));
+					Update.update("checkState", AuditConstants.OPEN_APPLY_CHECKED_SUCCESS), false, true));
 		}
 		return super.bathUpdate(super.mongoTemplate, GuideEntity.class, list);
 	}

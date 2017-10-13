@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
@@ -41,12 +42,11 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
 		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
 		Criteria c = new Criteria();
+		c.and("checkState").is(AuditConstants.GUIDE_COMMITED);
 		if (StringUtils.isNotBlank(guideName)) {
-
 			c.and("guideName").regex(guideName);
 		}
 		if (StringUtils.isNotBlank(creatUserName)) {
-
 			c.and("creatUserName").regex(creatUserName);
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));
