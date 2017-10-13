@@ -53,6 +53,12 @@ public class GuideManageController {
 
 	}
 
+	/**
+	 * 
+	 * @param ids
+	 *            jsondemo["1","2","3"]
+	 * @return
+	 */
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestBody String ids) {
 
