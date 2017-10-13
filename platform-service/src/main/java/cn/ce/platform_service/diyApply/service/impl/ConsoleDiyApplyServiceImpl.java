@@ -259,9 +259,14 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			}
 			JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
 			ApplyProduct applyproduct = (ApplyProduct) JSONObject.toBean(jsonobject, ApplyProduct.class);
-			result.setData(applyproduct);
-			return result;
-
+			if (applyproduct.getMsg().equals("200")) {
+				result.setData(applyproduct);
+				return result;
+			} else {
+				logger.error("getApplyProductByKey http getfaile ");
+				result.setErrorMessage("接口调用失败");
+				return result;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.error("getApplyProductByKey http error " + e + "");
