@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,13 +29,10 @@ import cn.ce.platform_service.guide.service.IConsoleGuideService;
 @RequestMapping("/guideConsole")
 public class GuideConsoleController {
 
-	/** 日志对象 */
-	private static Logger _LOGGER = Logger.getLogger(GuideConsoleController.class);
-
 	@Resource
 	private IConsoleGuideService iConsoleGuideService;
 
-	@RequestMapping(value = "/guideAdd", method = RequestMethod.POST)
+	@RequestMapping(value = "/guideAddOrAudit", method = RequestMethod.POST)
 	public Result<?> guideAdd(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 			@RequestBody GuideEntity g) {
 		return iConsoleGuideService.add(session, g);

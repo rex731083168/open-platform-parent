@@ -45,7 +45,6 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		try {
 			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 			g.setCreatUserName(user.getUserName());
-			g.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED);
 			g.setCreatTime(new Date());
 			guideDaoImpl.saveOrUpdateGuide(g);
 			result.setSuccessMessage("添加成功");
@@ -113,7 +112,13 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			if (guideDaoImpl.getById(g.getId()).getCheckState().equals(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS)) {
 				result.setErrorMessage("指南已审核,无法删除");
 				return result;
-			} else {
+			} else if (guideDaoImpl.getById(g.getId()).getCheckState()
+					.equals(AuditConstants.OPEN_APPLY_CHECKED_COMMITED)) {
+				result.setErrorMessage("指南审核中,无法删除");
+				return result;
+			}
+
+			else {
 				guideDaoImpl.deleteByid(g.getId());
 				result.setSuccessMessage("删除成功");
 				return result;
