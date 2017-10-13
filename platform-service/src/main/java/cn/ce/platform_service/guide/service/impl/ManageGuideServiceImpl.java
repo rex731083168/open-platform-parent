@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.AuditConstants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
@@ -68,6 +69,7 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 		} catch (Exception e) {
 			// TODO: handle exception
 			_LOGGER.info("bachUpdate guide message faile " + e + " ");
+			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("审核失败");
 			return result;
 		}

@@ -5,7 +5,9 @@ import java.util.List;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.applyProduct.ApplyProduct;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfo;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
 /***
  * 
@@ -69,6 +71,26 @@ public interface IConsoleDiyApplyService {
 	 * @param key
 	 * @return 产品实例
 	 */
-	public Result<ApplyProduct> getApplyProductByKey(String key);
+	public Result<TenantApps> findTenantAppsByTenantKey(String key);
+
+	/**
+	 * 
+	 * @param owner
+	 *            所属企业 CE 为中企动力 不填为所有
+	 * @param name
+	 *            名称 模糊搜索 不填为所有
+	 * @param pageNum
+	 *            当前第几页
+	 * @param pageSize
+	 *            每页显示多少条
+	 * @return
+	 */
+	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize);
+
+	public Result<InterfaMessageInfo> registerBathApp(String tenantId, String apps);
+
+	public Result<InterfaMessageInfo> saveOrUpdateApps(String apps);
+
+	public Result<InterfaMessageInfo> generatorTenantKey(String id);
 
 }

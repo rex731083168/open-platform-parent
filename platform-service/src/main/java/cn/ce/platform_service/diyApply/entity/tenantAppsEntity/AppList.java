@@ -1,7 +1,7 @@
 /**
   * Copyright 2017 bejson.com 
   */
-package cn.ce.platform_service.diyApply.entity.applyProduct;
+package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
 
 /**
  * Auto-generated: 2017-10-13 11:28:45
