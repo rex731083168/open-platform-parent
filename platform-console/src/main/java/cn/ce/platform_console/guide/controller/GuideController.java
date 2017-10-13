@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_console.users.controller.UserController;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
-import cn.ce.platform_service.page.Page;
 
 /**
  *

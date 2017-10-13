@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.mongodb.core.query.Query;
 
 import cn.ce.platform_service.guide.entity.GuideEntity;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 /**
  *

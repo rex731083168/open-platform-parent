@@ -13,8 +13,7 @@ import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
-import cn.ce.platform_service.page.Page;
-
+import cn.ce.platform_service.common.page.Page;
 /**
  *
  * @Title: GuideDaoImpl.java

@@ -17,7 +17,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
-import cn.ce.platform_service.page.Page;
+import cn.ce.platform_service.common.page.Page;
 
 /**
  *

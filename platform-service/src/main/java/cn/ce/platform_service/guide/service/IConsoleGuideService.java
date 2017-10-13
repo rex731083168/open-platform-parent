@@ -2,8 +2,8 @@ package cn.ce.platform_service.guide.service;
 
 import javax.servlet.http.HttpSession;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
-import cn.ce.platform_service.page.Page;
 
 /**
  *
