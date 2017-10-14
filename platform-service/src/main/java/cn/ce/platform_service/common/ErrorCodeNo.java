@@ -22,6 +22,7 @@ public enum ErrorCodeNo {
 	,SYS012("状态不正确")
 	,SYS013("权限不足")
 	,SYS014("调用网关发生异常")
+	,SYS015("数据不存在")
 	;
 	
 	

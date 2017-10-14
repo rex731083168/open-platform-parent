@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
 import net.sf.json.JSONArray;
-import cn.ce.platform_service.common.page.Page;
 
 /**
  *
@@ -51,7 +51,7 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 			c.and("creatUserName").regex(creatUserName);
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));
-		result.setData(guideDaoImpl.list(page, query));
+		result.setData(guideDaoImpl.listByPage(page, query));
 		return result;
 	}
 

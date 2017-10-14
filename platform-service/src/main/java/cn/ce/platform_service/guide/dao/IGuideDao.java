@@ -20,7 +20,9 @@ public interface IGuideDao {
 
 	public void saveOrUpdateGuide(GuideEntity g);
 
-	public Page<GuideEntity> list(Page<GuideEntity> page, Query query);
+	public Page<GuideEntity> listByPage(Page<GuideEntity> page, Query query);
+	
+	public List<GuideEntity> list(Query query);
 	
 	public GuideEntity getById(String id);
 
