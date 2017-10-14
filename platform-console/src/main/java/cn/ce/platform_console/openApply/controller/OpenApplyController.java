@@ -77,10 +77,12 @@ public class OpenApplyController {
 		
 		if(StringUtils.isBlank(apply.getApplyName())){
 			result.setErrorMessage("服务名称不能为空!");
+			return result;
 		}
 		
 		if(StringUtils.isBlank(apply.getApplyKey())){
 			result.setErrorMessage("服务key不能为空!");
+			return result;
 		}
 		
 		if(StringUtils.isBlank(result.getMessage())){
@@ -99,7 +101,7 @@ public class OpenApplyController {
 	 * @return: Result<?>
 	 * @throws
 	 */
-	@RequestMapping(value = "/modifyApply", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyApply", method = RequestMethod.PUT)
 	@ResponseBody
 	public Result<?> modifyApply(@RequestBody OpenApplyEntity openApply) {
 		return consoleOpenApplyService.modifyApply(openApply);
@@ -116,7 +118,7 @@ public class OpenApplyController {
 	 * @return: Result<?>
 	 * @throws
 	 */
-	@RequestMapping(value = "/submitVerify", method = RequestMethod.POST)
+	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
 	@ResponseBody
 	public Result<?> submitVerify(HttpServletRequest request, HttpServletResponse response, String id) {
 		return consoleOpenApplyService.submitVerify(id,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);

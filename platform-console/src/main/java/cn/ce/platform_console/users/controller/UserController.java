@@ -47,7 +47,7 @@ public class UserController {
 		_LOGGER.info("tel:"+user.getTelNumber());
 		
 		_LOGGER.info("校验验证码是否正确");
-		Integer checkCode1 = (Integer)session.getAttribute(user.getTelNumber());
+		String checkCode1 = (String)session.getAttribute(user.getTelNumber());
 		
 		
 		//短信验证码校验

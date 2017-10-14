@@ -28,11 +28,16 @@ import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
 
-/**
-* @Description : 说明
-* @Author : makangwei
-* @Date : 2017年10月11日
-*/
+/***
+ * 
+ * 
+ * @ClassName:  ConsoleOpenApplyServiceImpl   
+ * @Description:开放应用控制service实现类   
+ * @author: lida 
+ * @date:   2017年10月14日 下午2:48:59   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
+ *
+ */
 @Service(value="colsoleOpenApplyService")
 public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 
@@ -47,30 +52,55 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 		Result<String> result = new Result<String>();
 		
 		try{
-			//判断当前服务名称和key是否已经被占用
-			List<OpenApplyEntity> tempEntityList = newOpenApplyDao.findOpenApplyByNameOrKey(apply.getApplyName(),apply.getApplyKey());
-			if (tempEntityList != null && tempEntityList.size() ==0) { //未被占用
-				User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-				if (user.getUserType() == AuditConstants.USER_ADMINISTRATOR) {
-					apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS); // 后台系统添加服务分类默认审核通过
-				} else {
-					apply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED); //提供者添加服务分类需要提交审核
-				}
-				apply.setCreateDate(new Date());
-				apply.setUserId(user.getId());
-				apply.setUserName(user.getUserName());
-				apply.setEnterpriseName(user.getEnterpriseName());
-	
-				// appKey不能以/开头和结尾
-				if (apply.getApplyKey().startsWith("/") || apply.getApplyKey().endsWith("/")) {
-					result.setErrorMessage("appKey不能以/开头和/结尾");
-					return result;
-				}
-				newOpenApplyDao.save(apply);
-				result.setSuccessMessage("");
-			} else{
-				result.setErrorMessage("服务分类标识已存在!",ErrorCodeNo.SYS009);
+
+			Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
+			
+			List<OpenApplyEntity> tempEntityList;
+			
+			if(StringUtils.isNotBlank(apply.getApplyName())){
+				whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME, 
+						new MongoDBWhereEntity(apply.getApplyName(), ConditionEnum.EQ));
 			}
+			
+			tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
+			
+			if(tempEntityList != null && tempEntityList.size() > 0){
+				result.setErrorMessage("应用名称已存在!",ErrorCodeNo.SYS009);
+				return result;
+			}
+			
+			whereEntity.clear();
+			
+			if(StringUtils.isNotBlank(apply.getApplyKey())){
+				whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYKEY, 
+						new MongoDBWhereEntity(apply.getApplyKey(), ConditionEnum.EQ));
+			}
+			
+			tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
+
+			if(tempEntityList != null && tempEntityList.size() > 0){
+				result.setErrorMessage("应用key已存在!",ErrorCodeNo.SYS009);
+				return result;
+			}
+			
+			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+			if (user.getUserType() == AuditConstants.USER_ADMINISTRATOR) {
+				apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS); // 后台系统添加服务分类默认审核通过
+			} else {
+				apply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED); //提供者添加服务分类需要提交审核
+			}
+			apply.setCreateDate(new Date());
+			apply.setUserId(user.getId());
+			apply.setUserName(user.getUserName());
+			apply.setEnterpriseName(user.getEnterpriseName());
+
+			// appKey不能以/开头和结尾
+			if (apply.getApplyKey().startsWith("/") || apply.getApplyKey().endsWith("/")) {
+				result.setErrorMessage("appKey不能以/开头和/结尾");
+				return result;
+			}
+			newOpenApplyDao.save(apply);
+			result.setSuccessMessage("保存成功!");
 		} catch (Exception e) {
 			_LOGGER.error("添加应用时出现错误,e:" + e.toString());
 			result.setErrorMessage("保存失败!");
@@ -92,14 +122,44 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 				result.setErrorMessage("当前开放应用不存在", ErrorCodeNo.SYS006);
 			} else {
 				
-				List<OpenApplyEntity> entityList = newOpenApplyDao.findOpenApplyByNeqId(openApply);
+				Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
 				
-				if (null != entityList && entityList.size() == 0) {
-					newOpenApplyDao.save(openApply);
-					result.setSuccessMessage("保存成功!");
-				} else {
-					result.setErrorMessage("appKey或appName不能重复!");
+				List<OpenApplyEntity> entityList;
+				
+				
+				if(StringUtils.isNotBlank(openApply.getApplyKey())){
+					whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYKEY, 
+							new MongoDBWhereEntity(openApply.getApplyKey(), ConditionEnum.EQ));
+					whereEntity.put(MongoFiledConstants.OPEN_APPLY_ID, 
+							new MongoDBWhereEntity(openApply.getId(), ConditionEnum.NEQ));					
 				}
+				
+				entityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
+				
+				if(entityList != null && entityList.size() > 0){
+					result.setErrorMessage("应用key已存在!",ErrorCodeNo.SYS009);
+					return result;
+				}
+				
+				whereEntity.clear();
+				
+				if(StringUtils.isNotBlank(openApply.getApplyName())){
+					whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME, 
+							new MongoDBWhereEntity(openApply.getApplyName(), ConditionEnum.EQ));
+					whereEntity.put(MongoFiledConstants.OPEN_APPLY_ID, 
+							new MongoDBWhereEntity(openApply.getId(), ConditionEnum.NEQ));					
+				}				
+				
+				entityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
+				
+				if(entityList != null && entityList.size() > 0){
+					result.setErrorMessage("应用名称已存在!",ErrorCodeNo.SYS009);
+					return result;
+				}
+				
+				newOpenApplyDao.save(openApply);
+				result.setSuccessMessage("保存成功!");
+				
 			}
 		} catch (Exception e) {
 			_LOGGER.error("修改应用时出现错误,e:" + e.toString());
@@ -117,27 +177,11 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 
 	@Override
 	public Result<List<OpenApplyEntity>> applyList(OpenApplyEntity entity) {
+		
 		Result<List<OpenApplyEntity>> result = new Result<>();
 		
-		Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
-		
-		if(StringUtils.isNotBlank(entity.getApplyName())){
-			whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME, 
-					new MongoDBWhereEntity(entity.getApplyName(), ConditionEnum.LIKE));
-		}
-		
-		if(StringUtils.isNotBlank(entity.getUserName())){
-			whereEntity.put(MongoFiledConstants.OPEN_APPLY_USERNAME, 
-					new MongoDBWhereEntity(entity.getUserName(), ConditionEnum.LIKE));
-		}
-		
-		if(null != entity.getCheckState()){
-			whereEntity.put(MongoFiledConstants.OPEN_APPLY_CHECKSTATE, 
-					new MongoDBWhereEntity(entity.getCheckState(), ConditionEnum.EQ));
-		}		
-		
 		try{
-			List<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
+			List<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao.findOpenApplyByEntity(getSearchWhereMap(entity));
 			result.setData(findOpenApplyByEntity);
 			result.setStatus(Status.SUCCESS);
 		} catch (Exception e) {
@@ -150,26 +194,11 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 	}
 	
 	public Result<Page<OpenApplyEntity>> applyList(OpenApplyEntity entity, Page<OpenApplyEntity> page) {
+		
 		Result<Page<OpenApplyEntity>> result = new Result<>();
-		Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
-		
-		if(StringUtils.isNotBlank(entity.getApplyName())){
-			whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME, 
-					new MongoDBWhereEntity(entity.getApplyName(), ConditionEnum.LIKE));
-		}
-		
-		if(StringUtils.isNotBlank(entity.getUserName())){
-			whereEntity.put(MongoFiledConstants.OPEN_APPLY_USERNAME, 
-					new MongoDBWhereEntity(entity.getUserName(), ConditionEnum.LIKE));
-		}
-		
-		if(null != entity.getCheckState()){
-			whereEntity.put(MongoFiledConstants.OPEN_APPLY_CHECKSTATE, 
-					new MongoDBWhereEntity(entity.getCheckState(), ConditionEnum.EQ));
-		}
 		
 		try {
-			Page<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao.findOpenApplyByEntity(whereEntity, page);
+			Page<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao.findOpenApplyByEntity(getSearchWhereMap(entity), page);
 			result.setData(findOpenApplyByEntity);
 			result.setStatus(Status.SUCCESS);
 		} catch (Exception e) {
@@ -183,8 +212,11 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 
 	@Override
 	public Result<?> submitVerify(String id,Integer checkState) {
+		
 		Result<Page<OpenApplyEntity>> result = new Result<>();
+		
 		List<String> asList = Arrays.asList(id.split(","));
+		
 		try {
 			newOpenApplyDao.batchSaveApply(asList, checkState);
 			result.setSuccessMessage("保存成功!");
@@ -194,4 +226,26 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 		}
 		return result;
 	}
+	
+	protected Map<String,MongoDBWhereEntity> getSearchWhereMap(OpenApplyEntity entity){
+		
+		Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
+		
+		if(StringUtils.isNotBlank(entity.getApplyName())){
+			whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME, 
+					new MongoDBWhereEntity(entity.getApplyName(), ConditionEnum.LIKE));
+		}
+		
+		if(StringUtils.isNotBlank(entity.getUserName())){
+			whereEntity.put(MongoFiledConstants.OPEN_APPLY_USERNAME, 
+					new MongoDBWhereEntity(entity.getUserName(), ConditionEnum.LIKE));
+		}
+		
+		if(null != entity.getCheckState()){
+			whereEntity.put(MongoFiledConstants.OPEN_APPLY_CHECKSTATE, 
+					new MongoDBWhereEntity(entity.getCheckState(), ConditionEnum.EQ));
+		}
+		return whereEntity;
+	}
+	
 }
