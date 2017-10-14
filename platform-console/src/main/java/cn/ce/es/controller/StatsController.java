@@ -43,7 +43,7 @@ public class StatsController {
 	 *            0 lin 1 pie
 	 * @return
 	 */
-	@RequestMapping(value = "statisticsLineChartAndPie", method = RequestMethod.POST)
+	@RequestMapping(value = "statisticsLineChartAndPie", method = RequestMethod.GET)
 	@ResponseBody
 	public String statisticsLineChartAndPie(HttpServletRequest request, HttpServletResponse response, String type,
 			String dateTime, String apiKey, String param, String lineOrPie) {

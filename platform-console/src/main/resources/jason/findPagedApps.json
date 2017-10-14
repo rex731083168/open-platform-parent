@@ -1,31 +1,31 @@
 {
     "data": {
-        "pageSize": 2, //Ã¿Ò³ÏÔÊ¾¶àÉÙÌõ
-        "currentPage": 1, //µ±Ç°µÚ¼¸Ò³
-        "totalPages": 68, //Ò»¹²¶àÉÙÒ³
-        "totalCount": 135, //×Ü¹²¶àÉÙÌõÊı¾İ
+        "pageSize": 2,
+        "currentPage": 1,
+        "totalPages": 68,
+        "totalCount": 135,
         "list": [
             {
                 "id": null,
-                "appId": 1, //Ó¦ÓÃd
-                "appName": "½éÉÜÄÚÈİ",  //Ó¦ÓÃÃû³Æ
+                "appId": 1,
+                "appName": "ä»‹ç»å†…å®¹", 
                 "appAlias": null,
                 "appTypes": [
                     {
                         "appId": 1,
                         "appTypeId": 1,
-                        "appTypeName": "×ÛºÏÒ³Ãæ"
+                        "appTypeName": "ç»¼åˆé¡µé¢"
                     },
                     {
                         "appId": 1,
                         "appTypeId": 3,
-                        "appTypeName": "½éÉÜÀàÏêÇéÒ³"
+                        "appTypeName": "ä»‹ç»ç±»è¯¦æƒ…é¡µ"
                     }
                 ],
-                "appUrl": "introduction/introductionCommon.do?urlType=1&parentId=0", //Ó¦ÓÃurl
-                "appDesc": "Ìá¹©·á¸»µÄ½éÉÜÀàÄ£°å£¬Òıµ¼ÆóÒµÈ«·½Î»¡¢¶à½Ç¶È¡¢Í¼ÎÄ²¢Ã¯µØ½éÉÜÆóÒµ£¬´ïµ½Éú¶¯Ö±¹ÛµØÕ¹Ê¾ÆóÒµĞÎÏóµÄĞ§¹û¡£", //Ó¦ÓÃÃèÊö 
-                "appCatogroyId": 1, //·ÖÀà
-                "appTag": 1, //Ä£¿éid
+                "appUrl": "introduction/introductionCommon.do?urlType=1&parentId=0",
+                "appDesc": "æä¾›ä¸°å¯Œçš„ä»‹ç»ç±»æ¨¡æ¿ï¼Œå¼•å¯¼ä¼ä¸šå…¨æ–¹ä½ã€å¤šè§’åº¦ã€å›¾æ–‡å¹¶èŒ‚åœ°ä»‹ç»ä¼ä¸šï¼Œè¾¾åˆ°ç”ŸåŠ¨ç›´è§‚åœ°å±•ç¤ºä¼ä¸šå½¢è±¡çš„æ•ˆæœã€‚",  
+                "appCatogroyId": 1,
+                "appTag": 1,
                 "appStatus": null,
                 "isRelation": 1,
                 "resourcetype": "777777",
@@ -34,8 +34,8 @@
                 "isShow": 1,
                 "appCode": "Site_002",
                 "unitType": "100001",
-                "appType": 1, //Ó¦ÓÃÀàĞÍ 1±êÆ·£¬2 ¿ª·¢Õß×¢²á
-                "owner": "CE",  //ËùÊôÆóÒµ
+                "appType": 1,
+                "owner": "CE", 
                 "templateCode": null,
                 "productCode": null,
                 "parentAppId": 0,
@@ -47,27 +47,27 @@
             {
                 "id": null,
                 "appId": 2,
-                "appName": "²úÆ·¹ÜÀí",
+                "appName": "äº§å“ç®¡ç†",
                 "appAlias": null,
                 "appTypes": [
                     {
                         "appId": 2,
                         "appTypeId": 1,
-                        "appTypeName": "×ÛºÏÒ³Ãæ"
+                        "appTypeName": "ç»¼åˆé¡µé¢"
                     },
                     {
                         "appId": 2,
                         "appTypeId": 2,
-                        "appTypeName": "²úÆ·Ó¦ÓÃÁĞ±íÒ³"
+                        "appTypeName": "äº§å“åº”ç”¨åˆ—è¡¨é¡µ"
                     },
                     {
                         "appId": 2,
                         "appTypeId": 3,
-                        "appTypeName": "²úÆ·Ó¦ÓÃÏêÇéÒ³"
+                        "appTypeName": "äº§å“åº”ç”¨è¯¦æƒ…é¡µ"
                     }
                 ],
                 "appUrl": "productCommon/productCommonlist.do?urlType=picview&appId=2",
-                "appDesc": "Ìá¹©×Ô¶¨Òå±íµ¥£¬ÄÜÂú×ãÎ¬»¤¸÷ÖÖ²úÆ·µÄĞèÇó£¬Í¨¹ı¶à½Ç¶ÈÕ¹Ê¾²úÆ·£¬´ïµ½¸üÖ±¹ÛµÄÕ¹Ê¾Ğ§¹û£»Í¨¹ı·ÖÀà¡¢³÷´°¡¢Æ·ÅÆµÈ£¬´Ó¶øÊµÏÖ¶àÎ¬¶È¹ÜÀí²úÆ·£¬Í¨¹ıÍ³¼Æ·ÖÎö£¬ÎªÔËÓª¾ö²ßÌá¹©Êı¾İÖ§³Å¡£",
+                "appDesc": "æä¾›è‡ªå®šä¹‰è¡¨å•ï¼Œèƒ½æ»¡è¶³ç»´æŠ¤å„ç§äº§å“çš„éœ€æ±‚ï¼Œé€šè¿‡å¤šè§’åº¦å±•ç¤ºäº§å“ï¼Œè¾¾åˆ°æ›´ç›´è§‚çš„å±•ç¤ºæ•ˆæœï¼›é€šè¿‡åˆ†ç±»ã€æ©±çª—ã€å“ç‰Œç­‰ï¼Œä»è€Œå®ç°å¤šç»´åº¦ç®¡ç†äº§å“ï¼Œé€šè¿‡ç»Ÿè®¡åˆ†æï¼Œä¸ºè¿è¥å†³ç­–æä¾›æ•°æ®æ”¯æ’‘ã€‚",
                 "appCatogroyId": 2,
                 "appTag": 2,
                 "appStatus": null,
@@ -95,6 +95,6 @@
             "owner": "CE"
         }
     },
-    "msg": "µ÷ÓÃ³É¹¦",
+    "msg": "è°ƒç”¨æˆåŠŸ",
     "status": 200
 }

@@ -6,7 +6,8 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
-import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfo;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoJasonObject;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
 /***
@@ -87,10 +88,10 @@ public interface IConsoleDiyApplyService {
 	 */
 	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize);
 
-	public Result<InterfaMessageInfo> registerBathApp(String tenantId, String apps);
+	public Result<InterfaMessageInfoJasonObject> registerBathApp(String tenantId, String apps);
 
-	public Result<InterfaMessageInfo> saveOrUpdateApps(String apps);
+	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps);
 
-	public Result<InterfaMessageInfo> generatorTenantKey(String id);
+	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
 }

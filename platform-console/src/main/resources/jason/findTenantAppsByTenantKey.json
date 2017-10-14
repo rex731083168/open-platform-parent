@@ -3,24 +3,24 @@
         "appList": [
             {
                 "id": null,
-                "appId": 1, 					//物理主键
-                "appName": "介绍内容",          //app名称
-                "appAlias": "介绍内容",           //app别名  
+                "appId": 1, 			
+                "appName": "浠嬬粛鍐呭",         
+                "appAlias": "浠嬬粛鍐呭",          
                 "appTypes": null,
                 "appUrl": "introduction/introductionCommon.do?urlType=1&parentId=0",
-                "appDesc": null,                //app描述
-                "appCatogroyId": null,          //分类id
-                "appTag": 1,                    //模块标识
+                "appDesc": null,                
+                "appCatogroyId": null,         
+                "appTag": 1,                   
                 "appStatus": 1,                 
                 "isRelation": null,
                 "resourcetype": null,
                 "offresourcetype": null,
                 "isSearch": null,
                 "isShow": null,
-                "appCode": "Site_002",       //app编号
-                "unitType": "100001",         //所属单元 
-                "appType": 1,                 //应用标识  1为标品，2为开发者注册
-                "owner": "CE",                //所属企业
+                "appCode": "Site_002",       
+                "unitType": "100001",         
+                "appType": 1,                
+                "owner": "CE",                
                 "templateCode": null,
                 "productCode": null,
                 "parentAppId": 0,
@@ -32,8 +32,8 @@
             {
                 "id": null,
                 "appId": 2,
-                "appName": "产品管理",
-                "appAlias": "产品管理",
+                "appName": "浜у搧绠＄悊",
+                "appAlias": "浜у搧绠＄悊",
                 "appTypes": null,
                 "appUrl": "productCommon/productCommonlist.do?urlType=picview&appId=2",
                 "appDesc": null,
@@ -60,8 +60,8 @@
             {
                 "id": null,
                 "appId": 3,
-                "appName": "新闻资讯",
-                "appAlias": "新闻资讯",
+                "appName": "鏂伴椈璧勮",
+                "appAlias": "鏂伴椈璧勮",
                 "appTypes": null,
                 "appUrl": "info/index.do",
                 "appDesc": null,
@@ -87,19 +87,19 @@
             }
         ],
         "tenant": {
-            "id": 99, //产品实例id 
+            "id": 99, 
             "name": null,
-            "tenantCode": "oms20151016001", //租户code
+            "tenantCode": "oms20151016001", 
             "tennatCode": "oms20151016001",
-            "cdnFlag": "1", //是否开启cdn 加速
-            "language": "zh_CN", //语言版本
-            "productDomain": "p1510220001.oper.yun300.cn", //pc产品二级域名
-            "mobileProductDomain": "m1510220001.oper.yun300.cn",//移动二级域名 
-            "mobileMakeDomain": "m1510220001.make.yun300.cn",//移动制作域名
-            "domain": "localhost",//主域名
-            "makeDomain": "p1510220001.make.yun300.cn", //pc制作期域名
-            "mobileDomain": "www.m1510220001.com",//移动主域名
-            "mobileStatus": 6,//移动版网站状态
+            "cdnFlag": "1", 
+            "language": "zh_CN", 
+            "productDomain": "p1510220001.oper.yun300.cn", 
+            "mobileProductDomain": "m1510220001.oper.yun300.cn", 
+            "mobileMakeDomain": "m1510220001.make.yun300.cn",
+            "domain": "localhost",
+            "makeDomain": "p1510220001.make.yun300.cn", 
+            "mobileDomain": "www.m1510220001.com",
+            "mobileStatus": 6,
             "pcPublishTime": 1454292980000,
             "mobilePublishTime": 1477542318000,
             "productInstanceId": null,
@@ -108,9 +108,9 @@
             "productAttrId": null,
             "attr": null,
             "productInstance": null,
-            "productInstanceCode": "oms20151016001", //boss 商品实例code
-            "unittype": "100001", //物理业务单元
-            "templateCode": null,//产品号
+            "productInstanceCode": "oms20151016001", 
+            "unittype": "100001", 
+            "templateCode": null,
             "youyiProductName": null,
             "domains": [],
             "ningkerDomain": "www.ningker01.cn",
@@ -118,11 +118,11 @@
             "hotelDomain": "www.wjHotel01.com",
             "hotelCusdomain": "www.wjHotelCus01.com",
             "domainStatus": null,
-            "status": 6,//pc 域名状态
+            "status": 6,
             "domainInfo": null,
             "ceYun": false
         }
     },
-    "msg": "调用成功",
+    "msg": "璋冪敤鎴愬姛",
     "status": 200
 }  

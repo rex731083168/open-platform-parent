@@ -1,8 +1,0 @@
-{
-    "data": {
-        "wj_app_test101": 1000000049,  //key 为 应用code，值为应用id
-        "wj_app_test102": 1000000050  //key 为 应用code，值为应用id
-},
-    "msg": "调用成功",
-    "status": 200
-}

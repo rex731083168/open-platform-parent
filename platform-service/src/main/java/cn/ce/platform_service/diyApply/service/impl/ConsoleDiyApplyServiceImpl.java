@@ -1,7 +1,16 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -30,13 +39,16 @@ import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.common.ErrorCodeNo;
+import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.HttpUtils;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
-import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfo;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoJasonObject;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
@@ -248,15 +260,24 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	@Override
 	public Result<TenantApps> findTenantAppsByTenantKey(String key) {
 		// TODO Auto-generated method stub
+
 		Result<TenantApps> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
 		String key$ = Pattern.quote("${key}");
 		String replacedurl = url.replaceAll(key$, key);
+		Map<String, Class> classMap = new HashMap<String, Class>();
+		classMap.put("appList", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList.class);
+		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant.class);
+
 		try {
 
-			TenantApps applyproduct = (TenantApps) getUrlReturnObject(replacedurl, TenantApps.class);
-			if (applyproduct.getMsg().equals("200")) {
+			// TenantApps applyproduct = (TenantApps) getUrlReturnObject(replacedurl,
+			// TenantApps.class,classMap);
+			TenantApps applyproduct = (TenantApps) testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,
+					TenantApps.class, classMap);
+			if (applyproduct.getStatus() == 200) {
 				result.setData(applyproduct);
+				result.setSuccessMessage("");
 				return result;
 			} else {
 				logger.error(
@@ -287,10 +308,16 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(o$, owner).replaceAll(n$, name).replaceAll(p$, String.valueOf(pageNum))
 				.replaceAll(z$, String.valueOf(pageSize));
 
+		Map<String, Class> classMap = new HashMap<String, Class>();
+		classMap.put("list", cn.ce.platform_service.diyApply.entity.appsEntity.AppList.class);
+		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
+
 		try {
-			Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class);
-			if (apps.getMsg().equals("200")) {
+			// Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class);
+			Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl, Apps.class, classMap);
+			if (apps.getStatus() == 200) {
 				result.setData(apps);
+				result.setSuccessMessage("");
 				return result;
 			} else {
 				logger.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
@@ -308,18 +335,22 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<InterfaMessageInfo> registerBathApp(String tenantId, String apps) {
+	public Result<InterfaMessageInfoJasonObject> registerBathApp(String tenantId, String apps) {
 		// TODO Auto-generated method stub
-		Result<InterfaMessageInfo> result = new Result<>();
+		Result<InterfaMessageInfoJasonObject> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("registerBathApp");
 		String tId$ = Pattern.quote("${tId}");
 		String appList$ = Pattern.quote("${appList}");
 		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
 
 		try {
-			InterfaMessageInfo messageInfo = (InterfaMessageInfo) getUrlReturnObject(replacedurl, Apps.class);
-			if (messageInfo.getMsg().equals("200")) {
+			// InterfaMessageInfo messageInfo =
+			// (InterfaMessageInfo)getUrlReturnObject(replacedurl, Apps.class,null);
+			InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject) testgetUrlReturnObject(
+					"registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
+			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
+				result.setSuccessMessage("");
 				return result;
 			} else {
 				logger.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
@@ -337,17 +368,21 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<InterfaMessageInfo> saveOrUpdateApps(String apps) {
+	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps) {
 		// TODO Auto-generated method stub
-		Result<InterfaMessageInfo> result = new Result<>();
+		Result<InterfaMessageInfoString> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
 		String apps$ = Pattern.quote("${apps}");
 		String replacedurl = url.replaceAll(apps$, apps);
 
 		try {
-			InterfaMessageInfo messageInfo = (InterfaMessageInfo) getUrlReturnObject(replacedurl, Apps.class);
-			if (messageInfo.getMsg().equals("200")) {
+			// InterfaMessageInfo messageInfo = (InterfaMessageInfo)
+			// getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("saveOrUpdateApps",
+					replacedurl, InterfaMessageInfoString.class, null);
+			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
+				result.setSuccessMessage("");
 				return result;
 			} else {
 				logger.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");
@@ -364,17 +399,21 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<InterfaMessageInfo> generatorTenantKey(String id) {
+	public Result<InterfaMessageInfoString> generatorTenantKey(String id) {
 		// TODO Auto-generated method stub
-		Result<InterfaMessageInfo> result = new Result<>();
+		Result<InterfaMessageInfoString> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("generatorTenantKey");
 		String id$ = Pattern.quote("${id}");
 		String replacedurl = url.replaceAll(id$, id);
 
 		try {
-			InterfaMessageInfo messageInfo = (InterfaMessageInfo) getUrlReturnObject(replacedurl, Apps.class);
-			if (messageInfo.getMsg().equals("200")) {
+			// InterfaMessageInfo messageInfo = (InterfaMessageInfo)
+			// getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject(
+					"generatorTenantKey", replacedurl, InterfaMessageInfoString.class, null);
+			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
+				result.setSuccessMessage("");
 				return result;
 			} else {
 				logger.error("generatorTenantKey data http getfaile return code :" + messageInfo.getMsg() + " ");
@@ -390,23 +429,59 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 	}
 
-	public Object getUrlReturnObject(String url, Class<?> clazz) throws Exception {
-		url = "http://localhost:8080/platform-console/statistics/statisticsLineChartAndPie?Tenankey=111111";
-
-		String jasonResultHttpGet = null;
-		Object object;
-		ClientConnectionManager connManager = new PoolingClientConnectionManager();
-		DefaultHttpClient client = new DefaultHttpClient(connManager);
-		HttpGet request = new HttpGet(URLEncoder.encode(url));// 这里发送get请求
-		HttpResponse response = client.execute(request);
-		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-			jasonResultHttpGet = EntityUtils.toString(response.getEntity(), "utf-8");
-			logger.info("http request" + url + " success ");
-			logger.info("http jasonResultHttpGet " + jasonResultHttpGet + "");
-		}
+	public Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
+		String jasonResultHttpGet = HttpClientUtil.sendGetRequest(url, null);
 		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
-		object = JSONObject.toBean(jsonobject, clazz);
+		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
 		return object;
+	}
+
+	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class> classMap)
+			throws Exception {
+
+		BufferedReader br = null;
+
+		if (method.equals("findTenantAppsByTenantKey")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findTenantAppsByTenantKey.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("findPagedApps")) {
+
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findPagedApps.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+
+		}
+		if (method.equals("registerBathApp")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/registerBathApp.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("generatorTenantKey")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/generatorTenantKey.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("saveOrUpdateApps")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/saveOrUpdateApps.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+
+		String s = "";
+		String tempString = null;
+		while ((tempString = br.readLine()) != null) {
+			s += tempString;
+
+		}
+
+		JSONObject jsonobject = JSONObject.fromObject(s);
+		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+
+		br.close();
+		return object;
+
 	}
 
 }
