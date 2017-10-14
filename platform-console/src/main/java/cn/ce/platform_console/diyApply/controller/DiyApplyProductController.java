@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.diyApply.entity.applyProduct.ApplyProduct;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 
 /**
@@ -27,9 +28,19 @@ public class DiyApplyProductController {
 	@Resource
 	private IConsoleDiyApplyService consoleDiyApplyService;
 
-	@RequestMapping(value = "/getApplyProduct", method = RequestMethod.POST)
-	public Result<ApplyProduct> getApplyProduct(@RequestParam(value = "key", required = true) String key) {
-		return consoleDiyApplyService.getApplyProductByKey(key);
+	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.POST)
+	public Result<TenantApps> findTenantAppsByTenantKey(
+			@RequestParam(value = "key", required = true) String key) {
+		return consoleDiyApplyService.findTenantAppsByTenantKey(key);
+	}
+
+	@RequestMapping(value = "findPagedApps", method = RequestMethod.POST)
+	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = true) String owner,
+			@RequestParam(value = "name", required = true) String name,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,
+			@RequestParam(required = false, defaultValue = "1") int currentPage) {
+
+		return consoleDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
 	}
 
 }

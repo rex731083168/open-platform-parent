@@ -1,15 +1,15 @@
 /**
   * Copyright 2017 bejson.com 
   */
-package cn.ce.platform_service.diyApply.entity.applyProduct;
+package cn.ce.platform_service.diyApply.entity.appsEntity;
 
 /**
- * Auto-generated: 2017-10-13 11:28:45
+ * Auto-generated: 2017-10-13 14:32:39
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class ApplyProduct {
+public class Apps {
 
     private Data data;
     private String msg;

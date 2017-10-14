@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
@@ -58,6 +59,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		} catch (Exception e) {
 			// TODO: handle exception
 			_LOGGER.error("add guide message faile " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("添加失败");
 			return result;
 		}
@@ -80,6 +82,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		} catch (Exception e) {
 			// TODO: handle exception
 			_LOGGER.error("update guide message faile " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("修改失败");
 			return result;
 		}
@@ -126,6 +129,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		} catch (Exception e) {
 			// TODO: handle
 			_LOGGER.error("delete guide message faile " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("删除失败");
 			return result;
 		}

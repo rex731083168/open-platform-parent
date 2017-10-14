@@ -37,9 +37,6 @@ public class JsonFileReadTest {
 		
 		JSONObject job = new JSONObject(sb.toString());
 		
-		System.out.println(job.get("userName"));
-		System.out.println(job.get("password"));
-		
 		
 	}
 }

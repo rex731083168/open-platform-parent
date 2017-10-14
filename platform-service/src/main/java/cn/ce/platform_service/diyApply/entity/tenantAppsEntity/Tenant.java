@@ -1,7 +1,7 @@
 /**
   * Copyright 2017 bejson.com 
   */
-package cn.ce.platform_service.diyApply.entity.applyProduct;
+package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
 import java.util.List;
 
 /**

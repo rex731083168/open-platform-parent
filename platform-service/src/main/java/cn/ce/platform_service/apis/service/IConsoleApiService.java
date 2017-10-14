@@ -1,5 +1,7 @@
 package cn.ce.platform_service.apis.service;
 
+import java.util.List;
+
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.entity.User;
@@ -13,7 +15,7 @@ public interface IConsoleApiService {
 
 	Result<?> publishApi(User user, ApiEntity apiEntity);
 
-	Result<?> submitApi(String[] apiIds);
+	Result<?> submitApi(List<String> apiId);
 
 	Result<?> modifyApi(ApiEntity apiEntity);
 

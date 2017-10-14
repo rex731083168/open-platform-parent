@@ -46,7 +46,7 @@ public class ManageUserServiceImpl implements IManageUserService{
 
 
 	@Override
-	public Result<String> auditUsers(String[] userIdArray, String checkMem, Integer checkState) {
+	public Result<String> auditUsers(List<String> userIdArray, String checkMem, Integer checkState) {
 		Result<String> result = new Result<String>();
 	
 		for (String userId : userIdArray) {

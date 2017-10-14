@@ -1,0 +1,100 @@
+{
+    "data": {
+        "pageSize": 2, //每页显示多少条
+        "currentPage": 1, //当前第几页
+        "totalPages": 68, //一共多少页
+        "totalCount": 135, //总共多少条数据
+        "list": [
+            {
+                "id": null,
+                "appId": 1, //应用d
+                "appName": "介绍内容",  //应用名称
+                "appAlias": null,
+                "appTypes": [
+                    {
+                        "appId": 1,
+                        "appTypeId": 1,
+                        "appTypeName": "综合页面"
+                    },
+                    {
+                        "appId": 1,
+                        "appTypeId": 3,
+                        "appTypeName": "介绍类详情页"
+                    }
+                ],
+                "appUrl": "introduction/introductionCommon.do?urlType=1&parentId=0", //应用url
+                "appDesc": "提供丰富的介绍类模板，引导企业全方位、多角度、图文并茂地介绍企业，达到生动直观地展示企业形象的效果。", //应用描述 
+                "appCatogroyId": 1, //分类
+                "appTag": 1, //模块id
+                "appStatus": null,
+                "isRelation": 1,
+                "resourcetype": "777777",
+                "offresourcetype": "888888",
+                "isSearch": null,
+                "isShow": 1,
+                "appCode": "Site_002",
+                "unitType": "100001",
+                "appType": 1, //应用类型 1标品，2 开发者注册
+                "owner": "CE",  //所属企业
+                "templateCode": null,
+                "productCode": null,
+                "parentAppId": 0,
+                "isAppMenu": null,
+                "isApp": null,
+                "appIcon": "img/app_03.png",
+                "appCreateTime": 1413167868000
+            },
+            {
+                "id": null,
+                "appId": 2,
+                "appName": "产品管理",
+                "appAlias": null,
+                "appTypes": [
+                    {
+                        "appId": 2,
+                        "appTypeId": 1,
+                        "appTypeName": "综合页面"
+                    },
+                    {
+                        "appId": 2,
+                        "appTypeId": 2,
+                        "appTypeName": "产品应用列表页"
+                    },
+                    {
+                        "appId": 2,
+                        "appTypeId": 3,
+                        "appTypeName": "产品应用详情页"
+                    }
+                ],
+                "appUrl": "productCommon/productCommonlist.do?urlType=picview&appId=2",
+                "appDesc": "提供自定义表单，能满足维护各种产品的需求，通过多角度展示产品，达到更直观的展示效果；通过分类、橱窗、品牌等，从而实现多维度管理产品，通过统计分析，为运营决策提供数据支撑。",
+                "appCatogroyId": 2,
+                "appTag": 2,
+                "appStatus": null,
+                "isRelation": 1,
+                "resourcetype": "777777",
+                "offresourcetype": "888888",
+                "isSearch": null,
+                "isShow": 1,
+                "appCode": "Site_001",
+                "unitType": "100001",
+                "appType": 1,
+                "owner": "CE",
+                "templateCode": null,
+                "productCode": null,
+                "parentAppId": 0,
+                "isAppMenu": null,
+                "isApp": null,
+                "appIcon": "img/app_18.png",
+                "appCreateTime": 1413167892000
+            }
+        ],
+        "params": {
+            "useViewType": false,
+            "name": null,
+            "owner": "CE"
+        }
+    },
+    "msg": "调用成功",
+    "status": 200
+}

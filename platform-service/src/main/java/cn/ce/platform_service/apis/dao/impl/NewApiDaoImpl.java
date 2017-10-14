@@ -1,5 +1,6 @@
 package cn.ce.platform_service.apis.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +36,7 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 	//修改旧的版本的newVersion字段为false
 	@Override 
 	public int updApiVersionByApiId(String apiId) {
-		Query query = new Query().addCriteria(Criteria.where(DBFieldsConstants.APIS_APIVERSION_APIID).is(apiId));
+		Query query = new Query().addCriteria(Criteria.where(DBFieldsConstants.APIS_APIVERSION_VERSIONID).is(apiId));
 		Update update = Update.update(DBFieldsConstants.APIS_APIVERSION_NEWVERSION, false);
         WriteResult wr = super.update(query, update);
         return wr.getN();
@@ -77,6 +78,18 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		}
 		Query query = new Query(c);
 		return super.findOne(query);
+	}
+
+	@Override
+	public List<ApiEntity> findApiByIds(List<String> apiId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ApiEntity> findByField(String key, String value) {
+		Query query = new Query().addCriteria(Criteria.where(key).is(value));
+		return super.find(query);
 	}
 
 }

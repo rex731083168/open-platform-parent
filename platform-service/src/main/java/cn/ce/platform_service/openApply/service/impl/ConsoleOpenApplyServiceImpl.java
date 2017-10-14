@@ -1,6 +1,5 @@
 package cn.ce.platform_service.openApply.service.impl;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +26,7 @@ import cn.ce.platform_service.openApply.dao.INewOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.SplitUtil;
 
 /***
  * 
@@ -215,7 +215,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 		
 		Result<Page<OpenApplyEntity>> result = new Result<>();
 		
-		List<String> asList = Arrays.asList(id.split(","));
+		List<String> asList = SplitUtil.splitStringWithComma(id);
 		
 		try {
 			newOpenApplyDao.batchSaveApply(asList, checkState);

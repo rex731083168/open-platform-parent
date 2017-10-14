@@ -1,22 +1,23 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -28,12 +29,15 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpUtils;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.applyProduct.ApplyProduct;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfo;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
 import net.sf.json.JSONObject;
@@ -242,38 +246,167 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<ApplyProduct> getApplyProductByKey(String key) {
+	public Result<TenantApps> findTenantAppsByTenantKey(String key) {
 		// TODO Auto-generated method stub
-		Result<ApplyProduct> result = new Result<>();
+		Result<TenantApps> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
-		url.replace("${key}", key);
-		String jasonResultHttpGet = null;
-
-		HttpGet request = new HttpGet(url);// 这里发送get请求
+		String key$ = Pattern.quote("${key}");
+		String replacedurl = url.replaceAll(key$, key);
 		try {
-			HttpResponse response = HttpUtils.getHttpClient().execute(request);
 
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				jasonResultHttpGet = EntityUtils.toString(response.getEntity(), "utf-8");
-				logger.info("http getApplyProductByKey " + jasonResultHttpGet + "");
-			}
-			JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
-			ApplyProduct applyproduct = (ApplyProduct) JSONObject.toBean(jsonobject, ApplyProduct.class);
+			TenantApps applyproduct = (TenantApps) getUrlReturnObject(replacedurl, TenantApps.class);
 			if (applyproduct.getMsg().equals("200")) {
 				result.setData(applyproduct);
 				return result;
 			} else {
-				logger.error("getApplyProductByKey http getfaile ");
-				result.setErrorMessage("接口调用失败");
+				logger.error(
+						"findTenantAppsByTenantKey data http getfaile return code :" + applyproduct.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
 				return result;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error("getApplyProductByKey http error " + e + "");
+			logger.error("findTenantAppsByTenantKey http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("请求失败");
 			return result;
 		}
 
+	}
+
+	@Override
+	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize) {
+		// TODO Auto-generated method stub
+		Result<Apps> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("findPagedApps");
+		String o$ = Pattern.quote("${o}");
+		String n$ = Pattern.quote("${n}");
+		String p$ = Pattern.quote("${p}");
+		String z$ = Pattern.quote("${z}");
+
+		String replacedurl = url.replaceAll(o$, owner).replaceAll(n$, name).replaceAll(p$, String.valueOf(pageNum))
+				.replaceAll(z$, String.valueOf(pageSize));
+
+		try {
+			Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class);
+			if (apps.getMsg().equals("200")) {
+				result.setData(apps);
+				return result;
+			} else {
+				logger.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("findPagedApps http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+
+	}
+
+	@Override
+	public Result<InterfaMessageInfo> registerBathApp(String tenantId, String apps) {
+		// TODO Auto-generated method stub
+		Result<InterfaMessageInfo> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("registerBathApp");
+		String tId$ = Pattern.quote("${tId}");
+		String appList$ = Pattern.quote("${appList}");
+		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
+
+		try {
+			InterfaMessageInfo messageInfo = (InterfaMessageInfo) getUrlReturnObject(replacedurl, Apps.class);
+			if (messageInfo.getMsg().equals("200")) {
+				result.setData(messageInfo);
+				return result;
+			} else {
+				logger.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("registerBathApp http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+
+	}
+
+	@Override
+	public Result<InterfaMessageInfo> saveOrUpdateApps(String apps) {
+		// TODO Auto-generated method stub
+		Result<InterfaMessageInfo> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
+		String apps$ = Pattern.quote("${apps}");
+		String replacedurl = url.replaceAll(apps$, apps);
+
+		try {
+			InterfaMessageInfo messageInfo = (InterfaMessageInfo) getUrlReturnObject(replacedurl, Apps.class);
+			if (messageInfo.getMsg().equals("200")) {
+				result.setData(messageInfo);
+				return result;
+			} else {
+				logger.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("saveOrUpdateApps http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+	}
+
+	@Override
+	public Result<InterfaMessageInfo> generatorTenantKey(String id) {
+		// TODO Auto-generated method stub
+		Result<InterfaMessageInfo> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("generatorTenantKey");
+		String id$ = Pattern.quote("${id}");
+		String replacedurl = url.replaceAll(id$, id);
+
+		try {
+			InterfaMessageInfo messageInfo = (InterfaMessageInfo) getUrlReturnObject(replacedurl, Apps.class);
+			if (messageInfo.getMsg().equals("200")) {
+				result.setData(messageInfo);
+				return result;
+			} else {
+				logger.error("generatorTenantKey data http getfaile return code :" + messageInfo.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("generatorTenantKey http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+	}
+
+	public Object getUrlReturnObject(String url, Class<?> clazz) throws Exception {
+		url = "http://localhost:8080/platform-console/statistics/statisticsLineChartAndPie?Tenankey=111111";
+
+		String jasonResultHttpGet = null;
+		Object object;
+		ClientConnectionManager connManager = new PoolingClientConnectionManager();
+		DefaultHttpClient client = new DefaultHttpClient(connManager);
+		HttpGet request = new HttpGet(URLEncoder.encode(url));// 这里发送get请求
+		HttpResponse response = client.execute(request);
+		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			jasonResultHttpGet = EntityUtils.toString(response.getEntity(), "utf-8");
+			logger.info("http request" + url + " success ");
+			logger.info("http jasonResultHttpGet " + jasonResultHttpGet + "");
+		}
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		object = JSONObject.toBean(jsonobject, clazz);
+		return object;
 	}
 
 }

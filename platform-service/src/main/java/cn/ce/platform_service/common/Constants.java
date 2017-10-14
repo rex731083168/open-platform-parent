@@ -11,7 +11,7 @@ public class Constants {
 
 //	------------------------网关相关-----------------------------------------------------
 	public static final String HEADER_KEY = "X-Tyk-Authorization";
-
+	
 	public static final String HEADER_VALUE = "352d20ee67be67f6340b4c0605b044b7";
 	
 	public static final String NETWORK_CREATE_CLIENT = "/tyk/oauth/clients/create";
@@ -111,6 +111,8 @@ public class Constants {
 	public static final int PAGE_COMMON_SIZE = 10;
 	
 	public static final int PAGE_MAX_SIZE = 30;
+
+	public static final String GW_API_JSON = "/src/main/java/cn/ce/platform_service/common/gateway/GwApi.json";
 	
 	
 }
