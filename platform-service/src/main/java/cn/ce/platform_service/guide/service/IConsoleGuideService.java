@@ -20,7 +20,7 @@ public interface IConsoleGuideService {
 
 	public Result<String> update(GuideEntity g);
 	
-	public Result<String> delete(GuideEntity g);
+	public Result<String> delete(String id);
 	
 	public Result<GuideEntity> getByid(String id);
 

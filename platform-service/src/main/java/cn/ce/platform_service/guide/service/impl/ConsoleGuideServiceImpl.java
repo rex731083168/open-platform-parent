@@ -1,6 +1,7 @@
 package cn.ce.platform_service.guide.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
+import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
@@ -44,18 +46,26 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			if (guideDaoImpl.getById(g.getId()).getGuideName().equals(g.getGuideName())) {
+			
+			Query query = new Query(Criteria.where("guideName").is(g.getGuideName()));
+			
+			List<GuideEntity> list = guideDaoImpl.list(query);
+			
+			if (list != null && list.size() > 0) {
+				result.setErrorCode(ErrorCodeNo.SYS009);
 				result.setErrorMessage("指南已存在");
 				return result;
-			} else {
-				User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-				g.setCreatUserName(user.getUserName());
-				g.setCreatTime(new Date());
-				guideDaoImpl.saveOrUpdateGuide(g);
-				result.setSuccessMessage("添加成功");
-				_LOGGER.info("add guide message success");
-				return result;
 			}
+			
+			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+			g.setCreatUserName(user.getUserName());
+			g.setCreatTime(new Date());
+			g.setCheckState(AuditConstants.GUIDE_UNCHECKED);
+			guideDaoImpl.saveOrUpdateGuide(g);
+			result.setSuccessMessage("添加成功");
+			_LOGGER.info("add guide message success");
+			return result;
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			_LOGGER.error("add guide message faile " + e + "");
@@ -71,14 +81,35 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Result<String> result = new Result<String>();
 		try {
 			_LOGGER.info("update guide message");
-			if (guideDaoImpl.getById(g.getId()).getCheckState().equals(AuditConstants.GUIDE_SUCCESS)) {
-				result.setErrorMessage("指南已审核");
-				return result;
-			} else {
-				guideDaoImpl.saveOrUpdateGuide(g);
-				result.setSuccessMessage("修改成功");
+			
+			GuideEntity ge = guideDaoImpl.getById(g.getId());
+			
+			if(ge == null){
+				result.setErrorCode(ErrorCodeNo.SYS015);
+				result.setMessage("指南不存在!");
 				return result;
 			}
+			
+			Query query = new Query(Criteria.where("guideName").is(g.getGuideName())
+					.and(MongoFiledConstants.BASIC_ID).ne(g.getId()));
+			
+			List<GuideEntity> list = guideDaoImpl.list(query);
+			
+			if(list != null && list.size() > 0){
+				result.setMessage("指南名称重复!");
+				result.setErrorCode(ErrorCodeNo.SYS010);
+				return result;
+			}
+			
+			if (AuditConstants.GUIDE_SUCCESS == ge.getCheckState()) {
+				result.setErrorMessage("指南已审核!");
+				return result;
+			}
+			
+			guideDaoImpl.saveOrUpdateGuide(g);
+			result.setSuccessMessage("修改成功");
+			return result;
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			_LOGGER.error("update guide message faile " + e + "");
@@ -101,31 +132,41 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		if (StringUtils.isNotBlank(creatUserName)) {
 			c.and("creatUserName").regex(creatUserName);
 		}
-		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));
-		result.setData(guideDaoImpl.list(page, query));
+		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
+		result.setSuccessData(guideDaoImpl.listByPage(page, query));
 		return result;
 	}
 
 	@Override
-	public Result<String> delete(GuideEntity g) {
+	public Result<String> delete(String id) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
 			_LOGGER.info("delete guide message");
-			if (guideDaoImpl.getById(g.getId()).getCheckState().equals(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS)) {
-				result.setErrorMessage("指南已审核,无法删除");
+
+			GuideEntity ge = guideDaoImpl.getById(id);
+			
+			if(ge == null){
+				result.setErrorCode(ErrorCodeNo.SYS015);
+				result.setMessage("指南不存在!");
 				return result;
-			} else if (guideDaoImpl.getById(g.getId()).getCheckState()
-					.equals(AuditConstants.OPEN_APPLY_CHECKED_COMMITED)) {
-				result.setErrorMessage("指南审核中,无法删除");
+			}
+			
+			if (AuditConstants.GUIDE_SUCCESS == ge.getCheckState()) {
+				result.setErrorMessage("指南已审核,无法删除!");
 				return result;
 			}
 
-			else {
-				guideDaoImpl.deleteByid(g.getId());
-				result.setSuccessMessage("删除成功");
+			if (AuditConstants.OPEN_APPLY_CHECKED_COMMITED == ge.getCheckState()) {
+				result.setErrorMessage("指南审核中,无法删除!");
 				return result;
 			}
+
+			guideDaoImpl.deleteByid(id);
+			
+			result.setSuccessMessage("删除成功");
+			return result;
+			
 		} catch (Exception e) {
 			// TODO: handle
 			_LOGGER.error("delete guide message faile " + e + "");
@@ -139,7 +180,15 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	public Result<GuideEntity> getByid(String id) {
 		// TODO Auto-generated method stub
 		Result<GuideEntity> result = new Result<GuideEntity>();
-		result.setData(guideDaoImpl.getById(id));
+		
+		GuideEntity byId = guideDaoImpl.getById(id);
+		
+		if(byId == null){
+			result.setErrorCode(ErrorCodeNo.SYS015);
+			result.setMessage("指南不存在!");
+			return result;
+		}
+		result.setSuccessData(byId);
 		return result;
 	}
 
