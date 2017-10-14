@@ -23,7 +23,12 @@ import cn.ce.platform_service.users.entity.User;
 public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDao {
 
 	public User save(User user) {
-		return super.save(user);
+		if(StringUtils.isNotBlank(user.getId())){
+			super.update(user);
+		} else {
+			super.save(user);
+		}
+		return user;
 	}
 
 	@Override
