@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -73,7 +75,7 @@ public class NewOpenApplyDaoImpl extends  BaseMongoDaoImpl<OpenApplyEntity> impl
 	
 	@Override
 	public Page<OpenApplyEntity> findOpenApplyByEntity(Map<String, MongoDBWhereEntity> whereEntity, Page<OpenApplyEntity> page) {
-		Query query = new Query(super.getCriteriaByWhereEntity(whereEntity));
+		Query query = new Query(super.getCriteriaByWhereEntity(whereEntity)).with(new Sort(Direction.DESC,MongoFiledConstants.BASIC_CREATEDATE));
 		return super.findPage(page, query);
 	}
 	

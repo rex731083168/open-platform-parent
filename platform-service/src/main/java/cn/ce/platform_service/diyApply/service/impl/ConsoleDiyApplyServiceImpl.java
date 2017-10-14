@@ -3,8 +3,6 @@ package cn.ce.platform_service.diyApply.service.impl;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
@@ -30,7 +28,7 @@ import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.common.ErrorCodeNo;
-import cn.ce.platform_service.common.HttpUtils;
+import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
@@ -71,36 +69,26 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		Criteria c = new Criteria();
 
 		if (StringUtils.isNotBlank(entity.getUser().getId())) {
-			c.and("userId").is(entity.getUser().getId());
+			c.and(MongoFiledConstants.BASIC_USERID).is(entity.getUser().getId());
 		}
 
 		if (StringUtils.isNotBlank(entity.getApplyName())) {
-			c.and("applyName").is(entity.getApplyName());
+			c.and(MongoFiledConstants.DIY_APPLY_APPLYNAME).is(entity.getApplyName());
+		}
+		
+		//修改时排除当前修改应用
+		if(StringUtils.isNotBlank(entity.getId())){
+			c.and(MongoFiledConstants.BASIC_ID).ne(entity.getId());
 		}
 
-		Query query = new Query(c).with(new Sort(Direction.DESC, "createDate"));
+		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
 
 		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(query);
 
-		if (StringUtils.isBlank(entity.getApplyName())) {
-			result.setErrorMessage("应用名称不能为空!");
+		if(null != findPageByList && findPageByList.size() > 0){
+			result.setMessage("应用名称不可重复!");
+			result.setErrorCode(ErrorCodeNo.SYS010);
 			return result;
-		}
-
-		// 新增时
-		if (StringUtils.isBlank(entity.getId())) {
-			if (null != findPageByList && findPageByList.size() > 0) {
-				result.setErrorMessage("应用名称不可重复!");
-				return result;
-			}
-		} else {
-			// 修改时 判断是否数据库中重复 排除修改对象本身
-			for (DiyApplyEntity applyEntity : findPageByList) {
-				if (!applyEntity.getId().equals(entity.getId())) {
-					result.setErrorMessage("应用名称不可重复!");
-					return result;
-				}
-			}
 		}
 
 		// 新增
@@ -113,6 +101,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));
 			diyApplyDao.saveOrUpdate(entity);
 			logger.info("save end");
+			result.setSuccessMessage("新增成功!");
 
 		} else {
 			// 修改
@@ -135,6 +124,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			logger.info("update apply begin : " + JSON.toJSONString(applyById));
 			diyApplyDao.saveOrUpdate(applyById);
 			logger.info("save end");
+			result.setSuccessMessage("修改成功!");
 
 		}
 
@@ -234,7 +224,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	private Query generalApplyQuery(DiyApplyEntity apply, Sort sort) {
 		if (sort == null) {
-			sort = new Sort(Direction.DESC, "createDate");
+			sort = new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE);
 		}
 		Query query = new Query(generalApplyCriteria(apply)).with(sort);
 		return query;
