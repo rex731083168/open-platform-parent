@@ -1,8 +1,8 @@
 package cn.ce.platform_manage.user;
 
+import java.util.List;
+
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +13,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IManageUserService;
+import cn.ce.platform_service.util.SplitUtil;
 
 /**
  * @Description : 说明
@@ -47,7 +48,7 @@ public class UserController {
 	@RequestMapping(value = "/auditUsers", method = RequestMethod.POST)
 	public Result<?> approveUsers(String userIds, String checkMem, Integer checkState) {
 
-		String[] userIdArray = userIds.split(",");
+		List<String> userIdArray = SplitUtil.splitStringWithComma(userIds);
 		return manageUserService.auditUsers(userIdArray, checkMem, checkState);
 	}
 

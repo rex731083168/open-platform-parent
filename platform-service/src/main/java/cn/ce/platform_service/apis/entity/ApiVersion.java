@@ -9,7 +9,7 @@ package cn.ce.platform_service.apis.entity;
  */
 public class ApiVersion {
 
-	private String versionId; //api接口id
+	private String versionId; //一组版本号不同其他相同的api拥有同一个versionId
 	
 	private String version ;//api版本号
 	

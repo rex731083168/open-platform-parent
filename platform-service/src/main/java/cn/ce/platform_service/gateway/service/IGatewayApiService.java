@@ -9,12 +9,12 @@ import cn.ce.platform_service.common.Result;
 */
 public interface IGatewayApiService {
 
-	Result<String> auditApi(String apiId, Integer checkState, String checkMem);
+//	Result<String> auditApi(String apiId, Integer checkState, String checkMem);
 	
-	Result<String> auditKey(String secretKey, Integer checkState);
+//	Result<String> auditKey(String secretKey, Integer checkState);
 	
-	Result<String> deleKey(String secretKey, String applyId);
+//	Result<String> deleKey(String secretKey, String applyId);
 	
-	Result<String> auditApi2(String apiId, Integer checkState, String checkMem);
+//	Result<String> auditApi2(String apiId, Integer checkState, String checkMem);
 	
 }

@@ -118,7 +118,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 上午11:05:13 
 	 */
 	@Override
-	public Result<?> submitApi(String[] apiIds) {
+	public Result<?> submitApi(List<String> apiIds) {
 		
 		Result<String> result = new Result<String>();
 		for (String apiId : apiIds) {

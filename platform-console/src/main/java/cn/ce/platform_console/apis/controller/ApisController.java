@@ -1,5 +1,7 @@
 package cn.ce.platform_console.apis.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.SplitUtil;
 
 /**
  * @ClassName:  ApisController   
@@ -67,7 +70,7 @@ public class ApisController {
 	public Result<?> submitApi(@RequestParam String apiIds) {
 
 		// DOTO 多个参数将参数用逗号隔开传入
-		String[] apiId = apiIds.split(",");
+		List<String> apiId = SplitUtil.splitStringWithComma(apiIds);
 		
 		return consoleApiService.submitApi(apiId);
 	}

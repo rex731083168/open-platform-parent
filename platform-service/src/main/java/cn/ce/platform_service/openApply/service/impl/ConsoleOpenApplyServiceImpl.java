@@ -27,6 +27,7 @@ import cn.ce.platform_service.openApply.dao.INewOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.SplitUtil;
 
 /**
 * @Description : 说明
@@ -184,7 +185,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 	@Override
 	public Result<?> submitVerify(String id,Integer checkState) {
 		Result<Page<OpenApplyEntity>> result = new Result<>();
-		List<String> asList = Arrays.asList(id.split(","));
+		List<String> asList = SplitUtil.splitStringWithComma(id);
 		try {
 			newOpenApplyDao.batchSaveApply(asList, checkState);
 			result.setSuccessMessage("保存成功!");

@@ -46,8 +46,6 @@ public class GatewayRouteUtils {
 		utils = this;
 		utils.gatewayColonyManageDao = this.gatewayColonyManageDao;
 	}
-	
-
 
 	public static String getRouteBySaasId(String saasId,String method){
 		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
@@ -113,9 +111,6 @@ public class GatewayRouteUtils {
 		return gwJsonApi;
 	}
 	
-	
-	
-	
 	public static String getOrDelGwJsonApi(String url,String method) throws Exception {
 		
 		LOGGER.info("***********在java中调用http/get/json请求***********");
@@ -150,7 +145,6 @@ public class GatewayRouteUtils {
 		
 		return str;
 	}
-	
 
 	/**
 	 * 向网关发送httpPut请求

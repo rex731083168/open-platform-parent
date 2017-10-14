@@ -6,16 +6,18 @@ import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -37,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.IOUtils;
+import io.netty.handler.codec.http.HttpMethod;
 
 /**
  *
@@ -45,7 +48,7 @@ import cn.ce.platform_service.common.IOUtils;
  */
 public class ApiCallUtils {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ApiCallUtils.class);
+	public static final Logger _LOGGER = LoggerFactory.getLogger(ApiCallUtils.class);
 
 	/**
 	 * 获取 HttpClient,解决跨域问
@@ -81,24 +84,19 @@ public class ApiCallUtils {
 	
 	/**
 	 * 向网关发送httpPost请求
-	 * @param url
-	 * @param params
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws IOException
 	 */
 	public static boolean postGwJson(String url,JSONObject params) {
 		
-		LOGGER.info("***********在java中调用http/post/json请求***********");
-		LOGGER.info("url:"+url);
-		LOGGER.info("params:"+params.toString());
+		_LOGGER.info("***********在java中调用http/post/json请求***********");
+		_LOGGER.info("url:"+url);
+		_LOGGER.info("params:"+params.toString());
 		
 		HttpClient httpClient = null;
 		
 		try{
 			httpClient = getHttpClient();
 		}catch(Exception  e){
-			LOGGER.info("create httpClient error");
+			_LOGGER.info("create httpClient error");
 			return false;
 		}
 		
@@ -117,20 +115,152 @@ public class ApiCallUtils {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error("error happens when execute http post");
+			_LOGGER.error("error happens when execute http post");
 			return false;
 		}
 		
 		StatusLine status = response.getStatusLine();
 
-		LOGGER.info("************resposne success************");
-		LOGGER.info("response status:"+status.getStatusCode());
+		_LOGGER.info("************resposne success************");
+		_LOGGER.info("response status:"+status.getStatusCode());
 		if(status.getStatusCode() == 200){
 			return true;	
 		}
 		
 		return false;
 	}
+	
+	public static String putOrPostMethod(String url, JSONObject params, Map<String,String> headers,HttpMethod method) {
+		
+		_LOGGER.info("***********在代码中调用http/post or put /json请求***********");
+		_LOGGER.info("url:"+url);
+		_LOGGER.info("params:"+params.toString());
+		
+		//创建http client
+		HttpClient httpClient = null;
+		try{
+			httpClient = getHttpClient();
+		}catch(Exception  e){
+			_LOGGER.info("create httpClient error");
+			return null;
+		}
+		
+		//添加头信息
+		HttpEntityEnclosingRequestBase hrb;
+		if(HttpMethod.POST == method){
+			hrb = new HttpPost(url);
+		} else if(HttpMethod.PUT == method){
+			hrb = new HttpPut(url);
+		} else{
+			_LOGGER.info("该方法只支持post和put请求");
+			return null;
+		}
+		
+		
+		for (String key : headers.keySet()) {
+			hrb.setHeader(key,headers.get(key));
+		}
+		
+		//添加请求体参数
+		StringEntity strEntity =  new StringEntity(params.toString(),ContentType.APPLICATION_JSON);
+		strEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_ENCODING,"utf-8"));
+		hrb.setEntity(strEntity);
+		
+		//调用，并取回返回结果，打印返回状态码
+		HttpResponse response = null;
+		try {
+			response = httpClient.execute(hrb);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			_LOGGER.error("error happens when execute http post");
+			return null;
+		}
+		
+		StatusLine status = response.getStatusLine();
+
+		_LOGGER.info("************resposne success************");
+		_LOGGER.info("response status:"+status.getStatusCode());
+		if(status.getStatusCode() == 200){ //只有状态为200才能够返回结果
+			try{
+				HttpEntity entity = response.getEntity();
+				InputStream is = entity.getContent();
+				String str = IOUtils.convertStreamToString(is);
+				_LOGGER.info("返回body："+str);
+				is.close();
+				return str;
+			}catch(Exception e){
+				_LOGGER.error("200状态下拉取body数据失败");
+				return null;
+			}
+		}else{
+			_LOGGER.error("返回状态不正确，请检查是否正确调用");
+			return null;
+		}
+	}
+	
+	public static String getOrDelMethod(String url, Map<String,String> headers, HttpMethod method){
+		
+		_LOGGER.info("***********在代码中调用http/ get or delete /json请求***********");
+		_LOGGER.info("url:"+url);
+		
+		HttpClient httpClient = null;
+		try{
+			httpClient = getHttpClient();
+		}catch(Exception e){
+			_LOGGER.info("get httpClient error");
+			return null;
+		}
+
+		//创建请求对象
+		HttpRequestBase hrb;
+		if(HttpMethod.DELETE == method){
+			hrb = new HttpDelete(url);
+		}else if(HttpMethod.GET == method){
+			hrb = new HttpGet(url);
+		}else{
+			_LOGGER.info("只支持delete或get方法");
+			return null;
+		}
+		
+		//添加头信息
+		for (String key : headers.keySet()) {
+			hrb.addHeader(key,headers.get(key));
+		}
+		
+		//调用，并取回返回结果，打印返回状态码
+		HttpResponse response = null;
+		try {
+			response = httpClient.execute(hrb);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			_LOGGER.error("error happens when execute http post");
+			return null;
+		}
+		
+		StatusLine status = response.getStatusLine();
+
+		_LOGGER.info("************resposne success************");
+		_LOGGER.info("response status:"+status.getStatusCode());
+		if(status.getStatusCode() == 200){ //只有状态为200才能够返回结果
+			try{
+				HttpEntity entity = response.getEntity();
+				InputStream is = entity.getContent();
+				String str = IOUtils.convertStreamToString(is);
+				_LOGGER.info("返回body："+str);
+				is.close();
+				return str;
+			}catch(Exception e){
+				_LOGGER.error("200状态下拉取body数据失败");
+				return null;
+			}
+		}else{
+			_LOGGER.error("返回状态不正确，请检查是否正确调用");
+			return null;
+		}
+	}
+	
 	
 	/**
 	 * 向网关发送httpPut请求
@@ -140,16 +270,16 @@ public class ApiCallUtils {
 	 */
 	public static boolean putGwJson(String url, JSONObject params) {
 		
-		LOGGER.info("***********在java中调用http/put/json请求***********");
-		LOGGER.info("url:"+url);
-		LOGGER.info("params:"+params.toString());
+		_LOGGER.info("***********在java中调用http/put/json请求***********");
+		_LOGGER.info("url:"+url);
+		_LOGGER.info("params:"+params.toString());
 		
 		HttpClient httpClient = null;
 		
 		try{
 			httpClient = getHttpClient();
 		}catch(Exception e){
-			LOGGER.info("create httpClient error");
+			_LOGGER.info("create httpClient error");
 			return false;
 		}
 		
@@ -168,7 +298,7 @@ public class ApiCallUtils {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error("error happens when execute http put");
+			_LOGGER.error("error happens when execute http put");
 			return false;
 		}
 		
@@ -185,7 +315,7 @@ public class ApiCallUtils {
 				//String str = new String(bt);
 				sb.append(bt);
 			}
-			LOGGER.info("返回流:"+bt.toString());
+			_LOGGER.info("返回流:"+bt.toString());
 			
 			System.out.println(response.getEntity().getContent().toString());
 		} catch (UnsupportedOperationException e) {
@@ -194,8 +324,8 @@ public class ApiCallUtils {
 			e.printStackTrace();
 		}
 		
-		LOGGER.info("************resposne success************");
-		LOGGER.info("response status:"+status.getStatusCode());
+		_LOGGER.info("************resposne success************");
+		_LOGGER.info("response status:"+status.getStatusCode());
 		if(status.getStatusCode() == 200){
 			return true;	
 		}
@@ -214,11 +344,11 @@ public class ApiCallUtils {
 		try{
 			httpClient = getHttpClient();
 		}catch(Exception e){
-			LOGGER.info("create httpClient error");
+			_LOGGER.info("create httpClient error");
 			return false;
 		}
 		
-		LOGGER.info("reload path:"+basicUrl);
+		_LOGGER.info("reload path:"+basicUrl);
 		HttpGet httpGet = new HttpGet(basicUrl);
 		httpGet.addHeader(Constants.HEADER_KEY,Constants.HEADER_VALUE);
 		
@@ -226,15 +356,15 @@ public class ApiCallUtils {
 		try {
 			response = httpClient.execute(httpGet);
 		} catch (IOException e) {
-			LOGGER.info("error happens when execute http get");
+			_LOGGER.info("error happens when execute http get");
 			return false;
 		}
 		StatusLine statusLine = response.getStatusLine();
 		
-		LOGGER.info("reload status:"+statusLine.getStatusCode());
+		_LOGGER.info("reload status:"+statusLine.getStatusCode());
 		
 		if(statusLine.getStatusCode() == 200){
-			LOGGER.info("reload success ");
+			_LOGGER.info("reload success ");
 			return true;
 		}
 		return false;
@@ -253,7 +383,7 @@ public class ApiCallUtils {
 		try{
 			httpClient = getHttpClient();
 		}catch(Exception e){
-			LOGGER.info("get httpclient error");
+			_LOGGER.info("get httpclient error");
 			return false;
 		}
 		
@@ -266,15 +396,15 @@ public class ApiCallUtils {
 		try{
 			response = httpClient.execute(httpGet);
 		}catch(Exception e){
-			LOGGER.info("error happens when execute http get");
+			_LOGGER.info("error happens when execute http get");
 			return false;
 		}
 		StatusLine statusLine = response.getStatusLine();
 		
-		LOGGER.info("get status:"+statusLine.getStatusCode());
+		_LOGGER.info("get status:"+statusLine.getStatusCode());
 		
 		if(statusLine.getStatusCode() == 200){
-			LOGGER.info("get result success ");
+			_LOGGER.info("get result success ");
 			return true;
 		}
 		
@@ -292,7 +422,7 @@ public class ApiCallUtils {
 		try{
 			httpClient = getHttpClient();
 		}catch(Exception e){
-			LOGGER.info("get httpClient error");
+			_LOGGER.info("get httpClient error");
 			return false;
 		}
 		
@@ -305,16 +435,16 @@ public class ApiCallUtils {
 		try{
 			response = httpClient.execute(httpDelete);
 		}catch(Exception e){
-			LOGGER.info("error happens when execute http delete");
+			_LOGGER.info("error happens when execute http delete");
 			return false;
 		}
 		
 		StatusLine statusLine = response.getStatusLine();
 		
-		LOGGER.info("get delete status:"+statusLine.getStatusCode());
+		_LOGGER.info("get delete status:"+statusLine.getStatusCode());
 		
 		if(statusLine.getStatusCode() == 200){
-			LOGGER.info("delete success");
+			_LOGGER.info("delete success");
 			return true;
 		}
 		return false;
@@ -332,7 +462,7 @@ public class ApiCallUtils {
 		try{
 			httpClient = getHttpClient();
 		}catch(Exception e){
-			LOGGER.info("get httpclient error");
+			_LOGGER.info("get httpclient error");
 			return null;
 		}
 		
@@ -345,15 +475,15 @@ public class ApiCallUtils {
 		try{
 			response = httpClient.execute(httpGet);
 		}catch(Exception e){
-			LOGGER.info("error happens when execute http get");
+			_LOGGER.info("error happens when execute http get");
 		}
 		StatusLine statusLine = response.getStatusLine();
 		
-		LOGGER.info("get status:"+statusLine.getStatusCode());
+		_LOGGER.info("get status:"+statusLine.getStatusCode());
 		
 		if(statusLine.getStatusCode() == 200){
 			
-			LOGGER.info("get api success ");
+			_LOGGER.info("get api success ");
 			HttpEntity entity = response.getEntity();
 			InputStream is = entity.getContent();
 			String str = IOUtils.convertStreamToString(is);

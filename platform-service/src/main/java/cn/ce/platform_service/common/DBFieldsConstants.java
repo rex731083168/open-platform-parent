@@ -8,7 +8,7 @@ package cn.ce.platform_service.common;
 public class DBFieldsConstants {
 
 	/*************** api相关字段 **********************/
-	public static final String APIS_APIVERSION_APIID = "apiVersion.apiId";
+	public static final String APIS_APIVERSION_VERSIONID = "apiVersion.versionId";
 	
 	public static final String APIS_APIVERSION_NEWVERSION = "apiVersion.newVersion"; 
 	
@@ -37,5 +37,15 @@ public class DBFieldsConstants {
 	public static final String USER_CHECKSTATE = "checkState";
 	public static final String USER_STATE = "state";
 	public static final String USER_REGTIME = "regTime";
+
+	/*************** 网关相关字段 **********************/
+	public static final String GW_API_NAME = "name";
+	public static final String GW_API_ID = "api_id";
+	public static final String GW_API_VERSIONS = "versions";
+	public static final String GW_API_VERSIONS_NAME = "name";
+	public static final String GW_API_VERSIONS_EXPIRES = "expires";
+	public static final String GW_API_VERSIONS_OVERRIDE_TARGET = "override_target";
+	public static final String GW_API_PROXY_LISTENPATH = "listen_path";
+	public static final String GW_API_PROXY = "proxy";
 	
 }
