@@ -20,16 +20,19 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 
 /**
  * @ClassName:  UserController   
- * @Description:TODO(这里用一句话描述这个类的作用)   
+ * @Description:Console用户控制类
  * @author: makangwei
  * @date:   2017年10月11日 下午2:27:28   
  * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  */
 @RestController
+@Api("用户管理")
 public class UserController {
 
 	/** 日志对象 */
@@ -39,6 +42,7 @@ public class UserController {
 	private IConsoleUserService consoleUserService;
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@ApiOperation("用户注册")
 	public Result<?> userRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 			@RequestBody User user) {
 		
@@ -47,7 +51,7 @@ public class UserController {
 		_LOGGER.info("tel:"+user.getTelNumber());
 		
 		_LOGGER.info("校验验证码是否正确");
-		Integer checkCode1 = (Integer)session.getAttribute(user.getTelNumber());
+		String checkCode1 = (String)session.getAttribute(user.getTelNumber());
 		
 		
 		//短信验证码校验
@@ -70,8 +74,8 @@ public class UserController {
 		return consoleUserService.userRegister(user);
 	}
 
-	//用户登陆后认证信息
 	@RequestMapping(value="/authenticate", method=RequestMethod.POST)
+	@ApiOperation("用户登陆后认证信息")
 	public Result<?> userAuthenticate(
 			@RequestParam String userId,
 			@RequestParam String enterpriseName, //企业名称 
@@ -82,8 +86,8 @@ public class UserController {
 		return consoleUserService.authenticate(userId,enterpriseName,idCard,userRealName);
 	}
 	
-	//登录
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@ApiOperation("登录")
 	public Result<?> login(HttpSession session, 
 			@RequestParam String userName, 
 			@RequestParam String password) {
@@ -91,8 +95,8 @@ public class UserController {
 		return consoleUserService.login(session, userName,password);
 	}
 	
-	//检查登录
 	@RequestMapping(value = "/checkLogin", method = RequestMethod.POST)
+	@ApiOperation("检查登录")
 	public Result<?> checkLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		
 		Result<User> result = new Result<User>();
@@ -113,8 +117,8 @@ public class UserController {
 		return result;
 	}
 
-	//退出登录
 	@RequestMapping(value = "/logOut", method = RequestMethod.POST)
+	@ApiOperation("退出登录")
 	public Result<?> logOut(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		_LOGGER.info("---------->> Action for logout");
 		Result<String> result = new Result<String>();
@@ -129,8 +133,8 @@ public class UserController {
 		}
 	}
 	
-	//忘记密码后重置密码(已经校验完成)
 	@RequestMapping(value="modifyPassword",method=RequestMethod.POST)
+	@ApiOperation("忘记密码后重置密码(需先经过短信验证)")
 	public Result<?> modifyPassword(HttpSession session,
 			@RequestParam String telNumber,
 			@RequestParam String newPassword,
@@ -146,31 +150,31 @@ public class UserController {
 		return consoleUserService.modifyPassword(telNumber,newPassword);
 	}
 	
-	//注册时发送短信验证码
 	@RequestMapping(value="/sendRegistSms", method=RequestMethod.POST)
+	@ApiOperation("注册时发送短信验证码")
 	public Result<?> sendRegistSms(HttpSession session, @RequestParam String telNumber){
 		
 		return consoleUserService.sendRegistSms(telNumber,session);
 	}
 	
-	//忘记密码时发送短信验证码
 	@RequestMapping(value="/sendRePwdSms", method=RequestMethod.POST)
+	@ApiOperation("忘记密码时发送短信验证码")
 	public Result<?> sendRePwdSms(HttpSession session, @RequestParam String telNumber){
 		
 		return consoleUserService.sendRePwdSms(telNumber,session);
 	}
 	
-	//校验忘记密码时发送的验证码，判断页面是否可以跳转到可以输入新密码的页面
 	@RequestMapping(value="checkTelVerifyCode",method=RequestMethod.POST)
+	@ApiOperation("校验忘记密码时发送的验证码")
 	public Result<?> checkTelVerifyCode(HttpSession session,
 			@RequestParam String telNumber,
 			@RequestParam String telVerifyCode){
 		
-		Integer verifyCode = (Integer) session.getAttribute(telNumber);
+		String verifyCode = session.getAttribute(telNumber) == null ? "" : session.getAttribute(telNumber).toString();
 		Long transTime = (Long) session.getAttribute(telNumber+"TransTime");
 		
 		Result<String> result = new Result<String>();
-		if(verifyCode == null || transTime == null){
+		if(StringUtils.isBlank(verifyCode) || transTime == null){
 			result.setErrorMessage("当前是新的session");
 			return result;
 		}
@@ -191,6 +195,7 @@ public class UserController {
 	
 	//校验邮箱
 	@RequestMapping(value="/checkEmail",method=RequestMethod.GET)
+	@ApiOperation("校验邮箱是否可用")
 	public Result<?> checkEmail(HttpServletRequest request,HttpServletResponse response,
 			String email){
 	
@@ -202,8 +207,8 @@ public class UserController {
 		return consoleUserService.checkEmail(email);
 	}
 	
-	//校验用户名
 	@RequestMapping(value="/checkUserName",method=RequestMethod.GET)
+	@ApiOperation("校验用户名是否可用")
 	public Result<?> checkUserName(String userName){
 		
 		if(StringUtils.isBlank(userName)){
@@ -215,8 +220,8 @@ public class UserController {
 		return consoleUserService.checkUserName(userName);
 	}
 	
-	//校验手机号
 	@RequestMapping(value="/checkTelNumber",method=RequestMethod.GET)
+	@ApiOperation("校验手机号是否可用")
 	public Result<?> checkTelNumber(String telNumber){
 		
 		if(StringUtils.isBlank(telNumber)){

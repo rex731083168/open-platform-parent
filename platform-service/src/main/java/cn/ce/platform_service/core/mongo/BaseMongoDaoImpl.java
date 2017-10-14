@@ -170,7 +170,7 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 	 * 
 	 */
 	protected Criteria getCriteriaByWhereEntity(final Map<String, MongoDBWhereEntity> condMap) {
-		Criteria criteria = new Criteria();
+		Criteria c = new Criteria();
 		if (!condMap.isEmpty()) {
 			Iterator<String> iterator = condMap.keySet().iterator();
 			MongoDBWhereEntity entity = null;
@@ -179,19 +179,22 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 				k = iterator.next();
 				entity = condMap.get(k);
 				if (entity.getMethod() == ConditionEnum.LIKE) {
-					criteria.and(k).regex(entity.getValue().toString());
+					c.and(k).regex(entity.getValue().toString());
+//					query.addCriteria(Criteria.where(k).regex(entity.getValue().toString()));
 				} else if (entity.getMethod() == ConditionEnum.EQ) {
-					criteria.and(k).is(entity.getValue());
+					c.and(k).is(entity.getValue().toString());
+//					query.addCriteria(Criteria.where(k).is(entity.getValue()));
 				} else if (entity.getMethod() == ConditionEnum.NEQ) {
-					criteria.and(k).ne(entity.getValue());
+					c.and(k).ne(entity.getValue().toString());
+//					query.addCriteria(Criteria.where(k).ne(entity.getValue()));
 				} else if (entity.getMethod() == ConditionEnum.IN) {
-					criteria.and(k).in(entity.getValue());
+//					query.addCriteria(Criteria.where(k).in(entity.getValue()));
 				} else if (entity.getMethod() == ConditionEnum.NOTIN) {
-					criteria.and(k).nin(entity.getValue());
+//					query.addCriteria(Criteria.where(k).nin(entity.getValue()));
 				}
 			}
 		}
-		return criteria;
+		return c;
 	}
 
 	/**** bathupdate code begain ****/

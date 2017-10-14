@@ -95,7 +95,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 				}
 				
 				/*** 添加api到网关接口 ***/
-				JSONObject params = parseGwApiJson(apiEntity.getId(), apiEntity.getApiEnName(), listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+				JSONObject params = generateGwApiJson(apiEntity.getId(), apiEntity.getApiEnName(), listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 				
 				if(params == null){
 					_LOGGER.info("拼接网关api json发生错误");
@@ -131,6 +131,11 @@ public class ManageApiServiceImpl implements IManageApiService{
 					rollBackApis.add(apiEntity.getId());
 				}
 			}
+			//reload
+			Map<String, String> headers = new HashMap<String, String>();
+			headers.put(Constants.HEADER_KEY, Constants.HEADER_VALUE);
+			ApiCallUtils.getOrDelMethod(GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NEWWORK_RELOAD_GROUP,
+					headers, HttpMethod.DELETE);
 				
 			// 批量修改数据库
 			for (ApiEntity apiEntity2 : apiList) {
@@ -146,7 +151,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 	}
 
 	
-	private JSONObject parseGwApiJson(String apiId, String apiEnName, String listenPath, Map<String, String> map,
+	private JSONObject generateGwApiJson(String apiId, String apiEnName, String listenPath, Map<String, String> map,
 			boolean gatewayApiVersionedTrue) {
 		String basePath = System.getProperty("user.dir");
 		String path = basePath+Constants.GW_API_JSON;
