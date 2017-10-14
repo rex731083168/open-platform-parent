@@ -21,6 +21,8 @@ public class Constants {
 	public static final String RESP_HEADER_CRE_VALUE = "true";
 
 	public static final String NETWORK_RELOAD_PATH = "/tyk/reload/";
+	
+	public static final String NEWWORK_RELOAD_GROUP = "/tyk/reload/group";
 
 	public static final String NETWORK_ADD_PATH = "/tyk/apis";
 
@@ -29,6 +31,10 @@ public class Constants {
 	public static final String NETWORK_UPDATE_PATH = "/tyk/apis";
 
 	public static final String NETWORK_GET_PATH = "/tyk/apis";
+	
+	public static final String NETWORK_ADD_POLICY = "/tyk/policies";
+	
+	public static final String NETWORK_ADD_CLIENT_ID = "/tyk/oauth/clients/create";
 
 	public static final String NETWORK_ADD_KEY_PATH = "/tyk/keys";
 
@@ -114,5 +120,6 @@ public class Constants {
 
 	public static final String GW_API_JSON = "/src/main/java/cn/ce/platform_service/common/gateway/GwApi.json";
 	
+	public static final String GW_POLICY_JSON = "/src/main/java/cn/ce/platform_service/common/gateway/GwPolicy.json";
 	
 }
