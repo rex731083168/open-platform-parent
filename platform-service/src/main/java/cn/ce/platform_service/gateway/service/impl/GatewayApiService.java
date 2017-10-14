@@ -5,24 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apisecret.dao.IApiSecretKeyDao;
-import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
-import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.DBFieldsConstants;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
-import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
-import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
+import cn.ce.platform_service.util.LocalFileReadUtil;
+import io.netty.handler.codec.http.HttpMethod;
 
 /**
 * @Description : 网关api和密钥的管理
@@ -317,4 +317,74 @@ public class GatewayApiService implements IGatewayApiService{
 //		result.setStatus(Status.SUCCESS);;
 //		return result;
 //	}
+	
+	public String pushPolicy(
+			String policyId,
+			String rate,
+			String per,
+			String quotaMax,
+			String quotaRenewRate,
+			Map<String,List<String>> apiInfos){
+		
+		JSONObject params = generatePolicyJson(policyId,rate,per,quotaMax,quotaRenewRate,apiInfos);
+		
+		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+
+				Constants.NETWORK_ADD_POLICY+"/"+policyId;
+		
+		Map<String, String> headers = new HashMap<String, String>();
+		headers.put(Constants.HEADER_KEY, Constants.HEADER_VALUE);
+		
+		String str = ApiCallUtils.putOrPostMethod(url, params, headers, HttpMethod.POST);
+		
+		return str;
+	}
+	
+	public String pushClient(String clientId, String secret, List<String> apiId, String policyId){
+		
+		String apiIds = "";
+		for (String str : apiId) {
+			apiIds = apiIds+","+str;
+		}
+		apiIds = apiIds.substring(1, apiIds.length());
+		
+		JSONObject params = new JSONObject();
+		params.put(DBFieldsConstants.GW_CLIENT_ID, clientId);
+		params.put(DBFieldsConstants.GW_SECRET, secret);
+		params.put(DBFieldsConstants.GW_POLICY_ID, policyId);
+		params.put(DBFieldsConstants.GW_API_ID, apiIds);
+		params.put(DBFieldsConstants.GW_REDIRECT_URI, "/");
+		
+		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+
+				Constants.NETWORK_ADD_CLIENT_ID;
+		Map<String, String> headers = new HashMap<String, String>();
+		headers.put(Constants.HEADER_KEY, Constants.HEADER_VALUE);
+		String str = ApiCallUtils.putOrPostMethod(url, params, headers, HttpMethod.POST);
+		return str;
+	}
+
+	private JSONObject generatePolicyJson(String policyId, String rate, String per, String quotaMax, String quotaRenewRate,
+			Map<String, List<String>> apiInfos) {
+		
+		String basePath=System.getProperty("user.dir");
+		String path = basePath+"/"+Constants.GW_POLICY_JSON;
+		JSONObject policyJson = LocalFileReadUtil.readLocalJson(path);
+		policyJson.put(DBFieldsConstants.GW_POLICY_ID, policyId);
+		policyJson.put(DBFieldsConstants.GW_POLICY_RATE, rate);
+		policyJson.put(DBFieldsConstants.GW_POLICY_PER, per);
+		policyJson.put(DBFieldsConstants.GW_POLICY_QUOTA_MAX, quotaMax);
+		policyJson.put(DBFieldsConstants.GW_POLICY_QUOTA_RENEWAL_RATE, quotaRenewRate);
+		
+		JSONObject accessRights = new JSONObject();
+		for (String key : apiInfos.keySet()) {
+			JSONObject apiJson = new JSONObject();
+			apiJson.put(DBFieldsConstants.GW_POLICY_ACCESS_RIGHTS_APINAME, "");
+			apiJson.put(DBFieldsConstants.GW_POLICY_ACCESS_RIGHTS_APIID, key);
+			apiJson.put(DBFieldsConstants.GW_POLICY_ACCESS_RIGHTS_VERSIONS, apiInfos.get(key));
+			accessRights.put(key, apiJson);
+		}	
+		policyJson.put(DBFieldsConstants.GW_POLICY_ACCESS_RIGHTS, accessRights);
+		
+		return policyJson;
+	}
+	
 }
