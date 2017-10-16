@@ -38,7 +38,7 @@ public class GuideConsoleController {
 	@Resource
 	private IConsoleGuideService iConsoleGuideService;
 
-	@RequestMapping(value = "/guide", method = RequestMethod.PUT)
+	@RequestMapping(value = "/guide", method = RequestMethod.POST)
 	@ApiOperation("添加指南")
 	public Result<?> guideAdd(HttpSession session,@RequestBody GuideEntity g) {
 		Result<?> result = new Result<>();
@@ -50,7 +50,7 @@ public class GuideConsoleController {
 		return iConsoleGuideService.add(session, g);
 	}
 	
-	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.POST)
+	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.PUT)
 	@ApiOperation("修改指南")
 	public Result<?> guideUpdate(@RequestBody GuideEntity g , @PathVariable("gid") String gid) {
 		g.setId(gid);

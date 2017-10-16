@@ -19,7 +19,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
-import net.sf.json.JSONArray;
+import cn.ce.platform_service.util.SplitUtil;
 
 /**
  *
@@ -51,7 +51,7 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 			c.and("creatUserName").regex(creatUserName);
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));
-		result.setData(guideDaoImpl.listByPage(page, query));
+		result.setSuccessData(guideDaoImpl.listByPage(page, query));
 		return result;
 	}
 
@@ -60,11 +60,10 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			JSONArray jsonArray = JSONArray.fromObject(ids);
-			List<String> lisids = jsonArray.toList(jsonArray);
+			List<String> lisids = SplitUtil.splitStringWithComma(ids);
 			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(lisids));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
-			result.setMessage("审核成功:" + message + "条");
+			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception
