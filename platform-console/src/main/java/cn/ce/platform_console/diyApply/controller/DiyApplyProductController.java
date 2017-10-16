@@ -38,12 +38,12 @@ public class DiyApplyProductController {
 	@Resource
 	private IConsoleDiyApplyService consoleDiyApplyService;
 
-	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.POST)
+	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
 	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key) {
 		return consoleDiyApplyService.findTenantAppsByTenantKey(key);
 	}
 
-	@RequestMapping(value = "findPagedApps", method = RequestMethod.POST)
+	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
 	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = true) String owner,
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -66,6 +66,7 @@ public class DiyApplyProductController {
 	}
 
 	@RequestMapping(value = "generatorTenantKey", method = RequestMethod.POST)
+	@ResponseBody
 	public Result<InterfaMessageInfoString> generatorTenantKey(@RequestBody GeneratorTenantKeyInParameterEntity queryVO,
 			HttpServletRequest request, HttpServletResponse response) {
 		return consoleDiyApplyService.generatorTenantKey(queryVO.getId());

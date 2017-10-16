@@ -18,6 +18,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -31,12 +32,13 @@ import io.swagger.annotations.ApiOperation;
  **/
 @RestController
 @RequestMapping("/guideConsole")
+@Api("应用指南")
 public class GuideConsoleController {
 
 	@Resource
 	private IConsoleGuideService iConsoleGuideService;
 
-	@RequestMapping(value = "/guide", method = RequestMethod.POST)
+	@RequestMapping(value = "/guide", method = RequestMethod.PUT)
 	@ApiOperation("添加指南")
 	public Result<?> guideAdd(HttpSession session,@RequestBody GuideEntity g) {
 		Result<?> result = new Result<>();
@@ -48,14 +50,14 @@ public class GuideConsoleController {
 		return iConsoleGuideService.add(session, g);
 	}
 	
-	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.POST)
 	@ApiOperation("修改指南")
 	public Result<?> guideUpdate(@RequestBody GuideEntity g , @PathVariable("gid") String gid) {
 		g.setId(gid);
 		return iConsoleGuideService.update(g);
 	}
 
-	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
+	@RequestMapping(value = "/guideList", method = RequestMethod.GET)
 	@ApiOperation("查询指南列表")
 	public Result<?> guideList(String guideName, String creatUserName,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,

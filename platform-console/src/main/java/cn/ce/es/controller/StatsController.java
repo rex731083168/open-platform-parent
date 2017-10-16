@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.ce.es.service.IStatsService;
+import io.swagger.annotations.Api;
 import net.sf.json.JSONObject;
 
 
@@ -25,6 +26,7 @@ import net.sf.json.JSONObject;
  **/
 @Controller
 @RequestMapping("/statistics")
+@Api("应用统计")
 public class StatsController {
 
 	@Autowired @Qualifier("statsService")

@@ -37,6 +37,7 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.common.CRequest;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.MongoFiledConstants;
@@ -87,9 +88,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		if (StringUtils.isNotBlank(entity.getApplyName())) {
 			c.and(MongoFiledConstants.DIY_APPLY_APPLYNAME).is(entity.getApplyName());
 		}
-		
-		//修改时排除当前修改应用
-		if(StringUtils.isNotBlank(entity.getId())){
+
+		// 修改时排除当前修改应用
+		if (StringUtils.isNotBlank(entity.getId())) {
 			c.and(MongoFiledConstants.BASIC_ID).ne(entity.getId());
 		}
 
@@ -97,7 +98,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(query);
 
-		if(null != findPageByList && findPageByList.size() > 0){
+		if (null != findPageByList && findPageByList.size() > 0) {
 			result.setMessage("应用名称不可重复!");
 			result.setErrorCode(ErrorCodeNo.SYS010);
 			return result;
@@ -424,6 +425,18 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
 		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
 		return object;
+	}
+
+	public Object postUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
+
+		String reqURL = CRequest.UrlPage(url);
+		Map<String, String> params = CRequest.URLRequest(url);
+
+		String jasonResultHttpGet = HttpClientUtil.sendPostRequest(reqURL, params, "UTF-8", "UTF-8");
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+		return object;
+
 	}
 
 	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class> classMap)
