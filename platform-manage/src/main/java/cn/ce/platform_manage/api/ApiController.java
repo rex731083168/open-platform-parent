@@ -1,29 +1,21 @@
 package cn.ce.platform_manage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.gateway.GatewayUtils;
-import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.impl.GatewayApiService;
-import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.SplitUtil;
 
@@ -49,7 +41,7 @@ public class ApiController {
     private IManageOpenApplyService manageOpenApplyService;
     
 	/**
-	 * @Description : 审核后推送网关是多版本+oauth
+	 * @Description : 审核后推送网关是多版本+oauth，批量审核，多个api用逗号隔开
 	 * @Author : makangwei
 	 * @Date : 2017年8月21日
 	 * @param request
@@ -60,7 +52,7 @@ public class ApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/auditApi", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public Result<String> auditApi2(HttpServletRequest request, HttpServletResponse response, 
+	public Result<String> auditApi(HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam String apiIds,
 			@RequestParam Integer checkState, 
 			@RequestParam(required=false) String checkMem) { // checkMem如过审核不通过，将审核失败的原因通过该字段传入

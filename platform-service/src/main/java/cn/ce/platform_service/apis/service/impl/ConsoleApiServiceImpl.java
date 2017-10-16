@@ -91,7 +91,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			apiEntity.setUserName(user.getUserName());
 			apiEntity.setCreateTime(new Date());
 			
-			int num = newApiDao.updApiVersionByApiId(apiEntity.getApiVersion().getVersionId());
+			int num = newApiDao.updApiVersionByApiId(apiEntity.getApiVersion().getVersionId(),false);
 			_LOGGER.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");
 			
 			// TODO 前端传入版本号和newVersion字段吗？
