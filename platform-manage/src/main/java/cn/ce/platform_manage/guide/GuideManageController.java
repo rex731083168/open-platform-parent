@@ -15,6 +15,9 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
+import cn.ce.platform_service.util.SplitUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  *
@@ -28,6 +31,7 @@ import cn.ce.platform_service.guide.service.IManageGuideService;
 
 @RestController
 @RequestMapping("/guideManage")
+@Api("指南管理")
 public class GuideManageController {
 
 	/** 日志对象 */
@@ -35,6 +39,7 @@ public class GuideManageController {
 	@Resource
 	private IManageGuideService iManageGuideService;
 
+	@ApiOperation("指南列表")
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
 	public Result<?> guideList(String guideName, String creatUserName,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
@@ -44,6 +49,7 @@ public class GuideManageController {
 		return result;
 	}
 
+	@ApiOperation("指南详情")
 	@RequestMapping(value = "/getGuideByid", method = RequestMethod.GET)
 	public Result<GuideEntity> getGuideByid(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "id", required = true) String id) {
@@ -53,19 +59,10 @@ public class GuideManageController {
 
 	}
 
-	/**
-	 * 
-	 * @param ids
-	 *            jsondemo["1","2","3"]
-	 * @return
-	 */
+	@ApiOperation("批量审核")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestBody String ids) {
-
-		Result<String> result = new Result<String>();
-		result = iManageGuideService.batchUpdate(ids);
-		return result;
-
+		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids));
 	}
 
 }

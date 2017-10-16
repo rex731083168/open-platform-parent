@@ -49,4 +49,11 @@ public interface IDiyApplyDao {
 	 * @return
 	 */
 	DiyApplyEntity findById(String id);
+	
+	/**
+	 * 批量審核
+	 * @param ids
+	 * @return
+	 */
+	public String bathUpdateByid(List<String> ids) ;
 }

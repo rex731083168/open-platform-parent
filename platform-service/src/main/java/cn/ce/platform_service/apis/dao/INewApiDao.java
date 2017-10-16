@@ -15,7 +15,7 @@ public interface INewApiDao {
 
 	ApiEntity save(ApiEntity apiEntity);
 
-	int updApiVersionByApiId(String apiId);
+	int updApiVersionByApiId(String apiId, boolean flag);
 
 	ApiEntity findApiById(String apiId);
 

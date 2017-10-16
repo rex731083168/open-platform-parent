@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.BasicDBObject;
 
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
@@ -43,7 +46,7 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 		// TODO Auto-generated method stub
 		return super.findPage(page, query);
 	}
-	
+
 	@Override
 	public List<GuideEntity> list(Query query) {
 		return super.find(query);
@@ -54,7 +57,7 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
-			list.add(new BathUpdateOptions(Query.query(Criteria.where("id").is(ids.get(i))),
+			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
 					Update.update("checkState", AuditConstants.OPEN_APPLY_CHECKED_SUCCESS), false, true));
 		}
 		return super.bathUpdate(super.mongoTemplate, GuideEntity.class, list);

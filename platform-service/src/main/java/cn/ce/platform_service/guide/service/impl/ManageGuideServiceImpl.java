@@ -19,7 +19,6 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
-import cn.ce.platform_service.util.SplitUtil;
 
 /**
  *
@@ -56,12 +55,11 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(String ids) {
+	public Result<String> batchUpdate(List<String> ids) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			List<String> lisids = SplitUtil.splitStringWithComma(ids);
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(lisids));
+			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;

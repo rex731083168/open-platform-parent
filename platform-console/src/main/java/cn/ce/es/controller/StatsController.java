@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.ce.es.service.IStatsService;
 import io.swagger.annotations.Api;
 import net.sf.json.JSONObject;
-
 
 /**
  *
@@ -29,7 +29,8 @@ import net.sf.json.JSONObject;
 @Api("应用统计")
 public class StatsController {
 
-	@Autowired @Qualifier("statsService")
+	@Autowired
+	@Qualifier("statsService")
 	private IStatsService statsService;
 
 	/**
