@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -87,8 +88,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		} else {
 			
 			// 开启版本控制
-			apiEntity.setUserId(user.getId());
-			apiEntity.setUserName(user.getUserName());
+			//apiEntity.setUserId(user.getId());
+			//apiEntity.setUserName(user.getUserName());
 			apiEntity.setCreateTime(new Date());
 			
 			int num = newApiDao.updApiVersionByApiId(apiEntity.getApiVersion().getVersionId(),false);
@@ -96,10 +97,11 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			
 			// TODO 前端传入版本号和newVersion字段吗？
 			apiEntity.getApiVersion().setNewVersion(true);
-
-			//如果前端没有传入版本的版本的apiId则重新生成版本apiId
+			//如果前端没有传入版本的版本的apiId则重新生成版本versionId
 			if(StringUtils.isBlank(apiEntity.getApiVersion().getVersionId())){
-				apiEntity.getApiVersion().setVersionId(apiEntity.getId());
+				// TODO versionId是java生成
+				String versionId = UUID.randomUUID().toString().replace("-", "");
+				apiEntity.getApiVersion().setVersionId(versionId);
 			}
 			
 			newApiDao.save(apiEntity);
@@ -283,7 +285,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		Map<String,Object> map =new HashMap<String,Object>();
 		map.put(DBFieldsConstants.APIS_VERSION, version);
-		map.put(DBFieldsConstants.APIS_Id, apiId);
+		map.put(DBFieldsConstants.APIS_ID, apiId);
 		ApiEntity entity = newApiDao.findOneByFields(map);
 
 		if(entity == null){
@@ -293,4 +295,5 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		return result;
 	}
+	
 }

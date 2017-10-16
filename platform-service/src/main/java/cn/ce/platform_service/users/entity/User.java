@@ -70,7 +70,7 @@ public class User implements Serializable {
 	@Field("regTime")
 	private Date regTime;
 	@Field("checkCode")
-	private String checkCode; // 短信校验码
+	private Integer checkCode; // 短信校验码
 
 	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
 	@Field("checkState")
@@ -210,11 +210,13 @@ public class User implements Serializable {
 		return serialVersionUID;
 	}
 
-	public String getCheckCode() {
+
+
+	public Integer getCheckCode() {
 		return checkCode;
 	}
 
-	public void setCheckCode(String checkCode) {
+	public void setCheckCode(Integer checkCode) {
 		this.checkCode = checkCode;
 	}
 
