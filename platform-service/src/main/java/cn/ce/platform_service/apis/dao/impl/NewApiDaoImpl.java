@@ -35,9 +35,9 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 
 	//修改旧的版本的newVersion字段为false
 	@Override 
-	public int updApiVersionByApiId(String apiId) {
+	public int updApiVersionByApiId(String apiId,boolean flag) {
 		Query query = new Query().addCriteria(Criteria.where(DBFieldsConstants.APIS_APIVERSION_VERSIONID).is(apiId));
-		Update update = Update.update(DBFieldsConstants.APIS_APIVERSION_NEWVERSION, false);
+		Update update = Update.update(DBFieldsConstants.APIS_APIVERSION_NEWVERSION, flag);
         WriteResult wr = super.update(query, update);
         return wr.getN();
 	}

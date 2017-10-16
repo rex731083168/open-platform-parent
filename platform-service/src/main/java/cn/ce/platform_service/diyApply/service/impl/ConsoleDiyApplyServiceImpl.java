@@ -1,14 +1,9 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +13,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -99,8 +87,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(query);
 
 		if (null != findPageByList && findPageByList.size() > 0) {
-			result.setMessage("应用名称不可重复!");
-			result.setErrorCode(ErrorCodeNo.SYS010);
+			result.setErrorMessage("应用名称不可重复!",ErrorCodeNo.SYS010);
 			return result;
 		}
 

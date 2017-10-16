@@ -1,4 +1,4 @@
-package cn.ce.platform_manage.openapp;
+package cn.ce.platform_manage.openApply;
 
 import java.util.List;
 
@@ -6,10 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.elasticsearch.action.admin.cluster.snapshots.status.TransportNodesSnapshotsStatus.Request;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,11 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.ce.platform_manage.base.BaseController;
 import cn.ce.platform_service.apis.service.IAPIService;
-import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
@@ -36,10 +30,10 @@ import net.sf.json.JSONArray;
  * @see jdk 1.8
  */
 @RestController
-@RequestMapping("/openapp")
-public class OpenAppsController extends BaseController {
+@RequestMapping("/openApply")
+public class OpenApplyController extends BaseController {
 
-	private static Logger _LOGGER = Logger.getLogger(OpenAppsController.class);
+	private static Logger _LOGGER = Logger.getLogger(OpenApplyController.class);
 
 	@Resource
 	private IAPIService apiService;
