@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -193,8 +194,8 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
-			list.add(new BathUpdateOptions(Query.query(Criteria.where("id").is(ids.get(i))),
-					Update.update("checkState", "2"), false, true));
+			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+					Update.update("checkState", "2"), true, true));
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list));
 

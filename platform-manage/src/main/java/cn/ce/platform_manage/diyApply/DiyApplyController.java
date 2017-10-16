@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.diyApply.IManageDiyApplyService;
+import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
+import io.swagger.annotations.Api;
 
 /**
 * @Description : 说明
@@ -19,6 +20,7 @@ import cn.ce.platform_service.diyApply.IManageDiyApplyService;
 */
 @RestController
 @RequestMapping("/diyApply")
+@Api("定制应用管理")
 public class DiyApplyController {
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(DiyApplyController.class);
@@ -26,20 +28,5 @@ public class DiyApplyController {
 	@Resource
 	IManageDiyApplyService manageDiyApplyService;
 	
-	@RequestMapping(value = "/diyApplyList", method=RequestMethod.POST)
-	public Result<?> diyApplyList(
-			@RequestParam(required=false)String applyNameLike,
-			@RequestParam(required=false)Integer checkState,
-			@RequestParam(required=false)String userNameLike,
-			@RequestParam(required=false)String productNameLike,
-			@RequestParam(required=false, defaultValue = "1")Integer currentPage,
-			@RequestParam(required=false, defaultValue = "10")Integer pageSize){
-		
-		_LOGGER.info("applyNameLike:"+applyNameLike);
-		_LOGGER.info("checkState:"+checkState);
-		_LOGGER.info("userNameLike:"+userNameLike);
-		_LOGGER.info("productNameLike:"+productNameLike);
-		
-		return manageDiyApplyService.getApplyList();
-	}
+	
 }

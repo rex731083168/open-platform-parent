@@ -56,15 +56,13 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(String ids) {
+	public Result<String> batchUpdate(List ids) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			JSONArray jsonArray = JSONArray.fromObject(ids);
-			List<String> lisids = jsonArray.toList(jsonArray);
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(lisids));
+			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
-			result.setMessage("审核成功:" + message + "条");
+			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception

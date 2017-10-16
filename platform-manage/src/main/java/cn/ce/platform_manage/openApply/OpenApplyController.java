@@ -20,6 +20,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
+import cn.ce.platform_service.util.SplitUtil;
 import net.sf.json.JSONArray;
 
 /***
@@ -50,9 +51,7 @@ public class OpenApplyController extends BaseController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestBody String ids) {
-		JSONArray jsonArray = JSONArray.fromObject(ids);
-		List<String> lisids = jsonArray.toList(jsonArray);
-		return openApplyService.batchUpdate(lisids);
+		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids));
 	}
 
 	/**

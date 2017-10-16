@@ -499,7 +499,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		Result<String> result = new Result<String>();
 		String message = openApplyDao.bathUpdateByid(ids);
 		_LOGGER.info("bachUpdate message " + message + " count");
-		result.setMessage("成功审核:" + message + "条");
+		result.setSuccessMessage("成功审核:" + message + "条");
 		return result;
 	}
 
