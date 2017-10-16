@@ -41,7 +41,7 @@ public class GuideManageController {
 
 	@ApiOperation("指南列表")
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
-	public Result<?> guideList(@RequestBody GuideEntity entity, String guideName, String creatUserName,
+	public Result<?> guideList(String guideName, String creatUserName,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();

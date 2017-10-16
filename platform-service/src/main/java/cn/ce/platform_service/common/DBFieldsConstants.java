@@ -20,7 +20,7 @@ public class DBFieldsConstants {
 	
 	public static final String APIS_VERSION= "version";
 	
-	public static final String APIS_Id = "id";
+	public static final String APIS_ID = "id";
 	
 	public static final String APIS_USERID = "userId";
 	

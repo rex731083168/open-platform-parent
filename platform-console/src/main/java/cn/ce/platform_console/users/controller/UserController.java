@@ -32,6 +32,7 @@ import io.swagger.annotations.ApiOperation;
  * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  */
 @RestController
+@RequestMapping("/user")
 @Api("用户管理")
 public class UserController {
 
@@ -51,7 +52,7 @@ public class UserController {
 		_LOGGER.info("tel:"+user.getTelNumber());
 		
 		_LOGGER.info("校验验证码是否正确");
-		String checkCode1 = (String)session.getAttribute(user.getTelNumber());
+		Integer checkCode1 = (Integer)session.getAttribute(user.getTelNumber());
 		
 		
 		//短信验证码校验

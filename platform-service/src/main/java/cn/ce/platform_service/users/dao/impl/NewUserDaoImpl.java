@@ -73,7 +73,7 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 		//构建查询对象
 		Criteria c = new Criteria();
 		
-		if(0 != userType){
+		if(null != userType && 0 != userType){
 			c.and(DBFieldsConstants.USER_USERTYPE).is(userType);
 		}
 		if(null != checkState){

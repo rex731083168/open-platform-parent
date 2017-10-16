@@ -3,11 +3,9 @@ package cn.ce.platform_service.guide.service;
 import java.security.interfaces.RSAKey;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.guide.entity.GuideEntity;
 
 /**
  *
@@ -23,7 +21,7 @@ public interface IManageGuideService {
 	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,
 			int currentPage, int pageSize);
 
-	public Result<String> batchUpdate(List ids);
+	public Result<String> batchUpdate(List<String> ids);
 	
 	public Result<String> auditUpdate(String id ,int checkState,String checkMem);
 	

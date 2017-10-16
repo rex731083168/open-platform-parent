@@ -82,8 +82,8 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 
 	@Override
 	public List<ApiEntity> findApiByIds(List<String> apiId) {
-		// TODO Auto-generated method stub
-		return null;
+		Query query = new Query().addCriteria(Criteria.where(DBFieldsConstants.APIS_ID).in(apiId));
+		return super.find(query);
 	}
 
 	@Override

@@ -19,7 +19,6 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
-import net.sf.json.JSONArray;
 
 /**
  *
@@ -51,12 +50,12 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 			c.and("creatUserName").regex(creatUserName);
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));
-		result.setData(guideDaoImpl.listByPage(page, query));
+		result.setSuccessData(guideDaoImpl.listByPage(page, query));
 		return result;
 	}
 
 	@Override
-	public Result<String> batchUpdate(List ids) {
+	public Result<String> batchUpdate(List<String> ids) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
