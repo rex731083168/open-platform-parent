@@ -17,7 +17,6 @@ import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.DBFieldsConstants;
-import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 
@@ -85,18 +84,24 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 	}
 
 	@Override
-	public Page<ApiEntity> findManagerList(String openApplyId, String userId, String apiId, String apiChNameLike,
-			String checkState, int currentPage, int pageSize) {
+	public Page<ApiEntity> findManagerList(QueryApiEntity entity,int currentPage, int pageSize) {
+		
 		Criteria c = new Criteria();
-		c.and(DBFieldsConstants.APIS_OPENAPPLY_ID).is(openApplyId);
-		if(!StringUtils.isBlank(userId)){
-			c.and(DBFieldsConstants.APIS_USERID);
+		
+		if(StringUtils.isNotBlank(entity.getOpenApplyId())){
+			c.and(DBFieldsConstants.APIS_OPENAPPLY_ID).is(entity.getOpenApplyId());
 		}
-		if(!StringUtils.isBlank(apiChNameLike)){
-			c.and(DBFieldsConstants.APIS_APICHNAME).regex(apiChNameLike);
+		if(StringUtils.isNotBlank(entity.getUserId())){
+			c.and(DBFieldsConstants.APIS_USERID).is(entity.getUserId());
 		}
-		if(checkState != null){
-			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(checkState);
+		if(!StringUtils.isBlank(entity.getApiChName())){
+			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
+		}
+		if(null != entity.getCheckState()){
+			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(entity.getCheckState());
+		}
+		if(null != entity.getUserType()){
+			c.and(DBFieldsConstants.USER_USERTYPE).is(entity.getUserType());
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		

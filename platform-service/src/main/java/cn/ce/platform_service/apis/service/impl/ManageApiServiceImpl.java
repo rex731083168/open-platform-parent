@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
@@ -169,11 +170,12 @@ public class ManageApiServiceImpl implements IManageApiService{
 
 
 	@Override
-	public Result<Page<ApiEntity>> apiList(String openApplyId, String userId, String apiId, String apiChName,
-			String checkState, int currentPage, int pageSize) {
+	public Result<Page<ApiEntity>> apiList(QueryApiEntity entity,int currentPage, int pageSize) {
 		
 		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
-		Page<ApiEntity> page = newApiDao.findManagerList(openApplyId,userId,apiId,apiChName,checkState,currentPage,pageSize);
+
+		Page<ApiEntity> page = newApiDao.findManagerList(entity,currentPage,pageSize);
+		
 		if(page != null){
 			result.setSuccessData(page);
 		}else{

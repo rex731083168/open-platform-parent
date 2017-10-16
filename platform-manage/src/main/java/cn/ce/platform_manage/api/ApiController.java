@@ -8,14 +8,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
-import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.service.impl.GatewayApiService;
@@ -97,23 +98,11 @@ public class ApiController {
 
 	@RequestMapping(value = "/apiList", method = RequestMethod.POST)
 	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, 
-			String apiId,
-			String apiChName, 
-			String checkState, 
-			String openApplyId,
-			String userId,
-			@RequestParam(required = false, defaultValue = ""+Constants.FIRST_PAGE) int currentPage,
-			@RequestParam(required = false, defaultValue = ""+Constants.PAGE_COMMON_SIZE) int pageSize) {
+			@RequestBody QueryApiEntity apiEntity,
+			@RequestParam(required=false,defaultValue= "1") int currentPage, 
+			@RequestParam(required=false,defaultValue= "10")int pageSize){
 
-		_LOGGER.info("-------------->appId:" + apiId);
-		_LOGGER.info("-------------->openApplyId:" + openApplyId);
-		_LOGGER.info("-------------->userId:" + userId);
-		_LOGGER.info("-------------->apiChName:" + apiChName);
-		_LOGGER.info("-------------->checkState:" + checkState);
-		_LOGGER.info("-------------->currentPage:" + currentPage);
-		_LOGGER.info("-------------->pageSize:" + pageSize);
-
-		return manageApiService.apiList(openApplyId,userId,apiId,apiChName,checkState,currentPage,pageSize);
+		return manageApiService.apiList(apiEntity,currentPage,pageSize);
 	}
 
 //	@RequestMapping(value = "/delApi", method = RequestMethod.GET)

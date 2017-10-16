@@ -22,8 +22,7 @@ public interface INewApiDao {
 
 	Page<ApiEntity> findSupplierApis(QueryApiEntity entity,int currentPage, int pageSize);
 	
-	Page<ApiEntity> findManagerList(String openApplyId, String userId, String apiId, String apiChNameLike,
-			String checkState, int currentPage, int pageSize);
+	Page<ApiEntity> findManagerList(QueryApiEntity entity,int currentPage, int pageSize);
 
 	ApiEntity findOneByFields(Map<String, Object> map);
 
