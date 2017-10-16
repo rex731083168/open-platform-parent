@@ -94,4 +94,6 @@ public interface IConsoleDiyApplyService {
 
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
+	public Result<String> auditUpdate(String id, int checkState, String checkMem);
+
 }

@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
@@ -65,7 +66,7 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", "2"), false, true));
+					Update.update("checkState", AuditConstants.DIY_APPLY_CHECKED_SUCCESS), false, true));
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
 

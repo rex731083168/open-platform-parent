@@ -23,58 +23,82 @@ public class GuideEntity implements Serializable {
 	@Id
 	private String id;
 	@Field("guideName")
-	private String guideName; //指南名稱
+	private String guideName; // 指南名稱
 	@Field("guideDesc")
-	private String guideDesc; //指南描述
+	private String guideDesc; // 指南描述
 	@Field("appIyId")
-	private String appIyId; //應用id
+	private String appIyId; // 應用id
 	@Field("creatUserName")
-	private String creatUserName; //創建人
-	@Field("creatTime") //創建時間
+	private String creatUserName; // 創建人
+	@Field("creatTime") // 創建時間
 	private Date creatTime;
 	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
 	@Field("checkState")
 	private Integer checkState;
-	
+	/** 审核备注 */
+	@Field("checkMem")
+	private String checkMem;
+
+	public String getCheckMem() {
+		return checkMem;
+	}
+
+	public void setCheckMem(String checkMem) {
+		this.checkMem = checkMem;
+	}
+
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
+
 	public String getGuideName() {
 		return guideName;
 	}
+
 	public void setGuideName(String guideName) {
 		this.guideName = guideName;
 	}
+
 	public String getGuideDesc() {
 		return guideDesc;
 	}
+
 	public void setGuideDesc(String guideDesc) {
 		this.guideDesc = guideDesc;
 	}
+
 	public String getAppIyId() {
 		return appIyId;
 	}
+
 	public void setAppIyId(String appIyId) {
 		this.appIyId = appIyId;
 	}
+
 	public String getCreatUserName() {
 		return creatUserName;
 	}
+
 	public void setCreatUserName(String creatUserName) {
 		this.creatUserName = creatUserName;
 	}
+
 	public Date getCreatTime() {
 		return creatTime;
 	}
+
 	public void setCreatTime(Date creatTime) {
 		this.creatTime = creatTime;
 	}
+
 	public Integer getCheckState() {
 		return checkState;
 	}
+
 	public void setCheckState(Integer checkState) {
 		this.checkState = checkState;
 	}

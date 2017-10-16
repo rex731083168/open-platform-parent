@@ -36,9 +36,16 @@ public class AuditConstants {
 	public static final int GUIDE_SUCCESS = 2; // 审核成功
 	public static final int GUIDE_FAILED = 3; // 审核失败
 	
+
+	/********** 提供者 提供的开发应用审核状态 **********/
+	public static final int DIY_APPLY_UNCHECKED = 0; // 未审核
+	public static final int DIY_APPLY_CHECKED_COMMITED = 1; // 待审核
+	public static final int DIY_APPLY_CHECKED_SUCCESS = 2; // 审核成功
+	public static final int DIY_APPLY_CHECKED_FAILED = 3; // 审核失败
+	
+	
 	/********** 网关相关状态 **********/
 	public static final boolean GATEWAY_API_VERSIONED_TRUE = true; //开启多版本
-	
 	public static final boolean GATEWAY_API_VERSIONED_FALSES = false; //关闭多版本
 
 }

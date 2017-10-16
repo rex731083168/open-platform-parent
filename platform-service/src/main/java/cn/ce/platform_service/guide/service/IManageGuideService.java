@@ -1,5 +1,6 @@
 package cn.ce.platform_service.guide.service;
 
+import java.security.interfaces.RSAKey;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,8 @@ public interface IManageGuideService {
 			int currentPage, int pageSize);
 
 	public Result<String> batchUpdate(List ids);
+	
+	public Result<String> auditUpdate(String id ,int checkState,String checkMem);
 	
 	public Result<GuideEntity> getByid(String id);
 }
