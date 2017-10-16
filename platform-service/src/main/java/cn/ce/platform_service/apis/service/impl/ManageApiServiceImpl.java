@@ -44,7 +44,6 @@ public class ManageApiServiceImpl implements IManageApiService{
 	private IManageOpenApplyService manageOpenApplyService;
 	
 	/**
-	 * 
 	 * @Title: auditApi
 	 * @Description: 批量添加api到网关，如果中途发生异常，回滚之前添加的api，并且reload
 	 * @author: makangwei 

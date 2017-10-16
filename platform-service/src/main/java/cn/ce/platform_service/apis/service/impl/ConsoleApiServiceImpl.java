@@ -142,7 +142,9 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	public Result<?> modifyApi(ApiEntity apiEntity) {
 		
 		Result<String> result = new Result<String>();
-		if (apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
+		if(null == newApiDao.findApiById(apiEntity.getId())){
+			result.setErrorMessage("当前id不可用", ErrorCodeNo.SYS006);
+		}else if (apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
 			result.setErrorMessage("当前状态不可修改", ErrorCodeNo.SYS012);
 		}
 		newApiDao.save(apiEntity);
@@ -291,7 +293,4 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		return result;
 	}
-
-	
-	
 }

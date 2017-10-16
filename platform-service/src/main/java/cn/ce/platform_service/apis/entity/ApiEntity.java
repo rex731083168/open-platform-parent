@@ -9,7 +9,6 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import cn.ce.platform_service.apisecret.entity.ApiSecretKey;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 
 /**
@@ -115,11 +114,6 @@ public class ApiEntity implements Serializable {
     @Field("createTime")
     private Date createTime;
     
-    /***
-     * 密钥列表
-     */
-    @Transient
-    private List<ApiSecretKey> apiSecret;
     
     /** 服务分类信息 */
     @Transient
@@ -325,16 +319,6 @@ public class ApiEntity implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public List<ApiSecretKey> getApiSecret() {
-		return apiSecret;
-	}
-
-	public void setApiSecret(List<ApiSecretKey> apiSecret) {
-		this.apiSecret = apiSecret;
-	}
-
-
-
 	public OpenApplyEntity getOpenApplyEntity() {
 		return openApplyEntity;
 	}
@@ -364,7 +348,7 @@ public class ApiEntity implements Serializable {
 				+ errCodes + ", apiVersion=" + apiVersion + ", desc=" + desc + ", state=" + state + ", countByDay="
 				+ countByDay + ", checkState=" + checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax
 				+ ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime="
-				+ createTime + ", apiSecret=" + apiSecret + ", openApplyEntity=" + openApplyEntity + "]";
+				+ createTime + ", openApplyEntity=" + openApplyEntity + "]";
 	}
 
 }

@@ -34,10 +34,10 @@ import cn.ce.platform_service.util.SplitUtil;
  */
 @RestController
 @RequestMapping("/api")
-public class ApisController {
+public class ApiController {
 
 	/** 日志对象 */
-	private static Logger _LOGGER = Logger.getLogger(ApisController.class);
+	private static Logger _LOGGER = Logger.getLogger(ApiController.class);
 
 	@Resource
 	private IConsoleApiService consoleApiService;
