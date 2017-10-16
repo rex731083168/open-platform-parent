@@ -100,6 +100,23 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setCreateDate(new Date());
 			entity.setCheckState(AuditConstants.DIY_APPLY_UNCHECKED);
 
+			String key = entity.getProductAuthCode();
+			String findTenantAppsByTenantKeyTenantId = null;
+			String findTenantAppsByTenantKeyTenanName = null;
+			try {
+				int findTenantAppsByTenantKeyTenantIdtemp = this.findTenantAppsByTenantKey(key).getData().getData()
+						.getTenant().getId();
+				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
+				findTenantAppsByTenantKeyTenanName = this.findTenantAppsByTenantKey(key).getData().getData().getTenant()
+						.getName();
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger.error("get messaget from url faile resaon " + e.getMessage() + "");
+			}
+
+			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
+			entity.setProductName(findTenantAppsByTenantKeyTenanName);
+
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));
 			diyApplyDao.saveOrUpdate(entity);
 			logger.info("save end");
