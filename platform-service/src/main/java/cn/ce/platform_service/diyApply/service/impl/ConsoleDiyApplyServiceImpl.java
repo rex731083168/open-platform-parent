@@ -103,12 +103,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			String key = entity.getProductAuthCode();
 			String findTenantAppsByTenantKeyTenantId = null;
 			String findTenantAppsByTenantKeyTenanName = null;
+			// 产品信息
+			TenantApps apps = new TenantApps();
 			try {
-				int findTenantAppsByTenantKeyTenantIdtemp = this.findTenantAppsByTenantKey(key).getData().getData()
-						.getTenant().getId();
+				apps = this.findTenantAppsByTenantKey(key).getData();
+				int findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
 				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
-				findTenantAppsByTenantKeyTenanName = this.findTenantAppsByTenantKey(key).getData().getData().getTenant()
-						.getName();
+				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.error("get messaget from url faile resaon " + e.getMessage() + "");
