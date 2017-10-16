@@ -32,13 +32,15 @@ public class DiyApplyEntity {
 	/** 产品授权码 */
 	@Field("productAuthCode")
 	private String productAuthCode;
+	
+	/** 产品实例ID */
+	@Field("productInstanceId")
+	private String productInstanceId;
+	
 	/** 产品名称 */
 	@Field("productName")
 	private String productName;
 
-	/** 产品实例ID */
-	@Field("productInstanceId")
-	private String productInstanceId;
 
 	/** 访问域名 */
 	@Field("domainUrl")

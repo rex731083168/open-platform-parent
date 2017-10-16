@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 @Api("定制应用")
 public class DiyApplyController {
 
-	private static Logger _LOGGER = LoggerFactory.getLogger(DiyApplyController.class);
+	//private static Logger _LOGGER = LoggerFactory.getLogger(DiyApplyController.class);
 
 	@Resource
 	IManageDiyApplyService manageDiyApplyService;

@@ -12,16 +12,14 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
-import cn.ce.platform_service.guide.entity.GuideEntity;
-import cn.ce.platform_service.guide.service.impl.ConsoleGuideServiceImpl;
 
 /**
  * @Description : 说明
@@ -90,24 +88,40 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	public Result<String> auditUpdate(String id, int checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
-		try {
-			DiyApplyEntity dae = diyApplyDao.findById(id);
-			if (dae != null) {
-				dae.setCheckState(checkState);
-				dae.setCheckMem(checkMem);
-				diyApplyDao.saveOrUpdate(dae);
-				result.setSuccessMessage("操作成功");
-			}
-			return result;
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			_LOGGER.error("auditUpdate failed reason " + e + "");
-			result.setErrorMessage("审核失败");
-			result.setErrorCode(ErrorCodeNo.SYS001);
+		
+		DiyApplyEntity dae = diyApplyDao.findById(id);
+		if(dae == null){
+			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);
 			return result;
 		}
+		
+		if(checkState > AuditConstants.DIY_APPLY_CHECKED_FAILED || 
+				checkState < AuditConstants.DIY_APPLY_CHECKED_SUCCESS){
+			result.setErrorMessage("审核状态不存在",ErrorCodeNo.SYS012);
+			return result;
+		}else if(checkState == AuditConstants.DIY_APPLY_CHECKED_FAILED){ //审核不通过
+			dae.setCheckState(3);
+			dae.setCheckMem(checkMem);
+			diyApplyDao.saveOrUpdate(dae);
+			result.setSuccessMessage("");
+			return result;
+		}else { //审核通过
+			
+			// TODO 推送网关：定制应用申请clientId,并且将频次绑定在clientId,并且将定制应用绑定多个api
+			
+			getClientIdWithApis(dae);
+			dae.setCheckState(checkState);
+			diyApplyDao.saveOrUpdate(dae);
+			result.setSuccessMessage("");
+			return result;
+		}
+	}
 
+	private void getClientIdWithApis(DiyApplyEntity dae) {
+		//1、创建policy，绑定多个api，推送网关
+		 
+		//2、创建clientId绑定policyId
+		
 	}
 
 }

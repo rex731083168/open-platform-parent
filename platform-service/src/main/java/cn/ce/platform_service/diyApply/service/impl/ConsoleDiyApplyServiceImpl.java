@@ -103,10 +103,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			String key = entity.getProductAuthCode();
 			String findTenantAppsByTenantKeyTenantId = null;
 			String findTenantAppsByTenantKeyTenanName = null;
+			
 			// 产品信息
 			TenantApps apps = new TenantApps();
 			try {
-				apps = this.findTenantAppsByTenantKey(key).getData();
+				apps = this.findTenantAppsByTenantKey(key).getData(); //接入产品中心获取产品信息和开放应用信息
+				
 				int findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
 				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
 				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
@@ -119,6 +121,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));
+			
 			diyApplyDao.saveOrUpdate(entity);
 			logger.info("save end");
 			result.setSuccessMessage("新增成功!");
@@ -261,7 +264,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Override
 	public Result<TenantApps> findTenantAppsByTenantKey(String key) {
-		// TODO Auto-generated method stub
+		
+		// TODO 需要把key查询出来的定制应用和多个开放应用的绑定关系存入数据库
 
 		Result<TenantApps> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
