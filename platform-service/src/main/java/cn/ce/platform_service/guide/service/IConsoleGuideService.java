@@ -24,6 +24,8 @@ public interface IConsoleGuideService {
 	
 	public Result<GuideEntity> getByid(String id);
 
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, int currentPage, int pageSize);
+	public Result<Page<GuideEntity>> guideList(GuideEntity entity, int currentPage, int pageSize);
+	
+	public Result<String> submitVerify(String id,Integer state);
 
 }

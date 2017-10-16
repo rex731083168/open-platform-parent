@@ -85,4 +85,6 @@ public interface IConsoleOpenApplyService {
 	 * @throws
 	 */
 	public Result<?> submitVerify(String id,Integer checkState);
+	
+	public Result<?> getApplyById(String id);
 }

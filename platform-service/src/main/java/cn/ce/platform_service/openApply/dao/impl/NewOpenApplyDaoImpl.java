@@ -1,9 +1,11 @@
 package cn.ce.platform_service.openApply.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -13,8 +15,10 @@ import org.springframework.stereotype.Repository;
 
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
+import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.openApply.dao.INewOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 
@@ -80,9 +84,14 @@ public class NewOpenApplyDaoImpl extends  BaseMongoDaoImpl<OpenApplyEntity> impl
 	}
 	
 	@Override
-	public void batchSaveApply(List<String> ids,Integer checkState) {
-		Criteria c = Criteria.where(MongoFiledConstants.OPEN_APPLY_ID).in(ids);
-		super.updateOne(new Query(c), Update.update(MongoFiledConstants.OPEN_APPLY_CHECKSTATE, checkState));
+	public int batchSaveApply(List<String> ids,Integer checkState) {
+		// TODO Auto-generated method stub
+		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
+		for (int i = 0; i < ids.size(); i++) {
+			list.add(new BathUpdateOptions(Query.query(Criteria.where(MongoFiledConstants.OPEN_APPLY_ID).is(new ObjectId(ids.get(i)))),
+					Update.update(MongoFiledConstants.OPEN_APPLY_CHECKSTATE, checkState), false, true));
+		}
+		return super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list);
 	}
 
 }

@@ -3,6 +3,7 @@ package cn.ce.platform_service.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -20,7 +21,13 @@ public class SplitUtil {
 	 */
 	public static List<String> splitStringWithComma(String str){
 		
-		String[] strArray = str.split(",");
+		String[] strArray = null;
+		if(StringUtils.isNotBlank(str) && str.indexOf(",") >= 0){
+			strArray = str.split(",");
+		}else{
+			strArray = (String[]) ArrayUtils.add(strArray, str);
+		}
+		
 		List<String> strList = new ArrayList<String>();
 		for (String string : strArray) {
 			if(StringUtils.isNotBlank(string)){

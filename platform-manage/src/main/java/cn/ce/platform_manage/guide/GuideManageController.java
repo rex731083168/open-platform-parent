@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
@@ -62,7 +63,7 @@ public class GuideManageController {
 	@ApiOperation("批量审核")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestBody String ids) {
-		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids));
+		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids),AuditConstants.GUIDE_SUCCESS);
 	}
 
 }

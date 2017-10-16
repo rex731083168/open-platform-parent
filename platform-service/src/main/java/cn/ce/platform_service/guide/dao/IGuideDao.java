@@ -26,7 +26,7 @@ public interface IGuideDao {
 	
 	public GuideEntity getById(String id);
 
-	public int bachUpdateGuide(List<String> ids);
+	public int bachUpdateGuide(List<String> ids,Integer state);
 	
 	public void deleteByid(String id);
 	

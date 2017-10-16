@@ -18,7 +18,6 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.bean.ConditionEnum;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
@@ -182,8 +181,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 		
 		try{
 			List<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao.findOpenApplyByEntity(getSearchWhereMap(entity));
-			result.setData(findOpenApplyByEntity);
-			result.setStatus(Status.SUCCESS);
+			result.setSuccessData(findOpenApplyByEntity);
 		} catch (Exception e) {
 			_LOGGER.error("查询应用时出现错误,e:" + e.toString());
 			result.setErrorMessage("查询失败!");
@@ -199,8 +197,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 		
 		try {
 			Page<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao.findOpenApplyByEntity(getSearchWhereMap(entity), page);
-			result.setData(findOpenApplyByEntity);
-			result.setStatus(Status.SUCCESS);
+			result.setSuccessData(findOpenApplyByEntity);
 		} catch (Exception e) {
 			_LOGGER.error("查询应用时出现错误,e:" + e.toString());
 			result.setErrorMessage("查询失败!");
@@ -224,6 +221,20 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService{
 			_LOGGER.error("审核应用时出现错误,e:" + e.toString());
 			result.setErrorMessage("保存失败!");
 		}
+		return result;
+	}
+	
+	@Override
+	public Result<?> getApplyById(String id) {
+		Result<OpenApplyEntity> result = new Result<>();
+		OpenApplyEntity findOpenApplyById = newOpenApplyDao.findOpenApplyById(id);
+		if(findOpenApplyById == null){
+			result.setErrorMessage("开放应用不存在!");
+			result.setErrorCode(ErrorCodeNo.SYS015);
+			return result;
+		}
+		result.setSuccessData(findOpenApplyById);
+		// TODO Auto-generated method stub
 		return result;
 	}
 	

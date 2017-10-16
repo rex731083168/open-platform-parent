@@ -3,6 +3,7 @@ package cn.ce.platform_service.apis.service;
 import java.util.List;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.entity.User;
 
@@ -21,8 +22,7 @@ public interface IConsoleApiService {
 
 	Result<?> showApi(String apiId);
 
-	Result<?> showApiList(String openApplyId, String userId, Integer checkState, String apiNameLike, int currentPage,
-			int pageSize);
+	Result<?> showApiList(QueryApiEntity entity,int currentPage, int pageSize);
 
 	Result<?> checkApiEnName(String apiEnName, String openApplyId);
 

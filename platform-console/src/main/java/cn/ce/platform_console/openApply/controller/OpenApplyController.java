@@ -61,6 +61,24 @@ public class OpenApplyController {
 	
 	/***
 	 * 
+	 * @Title: getApplyByid
+	 * @Description: 根据应用id获取应用详情
+	 * @param : @param request
+	 * @param : @param response
+	 * @param : @param id
+	 * @param : @return
+	 * @return: Result<?>
+	 * @throws
+	 */
+	@RequestMapping(value = "/getApplyByid", method = RequestMethod.GET)
+	public Result<?> getApplyByid(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "id", required = true) String id) {
+		return consoleOpenApplyService.getApplyById(id);
+	}
+	
+	
+	/***
+	 * 
 	 * @Title: addApply
 	 * @Description: 新增应用
 	 * @param : @param session
@@ -120,7 +138,7 @@ public class OpenApplyController {
 	 */
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
 	@ResponseBody
-	public Result<?> submitVerify(HttpServletRequest request, HttpServletResponse response, String id) {
+	public Result<?> submitVerify(@RequestParam(value = "id", required = true) String id) {
 		return consoleOpenApplyService.submitVerify(id,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
 	}
 }

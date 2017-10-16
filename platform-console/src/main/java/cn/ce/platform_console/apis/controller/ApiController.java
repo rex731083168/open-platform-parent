@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
@@ -111,21 +112,11 @@ public class ApiController {
 	 * @author: makangwei
 	 * @date:   2017年10月12日 下午1:42:41  
 	 */
-	@RequestMapping(value="/showApiList",method=RequestMethod.GET)
+	@RequestMapping(value="/showApiList",method=RequestMethod.POST)
 	public Result<?> showApiList(
-			@RequestParam String openApplyId, 
-			@RequestParam Integer userType,
-			@RequestParam(required=false) String userId,
-			@RequestParam(required=false) Integer checkState,
-			@RequestParam(required=false) String apiNameLike,
+			@RequestBody QueryApiEntity apiEntity,
 			@RequestParam(required=false,defaultValue= "1") int currentPage, 
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
-		
-		_LOGGER.info("当前开放应用："+openApplyId);
-		_LOGGER.info("当前用户类型："+userType);
-		_LOGGER.info("当前用户："+userId);
-		_LOGGER.info("审核状态："+checkState);
-		_LOGGER.info("模糊名称"+apiNameLike);
 		
 		if(pageSize == 0){
 			pageSize = Constants.PAGE_COMMON_SIZE;
@@ -133,7 +124,7 @@ public class ApiController {
 			pageSize = Constants.PAGE_MAX_SIZE; //最大超过三十
 		}
 		
-		return consoleApiService.showApiList(openApplyId,userId,checkState,apiNameLike,currentPage,pageSize);
+		return consoleApiService.showApiList(apiEntity,currentPage,pageSize);
 	}
 	
 	

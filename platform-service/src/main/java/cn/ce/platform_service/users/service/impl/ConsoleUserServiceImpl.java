@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
@@ -60,7 +61,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			// state 保留字段
 			user.setState(1);
 			user.setRegTime(new Date());
-			user.setCheckState(0);
+			user.setUserType(AuditConstants.USER_DEVELOPER); // TODO 默认设置为普通用户
+			user.setCheckState(AuditConstants.USER_STATE_ON);//默认启用
 			user.setAppSecret(Util.getRandomStrs(Constants.SECRET_LENGTH));
 			newUserDao.save(user);
 			result.setSuccessMessage("添加成功");

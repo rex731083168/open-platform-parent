@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.page.Page;
 
 /**
@@ -19,8 +20,7 @@ public interface INewApiDao {
 
 	ApiEntity findApiById(String apiId);
 
-	Page<ApiEntity> findSupplierApis(String openApplyId, String userId, String apiNameLike, Integer checkState,
-			int currentPage, int pageSize);
+	Page<ApiEntity> findSupplierApis(QueryApiEntity entity,int currentPage, int pageSize);
 
 	ApiEntity findOneByFields(Map<String, Object> map);
 

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
@@ -57,13 +59,13 @@ public class GuideConsoleController {
 		return iConsoleGuideService.update(g);
 	}
 
-	@RequestMapping(value = "/guideList", method = RequestMethod.GET)
+	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
 	@ApiOperation("查询指南列表")
-	public Result<?> guideList(String guideName, String creatUserName,
+	public Result<?> guideList(@RequestBody GuideEntity entity,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		result = iConsoleGuideService.guideList(guideName, creatUserName, currentPage, pageSize);
+		result = iConsoleGuideService.guideList(entity, currentPage, pageSize);
 		return result;
 	}
 
@@ -84,5 +86,23 @@ public class GuideConsoleController {
 		return result;
 
 	}
+
+	/***
+	 * 
+	 * @Title: submitVerify
+	 * @Description: 提交审核
+	 * @param : @param request
+	 * @param : @param response
+	 * @param : @param id
+	 * @param : @return
+	 * @return: Result<?>
+	 * @throws
+	 */
+	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
+	@ResponseBody
+	public Result<?> submitVerify(@RequestParam(value = "id", required = true) String id) {
+		return iConsoleGuideService.submitVerify(id,AuditConstants.GUIDE_COMMITED);
+	}
+	
 
 }

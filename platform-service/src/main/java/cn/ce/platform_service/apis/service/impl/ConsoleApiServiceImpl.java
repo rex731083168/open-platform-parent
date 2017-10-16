@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.ApiVersion;
+import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
@@ -197,13 +198,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 下午2:10:36 
 	 */
 	@Override
-	public Result<?> showApiList(String openApplyId, String userId, Integer checkState, String apiNameLike, int currentPage,
+	public Result<?> showApiList(QueryApiEntity entity, int currentPage,
 			int pageSize) {
 		
 		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
 
 		//提供者查看api列表
-		Page<ApiEntity> page = newApiDao.findSupplierApis(openApplyId, userId, apiNameLike,checkState,currentPage, pageSize);
+		Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
 		
 		//隐藏真实地址
 		List<ApiEntity> list = page.getItems();

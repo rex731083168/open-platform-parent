@@ -17,7 +17,7 @@ public interface INewOpenApplyDao {
 
 	OpenApplyEntity save(OpenApplyEntity apply);
 	
-	void batchSaveApply(List<String> ids,Integer checkState);
+	int batchSaveApply(List<String> ids,Integer checkState);
 
 	OpenApplyEntity findOpenApplyById(String id);
 

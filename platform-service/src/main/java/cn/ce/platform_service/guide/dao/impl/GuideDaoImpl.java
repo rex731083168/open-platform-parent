@@ -10,14 +10,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.mongodb.BasicDBObject;
-
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
-import cn.ce.platform_service.common.AuditConstants;
-import cn.ce.platform_service.common.page.Page;
 
 /**
  *
@@ -53,12 +50,12 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 	}
 
 	@Override
-	public int bachUpdateGuide(List<String> ids) {
+	public int bachUpdateGuide(List<String> ids,Integer state) {
 		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", AuditConstants.OPEN_APPLY_CHECKED_SUCCESS), false, true));
+					Update.update("checkState", state), false, true));
 		}
 		return super.bathUpdate(super.mongoTemplate, GuideEntity.class, list);
 	}

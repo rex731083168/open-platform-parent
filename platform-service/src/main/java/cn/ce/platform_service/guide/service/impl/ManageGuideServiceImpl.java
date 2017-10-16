@@ -55,11 +55,11 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids) {
+	public Result<String> batchUpdate(List<String> ids,Integer state) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids));
+			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids,state));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;

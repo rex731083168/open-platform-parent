@@ -18,6 +18,10 @@ public class AuditConstants {
 	public static final int USER__COMMITED = 1; // 待审核
 	public static final int USER__CHECKED_SUCCESS = 2; // 审核成功
 	public static final int USER__CHECKED_FAILED = 3; // 审核失败
+	
+	public static final int USER_STATE_OFF = 0; //禁用
+	
+	public static final int USER_STATE_ON = 1; //启用
 
 	/********** 用户角色 **********/
 	public static final int USER_ADMINISTRATOR = 0; // 管理员

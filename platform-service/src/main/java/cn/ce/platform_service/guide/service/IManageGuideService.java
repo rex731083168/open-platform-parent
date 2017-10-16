@@ -20,7 +20,7 @@ public interface IManageGuideService {
 	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,
 			int currentPage, int pageSize);
 
-	public Result<String> batchUpdate(List<String> ids);
+	public Result<String> batchUpdate(List<String> ids,Integer state);
 	
 	public Result<GuideEntity> getByid(String id);
 }

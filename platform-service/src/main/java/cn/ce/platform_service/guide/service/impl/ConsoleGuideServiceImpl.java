@@ -19,11 +19,12 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
-import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.SplitUtil;
 
 /**
  *
@@ -120,18 +121,22 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	}
 
 	@Override
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, int currentPage, int pageSize) {
+	public Result<Page<GuideEntity>> guideList(GuideEntity entity, int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
 		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
 		Criteria c = new Criteria();
 
-		if (StringUtils.isNotBlank(guideName)) {
-			c.and("guideName").regex(guideName);
+		if (StringUtils.isNotBlank(entity.getGuideName())) {
+			c.and("guideName").regex(entity.getGuideName());
 		}
-		if (StringUtils.isNotBlank(creatUserName)) {
-			c.and("creatUserName").regex(creatUserName);
+		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
+			c.and("creatUserName").regex(entity.getCreatUserName());
 		}
+		if(StringUtils.isNotBlank(entity.getCreatUserName())){
+			c.and("appIyId").is(entity.getCreatUserName());
+		}
+		
 		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
 		result.setSuccessData(guideDaoImpl.listByPage(page, query));
 		return result;
@@ -189,6 +194,22 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			return result;
 		}
 		result.setSuccessData(byId);
+		return result;
+	}
+	
+	@Override
+	public Result<String> submitVerify(String id, Integer state) {
+		Result<String> result = new Result<>();
+		
+		List<String> asList = SplitUtil.splitStringWithComma(id);
+		
+		try {
+			guideDaoImpl.bachUpdateGuide(asList, state);
+			result.setSuccessMessage("保存成功!");
+		} catch (Exception e) {
+			_LOGGER.error("审核应用时出现错误,e:" + e.toString());
+			result.setErrorMessage("保存失败!");
+		}
 		return result;
 	}
 
