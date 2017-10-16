@@ -79,4 +79,27 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 		result.setData(guideDaoImpl.getById(id));
 		return result;
 	}
+
+	@Override
+	public Result<String> auditUpdate(String id, int checkState, String checkMem) {
+		// TODO Auto-generated method stub
+
+		Result<String> result = new Result<String>();
+		GuideEntity entity = guideDaoImpl.getById(id);
+		try {
+			if (entity != null) {
+
+				entity.setCheckState(checkState);
+				entity.setCheckMem(checkMem);
+			}
+			result.setSuccessMessage("操作成功");
+			return result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("审核失败");
+			return result;
+		}
+
+	}
 }

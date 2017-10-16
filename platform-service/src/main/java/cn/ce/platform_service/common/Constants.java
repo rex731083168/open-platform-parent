@@ -116,9 +116,11 @@ public class Constants {
 //	-----------------------分页相关-------------------------------------------------
 	public static final int PAGE_COMMON_SIZE = 10;
 	
+	public static final int FIRST_PAGE = 1;
+	
 	public static final int PAGE_MAX_SIZE = 30;
 
-	public static final String GW_API_JSON = "/src/main/java/cn/ce/platform_service/common/gateway/GwApi.json";
+	public static final String GW_API_JSON = "GwApi.json";
 	
 	public static final String GW_POLICY_JSON = "/src/main/java/cn/ce/platform_service/common/gateway/GwPolicy.json";
 	

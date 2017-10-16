@@ -25,6 +25,7 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.CRequest;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
@@ -87,7 +88,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(query);
 
 		if (null != findPageByList && findPageByList.size() > 0) {
-			result.setErrorMessage("应用名称不可重复!",ErrorCodeNo.SYS010);
+			result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
 			return result;
 		}
 
@@ -97,8 +98,30 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setUserName(entity.getUser().getUserName());
 			entity.setEnterpriseName(entity.getUser().getEnterpriseName());
 			entity.setCreateDate(new Date());
+			entity.setCheckState(AuditConstants.DIY_APPLY_UNCHECKED);
+
+			String key = entity.getProductAuthCode();
+			String findTenantAppsByTenantKeyTenantId = null;
+			String findTenantAppsByTenantKeyTenanName = null;
+			
+			// 产品信息
+			TenantApps apps = new TenantApps();
+			try {
+				apps = this.findTenantAppsByTenantKey(key).getData(); //接入产品中心获取产品信息和开放应用信息
+				
+				int findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
+				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
+				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger.error("get messaget from url faile resaon " + e.getMessage() + "");
+			}
+
+			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
+			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));
+			
 			diyApplyDao.saveOrUpdate(entity);
 			logger.info("save end");
 			result.setSuccessMessage("新增成功!");
@@ -142,13 +165,17 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		} else if (apply.getAuthIds() != null && apply.getAuthIds().size() > 0) {
 			result.setErrorMessage("应用下存在api,删除失败!");
 			return result;
+		} else if (apply.getCheckState().equals(AuditConstants.DIY_APPLY_CHECKED_SUCCESS)) {
+			result.setErrorMessage("该应用已审,无法删除!");
+			return result;
 		} else {
 			logger.info("delete apply begin applyId:" + id);
 			diyApplyDao.delete(id);
 			logger.info("delete apply end");
 			result.setSuccessMessage("删除成功!");
+			return result;
 		}
-		return result;
+
 	}
 
 	@Override
@@ -237,7 +264,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Override
 	public Result<TenantApps> findTenantAppsByTenantKey(String key) {
-		// TODO Auto-generated method stub
+		
+		// TODO 需要把key查询出来的定制应用和多个开放应用的绑定关系存入数据库
 
 		Result<TenantApps> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
@@ -248,12 +276,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant.class);
 
 		try {
-			/*get请求方法*/
-//			TenantApps applyproduct = (TenantApps)getUrlReturnObject(replacedurl,TenantApps.class,classMap);
-			/*post请求方法*/
-//			TenantApps applyproduct = (TenantApps) postUrlReturnObject(replacedurl, TenantApps.class, classMap);
-			/*无接口时的测试方法*/
-			 TenantApps applyproduct = (TenantApps)testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,TenantApps.class, classMap);
+			/* get请求方法 */
+			// TenantApps applyproduct =
+			// (TenantApps)getUrlReturnObject(replacedurl,TenantApps.class,classMap);
+			/* post请求方法 */
+			// TenantApps applyproduct = (TenantApps) postUrlReturnObject(replacedurl,
+			// TenantApps.class, classMap);
+			/* 无接口时的测试方法 */
+			TenantApps applyproduct = (TenantApps) testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,
+					TenantApps.class, classMap);
 			if (applyproduct.getStatus() == 200) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
@@ -292,11 +323,11 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
 
 		try {
-			/*get请求方法*/
+			/* get请求方法 */
 			// Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class,classMap);
-			/*post请求方法*/
+			/* post请求方法 */
 			// Apps apps = (Apps) postUrlReturnObject(replacedurl, Apps.class,classMap);
-			/*无接口时的测试方法*/
+			/* 无接口时的测试方法 */
 			Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl, Apps.class, classMap);
 			if (apps.getStatus() == 200) {
 				result.setData(apps);
@@ -327,15 +358,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
 
 		try {
-			/*get请求方法*/
+			/* get请求方法 */
 			// InterfaMessageInfoJasonObject
 			// messageInfo=(InterfaMessageInfoJasonObject)getUrlReturnObject(replacedurl,
 			// Apps.class,null);
-			/*post请求方法*/
+			/* post请求方法 */
 			// InterfaMessageInfoJasonObject
 			// messageInfo=(InterfaMessageInfoJasonObject)postUrlReturnObject(replacedurl,
 			// Apps.class,null);
-			/*无接口时的测试方法*/
+			/* 无接口时的测试方法 */
 			InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject) testgetUrlReturnObject(
 					"registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
 			if (messageInfo.getStatus() == 200) {
@@ -366,12 +397,16 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(apps$, apps);
 
 		try {
-			/*get请求方法*/
-			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
-			/*post请求方法*/
-			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)postUrlReturnObject(replacedurl,InterfaMessageInfo.class,null);
-			/*无接口时的测试方法*/
-			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("saveOrUpdateApps",replacedurl, InterfaMessageInfoString.class, null);
+			/* get请求方法 */
+			// InterfaMessageInfoString messageInfo =
+			// (InterfaMessageInfoString)getUrlReturnObject(replacedurl,
+			// InterfaMessageInfo.class,null);
+			/* post请求方法 */
+			// InterfaMessageInfoString messageInfo =
+			// (InterfaMessageInfoString)postUrlReturnObject(replacedurl,InterfaMessageInfo.class,null);
+			/* 无接口时的测试方法 */
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("saveOrUpdateApps",
+					replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
@@ -399,15 +434,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(id$, id);
 
 		try {
-			/*get请求方法*/
+			/* get请求方法 */
 			// InterfaMessageInfo messageInfo =
 			// (InterfaMessageInfo)getUrlReturnObject(replacedurl,
 			// InterfaMessageInfo.class,null);
-			/*post请求方法*/
+			/* post请求方法 */
 			// InterfaMessageInfo messageInfo =
 			// (InterfaMessageInfo)postUrlReturnObject(replacedurl,
 			// InterfaMessageInfo.class,null);
-			/*无接口时的测试方法*/
+			/* 无接口时的测试方法 */
 			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject(
 					"generatorTenantKey", replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200) {
@@ -497,6 +532,30 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		br.close();
 		return object;
+
+	}
+
+	@Override
+	public Result<String> auditUpdate(String id, int checkState, String checkMem) {
+		// TODO Auto-generated method stub
+		Result<String> result = new Result<String>();
+		try {
+			DiyApplyEntity dae = diyApplyDao.findById(id);
+			if (dae != null) {
+				dae.setCheckState(checkState);
+				dae.setCheckMem(checkMem);
+				diyApplyDao.saveOrUpdate(dae);
+				result.setSuccessMessage("操作成功");
+			}
+			return result;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("auditUpdate failed reason " + e + "");
+			result.setErrorMessage("提交失败");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			return result;
+		}
 
 	}
 

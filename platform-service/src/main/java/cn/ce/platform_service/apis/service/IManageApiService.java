@@ -2,7 +2,9 @@ package cn.ce.platform_service.apis.service;
 
 import java.util.List;
 
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 
 /**
 * @Description : 说明
@@ -11,7 +13,13 @@ import cn.ce.platform_service.common.Result;
 */
 public interface IManageApiService {
 
-	Result<String> auditApi(List<String> apiId, Integer checkState, String checkMem);
+	Result<?> auditApi(List<String> apiId, Integer checkState, String checkMem);
 
+	Result<ApiEntity> showApi(String apiId);
+
+	Result<Page<ApiEntity>> apiList(String openApplyId, String userId, String apiId, String apiChName,
+			String checkState, int currentPage, int pageSize);
+
+	
 	
 }

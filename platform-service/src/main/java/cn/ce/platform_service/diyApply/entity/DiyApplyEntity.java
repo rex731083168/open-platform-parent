@@ -32,6 +32,16 @@ public class DiyApplyEntity {
 	/** 产品授权码 */
 	@Field("productAuthCode")
 	private String productAuthCode;
+	
+	/** 产品实例ID */
+	@Field("productInstanceId")
+	private String productInstanceId;
+	
+	/** 产品名称 */
+	@Field("productName")
+	private String productName;
+
+
 	/** 访问域名 */
 	@Field("domainUrl")
 	private String domainUrl;
@@ -61,6 +71,14 @@ public class DiyApplyEntity {
 
 	@Field("enterpriseName")
 	private String enterpriseName; // 企业名称
+
+	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
+	@Field("checkState")
+	private Integer checkState;
+
+	/** 审核备注 */
+	@Field("checkMem")
+	private String checkMem;
 
 	@Field("authIds")
 	private List<String> authIds;
@@ -189,5 +207,37 @@ public class DiyApplyEntity {
 
 	public void setFrequencyCount(String frequencyCount) {
 		this.frequencyCount = frequencyCount;
+	}
+
+	public Integer getCheckState() {
+		return checkState;
+	}
+
+	public void setCheckState(Integer checkState) {
+		this.checkState = checkState;
+	}
+
+	public String getCheckMem() {
+		return checkMem;
+	}
+
+	public void setCheckMem(String checkMem) {
+		this.checkMem = checkMem;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getProductInstanceId() {
+		return productInstanceId;
+	}
+
+	public void setProductInstanceId(String productInstanceId) {
+		this.productInstanceId = productInstanceId;
 	}
 }

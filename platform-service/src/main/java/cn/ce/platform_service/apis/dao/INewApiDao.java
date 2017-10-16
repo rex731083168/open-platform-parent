@@ -21,11 +21,15 @@ public interface INewApiDao {
 	ApiEntity findApiById(String apiId);
 
 	Page<ApiEntity> findSupplierApis(QueryApiEntity entity,int currentPage, int pageSize);
+	
+	Page<ApiEntity> findManagerList(String openApplyId, String userId, String apiId, String apiChNameLike,
+			String checkState, int currentPage, int pageSize);
 
 	ApiEntity findOneByFields(Map<String, Object> map);
 
 	List<ApiEntity> findApiByIds(List<String> apiId);
 
 	List<ApiEntity> findByField(String apisApiversionVersionid, String versionId);
+
 
 }

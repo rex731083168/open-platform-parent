@@ -1,0 +1,26 @@
+{
+    "id": "p1",
+    "org_id": "default",
+    "rate": 10,
+    "per": 1,
+    "quota_max": -1,
+    "quota_renewal_rate": 60,
+    "access_rights": {
+        "000001": {
+            "api_name": "OAUTH Test API",
+            "api_id": "000001",
+            "versions": [
+                "v1"
+            ]
+        },
+              "000002": {
+            "api_name": "OAUTH Test API",
+            "api_id": "000002",
+            "versions": [
+                "v1"
+            ]
+        }
+    },
+    "active": true,
+    "is_inactive": false
+}

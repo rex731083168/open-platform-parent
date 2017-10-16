@@ -3,11 +3,13 @@ package cn.ce.platform_service.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 /**
 * @Description : 读取本读文件工具类
@@ -18,17 +20,22 @@ public class LocalFileReadUtil {
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(LocalFileReadUtil.class);
 	
-	public static JSONObject readLocalJson(String localUrl){
+	public static JSONObject readLocalClassPathJson(String localUrl){
 		
 		_LOGGER.info("读取本地json文件，dir:"+localUrl);
 		
-		File file = new File(localUrl);
-		
-		if(!file.exists()){
-			_LOGGER.info("file does not exits when reading local json file");
+		File file = null;
+		try {
+			file = new ClassPathResource(localUrl).getFile();
+		} catch (IOException e1) {
+			_LOGGER.info("file read error when reading local json file");
 			return null;
 		}
 		
+		if(file == null || !file.exists()){
+			_LOGGER.info("file does not exits when reading local json file");
+			return null;
+		}
 		
 		StringBuffer sb = new StringBuffer();
 		JSONObject job = null;
