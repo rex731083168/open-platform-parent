@@ -1,6 +1,5 @@
 package cn.ce.platform_service.gateway.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
-import cn.ce.platform_service.util.LocalFileReadUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
@@ -367,7 +365,9 @@ public class GatewayApiService implements IGatewayApiService{
 		
 		String basePath=System.getProperty("user.dir");
 		String path = basePath+"/"+Constants.GW_POLICY_JSON;
-		JSONObject policyJson = LocalFileReadUtil.readLocalJson(path);
+//		JSONObject policyJson = LocalFileReadUtil.readLocalJson(path);
+		// TODO 
+		JSONObject policyJson = new JSONObject();
 		policyJson.put(DBFieldsConstants.GW_POLICY_ID, policyId);
 		policyJson.put(DBFieldsConstants.GW_POLICY_RATE, rate);
 		policyJson.put(DBFieldsConstants.GW_POLICY_PER, per);

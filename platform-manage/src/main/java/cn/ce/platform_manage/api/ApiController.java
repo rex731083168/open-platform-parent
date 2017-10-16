@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
+import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.service.impl.GatewayApiService;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.SplitUtil;
@@ -52,7 +55,7 @@ public class ApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/auditApi", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public Result<String> auditApi(HttpServletRequest request, HttpServletResponse response, 
+	public Result<?> auditApi(HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam String apiIds,
 			@RequestParam Integer checkState, 
 			@RequestParam(required=false) String checkMem) { // checkMem如过审核不通过，将审核失败的原因通过该字段传入
@@ -73,55 +76,46 @@ public class ApiController {
 			return result;
 		}
 
-		return manageApiService.auditApi(apiId, checkState, checkMem);
+		Result<?> result = manageApiService.auditApi(apiId, checkState, checkMem);
+		_LOGGER.info("api:"+apiIds+"，批量审核成功");
+		return result;
 	}
 
-//	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
-//	public Result<?> show(HttpServletRequest request, HttpServletResponse response, String apiid) {
-//
-//		Result<JSONObject> result= new Result<JSONObject>();
-//		try {
-//			ApiEntity api = apiService.findById(apiid);
-//
-////			com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject
-////					.parseObject(JSON.toJSONString(api));
-//			org.json.JSONObject jsonObject = new org.json.JSONObject(api);
-//
-//			// 添加封装信息
-//			OpenApplyEntity appEntity = manageOpenApplyService.findById(api.getOpenApplyId());
-//
-//			List<String> gatewayUrlList = new ArrayList<String>();
-//			for (GatewayColonyEntity gatewayColonyEntity : GatewayUtils.getAllGatewayColony()) {
-//				gatewayUrlList
-//						.add(gatewayColonyEntity.getColUrl() + "/" + appEntity.getApplyKey() + "/" + api.getApiEnName());
-//			}
-//			jsonObject.put("appName", appEntity.getApplyName());
-//			jsonObject.put("gatewayUrls", gatewayUrlList);
-//			
-//			result.setSuccessData(jsonObject);
-//		} catch (Exception e) {
-//			_LOGGER.info("error happens when execute showapi",e);
-//			result.setErrorMessage("");
-//		}
-//		return result;
-//	}
-//
-//	@RequestMapping(value = "/apiList", method = RequestMethod.POST)
-//	@ResponseBody
-//	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, String apiId,
-//			String apiChName, String checkState, 
-//			@RequestParam(required = false, defaultValue = "1") int currentPage,
-//			@RequestParam(required = false, defaultValue = "10") int pageSize) {
-//
-//		_LOGGER.info("-------------->appid:" + apiId);
-//		_LOGGER.info("-------------->apichname:" + apiChName);
-//		_LOGGER.info("-------------->checkState:" + checkState);
-//		_LOGGER.info("-------------->currentPage:" + currentPage);
-//		_LOGGER.info("-------------->pageSize:" + pageSize);
-//
-//		return apiService.apiList(apiId,apiChName,checkState,currentPage,pageSize);
-//	}
-//
+	/**
+	 * @Title: showApi
+	 * @Description: 单个api查询
+	 * @author: makangwei 
+	 * @date:   2017年10月16日 下午3:41:04 
+	 */
+	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
+	public Result<?> showApi(HttpServletRequest request, HttpServletResponse response, String apiId) {
+
+		_LOGGER.info("当前后台管理系统查询的apiId为："+apiId);
+		
+		return manageApiService.showApi(apiId);
+	}
+
+	@RequestMapping(value = "/apiList", method = RequestMethod.POST)
+	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, 
+			String apiId,
+			String apiChName, 
+			String checkState, 
+			String openApplyId,
+			String userId,
+			@RequestParam(required = false, defaultValue = ""+Constants.FIRST_PAGE) int currentPage,
+			@RequestParam(required = false, defaultValue = ""+Constants.PAGE_COMMON_SIZE) int pageSize) {
+
+		_LOGGER.info("-------------->appId:" + apiId);
+		_LOGGER.info("-------------->openApplyId:" + openApplyId);
+		_LOGGER.info("-------------->userId:" + userId);
+		_LOGGER.info("-------------->apiChName:" + apiChName);
+		_LOGGER.info("-------------->checkState:" + checkState);
+		_LOGGER.info("-------------->currentPage:" + currentPage);
+		_LOGGER.info("-------------->pageSize:" + pageSize);
+
+		return manageApiService.apiList(openApplyId,userId,apiId,apiChName,checkState,currentPage,pageSize);
+	}
+
 //	@RequestMapping(value = "/delApi", method = RequestMethod.GET)
 //	@ResponseBody
 //	public Result<String> delAPI(HttpServletRequest request, HttpServletResponse response, String apIid) {

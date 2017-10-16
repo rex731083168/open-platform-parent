@@ -23,6 +23,7 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
@@ -50,7 +51,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 	 * @date:   2017年10月13日 下午8:08:38 
 	 */
 	@Override
-	public Result<String> auditApi(List<String> apiId, Integer checkState, String checkMem) {
+	public Result<?> auditApi(List<String> apiId, Integer checkState, String checkMem) {
 		Result<String> result = new Result<String>();
 
 		List<ApiEntity> apiList = newApiDao.findApiByIds(apiId);
@@ -134,7 +135,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 			Map<String, String> headers = new HashMap<String, String>();
 			headers.put(Constants.HEADER_KEY, Constants.HEADER_VALUE);
 			ApiCallUtils.getOrDelMethod(GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NEWWORK_RELOAD_GROUP,
-					headers, HttpMethod.DELETE);
+					headers, HttpMethod.GET);
 				
 			// 批量修改数据库
 			for (ApiEntity apiEntity2 : apiList) {
@@ -149,12 +150,44 @@ public class ManageApiServiceImpl implements IManageApiService{
 		return result;
 	}
 
+	@Override
+	public Result<ApiEntity> showApi(String apiId) {
+		
+		Result<ApiEntity> result = new Result<ApiEntity>();
+		ApiEntity apiEntity = newApiDao.findApiById(apiId);
+		if(apiEntity == null){
+			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);;
+			return result;
+		}
+		//隐藏数据
+		apiEntity.setTestEndPoint("");
+		apiEntity.setEndPoint("");
+		
+		result.setSuccessData(apiEntity);
+		return result;
+	}
+
+
+	@Override
+	public Result<Page<ApiEntity>> apiList(String openApplyId, String userId, String apiId, String apiChName,
+			String checkState, int currentPage, int pageSize) {
+		
+		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
+		Page<ApiEntity> page = newApiDao.findManagerList(openApplyId,userId,apiId,apiChName,checkState,currentPage,pageSize);
+		if(page != null){
+			result.setSuccessData(page);
+		}else{
+			result.setErrorMessage("查询不到结果", ErrorCodeNo.SYS006);
+		}
+		return result;
+	}
 	
 	private JSONObject generateGwApiJson(String apiId, String apiEnName, String listenPath, Map<String, String> map,
+
 			boolean gatewayApiVersionedTrue) {
-		String basePath = System.getProperty("user.dir");
-		String path = basePath+Constants.GW_API_JSON;
-		JSONObject job = LocalFileReadUtil.readLocalJson(path);
+		
+		String path = Constants.GW_API_JSON;
+		JSONObject job = LocalFileReadUtil.readLocalClassPathJson(path);
 		
 		if(job == null){
 			return null;
@@ -178,4 +211,9 @@ public class ManageApiServiceImpl implements IManageApiService{
 		
 		return job;
 	}
+
+
+
+
+
 }
