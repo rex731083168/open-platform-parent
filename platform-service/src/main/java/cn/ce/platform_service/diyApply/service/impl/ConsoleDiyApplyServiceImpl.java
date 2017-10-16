@@ -268,6 +268,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			if (applyproduct.getStatus() == 200) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
+				result.setErrorCode(ErrorCodeNo.SYS000);
 				return result;
 			} else {
 				logger.error(
