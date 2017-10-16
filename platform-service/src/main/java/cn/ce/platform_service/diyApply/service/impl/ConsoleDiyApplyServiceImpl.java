@@ -262,10 +262,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		try {
 
-			// TenantApps applyproduct = (TenantApps) getUrlReturnObject(replacedurl,
-			// TenantApps.class,classMap);
-			TenantApps applyproduct = (TenantApps) testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,
-					TenantApps.class, classMap);
+//			TenantApps applyproduct = (TenantApps) getUrlReturnObject(replacedurl,TenantApps.class,classMap);
+//			TenantApps applyproduct = (TenantApps) postUrlReturnObjecttUrlReturnObject(replacedurl,TenantApps.class,classMap);
+			TenantApps applyproduct = (TenantApps) testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,TenantApps.class, classMap);
 			if (applyproduct.getStatus() == 200) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
@@ -304,7 +303,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
 
 		try {
-			// Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class);
+//		    Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class,classMap);
+//			Apps apps = (Apps) postUrlReturnObject(replacedurl, Apps.class,classMap);
 			Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl, Apps.class, classMap);
 			if (apps.getStatus() == 200) {
 				result.setData(apps);
@@ -335,10 +335,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
 
 		try {
-			// InterfaMessageInfo messageInfo =
-			// (InterfaMessageInfo)getUrlReturnObject(replacedurl, Apps.class,null);
-			InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject) testgetUrlReturnObject(
-					"registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
+//			InterfaMessageInfoJasonObject messageInfo=(InterfaMessageInfoJasonObject)getUrlReturnObject(replacedurl, Apps.class,null);
+//			InterfaMessageInfoJasonObject messageInfo=(InterfaMessageInfoJasonObject)postUrlReturnObject(replacedurl, Apps.class,null);
+			InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject) testgetUrlReturnObject("registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
 			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
@@ -367,10 +366,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(apps$, apps);
 
 		try {
-			// InterfaMessageInfo messageInfo = (InterfaMessageInfo)
-			// getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
-			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("saveOrUpdateApps",
-					replacedurl, InterfaMessageInfoString.class, null);
+//			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
+//			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)postUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("saveOrUpdateApps",replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
@@ -398,10 +396,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(id$, id);
 
 		try {
-			// InterfaMessageInfo messageInfo = (InterfaMessageInfo)
-			// getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
-			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject(
-					"generatorTenantKey", replacedurl, InterfaMessageInfoString.class, null);
+			// InterfaMessageInfo messageInfo = (InterfaMessageInfo)getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
+			// InterfaMessageInfo messageInfo = (InterfaMessageInfo)postUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("generatorTenantKey", replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
@@ -428,10 +425,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	public Object postUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
-
 		String reqURL = CRequest.UrlPage(url);
 		Map<String, String> params = CRequest.URLRequest(url);
-
 		String jasonResultHttpGet = HttpClientUtil.sendPostRequest(reqURL, params, "UTF-8", "UTF-8");
 		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
 		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
