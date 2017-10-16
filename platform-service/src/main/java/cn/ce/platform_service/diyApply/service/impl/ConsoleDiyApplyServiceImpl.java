@@ -261,13 +261,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant.class);
 
 		try {
-
-			// TenantApps applyproduct = (TenantApps)
-			// getUrlReturnObject(replacedurl,TenantApps.class,classMap);
-			// TenantApps applyproduct = (TenantApps)
-			// postUrlReturnObjecttUrlReturnObject(replacedurl,TenantApps.class,classMap);
-			TenantApps applyproduct = (TenantApps) testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,
-					TenantApps.class, classMap);
+			/*get请求方法*/
+//			TenantApps applyproduct = (TenantApps)getUrlReturnObject(replacedurl,TenantApps.class,classMap);
+			/*post请求方法*/
+//			TenantApps applyproduct = (TenantApps) postUrlReturnObject(replacedurl, TenantApps.class, classMap);
+			/*无接口时的测试方法*/
+			 TenantApps applyproduct = (TenantApps)testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,TenantApps.class, classMap);
 			if (applyproduct.getStatus() == 200) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
@@ -306,8 +305,11 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
 
 		try {
+			/*get请求方法*/
 			// Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class,classMap);
+			/*post请求方法*/
 			// Apps apps = (Apps) postUrlReturnObject(replacedurl, Apps.class,classMap);
+			/*无接口时的测试方法*/
 			Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl, Apps.class, classMap);
 			if (apps.getStatus() == 200) {
 				result.setData(apps);
@@ -338,12 +340,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
 
 		try {
+			/*get请求方法*/
 			// InterfaMessageInfoJasonObject
 			// messageInfo=(InterfaMessageInfoJasonObject)getUrlReturnObject(replacedurl,
 			// Apps.class,null);
+			/*post请求方法*/
 			// InterfaMessageInfoJasonObject
 			// messageInfo=(InterfaMessageInfoJasonObject)postUrlReturnObject(replacedurl,
 			// Apps.class,null);
+			/*无接口时的测试方法*/
 			InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject) testgetUrlReturnObject(
 					"registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
 			if (messageInfo.getStatus() == 200) {
@@ -374,14 +379,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(apps$, apps);
 
 		try {
-			// InterfaMessageInfoString messageInfo =
-			// (InterfaMessageInfoString)getUrlReturnObject(replacedurl,
-			// InterfaMessageInfo.class,null);
-			// InterfaMessageInfoString messageInfo =
-			// (InterfaMessageInfoString)postUrlReturnObject(replacedurl,
-			// InterfaMessageInfo.class,null);
-			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("saveOrUpdateApps",
-					replacedurl, InterfaMessageInfoString.class, null);
+			/*get请求方法*/
+			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)getUrlReturnObject(replacedurl, InterfaMessageInfo.class,null);
+			/*post请求方法*/
+			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)postUrlReturnObject(replacedurl,InterfaMessageInfo.class,null);
+			/*无接口时的测试方法*/
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject("saveOrUpdateApps",replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
@@ -409,12 +412,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(id$, id);
 
 		try {
+			/*get请求方法*/
 			// InterfaMessageInfo messageInfo =
 			// (InterfaMessageInfo)getUrlReturnObject(replacedurl,
 			// InterfaMessageInfo.class,null);
+			/*post请求方法*/
 			// InterfaMessageInfo messageInfo =
 			// (InterfaMessageInfo)postUrlReturnObject(replacedurl,
 			// InterfaMessageInfo.class,null);
+			/*无接口时的测试方法*/
 			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) testgetUrlReturnObject(
 					"generatorTenantKey", replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200) {
@@ -443,9 +449,16 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	public Object postUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
+		// url="http://127.0.0.1:8080/platform-console/statistics/statisticsLineChartAndPie111111?key=11111&apps=[{1,2}]";
 		String reqURL = CRequest.UrlPage(url);
 		Map<String, String> params = CRequest.URLRequest(url);
-		String jasonResultHttpGet = HttpClientUtil.sendPostRequest(reqURL, params, "UTF-8", "UTF-8");
+		String strRequestKeyAndValues = "";
+		for (String strRequestKey : params.keySet()) {
+			String strRequestValue = params.get(strRequestKey);
+			strRequestKeyAndValues += strRequestKey + "=" + strRequestValue + "";
+		}
+		String jasonResultHttpGet = HttpClientUtil.sendPostRequestByJava(reqURL, params);
+		// String jasonResultHttpGet = HttpClientUtil.sendGetRequest(url, null);
 		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
 		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
 		return object;

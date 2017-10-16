@@ -20,7 +20,10 @@ import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessag
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONArray;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -33,17 +36,20 @@ import net.sf.json.JSONArray;
  **/
 @RestController
 @RequestMapping("/diyapplyProduct")
+@Api("租户接口文档")
 public class DiyApplyProductController {
 
 	@Resource
 	private IConsoleDiyApplyService consoleDiyApplyService;
 
 	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
+	@ApiOperation("获取产品实例")
 	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key) {
 		return consoleDiyApplyService.findTenantAppsByTenantKey(key);
 	}
 
 	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
+	@ApiOperation("获取所有应用列表")
 	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = true) String owner,
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -52,21 +58,23 @@ public class DiyApplyProductController {
 	}
 
 	@RequestMapping(value = "registerBathApp", method = RequestMethod.POST)
-	@ResponseBody
-	public Result<InterfaMessageInfoJasonObject> registerBathApp(@RequestParam(value = "tenantId", required = true) String tenantId,@RequestBody RegisterBathAppInParameterEntity[] queryVO,
-			HttpServletRequest request, HttpServletResponse response) {
-		return consoleDiyApplyService.registerBathApp(tenantId,JSONArray.fromObject(queryVO).toString());
+	@ApiOperation("开发者在开放平台发布应用审核")
+	public Result<InterfaMessageInfoJasonObject> registerBathApp(
+			@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestBody RegisterBathAppInParameterEntity[] queryVO, HttpServletRequest request,
+			HttpServletResponse response) {
+		return consoleDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());
 	}
 
 	@RequestMapping(value = "saveOrUpdateApps", method = RequestMethod.POST)
-	@ResponseBody
+	@ApiOperation("注册应用")
 	public Result<InterfaMessageInfoString> saveOrUpdateApps(@RequestBody SaveOrUpdateAppsInParameterEntity[] queryVO,
 			HttpServletRequest request, HttpServletResponse response) {
 		return consoleDiyApplyService.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString());
 	}
 
 	@RequestMapping(value = "generatorTenantKey", method = RequestMethod.POST)
-	@ResponseBody
+	@ApiOperation("获取网站")
 	public Result<InterfaMessageInfoString> generatorTenantKey(@RequestBody GeneratorTenantKeyInParameterEntity queryVO,
 			HttpServletRequest request, HttpServletResponse response) {
 		return consoleDiyApplyService.generatorTenantKey(queryVO.getId());
