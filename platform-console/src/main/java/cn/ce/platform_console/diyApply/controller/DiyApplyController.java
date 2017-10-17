@@ -97,8 +97,8 @@ public class DiyApplyController {
 		return result;
 	}
 
-	@RequestMapping(value = "saveApply", method = RequestMethod.POST)
-	@ApiOperation("新增/修改应用")
+	@RequestMapping(value = "/saveApply", method = RequestMethod.POST)
+	@ApiOperation("新增应用")
 	public Result<String> saveApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
 		Result<String> result = new Result<>();
@@ -117,8 +117,15 @@ public class DiyApplyController {
 		return result;
 	}
 
-	@ApiOperation("单个发布应用 更改checkState为1")
+	@RequestMapping(value="updateApply",method=RequestMethod.POST)
+	@ApiOperation("修改应用，不能修改产品密钥")
+	public Result<?> updateApply(HttpSession session, @RequestBody DiyApplyEntity apply){
+		
+		return consoleDiyApplyService.updateApply(apply);
+	}
+	
 	@RequestMapping(value = "/auditUpdate", method = RequestMethod.POST)
+	@ApiOperation("单个发布应用 更改checkState为1")
 	public Result<String> auditUpdate(@RequestParam String id) {
 		return consoleDiyApplyService.auditUpdate(id);
 	}
