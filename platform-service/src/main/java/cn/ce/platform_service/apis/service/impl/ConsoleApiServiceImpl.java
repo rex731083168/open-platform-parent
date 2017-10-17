@@ -61,6 +61,11 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		Result<String> result = new Result<String>();
 		
+		//设置默认值，否则会后面审核api会报错
+		if(apiEntity.getCheckState() == null){
+			apiEntity.setCheckState(0);
+		}
+		
 		//如果apiId存在，则修改api
 		if(apiEntity.getId() != null ){
 			newApiDao.save(apiEntity);

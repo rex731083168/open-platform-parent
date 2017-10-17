@@ -193,7 +193,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page) {
 		Result<Page<DiyApplyEntity>> result = new Result<>();
 		Page<DiyApplyEntity> findPageByEntity = diyApplyDao.findPageByEntity(generalApplyQuery(entity, null), page);
-		result.setData(findPageByEntity);
+		result.setSuccessData(findPageByEntity);
 		return result;
 	}
 
