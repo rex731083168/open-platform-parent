@@ -169,6 +169,29 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
+	public Result<?> updateApply(DiyApplyEntity apply) {
+		
+		Result<String> result = new Result<String>();
+		if(StringUtils.isBlank(apply.getId())){
+			result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
+		}
+		
+		DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+		
+		if(null == apply1){
+			result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
+			return result;
+		}
+		if(apply1.getProductAuthCode() != apply.getProductAuthCode()){
+			result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
+			return result;
+		}
+		diyApplyDao.saveOrUpdate(apply1);
+		result.setSuccessMessage("修改成功");
+		return result;
+	}
+
+	@Override
 	public Result<String> deleteApplyByid(String id) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<>();
@@ -566,6 +589,5 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 
 	}
-
 
 }
