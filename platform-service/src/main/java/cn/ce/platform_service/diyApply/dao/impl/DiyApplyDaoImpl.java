@@ -62,7 +62,8 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 		return super.findById(id);
 	}
 
-	public String bathUpdateByid(List<String> ids, int checkState,String checkMem) {
+	@SuppressWarnings("static-access")
+	public String bathUpdateByid(List<String> ids, int checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
@@ -95,13 +96,14 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
-	public String bathUpdateByidAndPush(List<String> ids, Map<String, Object> map, int checkState) {
+	public String bathUpdateByidAndPush(List<String> ids, Map<String, Object> map, int checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", checkState), false, true));
+					Update.update("checkState", checkState).update("checkMem", checkMem), false, true));
 			Iterator<String> iter = map.keySet().iterator();
 			while (iter.hasNext()) {
 				String keytemp = iter.next();

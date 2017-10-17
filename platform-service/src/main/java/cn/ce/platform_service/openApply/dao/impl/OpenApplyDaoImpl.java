@@ -216,6 +216,7 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		return listApp;
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	/**
 	 * 批量审核

@@ -24,7 +24,8 @@ import io.swagger.annotations.ApiOperation;
 @Api("定制应用")
 public class DiyApplyController {
 
-	//private static Logger _LOGGER = LoggerFactory.getLogger(DiyApplyController.class);
+	// private static Logger _LOGGER =
+	// LoggerFactory.getLogger(DiyApplyController.class);
 
 	@Resource
 	IManageDiyApplyService manageDiyApplyService;
@@ -36,17 +37,12 @@ public class DiyApplyController {
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		return manageDiyApplyService.findPagedApps(productName, userName, checkState, applyName, currentPage, pageSize);
 	}
+
 	@ApiOperation("批量审核 调用租户接口2， 开发者在开放平台发布应用审核 发布应用")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids,@RequestParam Integer checkState,@RequestParam String checkMem) {
-		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids),checkState,checkMem);
-	}
-
-	@ApiOperation("单个审核  调用租户接口2， 开发者在开放平台发布应用审核 发布应用")
-	@RequestMapping(value = "/auditUpdate", method = RequestMethod.POST)
-	public Result<String> auditUpdate(@RequestParam String id, @RequestParam int checkState,
+	public Result<String> batchUpdate(@RequestBody String ids, @RequestParam Integer checkState,
 			@RequestParam String checkMem) {
-		return manageDiyApplyService.auditUpdate(id, checkState, checkMem);
+		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 	}
 
 }

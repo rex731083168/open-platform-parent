@@ -49,16 +49,6 @@ public class OpenApplyController extends BaseController {
 		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids),checkState,checkMem);
 	}
 
-	/**
-	 * 
-	 * @Title: auditGroupState @Description: TODO(这里用一句话描述这个方法的作用) @param : @param
-	 *         id @param : @param checkState @param : @param remark @throws
-	 */
-	@RequestMapping(value = "/auditGroup", method = RequestMethod.POST)
-	public Result<String> auditGroupState(String id, int checkState, String remark) {
-		return openApplyService.auditGroup(id, checkState, remark);
-	}
-
 	/***
 	 * 
 	 * @Title: getApplyByid

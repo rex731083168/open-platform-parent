@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
@@ -40,13 +39,13 @@ public interface IManageOpenApplyService {
 
 	/**
 	 * @Description: 根据用户查询应用列表（翻页） @param userId: 分组ID @param currentPage:
-	 * 当前页 @param pageSize: 每页显示数量 @return 返回应用集合 @throws
+	 *               当前页 @param pageSize: 每页显示数量 @return 返回应用集合 @throws
 	 */
 	public Page<OpenApplyEntity> getAppList(String userId, int currentPage, int pageSize);
 
 	/**
 	 * @Description: 根据App实体对象查询应用列表（翻页） @param appEntity: 服务分类实体 @param
-	 * currentPage: 当前页 @param pageSize: 每页显示数量 @return 返回应用集合 @throws
+	 *               currentPage: 当前页 @param pageSize: 每页显示数量 @return 返回应用集合 @throws
 	 */
 	// public Page<AppEntity> getAppListByDBWhere(Map<String,MongoDBWhereEntity>
 	// condition, int currentPage, int pageSize);
@@ -101,18 +100,18 @@ public interface IManageOpenApplyService {
 
 	public Result<String> modifyGroup1(OpenApplyEntity app);
 
-//	public Result<Page<OpenApplyEntity>> groupList1(String appName, String userName, String enterpriseName,
-//			String checkState, int currentPage, int pageSize);
+	// public Result<Page<OpenApplyEntity>> groupList1(String appName, String
+	// userName, String enterpriseName,
+	// String checkState, int currentPage, int pageSize);
 
-	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity queryEntity, int currentPage, int pageSize);
+	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity queryEntity, int currentPage,
+			int pageSize);
 
-	public Result<String> auditGroup(String id, int checkState, String remark);
-
-	public Result<String> batchUpdate(List<String> ids,Integer checkState,String batchUpdate);
+	public Result<String> batchUpdate(List<String> ids, Integer checkState, String batchUpdate);
 	// public Result<String> modifyGroup1(OpenApplyEntity app);
 
 	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize);
 
 	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps);
-	
+
 }

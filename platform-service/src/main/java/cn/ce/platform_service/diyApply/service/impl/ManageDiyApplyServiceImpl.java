@@ -71,10 +71,18 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids,Integer checkState,String checkMem) {
+	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
+			/* 审核失败返回 */
+			if (checkState == AuditConstants.DIY_APPLY_CHECKED_FAILED) {
+				String message = String.valueOf(diyApplyDao.bathUpdateByid(ids, checkState, checkMem));
+				_LOGGER.info("bachUpdate diyApply message " + message + " count");
+				result.setSuccessMessage("审核成功:" + message + "条");
+				return result;
+			}
+
 			Query query = new Query(Criteria.where("id").is(ids.get(0)));
 			List<DiyApplyEntity> diyApply = diyApplyDao.findListByEntity(query);
 
@@ -102,9 +110,9 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				map.put(key, value);
 
 			}
-
+			/* 审核成功 */
 			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
-				String message = String.valueOf(diyApplyDao.bathUpdateByid(ids, checkState,checkMem));
+				String message = String.valueOf(diyApplyDao.bathUpdateByidAndPush(ids, map, checkState, checkMem));
 				_LOGGER.info("bachUpdate diyApply message " + message + " count");
 				result.setSuccessMessage("审核成功:" + message + "条");
 				return result;
@@ -118,61 +126,6 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			_LOGGER.info("bachUpdate diyApply message faile " + e + " ");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("审核失败");
-			return result;
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cn.ce.platform_service.diyApply.service.IManageDiyApplyService#auditUpdate(
-	 * java.lang.String, int, java.lang.String)
-	 */
-	@Override
-	public Result<String> auditUpdate(String id, int checkState, String checkMem) {
-		// TODO Auto-generated method stub
-		Result<String> result = new Result<String>();
-
-		DiyApplyEntity dae = diyApplyDao.findById(id);
-		if (dae == null) {
-			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);
-			return result;
-		}
-
-		if (checkState > AuditConstants.DIY_APPLY_CHECKED_FAILED
-				|| checkState < AuditConstants.DIY_APPLY_CHECKED_SUCCESS) {
-			result.setErrorMessage("审核状态不存在", ErrorCodeNo.SYS012);
-			return result;
-		} else if (checkState == AuditConstants.DIY_APPLY_CHECKED_FAILED) { // 审核不通过
-			dae.setCheckState(3);
-			dae.setCheckMem(checkMem);
-			diyApplyDao.saveOrUpdate(dae);
-			result.setSuccessMessage("");
-			return result;
-		} else { // 审核通过
-			RegisterBathAppInParameterEntity[] queryVO = null;
-			queryVO[0].setAppName(dae.getApplyName());
-			queryVO[0].setAppUrl(dae.getDomainUrl());
-			queryVO[0].setAppDesc(dae.getApplyDesc());
-			queryVO[0].setAppCode(dae.getId());
-			queryVO[0].setAppType("2");
-			queryVO[0].setOwner(dae.getEnterpriseName());
-			/* 调用接口推送信息 */
-			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
-					.registerBathApp(dae.getProductInstanceId(), JSONArray.fromObject(queryVO).toString()).getData();
-			/* 接收返回信息存储本地 */
-			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
-			Iterator<String> keys = jsonObjecttest.keys();
-			String key = null;
-			while (keys.hasNext()) {
-				key = keys.next();
-				dae.setAppId(jsonObjecttest.get(key).toString());
-			}
-
-			dae.setCheckState(checkState);
-			diyApplyDao.saveOrUpdate(dae);
-			result.setSuccessMessage("");
 			return result;
 		}
 	}
@@ -268,5 +221,5 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		}
 
 	}
-	
+
 }

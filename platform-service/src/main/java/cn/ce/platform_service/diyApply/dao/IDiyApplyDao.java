@@ -65,5 +65,5 @@ public interface IDiyApplyDao {
 	 * @param ids 
 	 * @return
 	 */
-	public String bathUpdateByidAndPush(List<String> ids,Map<String, Object> map,int checkState) ;
+	public String bathUpdateByidAndPush(List<String> ids,Map<String, Object> map,int checkState,String checkMem) ;
 }
