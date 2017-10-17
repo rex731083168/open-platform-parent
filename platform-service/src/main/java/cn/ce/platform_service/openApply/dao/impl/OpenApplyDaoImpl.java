@@ -145,12 +145,12 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		Criteria c = new Criteria();
 
 		if (StringUtils.isNotBlank(entity.getUserId())) {
-			c.and("userid").is(entity.getUserId());
+			c.and("userId").is(entity.getUserId());
 		}
 
 		if (StringUtils.isNotBlank(entity.getApplyName())) {
-			Criteria c1 = Criteria.where("appname").regex(".*?" + entity.getApplyName() + ".*", "i");
-			Criteria c2 = Criteria.where("appkey").regex(".*?" + entity.getApplyName() + ".*", "i");
+			Criteria c1 = Criteria.where("appName").regex(".*?" + entity.getApplyName() + ".*", "i");
+			Criteria c2 = Criteria.where("appKey").regex(".*?" + entity.getApplyName() + ".*", "i");
 			c.orOperator(c1, c2);
 		}
 
@@ -167,15 +167,15 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		}
 
 		if (StringUtils.isNotBlank(entity.getApplyKey())) {
-			c.and("appkey").is(entity.getApplyKey());
+			c.and("appKey").is(entity.getApplyKey());
 		}
 
 		if (null != entity.getCheckState()) {
-			c.and("checkstate").is(entity.getCheckState());
+			c.and("checkState").is(entity.getCheckState());
 		}
 
 		// 构建排序对象
-		Query query = new Query(c).with(new Sort(Direction.DESC, "createdate"));
+		Query query = new Query(c).with(new Sort(Direction.DESC, "createDate"));
 
 		return query;
 	}
