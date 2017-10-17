@@ -195,7 +195,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			/* get请求方法 */
 			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
 
-			JSONObject jsonObject = (JSONObject) getUrlReturnJsonObject(replacedurl);
+			JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
 
 			messageInfo.setData(jsonObject.getString("data"));
 			messageInfo.setMsg(jsonObject.getString("msg"));
@@ -250,7 +250,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 
 		try {
 			/* get请求方法 */
-			Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class, classMap);
+			Apps apps = (Apps) HttpClientUtil.getUrlReturnObject(replacedurl, Apps.class, classMap);
 
 			/* 无接口时的测试方法 */
 			// Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl,
@@ -273,101 +273,5 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		}
 
 	}
-
-	@Override
-	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps) {
-		// TODO Auto-generated method stub
-		Result<InterfaMessageInfoString> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
-		String apps$ = Pattern.quote("${apps}");
-		String replacedurl = url.replaceAll(apps$, apps);
-
-		try {
-			/* get请求方法 */
-			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) getUrlReturnObject(replacedurl,
-					InterfaMessageInfoString.class, null);
-
-			/* 无接口时的测试方法 */
-			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)
-			// testgetUrlReturnObject("saveOrUpdateApps",
-			// replacedurl, InterfaMessageInfoString.class, null);
-			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setData(messageInfo);
-				result.setSuccessMessage("");
-				return result;
-			} else {
-				_LOGGER.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			_LOGGER.error("saveOrUpdateApps http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
-			return result;
-		}
-	}
-
-	public Object getUrlReturnJsonObject(String url) {
-		String jasonResultHttpGet = HttpClientUtil.sendGetRequest(url, null);
-		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
-		return jsonobject;
-	}
-
-	public Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
-		String jasonResultHttpGet = HttpClientUtil.sendGetRequest(url, null);
-		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
-		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
-		return object;
-	}
-
-	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class> classMap)
-			throws Exception {
-
-		BufferedReader br = null;
-
-		if (method.equals("findTenantAppsByTenantKey")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findTenantAppsByTenantKey.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-		if (method.equals("findPagedApps")) {
-
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findPagedApps.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-
-		}
-		if (method.equals("registerBathApp")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/registerBathApp.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-		if (method.equals("generatorTenantKey")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/generatorTenantKey.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-		if (method.equals("saveOrUpdateApps")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/saveOrUpdateApps.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-
-		String s = "";
-		String tempString = null;
-		while ((tempString = br.readLine()) != null) {
-			s += tempString;
-
-		}
-
-		JSONObject jsonobject = JSONObject.fromObject(s);
-		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
-
-		br.close();
-		return object;
-
-	}
-
+	
 }

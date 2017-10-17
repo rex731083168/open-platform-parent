@@ -1,7 +1,10 @@
 package cn.ce.platform_service.common;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -48,6 +51,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+
+import net.sf.json.JSONObject;
 
 /**
  *
@@ -489,6 +494,67 @@ public class HttpClientUtil {
 			httpclient.close();
 		}
 		return resData;
+	}
+
+	public static Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
+		String jasonResultHttpGet = sendGetRequest(url, null);
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+		return object;
+	}
+
+	public static Object getUrlReturnJsonObject(String url) {
+		String jasonResultHttpGet = sendGetRequest(url, null);
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		return jsonobject;
+	}
+
+	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class> classMap)
+			throws Exception {
+
+		BufferedReader br = null;
+
+		if (method.equals("findTenantAppsByTenantKey")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findTenantAppsByTenantKey.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("findPagedApps")) {
+
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findPagedApps.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+
+		}
+		if (method.equals("registerBathApp")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/registerBathApp.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("generatorTenantKey")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/generatorTenantKey.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("saveOrUpdateApps")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/saveOrUpdateApps.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+
+		String s = "";
+		String tempString = null;
+		while ((tempString = br.readLine()) != null) {
+			s += tempString;
+
+		}
+
+		JSONObject jsonobject = JSONObject.fromObject(s);
+		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+
+		br.close();
+		return object;
+
 	}
 
 }

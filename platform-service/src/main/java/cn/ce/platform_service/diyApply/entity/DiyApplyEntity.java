@@ -51,9 +51,17 @@ public class DiyApplyEntity {
 	/** 访问频次类型 0:标准，1:定制，2:高定制 */
 	@Field("frequencyType")
 	private String frequencyType;
+	
 	/** 访问频次 */
-	@Field("frequencyCount")
-	private String frequencyCount;
+
+	@Field("rate")
+	private Integer rate; 
+	@Field("per")
+	private Integer per;
+	@Field("quotaMax")
+	private Integer quotaMax;
+	@Field("quotaRenewRate")
+	private Integer quotaRenewRate;
 
 	/** 应用logo */
 	@Field("logoImage")
@@ -203,12 +211,38 @@ public class DiyApplyEntity {
 		this.frequencyType = frequencyType;
 	}
 
-	public String getFrequencyCount() {
-		return frequencyCount;
+
+
+	public Integer getRate() {
+		return rate;
 	}
 
-	public void setFrequencyCount(String frequencyCount) {
-		this.frequencyCount = frequencyCount;
+	public void setRate(Integer rate) {
+		this.rate = rate;
+	}
+
+	public Integer getPer() {
+		return per;
+	}
+
+	public void setPer(Integer per) {
+		this.per = per;
+	}
+
+	public Integer getQuotaMax() {
+		return quotaMax;
+	}
+
+	public void setQuotaMax(Integer quotaMax) {
+		this.quotaMax = quotaMax;
+	}
+
+	public Integer getQuotaRenewRate() {
+		return quotaRenewRate;
+	}
+
+	public void setQuotaRenewRate(Integer quotaRenewRate) {
+		this.quotaRenewRate = quotaRenewRate;
 	}
 
 	public Integer getCheckState() {
