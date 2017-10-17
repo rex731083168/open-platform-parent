@@ -149,7 +149,7 @@ public class ApiController {
 		
 		Result<String> result = new Result<String>();
 		if(StringUtils.isBlank(apiId)){
-			result.setMessage("apiId不能为空");
+			result.setMessage("apiId不能为空");	
 			return result;
 		}if(StringUtils.isBlank(version)){
 			result.setMessage("version不能为空");
