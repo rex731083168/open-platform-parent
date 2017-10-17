@@ -26,7 +26,10 @@ public class OpenApplyEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/** 唯一标识 */
 	@Id
-	private String id;
+	private String id; // 对应接口应用code 2， 开发者在开放平台发布应用审核
+
+	@Field("appId")
+	private String appId; // 对应接口返回应用id 2， 开发者在开放平台发布应用审核
 
 	/** 提供者标识 */
 	@Field("userId")
@@ -41,7 +44,7 @@ public class OpenApplyEntity implements Serializable {
 
 	@Field(MongoFiledConstants.OPEN_APPLY_APPLYKEY)
 	private String applyKey;
-	
+
 	/** 开放应用名称 */
 	@Field("applyName")
 	private String applyName;
@@ -155,6 +158,14 @@ public class OpenApplyEntity implements Serializable {
 
 	public void setApplyDesc(String applyDesc) {
 		this.applyDesc = applyDesc;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
 	@Override

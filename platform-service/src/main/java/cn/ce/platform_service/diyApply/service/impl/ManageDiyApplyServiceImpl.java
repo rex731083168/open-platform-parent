@@ -1,9 +1,14 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -17,15 +22,17 @@ import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
+import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.inparameter.RegisterBathAppInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
-import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
+import cn.ce.platform_service.util.PropertiesUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -39,8 +46,6 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	private static Logger _LOGGER = Logger.getLogger(ManageDiyApplyServiceImpl.class);
 	@Resource
 	private IDiyApplyDao diyApplyDao;
-	@Resource
-	private IConsoleDiyApplyService consoleDiyApplyService;
 
 	@Override
 	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, int checkState,
@@ -87,7 +92,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				queryVO[i].setOwner(diyApply.get(i).getEnterpriseName());
 			}
 			/* 开发者在开放平台发布应用审核 */
-			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = consoleDiyApplyService
+			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
 					.registerBathApp(diyApply.get(0).getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
 					.getData();
 			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
@@ -151,11 +156,6 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			result.setSuccessMessage("");
 			return result;
 		} else { // 审核通过
-
-			// TODO 推送网关：定制应用申请clientId,并且将频次绑定在clientId,并且将定制应用绑定多个api
-
-			getClientIdWithApis(dae);
-
 			RegisterBathAppInParameterEntity[] queryVO = null;
 			queryVO[0].setAppName(dae.getApplyName());
 			queryVO[0].setAppUrl(dae.getDomainUrl());
@@ -164,7 +164,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			queryVO[0].setAppType("2");
 			queryVO[0].setOwner(dae.getEnterpriseName());
 			/* 调用接口推送信息 */
-			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = consoleDiyApplyService
+			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
 					.registerBathApp(dae.getProductInstanceId(), JSONArray.fromObject(queryVO).toString()).getData();
 			/* 接收返回信息存储本地 */
 			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
@@ -182,10 +182,191 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		}
 	}
 
-	private void getClientIdWithApis(DiyApplyEntity dae) {
-		// 1、创建policy，绑定多个api，推送网关
+	@Override
+	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps) {
+		// TODO Auto-generated method stub
+		Result<InterfaMessageInfoString> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("registerBathApp");
+		String tId$ = Pattern.quote("${tId}");
+		String appList$ = Pattern.quote("${appList}");
+		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
 
-		// 2、创建clientId绑定policyId
+		try {
+			/* get请求方法 */
+			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
+
+			JSONObject jsonObject = (JSONObject) getUrlReturnJsonObject(replacedurl);
+
+			messageInfo.setData(jsonObject.getString("data"));
+			messageInfo.setMsg(jsonObject.getString("msg"));
+			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
+
+			/* 无接口时的测试方法 */
+			// InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject)
+			// testgetUrlReturnObject(
+			// "registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
+			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
+				result.setData(messageInfo);
+				result.setSuccessMessage("");
+				return result;
+			} else {
+				_LOGGER.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
+				result.setErrorMessage("接口请求成功,");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			_LOGGER.error("registerBathApp http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+
+	}
+
+	@Override
+	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize) {
+		// TODO Auto-generated method stub
+		Result<Apps> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("findPagedApps");
+		String o$ = Pattern.quote("${o}");
+		String n$ = Pattern.quote("${n}");
+		String p$ = Pattern.quote("${p}");
+		String z$ = Pattern.quote("${z}");
+		if (StringUtils.isBlank(owner)) {
+			owner = "";
+		}
+		if (StringUtils.isBlank(name)) {
+			name = "";
+		}
+
+		String replacedurl = url.replaceAll(o$, owner).replaceAll(n$, name).replaceAll(p$, String.valueOf(pageNum))
+				.replaceAll(z$, String.valueOf(pageSize));
+
+		Map<String, Class> classMap = new HashMap<String, Class>();
+		classMap.put("list", cn.ce.platform_service.diyApply.entity.appsEntity.AppList.class);
+		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
+
+		try {
+			/* get请求方法 */
+			Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class, classMap);
+
+			/* 无接口时的测试方法 */
+			// Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl,
+			// Apps.class, classMap);
+			if (apps.getStatus() == 200 || apps.getStatus() == 110) {
+				result.setData(apps);
+				result.setSuccessMessage("");
+				return result;
+			} else {
+				_LOGGER.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			_LOGGER.error("findPagedApps http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+
+	}
+
+	@Override
+	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps) {
+		// TODO Auto-generated method stub
+		Result<InterfaMessageInfoString> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
+		String apps$ = Pattern.quote("${apps}");
+		String replacedurl = url.replaceAll(apps$, apps);
+
+		try {
+			/* get请求方法 */
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) getUrlReturnObject(replacedurl,
+					InterfaMessageInfoString.class, null);
+
+			/* 无接口时的测试方法 */
+			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)
+			// testgetUrlReturnObject("saveOrUpdateApps",
+			// replacedurl, InterfaMessageInfoString.class, null);
+			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
+				result.setData(messageInfo);
+				result.setSuccessMessage("");
+				return result;
+			} else {
+				_LOGGER.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			_LOGGER.error("saveOrUpdateApps http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+	}
+
+	public Object getUrlReturnJsonObject(String url) {
+		String jasonResultHttpGet = HttpClientUtil.sendGetRequest(url, null);
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		return jsonobject;
+	}
+
+	public Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
+		String jasonResultHttpGet = HttpClientUtil.sendGetRequest(url, null);
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+		return object;
+	}
+
+	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class> classMap)
+			throws Exception {
+
+		BufferedReader br = null;
+
+		if (method.equals("findTenantAppsByTenantKey")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findTenantAppsByTenantKey.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("findPagedApps")) {
+
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findPagedApps.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+
+		}
+		if (method.equals("registerBathApp")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/registerBathApp.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("generatorTenantKey")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/generatorTenantKey.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+		if (method.equals("saveOrUpdateApps")) {
+			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/saveOrUpdateApps.json");
+
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+		}
+
+		String s = "";
+		String tempString = null;
+		while ((tempString = br.readLine()) != null) {
+			s += tempString;
+
+		}
+
+		JSONObject jsonobject = JSONObject.fromObject(s);
+		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+
+		br.close();
+		return object;
 
 	}
 

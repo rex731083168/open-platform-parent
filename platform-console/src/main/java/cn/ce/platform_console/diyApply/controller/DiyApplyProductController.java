@@ -46,49 +46,26 @@ public class DiyApplyProductController {
 		return consoleDiyApplyService.findTenantAppsByTenantKey(key);
 	}
 
-	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
-	@ApiOperation("获取所有应用列表")
-	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = true) String owner,
-			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(required = true, defaultValue = "10") int pageSize,
-			@RequestParam(required = true, defaultValue = "1") int currentPage) {
-		return consoleDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
-	}
-
-	@RequestMapping(value = "registerBathApp", method = RequestMethod.POST)
-	@ApiOperation("开发者在开放平台发布应用审核")
-	public Result<InterfaMessageInfoString> registerBathApp(
-			@RequestParam(value = "tenantId", required = false) String tenantId,
-			@RequestBody RegisterBathAppInParameterEntity[] queryVO, HttpServletRequest request,
-			HttpServletResponse response) {
-		return consoleDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());
-	}
-
-	@RequestMapping(value = "saveOrUpdateApps", method = RequestMethod.POST)
-	@ApiOperation("注册应用")
-	public Result<InterfaMessageInfoString> saveOrUpdateApps(@RequestBody SaveOrUpdateAppsInParameterEntity[] queryVO,
-			HttpServletRequest request, HttpServletResponse response) {
-		return consoleDiyApplyService.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString());
-	}
-
+	
 	@RequestMapping(value = "generatorTenantKey", method = RequestMethod.POST)
 	@ApiOperation("获取网站")
 	public Result<InterfaMessageInfoString> generatorTenantKey(@RequestBody GeneratorTenantKeyInParameterEntity queryVO,
 			HttpServletRequest request, HttpServletResponse response) {
 		return consoleDiyApplyService.generatorTenantKey(queryVO.getId());
 	}
-	
+
 	@ApiOperation("产品菜单列表")
-	@RequestMapping(value = "/productMenuList",method = RequestMethod.GET)
-	public Result<String> productMenuList(@RequestParam(value = "bossInstanceCode",required = true)String bossInstanceCode){
+	@RequestMapping(value = "/productMenuList", method = RequestMethod.GET)
+	public Result<String> productMenuList(
+			@RequestParam(value = "bossInstanceCode", required = true) String bossInstanceCode) {
 		return consoleDiyApplyService.productMenuList(bossInstanceCode);
 	}
-	
+
 	@ApiOperation("注册菜单")
-	@RequestMapping(value = "/registerMenu",method = RequestMethod.POST)
-	public Result<String> registerMenu(@RequestParam(value = "appid",required = true)String appid,
-										@RequestParam(value = "bossInstanceCode",required = true)String bossInstanceCode,
-										@RequestBody(required = true) String menuJson){
+	@RequestMapping(value = "/registerMenu", method = RequestMethod.POST)
+	public Result<String> registerMenu(@RequestParam(value = "appid", required = true) String appid,
+			@RequestParam(value = "bossInstanceCode", required = true) String bossInstanceCode,
+			@RequestBody(required = true) String menuJson) {
 		return consoleDiyApplyService.registerMenu(appid, bossInstanceCode, menuJson);
-	}	
+	}
 }

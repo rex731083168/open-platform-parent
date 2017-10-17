@@ -75,23 +75,7 @@ public interface IConsoleDiyApplyService {
 	 */
 	public Result<TenantApps> findTenantAppsByTenantKey(String key);
 
-	/**
-	 * 
-	 * @param owner
-	 *            所属企业 CE 为中企动力 不填为所有
-	 * @param name
-	 *            名称 模糊搜索 不填为所有
-	 * @param pageNum
-	 *            当前第几页
-	 * @param pageSize
-	 *            每页显示多少条
-	 * @return
-	 */
-	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize);
-
-	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps);
-
-	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps);
+	
 
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 

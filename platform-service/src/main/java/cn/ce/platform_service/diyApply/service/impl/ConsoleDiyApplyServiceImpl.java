@@ -316,134 +316,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize) {
-		// TODO Auto-generated method stub
-		Result<Apps> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("findPagedApps");
-		String o$ = Pattern.quote("${o}");
-		String n$ = Pattern.quote("${n}");
-		String p$ = Pattern.quote("${p}");
-		String z$ = Pattern.quote("${z}");
-		if (StringUtils.isBlank(owner)) {
-			owner = "";
-		}
-		if (StringUtils.isBlank(name)) {
-			name = "";
-		}
-
-		String replacedurl = url.replaceAll(o$, owner).replaceAll(n$, name).replaceAll(p$, String.valueOf(pageNum))
-				.replaceAll(z$, String.valueOf(pageSize));
-
-		Map<String, Class> classMap = new HashMap<String, Class>();
-		classMap.put("list", cn.ce.platform_service.diyApply.entity.appsEntity.AppList.class);
-		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
-
-		try {
-			/* get请求方法 */
-			Apps apps = (Apps) getUrlReturnObject(replacedurl, Apps.class, classMap);
-
-			/* 无接口时的测试方法 */
-			// Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl,
-			// Apps.class, classMap);
-			if (apps.getStatus() == 200 || apps.getStatus() == 110) {
-				result.setData(apps);
-				result.setSuccessMessage("");
-				return result;
-			} else {
-				logger.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error("findPagedApps http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
-			return result;
-		}
-
-	}
-
-	@Override
-	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps) {
-		// TODO Auto-generated method stub
-		Result<InterfaMessageInfoString> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("registerBathApp");
-		String tId$ = Pattern.quote("${tId}");
-		String appList$ = Pattern.quote("${appList}");
-		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
-
-		try {
-			/* get请求方法 */
-			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
-
-			JSONObject jsonObject = (JSONObject) getUrlReturnJsonObject(replacedurl);
-
-			messageInfo.setData(jsonObject.getString("data"));
-			messageInfo.setMsg(jsonObject.getString("msg"));
-			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
-
-			
-			/* 无接口时的测试方法 */
-			// InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject)
-			// testgetUrlReturnObject(
-			// "registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
-			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setData(messageInfo);
-				result.setSuccessMessage("");
-				return result;
-			} else {
-				logger.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
-				result.setErrorMessage("接口请求成功,");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error("registerBathApp http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
-			return result;
-		}
-
-	}
-
-	@Override
-	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps) {
-		// TODO Auto-generated method stub
-		Result<InterfaMessageInfoString> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
-		String apps$ = Pattern.quote("${apps}");
-		String replacedurl = url.replaceAll(apps$, apps);
-
-		try {
-			/* get请求方法 */
-			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) getUrlReturnObject(replacedurl,
-					InterfaMessageInfoString.class, null);
-
-			/* 无接口时的测试方法 */
-			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)
-			// testgetUrlReturnObject("saveOrUpdateApps",
-			// replacedurl, InterfaMessageInfoString.class, null);
-			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setData(messageInfo);
-				result.setSuccessMessage("");
-				return result;
-			} else {
-				logger.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error("saveOrUpdateApps http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
-			return result;
-		}
-	}
-
-	@Override
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id) {
 		// TODO Auto-generated method stub
 		Result<InterfaMessageInfoString> result = new Result<>();
@@ -587,120 +459,132 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Override
 	public Result<String> productMenuList(String bossInstanceCode) {
-		Result<String> result = new Result<>();
-		
-		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList");
-		
-		if(StringUtils.isBlank(productMenuListURL)){
-			logger.error("productMenuListURL is null !");
-			result.setErrorMessage("获取产品菜单列表错误,请联系管理员!");
-			return result;
-		}
-		
-		String reqURL = productMenuListURL.replace("{bossInstanceCode}", bossInstanceCode);
-		
-		
-		logger.info("send productMenuList URL is " + reqURL);
-		
-		try {
-			
-			String sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
-			
-			logger.debug("produMenuList return json:" + sendGetRequest);
-			
-			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest);
-			
-			if(null != jsonObject && jsonObject.has("status") && jsonObject.has("msg") && jsonObject.has("data")){
-				
-				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
-				
-				switch (status) {
-					case "101":
-						result.setStatus(Status.SUCCESS);
-						
-						result.setSuccessData(jsonObject.get("data").toString());
-										
-						break;
-					case "201":
-						result.setStatus(Status.FAILED);
-						break;
-					case "301":
-						result.setStatus(Status.FAILED);
-						break;
-					default:
-						result.setStatus(Status.SYSTEMERROR);
-						break;
-				}
-
-				result.setMessage(jsonObject.get("msg").toString());	
-				
-			}else{
-				logger.error("获取产品菜单列表时,缺失返回值:" + jsonObject);
-				
-				result.setErrorMessage("获取产品菜单列表错误!");
-			}
-			
-		} catch (Exception e) {
-			logger.error("send productMenuList error e:" + e.toString());
-			result.setErrorMessage("获取产品菜单列表错误!");
-		}
 		// TODO Auto-generated method stub
-		return result;
+		return null;
 	}
-	
+
 	@Override
-	public Result<String> registerMenu(String appid, String bossInstanceCode,String menuJson) {
-		
-		String registerMenuURL = PropertiesUtil.getInstance().getValue("registerMenu");
-		
-		Result<String> result = new Result<>();
-		if(StringUtils.isBlank(registerMenuURL)){
-			logger.error("registerMenuURL is null !");
-			result.setErrorMessage("发布菜单错误,请联系管理员");
-			return result;
-		}
-		Map<String,String> body = new HashMap<>();
-		body.put("appid", appid);
-		body.put("bossInstanceCode", bossInstanceCode);
-		body.put("menuJson", menuJson);
-		
-		try {
-			String sendPostByJson = HttpClientUtil.sendPostRequestByJava(registerMenuURL, body);
-//			String sendPostByJson = ApiCallUtils.putOrPostMethod(registerMenuURL, body, null, HttpMethod.POST);
-			
-//			String sendPostByJson = HttpClientUtil.sendPostByJson(registerMenuURL, body.toString());
-			
-			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
-			
-			if(null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")){
-				
-				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
-				
-				switch (status) {
-					case "101":
-						result.setStatus(Status.SUCCESS);
-						break;
-					case "201":
-						result.setStatus(Status.FAILED);
-						break;
-					case "301":
-						result.setStatus(Status.FAILED);
-						break;
-					default:
-						result.setStatus(Status.SYSTEMERROR);
-						break;
-				}
-				result.setMessage(jsonObject.get("msg").toString());
-			}else{
-				logger.error("发布菜单时,缺失返回值:" + jsonObject);
-				
-				result.setErrorMessage("发布菜单出现错误!");
-			}
-		} catch (Exception e) {
-			logger.error("send registerMenuURL error,e:" + e.toString());
-			result.setErrorMessage("发布菜单错误!");
-		}
-		return result;
+	public Result<String> registerMenu(String appid, String bossInstanceCode, String menuJson) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
+
+//	@Override
+//	public Result<String> productMenuList(String bossInstanceCode) {
+//		Result<String> result = new Result<>();
+//		
+//		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList");
+//		
+//		if(StringUtils.isBlank(productMenuListURL)){
+//			logger.error("productMenuListURL is null !");
+//			result.setErrorMessage("获取产品菜单列表错误,请联系管理员!");
+//			return result;
+//		}
+//		
+//		String reqURL = productMenuListURL.replace("{bossInstanceCode}", bossInstanceCode);
+//		
+//		
+//		logger.info("send productMenuList URL is " + reqURL);
+//		
+//		try {
+//			
+//			String sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
+//			
+//			logger.debug("produMenuList return json:" + sendGetRequest);
+//			
+//			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest);
+//			
+//			if(null != jsonObject && jsonObject.has("status") && jsonObject.has("msg") && jsonObject.has("data")){
+//				
+//				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+//				
+//				switch (status) {
+//					case "101":
+//						result.setStatus(Status.SUCCESS);
+//						
+//						result.setSuccessData(jsonObject.get("data").toString());
+//										
+//						break;
+//					case "201":
+//						result.setStatus(Status.FAILED);
+//						break;
+//					case "301":
+//						result.setStatus(Status.FAILED);
+//						break;
+//					default:
+//						result.setStatus(Status.SYSTEMERROR);
+//						break;
+//				}
+//
+//				result.setMessage(jsonObject.get("msg").toString());	
+//				
+//			}else{
+//				logger.error("获取产品菜单列表时,缺失返回值:" + jsonObject);
+//				
+//				result.setErrorMessage("获取产品菜单列表错误!");
+//			}
+//			
+//		} catch (Exception e) {
+//			logger.error("send productMenuList error e:" + e.toString());
+//			result.setErrorMessage("获取产品菜单列表错误!");
+//		}
+//		// TODO Auto-generated method stub
+//		return result;
+//	}
+//	
+//	@Override
+//	public Result<String> registerMenu(String appid, String bossInstanceCode,String menuJson) {
+//		
+//		String registerMenuURL = PropertiesUtil.getInstance().getValue("registerMenu");
+//		
+//		Result<String> result = new Result<>();
+//		if(StringUtils.isBlank(registerMenuURL)){
+//			logger.error("registerMenuURL is null !");
+//			result.setErrorMessage("发布菜单错误,请联系管理员");
+//			return result;
+//		}
+//		Map<String,String> body = new HashMap<>();
+//		body.put("appid", appid);
+//		body.put("bossInstanceCode", bossInstanceCode);
+//		body.put("menuJson", menuJson);
+//		
+//		try {
+//			String sendPostByJson = HttpClientUtil.sendPostRequestByJava(registerMenuURL, body);
+////			String sendPostByJson = ApiCallUtils.putOrPostMethod(registerMenuURL, body, null, HttpMethod.POST);
+//			
+////			String sendPostByJson = HttpClientUtil.sendPostByJson(registerMenuURL, body.toString());
+//			
+//			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
+//			
+//			if(null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")){
+//				
+//				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+//				
+//				switch (status) {
+//					case "101":
+//						result.setStatus(Status.SUCCESS);
+//						break;
+//					case "201":
+//						result.setStatus(Status.FAILED);
+//						break;
+//					case "301":
+//						result.setStatus(Status.FAILED);
+//						break;
+//					default:
+//						result.setStatus(Status.SYSTEMERROR);
+//						break;
+//				}
+//				result.setMessage(jsonObject.get("msg").toString());
+//			}else{
+//				logger.error("发布菜单时,缺失返回值:" + jsonObject);
+//				
+//				result.setErrorMessage("发布菜单出现错误!");
+//			}
+//		} catch (Exception e) {
+//			logger.error("send registerMenuURL error,e:" + e.toString());
+//			result.setErrorMessage("发布菜单错误!");
+//		}
+//		return result;
+//	}
+//	
 }
