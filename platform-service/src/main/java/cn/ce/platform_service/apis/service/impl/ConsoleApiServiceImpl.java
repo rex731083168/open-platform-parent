@@ -212,11 +212,11 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
 		
 		//隐藏真实地址
-		List<ApiEntity> list = page.getItems();
-		for (ApiEntity apiEntity : list) {
-			//将正式的url地址设置为空，不能让用户看到
-			apiEntity.setTestEndPoint("");
-		}
+//		List<ApiEntity> list = page.getItems();
+//		for (ApiEntity apiEntity : list) {
+//			//将正式的url地址设置为空，不能让用户看到
+//			apiEntity.setTestEndPoint("");
+//		}
 			
 		result.setSuccessData(page);
 		return result;

@@ -72,7 +72,7 @@ public class DiyApplyController {
 		return result;
 	}
 
-	@RequestMapping(value = "/getApplyByid", method = RequestMethod.GET)
+	@RequestMapping(value = "/getApplyApisById", method = RequestMethod.GET)
 	@ApiOperation("查询应用及api分页集合")
 	public Result<DiyApplyEntity> getApplyByid(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "id", required = true) String id,
@@ -81,6 +81,19 @@ public class DiyApplyController {
 
 		Result<DiyApplyEntity> result = consoleDiyApplyService.getApplyById(id, pageSize, currentPage);
 
+		return result;
+	}
+	
+	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
+	@ApiOperation("根据应用标识查询应用")
+	public Result<DiyApplyEntity> getApplyById(@RequestParam(value="applyId",required = true) String applyId){
+		Result<DiyApplyEntity> result = new Result<>();
+		DiyApplyEntity findById = consoleDiyApplyService.findById(applyId);
+		if(null == findById){
+			result.setErrorMessage("应用不存在!");
+		}else{
+			result.setSuccessData(findById);
+		}
 		return result;
 	}
 

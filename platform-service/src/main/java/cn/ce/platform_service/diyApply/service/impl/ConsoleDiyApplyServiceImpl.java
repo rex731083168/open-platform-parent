@@ -30,6 +30,7 @@ import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.CRequest;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
+import cn.ce.platform_service.common.HttpClientUtilsNew;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
@@ -644,9 +645,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		body.put("menuJson", menuJson);
 		
 		try {
-			String sendPostByJson = HttpClientUtil.sendPostRequestByJava(registerMenuURL, body);
-//			String sendPostByJson = ApiCallUtils.putOrPostMethod(registerMenuURL, body, null, HttpMethod.POST);
-			
+			String sendPostByJson = HttpClientUtilsNew.getResponseString(registerMenuURL, body);
 //			String sendPostByJson = HttpClientUtil.sendPostByJson(registerMenuURL, body.toString());
 			
 			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
