@@ -54,12 +54,5 @@ public class DiyApplyProductController {
 			HttpServletResponse response) {
 		return manageDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());
 	}
-	
-	@RequestMapping(value = "saveOrUpdateApps", method = RequestMethod.POST)
-	@ApiOperation("注册应用")
-	public Result<InterfaMessageInfoString> saveOrUpdateApps(@RequestBody SaveOrUpdateAppsInParameterEntity[] queryVO,
-			HttpServletRequest request, HttpServletResponse response) {
-		return manageDiyApplyService.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString());
-	}
 
 }

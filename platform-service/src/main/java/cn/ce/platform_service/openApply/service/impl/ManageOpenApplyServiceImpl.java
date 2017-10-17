@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,14 +22,17 @@ import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
+import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.common.page.PageContext;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.oauth.service.IOauthService;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
+import cn.ce.platform_service.util.PropertiesUtil;
 
 /**
  * @ClassName: openApplyServiceImpl
@@ -502,5 +506,42 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		result.setSuccessMessage("成功审核:" + message + "条");
 		return result;
 	}
+	
+	@Override
+	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps) {
+		// TODO Auto-generated method stub
+		Result<InterfaMessageInfoString> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
+		String apps$ = Pattern.quote("${apps}");
+		String replacedurl = url.replaceAll(apps$, apps);
 
+		try {
+			/* get请求方法 */
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) HttpClientUtil.getUrlReturnObject(replacedurl,
+					InterfaMessageInfoString.class, null);
+
+			/* 无接口时的测试方法 */
+			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)
+			// testgetUrlReturnObject("saveOrUpdateApps",
+			// replacedurl, InterfaMessageInfoString.class, null);
+			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
+				result.setData(messageInfo);
+				result.setSuccessMessage("");
+				return result;
+			} else {
+				_LOGGER.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			_LOGGER.error("saveOrUpdateApps http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+	}
+	
+	
+	
 }

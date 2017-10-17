@@ -95,4 +95,6 @@ public class OpenApplyController extends BaseController {
 
 		return openApplyService.groupList1(appName, userName, enterpriseName, checkState, currentPage, pageSize);
 	}
+	
+	
 }
