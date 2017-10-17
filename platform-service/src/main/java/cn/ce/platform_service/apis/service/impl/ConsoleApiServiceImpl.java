@@ -83,7 +83,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			
 			//未开启版本控制的version信息
 			ApiVersion version = new ApiVersion();
-			version.setVersionId(apiEntity.getId());
+			version.setVersionId(UUID.randomUUID().toString().replace("-", ""));
 			apiEntity.setApiVersion(version);
 			
 			// 过滤apienname不能以/开头和结尾
@@ -94,9 +94,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		} else {
 			
 			// 开启版本控制
-			//apiEntity.setUserId(user.getId());
-			//apiEntity.setUserName(user.getUserName());
+			apiEntity.setUserId(user.getId());
+			apiEntity.setUserName(user.getUserName());
 			apiEntity.setCreateTime(new Date());
+			// TODO 校验apiEnName,apiChName,version
 			
 			int num = newApiDao.updApiVersionByApiId(apiEntity.getApiVersion().getVersionId(),false);
 			_LOGGER.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");

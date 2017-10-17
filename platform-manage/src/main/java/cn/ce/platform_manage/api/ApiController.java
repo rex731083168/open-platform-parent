@@ -33,9 +33,6 @@ public class ApiController {
 	
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(ApiController.class);
-	
-//	@Resource
-//	private GatewayApiService gatewayApiService;
 
     @Resource
     private IManageApiService manageApiService;

@@ -1,7 +1,9 @@
 package cn.ce.platform_service.diyApply.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
@@ -10,7 +12,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
@@ -60,14 +61,44 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 		return super.findById(id);
 	}
 
-	public String bathUpdateByid(List<String> ids) {
+	public String bathUpdateByid(List<String> ids, int checkState) {
 		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", AuditConstants.DIY_APPLY_CHECKED_SUCCESS), false, true));
+					Update.update("checkState", checkState), false, true));
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
 
+	}
+
+	public String bathUpdateByidSaveAppID(List<String> ids, int checkState, List<String> appid) {
+		// TODO Auto-generated method stub
+		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
+		for (int i = 0; i < ids.size(); i++) {
+			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+					Update.update("checkState", checkState), false, true));
+		}
+		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
+
+	}
+
+	@Override
+	public String bathUpdateByidAndPush(List<String> ids, Map<String, Object> map, int checkState) {
+		// TODO Auto-generated method stub
+		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
+		for (int i = 0; i < ids.size(); i++) {
+			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+					Update.update("checkState", checkState), false, true));
+			Iterator<String> iter = map.keySet().iterator();
+			while (iter.hasNext()) {
+				String keytemp = iter.next();
+				if (keytemp.equals(ids.get(i))) {
+					list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+							Update.update("appId", map.get(keytemp)), false, true));
+				}
+			}
+		}
+		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
 	}
 }

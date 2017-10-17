@@ -11,212 +11,239 @@ package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
  */
 public class AppList {
 
-    private String id;
-    private int appId;
-    private String appName;
-    private String appAlias;
-    private String appTypes;
-    private String appUrl;
-    private String appDesc;
-    private String appCatogroyId;
-    private int appTag;
-    private int appStatus;
-    private String isRelation;
-    private String resourcetype;
-    private String offresourcetype;
-    private String isSearch;
-    private String isShow;
-    private String appCode;
-    private String unitType;
-    private int appType;
-    private String owner;
-    private String templateCode;
-    private String productCode;
-    private int parentAppId;
-    private String isAppMenu;
-    private String isApp;
-    private String appIcon;
-    private String appCreateTime;
-    public void setId(String id) {
-         this.id = id;
-     }
-     public String getId() {
-         return id;
-     }
+	private String id;
+	private Integer appId;
+	private String appName;
+	private String appAlias;
+	private String appTypes;
+	private String appUrl;
+	private String appDesc;
+	private String appCatogroyId;
+	private Integer appTag;
+	private Integer appStatus;
+	private String isRelation;
+	private String resourcetype;
+	private String offresourcetype;
+	private String isSearch;
+	private String isShow;
+	private String appCode;
+	private String unitType;
+	private Integer appType;
+	private String owner;
+	private String templateCode;
+	private String productCode;
+	private Integer parentAppId;
+	private String isAppMenu;
+	private String isApp;
+	private String appIcon;
+	private String appCreateTime;
 
-    public void setAppId(int appId) {
-         this.appId = appId;
-     }
-     public int getAppId() {
-         return appId;
-     }
+	public String getId() {
+		return id;
+	}
 
-    public void setAppName(String appName) {
-         this.appName = appName;
-     }
-     public String getAppName() {
-         return appName;
-     }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setAppAlias(String appAlias) {
-         this.appAlias = appAlias;
-     }
-     public String getAppAlias() {
-         return appAlias;
-     }
+	public Integer getAppId() {
+		return appId;
+	}
 
-    public void setAppTypes(String appTypes) {
-         this.appTypes = appTypes;
-     }
-     public String getAppTypes() {
-         return appTypes;
-     }
+	public void setAppId(Integer appId) {
+		this.appId = appId;
+	}
 
-    public void setAppUrl(String appUrl) {
-         this.appUrl = appUrl;
-     }
-     public String getAppUrl() {
-         return appUrl;
-     }
+	public String getAppName() {
+		return appName;
+	}
 
-    public void setAppDesc(String appDesc) {
-         this.appDesc = appDesc;
-     }
-     public String getAppDesc() {
-         return appDesc;
-     }
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
 
-    public void setAppCatogroyId(String appCatogroyId) {
-         this.appCatogroyId = appCatogroyId;
-     }
-     public String getAppCatogroyId() {
-         return appCatogroyId;
-     }
+	public String getAppAlias() {
+		return appAlias;
+	}
 
-    public void setAppTag(int appTag) {
-         this.appTag = appTag;
-     }
-     public int getAppTag() {
-         return appTag;
-     }
+	public void setAppAlias(String appAlias) {
+		this.appAlias = appAlias;
+	}
 
-    public void setAppStatus(int appStatus) {
-         this.appStatus = appStatus;
-     }
-     public int getAppStatus() {
-         return appStatus;
-     }
+	public String getAppTypes() {
+		return appTypes;
+	}
 
-    public void setIsRelation(String isRelation) {
-         this.isRelation = isRelation;
-     }
-     public String getIsRelation() {
-         return isRelation;
-     }
+	public void setAppTypes(String appTypes) {
+		this.appTypes = appTypes;
+	}
 
-    public void setResourcetype(String resourcetype) {
-         this.resourcetype = resourcetype;
-     }
-     public String getResourcetype() {
-         return resourcetype;
-     }
+	public String getAppUrl() {
+		return appUrl;
+	}
 
-    public void setOffresourcetype(String offresourcetype) {
-         this.offresourcetype = offresourcetype;
-     }
-     public String getOffresourcetype() {
-         return offresourcetype;
-     }
+	public void setAppUrl(String appUrl) {
+		this.appUrl = appUrl;
+	}
 
-    public void setIsSearch(String isSearch) {
-         this.isSearch = isSearch;
-     }
-     public String getIsSearch() {
-         return isSearch;
-     }
+	public String getAppDesc() {
+		return appDesc;
+	}
 
-    public void setIsShow(String isShow) {
-         this.isShow = isShow;
-     }
-     public String getIsShow() {
-         return isShow;
-     }
+	public void setAppDesc(String appDesc) {
+		this.appDesc = appDesc;
+	}
 
-    public void setAppCode(String appCode) {
-         this.appCode = appCode;
-     }
-     public String getAppCode() {
-         return appCode;
-     }
+	public String getAppCatogroyId() {
+		return appCatogroyId;
+	}
 
-    public void setUnitType(String unitType) {
-         this.unitType = unitType;
-     }
-     public String getUnitType() {
-         return unitType;
-     }
+	public void setAppCatogroyId(String appCatogroyId) {
+		this.appCatogroyId = appCatogroyId;
+	}
 
-    public void setAppType(int appType) {
-         this.appType = appType;
-     }
-     public int getAppType() {
-         return appType;
-     }
+	public Integer getAppTag() {
+		return appTag;
+	}
 
-    public void setOwner(String owner) {
-         this.owner = owner;
-     }
-     public String getOwner() {
-         return owner;
-     }
+	public void setAppTag(Integer appTag) {
+		this.appTag = appTag;
+	}
 
-    public void setTemplateCode(String templateCode) {
-         this.templateCode = templateCode;
-     }
-     public String getTemplateCode() {
-         return templateCode;
-     }
+	public Integer getAppStatus() {
+		return appStatus;
+	}
 
-    public void setProductCode(String productCode) {
-         this.productCode = productCode;
-     }
-     public String getProductCode() {
-         return productCode;
-     }
+	public void setAppStatus(Integer appStatus) {
+		this.appStatus = appStatus;
+	}
 
-    public void setParentAppId(int parentAppId) {
-         this.parentAppId = parentAppId;
-     }
-     public int getParentAppId() {
-         return parentAppId;
-     }
+	public String getIsRelation() {
+		return isRelation;
+	}
 
-    public void setIsAppMenu(String isAppMenu) {
-         this.isAppMenu = isAppMenu;
-     }
-     public String getIsAppMenu() {
-         return isAppMenu;
-     }
+	public void setIsRelation(String isRelation) {
+		this.isRelation = isRelation;
+	}
 
-    public void setIsApp(String isApp) {
-         this.isApp = isApp;
-     }
-     public String getIsApp() {
-         return isApp;
-     }
+	public String getResourcetype() {
+		return resourcetype;
+	}
 
-    public void setAppIcon(String appIcon) {
-         this.appIcon = appIcon;
-     }
-     public String getAppIcon() {
-         return appIcon;
-     }
+	public void setResourcetype(String resourcetype) {
+		this.resourcetype = resourcetype;
+	}
 
-    public void setAppCreateTime(String appCreateTime) {
-         this.appCreateTime = appCreateTime;
-     }
-     public String getAppCreateTime() {
-         return appCreateTime;
-     }
+	public String getOffresourcetype() {
+		return offresourcetype;
+	}
+
+	public void setOffresourcetype(String offresourcetype) {
+		this.offresourcetype = offresourcetype;
+	}
+
+	public String getIsSearch() {
+		return isSearch;
+	}
+
+	public void setIsSearch(String isSearch) {
+		this.isSearch = isSearch;
+	}
+
+	public String getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(String isShow) {
+		this.isShow = isShow;
+	}
+
+	public String getAppCode() {
+		return appCode;
+	}
+
+	public void setAppCode(String appCode) {
+		this.appCode = appCode;
+	}
+
+	public String getUnitType() {
+		return unitType;
+	}
+
+	public void setUnitType(String unitType) {
+		this.unitType = unitType;
+	}
+
+	public Integer getAppType() {
+		return appType;
+	}
+
+	public void setAppType(Integer appType) {
+		this.appType = appType;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getTemplateCode() {
+		return templateCode;
+	}
+
+	public void setTemplateCode(String templateCode) {
+		this.templateCode = templateCode;
+	}
+
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public Integer getParentAppId() {
+		return parentAppId;
+	}
+
+	public void setParentAppId(Integer parentAppId) {
+		this.parentAppId = parentAppId;
+	}
+
+	public String getIsAppMenu() {
+		return isAppMenu;
+	}
+
+	public void setIsAppMenu(String isAppMenu) {
+		this.isAppMenu = isAppMenu;
+	}
+
+	public String getIsApp() {
+		return isApp;
+	}
+
+	public void setIsApp(String isApp) {
+		this.isApp = isApp;
+	}
+
+	public String getAppIcon() {
+		return appIcon;
+	}
+
+	public void setAppIcon(String appIcon) {
+		this.appIcon = appIcon;
+	}
+
+	public String getAppCreateTime() {
+		return appCreateTime;
+	}
+
+	public void setAppCreateTime(String appCreateTime) {
+		this.appCreateTime = appCreateTime;
+	}
 
 }

@@ -10,7 +10,9 @@ package cn.ce.platform_service.diyApply.entity.appsEntity;
  * @website http://www.bejson.com/java2pojo/
  */
 public class Params {
-
+	
+	private String mobileRunning;
+	private String pcRunning;
     private boolean useViewType;
     private String name;
     private String owner;
@@ -34,5 +36,17 @@ public class Params {
      public String getOwner() {
          return owner;
      }
+	public String getMobileRunning() {
+		return mobileRunning;
+	}
+	public void setMobileRunning(String mobileRunning) {
+		this.mobileRunning = mobileRunning;
+	}
+	public String getPcRunning() {
+		return pcRunning;
+	}
+	public void setPcRunning(String pcRunning) {
+		this.pcRunning = pcRunning;
+	}
 
 }

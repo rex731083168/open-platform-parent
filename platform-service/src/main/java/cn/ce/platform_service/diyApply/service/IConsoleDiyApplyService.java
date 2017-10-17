@@ -8,7 +8,6 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
-import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoJasonObject;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
@@ -76,27 +75,13 @@ public interface IConsoleDiyApplyService {
 	 */
 	public Result<TenantApps> findTenantAppsByTenantKey(String key);
 
-	/**
-	 * 
-	 * @param owner
-	 *            所属企业 CE 为中企动力 不填为所有
-	 * @param name
-	 *            名称 模糊搜索 不填为所有
-	 * @param pageNum
-	 *            当前第几页
-	 * @param pageSize
-	 *            每页显示多少条
-	 * @return
-	 */
-	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize);
-
-	public Result<InterfaMessageInfoJasonObject> registerBathApp(String tenantId, String apps);
-
-	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps);
+	
 
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
-	public Result<String> auditUpdate(String id, int checkState, String checkMem);
+	public Result<String> auditUpdate(String id);
+
+	public Result<String> batchUpdate(String ids);
 	
 	
 	/**

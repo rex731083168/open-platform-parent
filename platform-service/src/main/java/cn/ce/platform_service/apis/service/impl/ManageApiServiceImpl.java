@@ -76,8 +76,12 @@ public class ManageApiServiceImpl implements IManageApiService{
 				//根据versionId查询只有版本信息不同的其他相同的多个api
 				//添加新的版本需要将旧的版本信息和新的版本信息一同推送到网关
 				List<ApiEntity> apiVersionList = newApiDao.findByField(DBFieldsConstants.APIS_APIVERSION_VERSIONID, apiEntity.getApiVersion().getVersionId());
-				String apiEnName = apiList.get(0).getApiEnName();
-				OpenApplyEntity openApplyEntity = manageOpenApplyService.findById(apiList.get(0).getOpenApplyId());
+				
+				/** 这里有一个问题是如果不同版本但是其他相同api同时提交审核会往网关推送两次，但是我们的业务是每次只能是最新的版本进行提交
+				 * 所以这个bug由业务来避免了。
+				 */
+				String apiEnName = apiVersionList.get(0).getApiEnName();
+				OpenApplyEntity openApplyEntity = manageOpenApplyService.findById(apiVersionList.get(0).getOpenApplyId());
 				String listenPath = "/"+openApplyEntity.getApplyKey()+"/"+apiEnName+"/";
 				apiEntity.setListenPath(listenPath);//listenPath
 				

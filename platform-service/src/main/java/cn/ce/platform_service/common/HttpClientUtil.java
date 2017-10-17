@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -77,8 +78,13 @@ public class HttpClientUtil {
 		long responseLength = 0; // 响应长度
 		String responseContent = null; // 响应内容
 		HttpClient httpClient = new DefaultHttpClient(); // 创建默认的httpClient实例
-		HttpGet httpGet = new HttpGet(reqURL); // 创建org.apache.http.client.methods.HttpGet
+
 		try {
+
+			URL url = new URL(reqURL);
+			URI uri = new URI(url.getProtocol(), url.getHost() + ":" + url.getPort(), url.getPath(), url.getQuery(),
+					null);
+			HttpGet httpGet = new HttpGet(uri); // 创建org.apache.http.client.methods.HttpGet
 			HttpResponse response = httpClient.execute(httpGet); // 执行GET请求
 			HttpEntity entity = response.getEntity(); // 获取响应实体
 			if (null != entity) {
@@ -96,6 +102,9 @@ public class HttpClientUtil {
 			logger.debug(e.getMessage(), e);
 		} catch (IOException e) {
 			logger.debug("该异常通常是网络原因引起的,如HTTP服务器未启动等,堆栈信息如下", e);
+		} catch (Exception e) {
+			logger.debug("该异常通常是网络原因引起的,如HTTP服务器未启动等,堆栈信息如下", e);
+			e.printStackTrace();
 		} finally {
 			httpClient.getConnectionManager().shutdown(); // 关闭连接,释放资源
 		}
@@ -293,7 +302,7 @@ public class HttpClientUtil {
 	 * @param params
 	 *            发送到远程主机的正文数据,其数据类型为<code>java.util.Map<String, String></code>
 	 * @return 远程主机响应正文`HTTP状态码,如<code>"SUCCESS`200"</code><br>
-	 * 		若通信过程中发生异常则返回"Failed`HTTP状态码",如<code>"Failed`500"</code>
+	 *         若通信过程中发生异常则返回"Failed`HTTP状态码",如<code>"Failed`500"</code>
 	 */
 	public static String sendPostRequestByJava(String reqURL, Map<String, String> params) {
 		StringBuilder sendData = new StringBuilder();
@@ -316,7 +325,7 @@ public class HttpClientUtil {
 	 * @param sendData
 	 *            发送到远程主机的正文数据
 	 * @return 远程主机响应正文`HTTP状态码,如<code>"SUCCESS`200"</code><br>
-	 * 		若通信过程中发生异常则返回"Failed`HTTP状态码",如<code>"Failed`500"</code>
+	 *         若通信过程中发生异常则返回"Failed`HTTP状态码",如<code>"Failed`500"</code>
 	 */
 	public static String sendPostRequestByJava(String reqURL, String sendData) {
 		HttpURLConnection httpURLConnection = null;

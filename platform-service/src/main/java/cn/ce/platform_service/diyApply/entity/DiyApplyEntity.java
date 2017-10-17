@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
-import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
 import cn.ce.platform_service.users.entity.User;
 
 /***
@@ -25,7 +24,10 @@ import cn.ce.platform_service.users.entity.User;
 public class DiyApplyEntity {
 
 	@Id
-	private String id;
+	private String id; // 对应接口应用code 2， 开发者在开放平台发布应用审核
+
+	@Field("appId")
+	private String appId; // 对应接口返回应用id 2， 开发者在开放平台发布应用审核 
 
 	@Field("applyName")
 	private String applyName;// 应用名称
@@ -33,15 +35,14 @@ public class DiyApplyEntity {
 	/** 产品授权码 */
 	@Field("productAuthCode")
 	private String productAuthCode;
-	
+
 	/** 产品实例ID */
 	@Field("productInstanceId")
 	private String productInstanceId;
-	
+
 	/** 产品名称 */
 	@Field("productName")
 	private String productName;
-
 
 	/** 访问域名 */
 	@Field("domainUrl")
@@ -83,9 +84,6 @@ public class DiyApplyEntity {
 
 	@Field("authIds")
 	private List<String> authIds;
-	
-	@Field("appList")
-	private List<AppList> appList;
 
 	@Transient
 	private List<ApiAuditEntity> auditList;// api集合
@@ -245,13 +243,12 @@ public class DiyApplyEntity {
 		this.productInstanceId = productInstanceId;
 	}
 
-	public List<AppList> getAppList() {
-		return appList;
+	public String getAppId() {
+		return appId;
 	}
 
-	public void setAppList(List<AppList> appList) {
-		this.appList = appList;
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
-	
 	
 }
