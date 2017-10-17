@@ -33,7 +33,6 @@ import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
@@ -43,8 +42,6 @@ import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessag
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
-import io.netty.handler.codec.http.HttpMethod;
-import io.swagger.util.Json;
 import net.sf.json.JSONObject;
 
 /***
