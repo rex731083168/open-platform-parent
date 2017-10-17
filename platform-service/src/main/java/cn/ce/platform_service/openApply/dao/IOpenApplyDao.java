@@ -133,4 +133,9 @@ public interface IOpenApplyDao {
 	 * @return 受影响的行数
 	 */
 	public String bathUpdateByid(List<String> ids);
+	
+	/**
+	 * 
+	 */
+	public List<OpenApplyEntity> getListByids(List<String> ids);
 }

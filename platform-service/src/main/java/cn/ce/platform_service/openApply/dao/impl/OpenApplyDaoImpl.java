@@ -201,4 +201,10 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 
 	}
 
+	@Override
+	public List<OpenApplyEntity> getListByids(List<String> ids) {
+		// TODO Auto-generated method stub
+		return super.find(new Query(Criteria.where("id").in(ids)), OpenApplyEntity.class);
+	}
+
 }
