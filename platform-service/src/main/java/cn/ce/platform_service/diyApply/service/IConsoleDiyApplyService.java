@@ -75,7 +75,7 @@ public interface IConsoleDiyApplyService {
 	 */
 	public Result<TenantApps> findTenantAppsByTenantKey(String key);
 
-	
+	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize);
 
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 

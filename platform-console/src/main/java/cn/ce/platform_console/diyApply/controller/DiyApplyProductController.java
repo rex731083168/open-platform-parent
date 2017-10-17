@@ -45,7 +45,13 @@ public class DiyApplyProductController {
 	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key) {
 		return consoleDiyApplyService.findTenantAppsByTenantKey(key);
 	}
-
+	@ApiOperation("获取所有应用列表")
+	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = true) String owner,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(required = true, defaultValue = "10") int pageSize,
+			@RequestParam(required = true, defaultValue = "1") int currentPage) {
+		return consoleDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
+	}
 	
 	@RequestMapping(value = "generatorTenantKey", method = RequestMethod.POST)
 	@ApiOperation("获取网站")
