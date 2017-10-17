@@ -1,9 +1,5 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +71,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids) {
+	public Result<String> batchUpdate(List<String> ids,Integer checkState,String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
@@ -108,8 +104,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			}
 
 			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
-				String message = String
-						.valueOf(diyApplyDao.bathUpdateByid(ids, AuditConstants.DIY_APPLY_CHECKED_SUCCESS));
+				String message = String.valueOf(diyApplyDao.bathUpdateByid(ids, checkState,checkMem));
 				_LOGGER.info("bachUpdate diyApply message " + message + " count");
 				result.setSuccessMessage("审核成功:" + message + "条");
 				return result;

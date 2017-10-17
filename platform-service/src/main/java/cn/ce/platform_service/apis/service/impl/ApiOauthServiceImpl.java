@@ -25,14 +25,15 @@ import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.HttpUtils;
@@ -47,8 +48,10 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 
 	@Resource
 	private IAPIService apiService;
+//	@Resource
+//	private IManageOpenApplyService appService;
 	@Resource
-	private IManageOpenApplyService appService;
+	private IOpenApplyDao openApplyDao;
 	@Resource
 	private IDiyApplyDao applyDao;
 	@Resource
@@ -94,7 +97,11 @@ public class ApiOauthServiceImpl implements IApiOauthService{
 		}
 		
 		
-		OpenApplyEntity appEntity = appService.findById(apiEntity.getOpenApplyId());
+		OpenApplyEntity appEntity = openApplyDao.findById(applyId);
+		if(null == appEntity){
+			result.setErrorCode(ErrorCodeNo.SYS009);
+			result.setMessage("应用不存在!");
+		}
 
 		//拼接对象
 		ApiAuditEntity auditEntity = new ApiAuditEntity();

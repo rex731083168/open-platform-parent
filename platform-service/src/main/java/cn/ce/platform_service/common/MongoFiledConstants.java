@@ -19,6 +19,8 @@ public class MongoFiledConstants {
 	
 	public static final String OPEN_APPLY_CHECKSTATE = "checkState";
 	
+	public static final String OPEN_APPLY_ENTERPRISENAME = "enterpriseName";
+	
 	
 	
 	public static final String DIY_APPLY_APPLYNAME = "applyName";

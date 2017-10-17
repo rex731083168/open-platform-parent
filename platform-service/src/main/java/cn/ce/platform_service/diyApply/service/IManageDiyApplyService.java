@@ -21,7 +21,7 @@ public interface IManageDiyApplyService {
 	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, int checkState,
 			String applyName, int currentPage, int pageSize);
 
-	public Result<String> batchUpdate(List<String> ids);
+	public Result<String> batchUpdate(List<String> ids,Integer checkState,String checkMem);
 
 	public Result<String> auditUpdate(String id, int checkState, String checkMem);
 	

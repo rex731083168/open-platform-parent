@@ -23,7 +23,7 @@ import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.oauth.dao.IOauthDao;
-import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
+import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 
 /**
  * 
@@ -35,8 +35,10 @@ import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 @Service(value = "apiService")
 public class APIServiceImpl implements IAPIService {
 	
+//	@Resource
+//	private IManageOpenApplyService manageOpenApplyService;
 	@Resource
-	private IManageOpenApplyService manageOpenApplyService;
+	private IOpenApplyDao openApplyDao;
 	
 	@Resource
 	private IApiDAO  apiDao;
@@ -381,7 +383,7 @@ public class APIServiceImpl implements IAPIService {
 			List<String> apiIdList = new ArrayList<>(items.size());
 			// 构建apiId集合
 			for (ApiEntity apiEntity : items) {
-				apiEntity.setOpenApplyEntity( manageOpenApplyService.findById(apiEntity.getOpenApplyId()));
+				apiEntity.setOpenApplyEntity( openApplyDao.findById(apiEntity.getOpenApplyId()));
 				apiIdList.add(apiEntity.getId());
 			}
 

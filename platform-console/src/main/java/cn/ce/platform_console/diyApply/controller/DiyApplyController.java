@@ -132,7 +132,7 @@ public class DiyApplyController {
 	
 	@ApiOperation("批量发布应用 更改checkState为1 ")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestParam String ids) {
+	public Result<String> batchUpdate(@RequestBody String ids) {
 		return consoleDiyApplyService.batchUpdate(ids);
 	}
 	

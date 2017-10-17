@@ -2,7 +2,6 @@ package cn.ce.platform_service.openApply.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,12 +26,12 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.common.page.PageContext;
-import cn.ce.platform_service.diyApply.entity.inparameter.RegisterBathAppInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.inparameter.SaveOrUpdateAppsInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.oauth.service.IOauthService;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
 import net.sf.json.JSONArray;
@@ -69,8 +68,16 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	}
 
 	@Override
-	public OpenApplyEntity findById(String id) {
-		return openApplyDao.findById(id);
+	public Result<OpenApplyEntity> findById(String id) {
+		Result<OpenApplyEntity> result = new Result<>();
+		OpenApplyEntity findById = openApplyDao.findById(id);
+		if(null == findById){
+			result.setErrorCode(ErrorCodeNo.SYS009);
+			result.setMessage("应用不存在!");
+			return result;
+		}
+		result.setSuccessData(findById);
+		return result;
 	}
 
 	@Override
@@ -302,7 +309,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	public Result<String> submitVerify(String id) {
 		Result<String> result = new Result<String>();
 		try {
-			OpenApplyEntity app = findById(id);
+			OpenApplyEntity app = openApplyDao.findById(id);
 			app.setCheckState(1);
 			modifyById(app);
 
@@ -396,7 +403,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		Result<String> result = new Result<String>();
 		try {
 
-			OpenApplyEntity appAfter = findById(app.getId());
+			OpenApplyEntity appAfter = openApplyDao.findById(app.getId());
 			if (null == appAfter) {
 				result.setErrorMessage("当前分组不存在", ErrorCodeNo.SYS006);
 			} else {
@@ -419,34 +426,16 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	}
 
 	@Override
-	public Result<Page<OpenApplyEntity>> groupList1(String appName, String userName, String enterpriseName,
-			String checkState, int currentPage, int pageSize) {
+	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity entity,int currentPage, int pageSize) {
 		Result<Page<OpenApplyEntity>> result = new Result<Page<OpenApplyEntity>>();
 
 		try {
-			// Map<String,Object> condMap = new HashMap<String, Object>(2);
-			OpenApplyEntity appParam = new OpenApplyEntity();
 
-			if (StringUtils.isNotBlank(appName)) {
-				appParam.setApplyName(appName);
-			}
-
-			if (StringUtils.isNotBlank(userName)) {
-				appParam.setUserName(userName);
-			}
-			if (StringUtils.isNotBlank(enterpriseName)) {
-				appParam.setEnterpriseName(enterpriseName);
-			}
-
-			if (StringUtils.isNotBlank(checkState)) {
-				appParam.setCheckState(Integer.valueOf(checkState));
-			}
-
-			Page<OpenApplyEntity> ds = getAppListByDBWhere(appParam, currentPage, pageSize);
+			Page<OpenApplyEntity> ds = openApplyDao.findOpenApplyByEntity(entity, currentPage, pageSize);
 
 			result.setSuccessData(ds);
 		} catch (Exception e) {
-			_LOGGER.info("error happens when execute group list1", e);
+			_LOGGER.info("error happens when execute findOpenApplyList", e);
 			result.setErrorMessage("");
 		}
 		return result;
@@ -456,7 +445,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	public Result<String> auditGroup(String id, int checkState, String remark) {
 		Result<String> result = new Result<String>();
 		try {
-			OpenApplyEntity app = findById(id);
+			OpenApplyEntity app = openApplyDao.findById(id);
 			if (null == app) {
 				result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);
 			} else {
@@ -490,8 +479,9 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		}
 		return result;
 	}
+	
 	@Override
-	public Result<String> batchUpdate(List<String> ids) {
+	public Result<String> batchUpdate(List<String> ids,Integer checkState,String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
@@ -508,7 +498,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
 					.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
 			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
-				String message = openApplyDao.bathUpdateByid(ids);
+				String message = openApplyDao.bathUpdateByid(ids,checkState,checkMem);
 				_LOGGER.info("bachUpdate message " + message + " count");
 				result.setSuccessMessage("成功审核:" + message + "条");
 			} else {

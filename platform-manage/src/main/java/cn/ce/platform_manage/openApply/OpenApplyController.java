@@ -1,10 +1,6 @@
 package cn.ce.platform_manage.openApply;
 
-import java.util.List;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +15,9 @@ import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.SplitUtil;
-import net.sf.json.JSONArray;
 
 /***
  * 服务管理前端控制器
@@ -48,10 +44,9 @@ public class OpenApplyController extends BaseController {
 	 *            jsondemo["1","2","3"]
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids) {
-		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids));
+	public Result<String> batchUpdate(@RequestBody String ids,Integer checkState,String checkMem) {
+		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids),checkState,checkMem);
 	}
 
 	/**
@@ -61,12 +56,26 @@ public class OpenApplyController extends BaseController {
 	 */
 	@RequestMapping(value = "/auditGroup", method = RequestMethod.POST)
 	public Result<String> auditGroupState(String id, int checkState, String remark) {
-		_LOGGER.info("---------------->> Action audit Group! GroupID: " + id + " ; group state: " + checkState
-				+ "; remark:" + remark);
-
 		return openApplyService.auditGroup(id, checkState, remark);
 	}
 
+	/***
+	 * 
+	 * @Title: getApplyByid
+	 * @Description: 根据应用id获取应用详情
+	 * @param : @param request
+	 * @param : @param response
+	 * @param : @param id
+	 * @param : @return
+	 * @return: Result<?>
+	 * @throws
+	 */
+	@RequestMapping(value = "/getApplyByid", method = RequestMethod.GET)
+	public Result<OpenApplyEntity> getApplyByid(@RequestParam(value = "id", required = true) String id) {
+		return openApplyService.findById(id);
+	}
+	
+	
 	/***
 	 * 按照条件查询服务分类列表方法
 	 * 
@@ -84,16 +93,13 @@ public class OpenApplyController extends BaseController {
 	 *            分页数
 	 * @return
 	 */
-	@RequestMapping(value = "/groupList", method = RequestMethod.POST)
+	@RequestMapping(value = "/openApplyList", method = RequestMethod.POST)
 	@ResponseBody
-	public Result<Page<OpenApplyEntity>> groupList(HttpServletRequest request, HttpServletResponse response,
-			String appName, String userName, String enterpriseName, String checkState,
+	public Result<Page<OpenApplyEntity>> openApplyList(
+			@RequestBody QueryOpenApplyEntity queryEntity,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
-		_LOGGER.info("---------------->> Action Search GroupList! appname: " + appName + ";  appName:" + appName
-				+ ";userName:" + userName + "checkState:" + checkState);
-
-		return openApplyService.groupList1(appName, userName, enterpriseName, checkState, currentPage, pageSize);
+		return openApplyService.findOpenApplyList(queryEntity, currentPage, pageSize);
 	}
 	
 	

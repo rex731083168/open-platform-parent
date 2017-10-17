@@ -26,8 +26,8 @@ import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
+import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.LocalFileReadUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
@@ -43,7 +43,10 @@ public class ManageApiServiceImpl implements IManageApiService{
 	@Resource
 	private INewApiDao newApiDao;
 	@Resource
-	private IManageOpenApplyService manageOpenApplyService;
+	private IOpenApplyDao openApplyDao;	
+//	@Resource
+//	private IManageOpenApplyService manageOpenApplyService;
+	
 	
 	/**
 	 * @Title: auditApi
@@ -81,7 +84,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 				 * 所以这个bug由业务来避免了。
 				 */
 				String apiEnName = apiVersionList.get(0).getApiEnName();
-				OpenApplyEntity openApplyEntity = manageOpenApplyService.findById(apiVersionList.get(0).getOpenApplyId());
+				OpenApplyEntity openApplyEntity = openApplyDao.findById(apiVersionList.get(0).getOpenApplyId());
 				String listenPath = "/"+openApplyEntity.getApplyKey()+"/"+apiEnName+"/";
 				apiEntity.setListenPath(listenPath);//listenPath
 				

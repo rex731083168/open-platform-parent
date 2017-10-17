@@ -7,6 +7,7 @@ import java.util.Map;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 
 /**
  * 
@@ -121,6 +122,8 @@ public interface IOpenApplyDao {
 	 * @return
 	 */
 	Page<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity, int currentPage, int pageSize);
+	
+	Page<OpenApplyEntity> findOpenApplyByEntity(QueryOpenApplyEntity entity, int currentPage, int pageSize);
 
 	List<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity);
 
@@ -132,7 +135,7 @@ public interface IOpenApplyDao {
 	 * @param ids
 	 * @return 受影响的行数
 	 */
-	public String bathUpdateByid(List<String> ids);
+	public String bathUpdateByid(List<String> ids,Integer checkState,String checkMem);
 	
 	/**
 	 * 

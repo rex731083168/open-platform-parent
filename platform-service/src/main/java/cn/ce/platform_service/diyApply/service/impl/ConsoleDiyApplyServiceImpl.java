@@ -407,8 +407,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			List idslist = SplitUtil.splitStringWithComma(ids);
-			String message = diyApplyDao.bathUpdateByid(idslist, AuditConstants.DIY_APPLY_CHECKED_COMMITED);
+			List<String> idslist = SplitUtil.splitStringWithComma(ids);
+			String message = diyApplyDao.bathUpdateByid(idslist);
 			logger.info("bachUpdate diyApply message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;

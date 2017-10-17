@@ -2,8 +2,6 @@ package cn.ce.platform_manage.diyApply;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,8 +38,8 @@ public class DiyApplyController {
 	}
 	@ApiOperation("批量审核 调用租户接口2， 开发者在开放平台发布应用审核 发布应用")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids) {
-		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids));
+	public Result<String> batchUpdate(@RequestBody String ids,@RequestParam Integer checkState,@RequestParam String checkMem) {
+		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids),checkState,checkMem);
 	}
 
 	@ApiOperation("单个审核  调用租户接口2， 开发者在开放平台发布应用审核 发布应用")

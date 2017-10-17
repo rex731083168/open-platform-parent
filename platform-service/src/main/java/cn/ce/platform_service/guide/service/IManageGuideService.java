@@ -18,7 +18,7 @@ import cn.ce.platform_service.guide.entity.GuideEntity;
  **/
 public interface IManageGuideService {
 
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,String appIyId,
 			int currentPage, int pageSize);
 
 	public Result<String> batchUpdate(List<String> ids,Integer state);

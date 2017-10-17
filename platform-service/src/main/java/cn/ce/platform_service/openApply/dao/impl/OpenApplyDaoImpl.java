@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.common.page.PageContext;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
@@ -22,6 +23,7 @@ import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 
 /**
  * 
@@ -139,6 +141,34 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 
 		return findAsPage;
 	}
+	
+	@Override
+	public Page<OpenApplyEntity> findOpenApplyByEntity(QueryOpenApplyEntity entity, int currentPage, int pageSize) {
+		Criteria c = new Criteria();
+
+		if (StringUtils.isNotBlank(entity.getAppName())) {
+			c.and(MongoFiledConstants.OPEN_APPLY_APPLYNAME).regex(entity.getAppName());
+		}
+		
+		if (StringUtils.isNotBlank(entity.getUserName())) {
+			c.and(MongoFiledConstants.OPEN_APPLY_USERNAME).regex(entity.getUserName());
+		}
+		
+		if (StringUtils.isNotBlank(entity.getEnterpriseName())) {
+			c.and(MongoFiledConstants.OPEN_APPLY_ENTERPRISENAME).regex(entity.getEnterpriseName());
+		}
+		
+		if(null != entity.getCheckState()){
+			c.and(MongoFiledConstants.OPEN_APPLY_CHECKSTATE).is(entity.getCheckState());
+		}
+		
+		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
+		// 分页
+		Page<OpenApplyEntity> findAsPage = super.findAsPage(query, currentPage, pageSize,OpenApplyEntity.class);
+
+		return findAsPage;
+	}
+	
 
 	private Query generalSecretQueryBean(OpenApplyEntity entity) {
 		// 构建查询对象
@@ -190,17 +220,18 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 	/**
 	 * 批量审核
 	 */
-	public String bathUpdateByid(List<String> ids) {
+	public String bathUpdateByid(List<String> ids,Integer checkState,String checkMem) {
 		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", "2"), true, true));
+					Update.update("checkState", checkState).update("checkMem", checkMem), true, true));
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list));
 
 	}
 
+	
 	@Override
 	public List<OpenApplyEntity> getListByids(List<String> ids) {
 		// TODO Auto-generated method stub

@@ -11,6 +11,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import net.sf.json.JSONObject;
 
 /**
@@ -25,7 +26,7 @@ public interface IManageOpenApplyService {
 	/**
 	 * @Description: 根据应用Id查询应用信息 @param id: 应用id @return 返回应用对象 @throws
 	 */
-	public OpenApplyEntity findById(String id);
+	public Result<OpenApplyEntity> findById(String id);
 
 	/**
 	 * @Description: 修改应用信息 @param app: 应用对象 @throws
@@ -100,12 +101,14 @@ public interface IManageOpenApplyService {
 
 	public Result<String> modifyGroup1(OpenApplyEntity app);
 
-	public Result<Page<OpenApplyEntity>> groupList1(String appName, String userName, String enterpriseName,
-			String checkState, int currentPage, int pageSize);
+//	public Result<Page<OpenApplyEntity>> groupList1(String appName, String userName, String enterpriseName,
+//			String checkState, int currentPage, int pageSize);
+
+	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity queryEntity, int currentPage, int pageSize);
 
 	public Result<String> auditGroup(String id, int checkState, String remark);
 
-	public Result<String> batchUpdate(List<String> ids);
+	public Result<String> batchUpdate(List<String> ids,Integer checkState,String batchUpdate);
 	// public Result<String> modifyGroup1(OpenApplyEntity app);
 
 	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize);

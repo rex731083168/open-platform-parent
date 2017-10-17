@@ -30,8 +30,8 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.impl.GatewayApiServiceImpl;
+import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
 
 /**
@@ -46,8 +46,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	
 	@Resource
 	private INewApiDao newApiDao;
+//	@Resource
+//	private IManageOpenApplyService manageOpenApplyService;
 	@Resource
-	private IManageOpenApplyService manageOpenApplyService;
+	private IOpenApplyDao openApplyDao;
 	@Resource
 	private GatewayApiServiceImpl gatewayApiService;
 	
@@ -184,7 +186,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 		// 添加网关访问地址
 		String openApplyId = api.getOpenApplyId();
-		OpenApplyEntity openApplyEntity = manageOpenApplyService.findById(openApplyId);
+		OpenApplyEntity openApplyEntity = openApplyDao.findById(openApplyId);
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {

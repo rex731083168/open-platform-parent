@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,8 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.oauth.dao.IOauthDao;
 import cn.ce.platform_service.oauth.entity.AuthorizeClientEntity;
 import cn.ce.platform_service.oauth.service.IOauthService;
+import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
-import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.HttpUtils;
 
 /**
@@ -37,8 +39,10 @@ public class OauthServiceImpl implements IOauthService{
 	@Autowired
 	private IOauthDao oauthDao;
 	
-	@Autowired 
-	private IManageOpenApplyService appService;
+//	@Autowired 
+//	private IManageOpenApplyService appService;
+	@Resource
+	private IOpenApplyDao openApplyDao;
     
     @Autowired 
     private IApiOauthService apiAuditService;
@@ -93,7 +97,7 @@ public class OauthServiceImpl implements IOauthService{
 				sb.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
 			}
 			
-			OpenApplyEntity appEntity = appService.findById(findApiByClientId.getAppId());
+			OpenApplyEntity appEntity = openApplyDao.findById(findApiByClientId.getAppId());
 			
 			// TODO 监听路径是否需要加上appKey
 			String listenPath = appEntity.getApplyKey()+"/"+findApiByClientId.getApiEnName();/*+"/"+findApiByClientId.getVersion();*/
