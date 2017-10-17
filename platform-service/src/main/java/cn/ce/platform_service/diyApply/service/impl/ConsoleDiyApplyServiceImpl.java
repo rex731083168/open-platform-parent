@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,6 +32,8 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
@@ -40,6 +43,8 @@ import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessag
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
+import io.netty.handler.codec.http.HttpMethod;
+import io.swagger.util.Json;
 import net.sf.json.JSONObject;
 
 /***
@@ -56,6 +61,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	/** 日志对象 */
 	private static Logger logger = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
 
+	@Value("${productMenuList}")
+	private String productMenuListURL;
+	
+	@Value("${registerMenu}")
+	private String registerMenuURL;
+	
 	@Resource
 	private IAPIService apiService;
 	@Resource
@@ -559,4 +570,117 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	}
 
+	@Override
+	public Result<String> productMenuList(String bossInstanceCode) {
+		Result<String> result = new Result<>();
+		
+		if(StringUtils.isBlank(productMenuListURL)){
+			logger.error("productMenuListURL is null !");
+			result.setErrorMessage("获取产品菜单列表错误,请联系管理员!");
+			return result;
+		}
+		
+		String reqURL = productMenuListURL.replace("{bossInstanceCode}", bossInstanceCode);
+		
+		
+		logger.info("send productMenuList URL is " + reqURL);
+		
+		try {
+			
+			String sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
+			
+			logger.debug("produMenuList return json:" + sendGetRequest);
+			
+			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest);
+			
+			if(null != jsonObject && jsonObject.has("status") && jsonObject.has("msg") && jsonObject.has("data")){
+				
+				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+				
+				switch (status) {
+					case "101":
+						result.setStatus(Status.SUCCESS);
+						
+						result.setSuccessData(jsonObject.get("data").toString());
+										
+						break;
+					case "201":
+						result.setStatus(Status.FAILED);
+						break;
+					case "301":
+						result.setStatus(Status.FAILED);
+						break;
+					default:
+						result.setStatus(Status.SYSTEMERROR);
+						break;
+				}
+
+				result.setMessage(jsonObject.get("msg").toString());	
+				
+			}else{
+				logger.error("获取产品菜单列表时,缺失返回值:" + jsonObject);
+				
+				result.setErrorMessage("获取产品菜单列表错误!");
+			}
+			
+		} catch (Exception e) {
+			logger.error("send productMenuList error e:" + e.toString());
+			result.setErrorMessage("获取产品菜单列表错误!");
+		}
+		// TODO Auto-generated method stub
+		return result;
+	}
+	
+	@Override
+	public Result<String> registerMenu(String appid, String bossInstanceCode,String menuJson) {
+		Result<String> result = new Result<>();
+		if(StringUtils.isBlank(registerMenuURL)){
+			logger.error("registerMenuURL is null !");
+			result.setErrorMessage("发布菜单错误,请联系管理员");
+			return result;
+		}
+		Map<String,String> body = new HashMap<>();
+		body.put("appid", appid);
+		body.put("bossInstanceCode", bossInstanceCode);
+		body.put("menuJson", menuJson);
+		
+		try {
+			String sendPostByJson = HttpClientUtil.sendPostRequestByJava(registerMenuURL, body);
+//			String sendPostByJson = ApiCallUtils.putOrPostMethod(registerMenuURL, body, null, HttpMethod.POST);
+			
+//			String sendPostByJson = HttpClientUtil.sendPostByJson(registerMenuURL, body.toString());
+			
+			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
+			
+			if(null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")){
+				
+				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+				
+				switch (status) {
+					case "101":
+						result.setStatus(Status.SUCCESS);
+						break;
+					case "201":
+						result.setStatus(Status.FAILED);
+						break;
+					case "301":
+						result.setStatus(Status.FAILED);
+						break;
+					default:
+						result.setStatus(Status.SYSTEMERROR);
+						break;
+				}
+				result.setMessage(jsonObject.get("msg").toString());
+			}else{
+				logger.error("发布菜单时,缺失返回值:" + jsonObject);
+				
+				result.setErrorMessage("发布菜单出现错误!");
+			}
+		} catch (Exception e) {
+			logger.error("send registerMenuURL error,e:" + e.toString());
+			result.setErrorMessage("发布菜单错误!");
+		}
+		return result;
+	}
+	
 }
