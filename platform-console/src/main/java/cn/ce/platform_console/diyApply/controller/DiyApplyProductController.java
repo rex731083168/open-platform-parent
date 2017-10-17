@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
@@ -16,14 +15,12 @@ import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.inparameter.GeneratorTenantKeyInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.inparameter.RegisterBathAppInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.inparameter.SaveOrUpdateAppsInParameterEntity;
-import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoJasonObject;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONArray;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -51,16 +48,16 @@ public class DiyApplyProductController {
 	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
 	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = true) String owner,
-			@RequestParam(value = "name", required = true) String name,
-			@RequestParam(required = false, defaultValue = "10") int pageSize,
-			@RequestParam(required = false, defaultValue = "1") int currentPage) {
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(required = true, defaultValue = "10") int pageSize,
+			@RequestParam(required = true, defaultValue = "1") int currentPage) {
 		return consoleDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
 	}
 
 	@RequestMapping(value = "registerBathApp", method = RequestMethod.POST)
 	@ApiOperation("开发者在开放平台发布应用审核")
-	public Result<InterfaMessageInfoJasonObject> registerBathApp(
-			@RequestParam(value = "tenantId", required = true) String tenantId,
+	public Result<InterfaMessageInfoString> registerBathApp(
+			@RequestParam(value = "tenantId", required = false) String tenantId,
 			@RequestBody RegisterBathAppInParameterEntity[] queryVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		return consoleDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());

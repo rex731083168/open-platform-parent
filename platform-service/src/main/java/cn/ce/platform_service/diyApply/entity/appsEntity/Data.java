@@ -2,6 +2,7 @@
   * Copyright 2017 bejson.com 
   */
 package cn.ce.platform_service.diyApply.entity.appsEntity;
+
 import java.util.List;
 
 /**
@@ -12,52 +13,59 @@ import java.util.List;
  */
 public class Data {
 
-    private int pageSize;
-    private int currentPage;
-    private int totalPages;
-    private int totalCount;
-    private List<AppList> list;
-    private Params params;
-    public void setPageSize(int pageSize) {
-         this.pageSize = pageSize;
-     }
-     public int getPageSize() {
-         return pageSize;
-     }
+	private Integer pageSize;
+	private Integer currentPage;
+	private Integer totalPages;
+	private Integer totalCount;
+	private List<AppList> list;
+	private Params params;
 
-    public void setCurrentPage(int currentPage) {
-         this.currentPage = currentPage;
-     }
-     public int getCurrentPage() {
-         return currentPage;
-     }
+	public Integer getPageSize() {
+		return pageSize;
+	}
 
-    public void setTotalPages(int totalPages) {
-         this.totalPages = totalPages;
-     }
-     public int getTotalPages() {
-         return totalPages;
-     }
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
 
-    public void setTotalCount(int totalCount) {
-         this.totalCount = totalCount;
-     }
-     public int getTotalCount() {
-         return totalCount;
-     }
+	public Integer getCurrentPage() {
+		return currentPage;
+	}
 
-    public void setList(List<AppList> list) {
-         this.list = list;
-     }
-     public List<AppList> getList() {
-         return list;
-     }
+	public void setCurrentPage(Integer currentPage) {
+		this.currentPage = currentPage;
+	}
 
-    public void setParams(Params params) {
-         this.params = params;
-     }
-     public Params getParams() {
-         return params;
-     }
+	public Integer getTotalPages() {
+		return totalPages;
+	}
+
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
+	}
+
+	public Integer getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	public void setList(List<AppList> list) {
+		this.list = list;
+	}
+
+	public List<AppList> getList() {
+		return list;
+	}
+
+	public void setParams(Params params) {
+		this.params = params;
+	}
+
+	public Params getParams() {
+		return params;
+	}
 
 }

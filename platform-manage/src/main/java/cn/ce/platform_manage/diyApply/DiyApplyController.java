@@ -38,13 +38,13 @@ public class DiyApplyController {
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		return manageDiyApplyService.findPagedApps(productName, userName, checkState, applyName, currentPage, pageSize);
 	}
-	@ApiOperation("批量审核")
+	@ApiOperation("批量审核 调用租户接口2， 开发者在开放平台发布应用审核 发布应用")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestBody String ids) {
 		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids));
 	}
 
-	@ApiOperation("单个审核")
+	@ApiOperation("单个审核  调用租户接口2， 开发者在开放平台发布应用审核 发布应用")
 	@RequestMapping(value = "/auditUpdate", method = RequestMethod.POST)
 	public Result<String> auditUpdate(@RequestParam String id, @RequestParam int checkState,
 			@RequestParam String checkMem) {

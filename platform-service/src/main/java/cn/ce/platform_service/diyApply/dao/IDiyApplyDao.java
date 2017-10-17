@@ -1,6 +1,7 @@
 package cn.ce.platform_service.diyApply.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -55,5 +56,12 @@ public interface IDiyApplyDao {
 	 * @param ids
 	 * @return
 	 */
-	public String bathUpdateByid(List<String> ids) ;
+	public String bathUpdateByid(List<String> ids,int checkState) ;
+	
+	/**
+	 * 批量審核并发布
+	 * @param ids 
+	 * @return
+	 */
+	public String bathUpdateByidAndPush(List<String> ids,Map<String, Object> map,int checkState) ;
 }

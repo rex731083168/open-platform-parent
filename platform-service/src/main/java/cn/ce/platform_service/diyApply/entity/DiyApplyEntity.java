@@ -24,7 +24,10 @@ import cn.ce.platform_service.users.entity.User;
 public class DiyApplyEntity {
 
 	@Id
-	private String id;
+	private String id; // 对应接口应用code 2， 开发者在开放平台发布应用审核
+
+	@Field("appId")
+	private String appId; // 对应接口返回应用id 2， 开发者在开放平台发布应用审核 
 
 	@Field("applyName")
 	private String applyName;// 应用名称
@@ -32,15 +35,14 @@ public class DiyApplyEntity {
 	/** 产品授权码 */
 	@Field("productAuthCode")
 	private String productAuthCode;
-	
+
 	/** 产品实例ID */
 	@Field("productInstanceId")
 	private String productInstanceId;
-	
+
 	/** 产品名称 */
 	@Field("productName")
 	private String productName;
-
 
 	/** 访问域名 */
 	@Field("domainUrl")
@@ -239,5 +241,13 @@ public class DiyApplyEntity {
 
 	public void setProductInstanceId(String productInstanceId) {
 		this.productInstanceId = productInstanceId;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 }
