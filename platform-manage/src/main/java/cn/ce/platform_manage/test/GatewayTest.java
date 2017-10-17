@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.gateway.service.impl.GatewayApiServiceImpl;
 import cn.ce.platform_service.util.SplitUtil;
 

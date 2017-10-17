@@ -2,8 +2,6 @@ package cn.ce.platform_service.diyApply.service;
 
 import java.util.List;
 
-import org.json.JSONObject;
-
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
@@ -107,5 +105,7 @@ public interface IConsoleDiyApplyService {
 	 * @throws
 	 */
 	public Result<String> registerMenu(String appid,String bossInstanceCode,String menuJson);
+ 
+	Result<?> updateApply(DiyApplyEntity apply);
 
 }

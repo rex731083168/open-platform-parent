@@ -1,9 +1,5 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +25,6 @@ import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
-import cn.ce.platform_service.common.HttpClientUtilsNew;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
@@ -170,6 +165,29 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		}
 
+		return result;
+	}
+
+	@Override
+	public Result<?> updateApply(DiyApplyEntity apply) {
+		
+		Result<String> result = new Result<String>();
+		if(StringUtils.isBlank(apply.getId())){
+			result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
+		}
+		
+		DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+		
+		if(null == apply1){
+			result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
+			return result;
+		}
+		if(apply1.getProductAuthCode() != apply.getProductAuthCode()){
+			result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
+			return result;
+		}
+		diyApplyDao.saveOrUpdate(apply1);
+		result.setSuccessMessage("修改成功");
 		return result;
 	}
 

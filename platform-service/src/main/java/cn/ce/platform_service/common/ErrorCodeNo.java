@@ -23,6 +23,7 @@ public enum ErrorCodeNo {
 	,SYS013("权限不足")
 	,SYS014("调用网关发生异常")
 	,SYS015("数据不存在")
+	,SYS016("数据不一致")
 	;
 	
 	

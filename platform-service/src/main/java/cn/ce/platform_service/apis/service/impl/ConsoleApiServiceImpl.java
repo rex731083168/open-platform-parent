@@ -29,6 +29,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
+import cn.ce.platform_service.gateway.service.impl.GatewayApiServiceImpl;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
@@ -47,6 +48,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	private INewApiDao newApiDao;
 	@Resource
 	private IManageOpenApplyService manageOpenApplyService;
+	@Resource
+	private GatewayApiServiceImpl gatewayApiService;
 	
 	
 	/**
@@ -303,4 +306,34 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 	
+	/**
+	 * @Title: boundDiyApplyWithApi
+	 * @Description: 将定制应用和api发生绑定，将绑定关系推送到网关 。
+	 * @author: makangwei 
+	 * @date:   2017年10月17日 下午5:55:34 
+	 */
+	public boolean boundDiyApplyWithApi(
+			String policyId,
+			String clientId,
+			String secret,
+			Integer rate,
+			Integer per,
+			Integer quotaMax,
+			Integer quotaRenewRate,
+			List<String> appIds){
+		
+		//String policyResult =  gatewayApiService.pushPolicy(policyId, rate, per, quotaMax, quotaRenewRate, apiInfos);
+		
+//		if(StringUtils.isBlank(policyResult)){ //推送policy失败
+//			_LOGGER.error("____________>error happens when execure push policy to gateway");
+//			return false;
+//		}
+		
+		//String clientResult = gatewayApiService.pushClient(clientId, secret, apiIds, policyId);
+		
+//		if(StringUtils.isBlank(clientResult)){
+//			//_LOGGER.error(arg0);
+//		}
+		return false;
+	}
 }
