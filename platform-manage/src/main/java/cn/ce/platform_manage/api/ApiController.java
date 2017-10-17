@@ -19,7 +19,6 @@ import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.gateway.service.impl.GatewayApiService;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.SplitUtil;
 
@@ -34,9 +33,6 @@ public class ApiController {
 	
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(ApiController.class);
-	
-	@Resource
-	private GatewayApiService gatewayApiService;
 
     @Resource
     private IManageApiService manageApiService;

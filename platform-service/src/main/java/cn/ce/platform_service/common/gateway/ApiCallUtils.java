@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -156,6 +157,7 @@ public class ApiCallUtils {
 			return null;
 		}
 		
+		headers = (headers == null ? new HashMap<>() : headers);
 		
 		for (String key : headers.keySet()) {
 			hrb.setHeader(key,headers.get(key));
@@ -194,6 +196,12 @@ public class ApiCallUtils {
 				return null;
 			}
 		}else{
+			try{
+				String result = IOUtils.convertStreamToString(response.getEntity().getContent());
+				_LOGGER.info("result:"+result);
+			}catch(Exception e){
+				_LOGGER.info("error happens when read http result stream");
+			}
 			_LOGGER.error("返回状态不正确，请检查是否正确调用");
 			return null;
 		}

@@ -250,4 +250,24 @@ public class DiyApplyEntity {
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
+
+	public List<AppList> getAppList() {
+		return appList;
+	}
+
+	public void setAppList(List<AppList> appList) {
+		this.appList = appList;
+	}
+	
+	
+
+	public List<AppList> getAppList() {
+		return appList;
+	}
+
+	public void setAppList(List<AppList> appList) {
+		this.appList = appList;
+	}
+	
+	
 }

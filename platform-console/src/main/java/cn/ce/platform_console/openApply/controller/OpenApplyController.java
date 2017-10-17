@@ -103,11 +103,8 @@ public class OpenApplyController {
 			return result;
 		}
 		
-		if(StringUtils.isBlank(result.getMessage())){
-			result = consoleOpenApplyService.addApply(session,apply);
-		}
+		return	result = consoleOpenApplyService.addApply(session,apply);
 		
-		return result;
 	}
 	
 	/***

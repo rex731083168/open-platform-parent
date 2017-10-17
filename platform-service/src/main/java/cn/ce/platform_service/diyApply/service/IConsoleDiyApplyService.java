@@ -2,10 +2,13 @@ package cn.ce.platform_service.diyApply.service;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoJasonObject;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
@@ -96,5 +99,30 @@ public interface IConsoleDiyApplyService {
 	public Result<String> auditUpdate(String id);
 
 	public Result<String> batchUpdate(String ids);
+	
+	
+	/**
+	 * 
+	 * @Title: productMenuList
+	 * @Description: 获取产品菜单列表
+	 * @param : @param bossInstanceCode
+	 * @param : @return
+	 * @return: Result<InterfaMessageInfoJasonObject>
+	 * @throws
+	 */
+	public Result<String> productMenuList(String bossInstanceCode);
+	
+	/**
+	 * 
+	 * @Title: registerMenu
+	 * @Description: 注册菜单
+	 * @param : @param appid
+	 * @param : @param bossInstanceCode
+	 * @param : @param menuJson
+	 * @param : @return
+	 * @return: Result<InterfaMessageInfoJasonObject>
+	 * @throws
+	 */
+	public Result<String> registerMenu(String appid,String bossInstanceCode,String menuJson);
 
 }
