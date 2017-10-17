@@ -28,7 +28,7 @@ import io.netty.handler.codec.http.HttpMethod;
 * @Date : 2017年8月14日
 */
 @Service("gatewayApiService")
-public class GatewayApiService implements IGatewayApiService{
+public class GatewayApiServiceImpl implements IGatewayApiService{
 
 	@Autowired
 	private IAPIService apiService;
@@ -39,7 +39,7 @@ public class GatewayApiService implements IGatewayApiService{
 	@Autowired
 	private IApiSecretKeyDao apiSecretKeyDao;
 	
-	private static Logger logger = LoggerFactory.getLogger(GatewayApiService.class);
+	private static Logger logger = LoggerFactory.getLogger(GatewayApiServiceImpl.class);
 //	/**
 //	 * 
 //	 * @Description : 添加版本后的api审
@@ -318,11 +318,12 @@ public class GatewayApiService implements IGatewayApiService{
 	
 	public String pushPolicy(
 			String policyId,
-			String rate,
-			String per,
-			String quotaMax,
-			String quotaRenewRate,
-			Map<String,List<String>> apiInfos){
+			Integer rate,
+			Integer per,
+			Integer quotaMax,
+			Integer quotaRenewRate,
+			Map<String,List<String>> apiInfos /**key是versionId,value是多个version的名称*/
+			){
 		
 		JSONObject params = generatePolicyJson(policyId,rate,per,quotaMax,quotaRenewRate,apiInfos);
 		
@@ -337,18 +338,18 @@ public class GatewayApiService implements IGatewayApiService{
 		return str;
 	}
 	
-	public String pushClient(String clientId, String secret, List<String> apiId, String policyId){
+	public String pushClient(String clientId, String secret, String apiIds, String policyId){
 		
-		String apiIds = "";
-		for (String str : apiId) {
-			apiIds = apiIds+","+str;
-		}
-		apiIds = apiIds.substring(1, apiIds.length());
+//		String apiIds = "";
+//		for (String str : apiId) {
+//			apiIds = apiIds+","+str;
+//		}
+//		apiIds = apiIds.substring(1, apiIds.length());
 		
 		JSONObject params = new JSONObject();
 		params.put(DBFieldsConstants.GW_CLIENT_ID, clientId);
 		params.put(DBFieldsConstants.GW_SECRET, secret);
-		params.put(DBFieldsConstants.GW_POLICY_ID, policyId);
+		params.put(DBFieldsConstants.GW_POLICY_ID_FULL, policyId);
 		params.put(DBFieldsConstants.GW_API_ID, apiIds);
 		params.put(DBFieldsConstants.GW_REDIRECT_URI, "/");
 		
@@ -360,8 +361,8 @@ public class GatewayApiService implements IGatewayApiService{
 		return str;
 	}
 
-	private JSONObject generatePolicyJson(String policyId, String rate, String per, String quotaMax, String quotaRenewRate,
-			Map<String, List<String>> apiInfos) {
+	private JSONObject generatePolicyJson(String policyId, Integer rate, Integer per, Integer quotaMax, Integer quotaRenewRate,
+			Map<String, List<String>> apiInfos) {//键是一组versionId相同版本不同的api的versionId，值是所有的version名称
 		
 		String basePath=System.getProperty("user.dir");
 		String path = basePath+"/"+Constants.GW_POLICY_JSON;

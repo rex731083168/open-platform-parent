@@ -47,8 +47,10 @@ public class DBFieldsConstants {
 	public static final String GW_API_VERSIONS_OVERRIDE_TARGET = "override_target";
 	public static final String GW_API_PROXY_LISTENPATH = "listen_path";
 	public static final String GW_API_PROXY = "proxy";
+	public static final String GW_API_VERSION_DATA = "version_data";
 	
 	public static final String GW_POLICY_ID = "id";
+	public static final String GW_POLICY_ID_FULL = "policy_id";
 	public static final String GW_POLICY_RATE = "rate";
 	public static final String GW_POLICY_PER = "per";
 	public static final String GW_POLICY_QUOTA_MAX = "quota_max";
@@ -61,4 +63,5 @@ public class DBFieldsConstants {
 	public static final String GW_CLIENT_ID = "client_id";
 	public static final String GW_SECRET= "secret";
 	public static final String GW_REDIRECT_URI = "redirect_uri";
+
 }

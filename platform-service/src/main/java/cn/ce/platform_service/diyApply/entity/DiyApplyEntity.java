@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
+import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
 import cn.ce.platform_service.users.entity.User;
 
 /***
@@ -82,6 +83,9 @@ public class DiyApplyEntity {
 
 	@Field("authIds")
 	private List<String> authIds;
+	
+	@Field("appList")
+	private List<AppList> appList;
 
 	@Transient
 	private List<ApiAuditEntity> auditList;// api集合
@@ -240,4 +244,14 @@ public class DiyApplyEntity {
 	public void setProductInstanceId(String productInstanceId) {
 		this.productInstanceId = productInstanceId;
 	}
+
+	public List<AppList> getAppList() {
+		return appList;
+	}
+
+	public void setAppList(List<AppList> appList) {
+		this.appList = appList;
+	}
+	
+	
 }

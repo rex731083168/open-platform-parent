@@ -79,7 +79,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 				String apiEnName = apiList.get(0).getApiEnName();
 				OpenApplyEntity openApplyEntity = manageOpenApplyService.findById(apiList.get(0).getOpenApplyId());
 				String listenPath = "/"+openApplyEntity.getApplyKey()+"/"+apiEnName+"/";
-				apiEntity.setListenPath(listenPath);
+				apiEntity.setListenPath(listenPath);//listenPath
 				
 				Map<String,String> map = new HashMap<String,String>(); //map中放着不同的版本和版本对应的endPoint.
 				for (ApiEntity entity : apiVersionList) { //查询旧的版本信息和Url
@@ -96,7 +96,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 				}
 				
 				/*** 添加api到网关接口 ***/
-				JSONObject params = generateGwApiJson(apiEntity.getId(), apiEntity.getApiEnName(), listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), apiEntity.getApiEnName(), listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 				
 				if(params == null){
 					_LOGGER.info("拼接网关api json发生错误");
@@ -112,7 +112,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 				
 				// TODO 这里如果将来有多个网关集群，需要修改
 				GatewayColonyEntity gatewayColonyEntity = gwCols.get(0);
-				String resultStr = ApiCallUtils.putOrPostMethod(gatewayColonyEntity.getColUrl()+Constants.NETWORK_ADD_PATH+"/"+apiEntity.getId(), 
+				String resultStr = ApiCallUtils.putOrPostMethod(gatewayColonyEntity.getColUrl()+Constants.NETWORK_ADD_PATH+"/"+apiEntity.getApiVersion().getVersionId(), 
 						params, headers, HttpMethod.POST);
 				
 				if(resultStr == null){
@@ -184,7 +184,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 		return result;
 	}
 	
-	private JSONObject generateGwApiJson(String apiId, String apiEnName, String listenPath, Map<String, String> map,
+	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, Map<String, String> map,
 
 			boolean gatewayApiVersionedTrue) {
 		
@@ -197,7 +197,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 			
 		//拼装新的json
 		job.put(DBFieldsConstants.GW_API_NAME, apiEnName);
-		job.put(DBFieldsConstants.GW_API_ID, apiId);
+		job.put(DBFieldsConstants.GW_API_ID, versionId);
 		JSONObject versions = new JSONObject();
 		for (String key : map.keySet()) {
 			JSONObject version = new JSONObject();
@@ -206,7 +206,9 @@ public class ManageApiServiceImpl implements IManageApiService{
 			version.put(DBFieldsConstants.GW_API_VERSIONS_OVERRIDE_TARGET, map.get(key));
 			versions.put(key, version);
 		}
-		job.put(DBFieldsConstants.GW_API_VERSIONS, versions);
+		//job.put(DBFieldsConstants.GW_API_VERSIONS, versions);
+		job.getJSONObject(DBFieldsConstants.GW_API_VERSION_DATA)
+			.put(DBFieldsConstants.GW_API_VERSIONS, versions);
 		
 		JSONObject proxy = (JSONObject)job.get(DBFieldsConstants.GW_API_PROXY);
 		proxy.put(DBFieldsConstants.GW_API_PROXY_LISTENPATH, listenPath);

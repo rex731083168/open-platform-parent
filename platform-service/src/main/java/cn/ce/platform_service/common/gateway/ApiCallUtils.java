@@ -196,6 +196,12 @@ public class ApiCallUtils {
 				return null;
 			}
 		}else{
+			try{
+				String result = IOUtils.convertStreamToString(response.getEntity().getContent());
+				_LOGGER.info("result:"+result);
+			}catch(Exception e){
+				_LOGGER.info("error happens when read http result stream");
+			}
 			_LOGGER.error("返回状态不正确，请检查是否正确调用");
 			return null;
 		}

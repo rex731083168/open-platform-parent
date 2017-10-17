@@ -57,8 +57,8 @@ public class User implements Serializable {
 	/** 签名秘钥 */
 	private String appSecret;
 
-	/** 状态 */
-	@Field("state")
+	/** 状态  0:禁用，1:启用*/
+	@Field("state") 
 	private int state;
 	/** 所属服务分类 */
 	@Field("appId")
