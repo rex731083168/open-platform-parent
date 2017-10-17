@@ -61,12 +61,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	/** 日志对象 */
 	private static Logger logger = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
 
-	@Value("${productMenuList}")
-	private String productMenuListURL;
-	
-	@Value("${registerMenu}")
-	private String registerMenuURL;
-	
 	@Resource
 	private IAPIService apiService;
 	@Resource
@@ -574,6 +568,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<String> productMenuList(String bossInstanceCode) {
 		Result<String> result = new Result<>();
 		
+		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList");
+		
 		if(StringUtils.isBlank(productMenuListURL)){
 			logger.error("productMenuListURL is null !");
 			result.setErrorMessage("获取产品菜单列表错误,请联系管理员!");
@@ -633,6 +629,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	
 	@Override
 	public Result<String> registerMenu(String appid, String bossInstanceCode,String menuJson) {
+		
+		String registerMenuURL = PropertiesUtil.getInstance().getValue("registerMenu");
+		
 		Result<String> result = new Result<>();
 		if(StringUtils.isBlank(registerMenuURL)){
 			logger.error("registerMenuURL is null !");
