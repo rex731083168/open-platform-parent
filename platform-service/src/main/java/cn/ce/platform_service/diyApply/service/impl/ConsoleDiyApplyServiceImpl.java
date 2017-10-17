@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
@@ -23,7 +25,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
-import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -37,6 +38,7 @@ import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
@@ -57,8 +59,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	/** 日志对象 */
 	private static Logger logger = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
 
-	@Resource
-	private IAPIService apiService;
 	@Resource
 	private IDiyApplyDao diyApplyDao;
 	@Resource
@@ -121,6 +121,20 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
+			/***************************************************************
+			 * TODO 定制应用和api以及频次绑定操作
+			 * 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
+			 * 只在当前位置做了绑定关系，如果将来绑定关系和绑定位置发生变化需要修改这段代码 
+			 * *************************************************************/
+			String clientId = UUID.randomUUID().toString().replaceAll("\\-", "");
+			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
+			String policyId = UUID.randomUUID().toString().replaceAll("\\-", "");
+			List<Integer> appIdList = new ArrayList<Integer>();
+			for (AppList appList : apps.getData().getAppList()) {
+				appIdList.add(appList.getAppId()); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
+			}
+			
+			
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));
 
 			diyApplyDao.saveOrUpdate(entity);
