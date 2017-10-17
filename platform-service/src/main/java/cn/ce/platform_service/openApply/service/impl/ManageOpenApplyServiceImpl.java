@@ -365,33 +365,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		}
 	}
 
-	// @Override
-	// public Result<String> modifyGroup1(OpenApplyEntity app) {
-	// Result<String> result = new Result<String>();
-	// try {
-	//
-	// OpenApplyEntity appAfter = findById(app.getId());
-	// if(null == appAfter){
-	// result.setErrorMessage("当前分组不存在", ErrorCodeNo.SYS006);
-	// }else{
-	// app.setNeqId(app.getId());//查询非当前修改数据进行判断
-	// List<OpenApplyEntity> findAppsByEntity = findAppsByEntity(app);
-	// if (findAppsByEntity.isEmpty()) {
-	// appAfter.setApplyName(app.getApplyName().trim());
-	// appAfter.setApplyKey(app.getApplyKey().trim());
-	// modifyById(appAfter);
-	// result.setSuccessMessage("");
-	// }else{
-	// result.setErrorMessage("分组名称或分组key不可重复！", ErrorCodeNo.SYS010);
-	// }
-	// }
-	// } catch (Exception e) {
-	// _LOGGER.info("error happens when execute modify app group ",e);
-	// result.setErrorMessage("");
-	// }
-	// return result;
-	// }
-
 	@Override
 	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize) {
 		Result<Page<OpenApplyEntity>> result = new Result<Page<OpenApplyEntity>>();
