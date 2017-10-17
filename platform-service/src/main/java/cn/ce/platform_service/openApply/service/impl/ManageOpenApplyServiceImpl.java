@@ -2,6 +2,7 @@ package cn.ce.platform_service.openApply.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -14,12 +15,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
@@ -27,12 +27,16 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.common.page.PageContext;
+import cn.ce.platform_service.diyApply.entity.inparameter.RegisterBathAppInParameterEntity;
+import cn.ce.platform_service.diyApply.entity.inparameter.SaveOrUpdateAppsInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.oauth.service.IOauthService;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * @ClassName: openApplyServiceImpl
@@ -486,9 +490,26 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 				app.setCheckState(checkState);
 				if (checkState == 3 && StringUtils.isNotBlank(remark)) {
 					app.setCheckMem(remark);
+
+					SaveOrUpdateAppsInParameterEntity[] queryVO = null;
+					queryVO[0].setAppName(app.getApplyName());
+					queryVO[0].setAppDesc(app.getApplyDesc());
+					queryVO[0].setAppCode(app.getId());
+					queryVO[0].setAppType("1");
+					queryVO[0].setOwner(app.getEnterpriseName());
+					/* 调用接口推送信息 */
+					InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
+							.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
+					/* 接收返回信息 */
+					if (interfaMessageInfoJasonObjectResult
+							.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
+						modifyById(app);
+						result.setSuccessMessage("审核成功");
+					} else {
+						result.setErrorMessage("审核失败");
+						result.setErrorCode(ErrorCodeNo.SYS001);
+					}
 				}
-				modifyById(app);
-				result.setSuccessMessage("");
 			}
 		} catch (Exception e) {
 			_LOGGER.info("error happens when execute audit group", e);
@@ -496,17 +517,38 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		}
 		return result;
 	}
-
 	@Override
 	public Result<String> batchUpdate(List<String> ids) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
-		String message = openApplyDao.bathUpdateByid(ids);
-		_LOGGER.info("bachUpdate message " + message + " count");
-		result.setSuccessMessage("成功审核:" + message + "条");
-		return result;
+		try {
+			List<OpenApplyEntity> list = openApplyDao.getListByids(ids);
+			SaveOrUpdateAppsInParameterEntity[] queryVO = null;
+			for (int i = 0; i < list.size(); i++) {
+				queryVO[i].setAppName(list.get(i).getApplyName());
+				queryVO[i].setAppDesc(list.get(i).getApplyDesc());
+				queryVO[i].setAppCode(list.get(i).getId());
+				queryVO[i].setAppType("1");
+				queryVO[i].setOwner(list.get(i).getEnterpriseName());
+			}
+			/* 调用接口推送信息 */
+			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
+					.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
+			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
+				String message = openApplyDao.bathUpdateByid(ids);
+				_LOGGER.info("bachUpdate message " + message + " count");
+				result.setSuccessMessage("成功审核:" + message + "条");
+			} else {
+				result.setErrorMessage("审核失败");
+				result.setErrorCode(ErrorCodeNo.SYS001);
+			}
+			return result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return result;
+		}
 	}
-	
+
 	@Override
 	public Result<InterfaMessageInfoString> saveOrUpdateApps(String apps) {
 		// TODO Auto-generated method stub
@@ -514,15 +556,13 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
 		String apps$ = Pattern.quote("${apps}");
 		String replacedurl = url.replaceAll(apps$, apps);
-
 		try {
 			/* get请求方法 */
-			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) HttpClientUtil.getUrlReturnObject(replacedurl,
-					InterfaMessageInfoString.class, null);
-
+			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) HttpClientUtil
+					.getUrlReturnObject(replacedurl, InterfaMessageInfoString.class, null);
 			/* 无接口时的测试方法 */
 			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)
-			// testgetUrlReturnObject("saveOrUpdateApps",
+			// HttpClientUtil.testgetUrlReturnObject("saveOrUpdateApps",
 			// replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
 				result.setData(messageInfo);
@@ -541,7 +581,5 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			return result;
 		}
 	}
-	
-	
-	
+
 }
