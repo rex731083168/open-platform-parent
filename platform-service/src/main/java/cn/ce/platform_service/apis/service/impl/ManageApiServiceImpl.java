@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -170,6 +171,12 @@ public class ManageApiServiceImpl implements IManageApiService{
 		//隐藏数据
 		apiEntity.setTestEndPoint("");
 		apiEntity.setEndPoint("");
+		
+		if(StringUtils.isNotBlank(apiEntity.getOpenApplyId())){
+			OpenApplyEntity findById = openApplyDao.findById(apiEntity.getOpenApplyId());
+			apiEntity.setOpenApplyEntity(findById);
+		}
+		
 		
 		result.setSuccessData(apiEntity);
 		return result;
