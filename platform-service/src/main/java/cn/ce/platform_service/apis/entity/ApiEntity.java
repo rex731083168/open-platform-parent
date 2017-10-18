@@ -29,6 +29,9 @@ public class ApiEntity implements Serializable {
 	@Id
 	private String id;
 	/** 所属功能分组的标识 */
+	/**
+	 * important : 这里存放的是会员中心返回来的他们维护的开放应用的主键
+	 */
 	@Field("openApplyId")
 	private String openApplyId;
 	/** 用户标识 */

@@ -64,4 +64,6 @@ public class DBFieldsConstants {
 	public static final String GW_SECRET= "secret";
 	public static final String GW_REDIRECT_URI = "redirect_uri";
 
+	public static final String APIS_APPID = "appId";
+
 }

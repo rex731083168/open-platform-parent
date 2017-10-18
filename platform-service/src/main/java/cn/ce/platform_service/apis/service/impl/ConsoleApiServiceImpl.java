@@ -328,6 +328,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		//获取versionId集合以及用逗号隔开的长数组
 		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIds(openApplyIds);
+		_LOGGER.info("根据开放应用Id查询的api列表"+apiEntityList.size());
 		StringBuffer versionIdsBuf = new StringBuffer(); // versionId用逗号分隔的长字符串
 		Set<String> versionIdList = new HashSet<String>(); //versionId的集合
 		for (ApiEntity apiEntity : apiEntityList) { //装参数
@@ -335,6 +336,12 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 				versionIdList.add(apiEntity.getApiVersion().getVersionId());
 				versionIdsBuf.append(","+apiEntity.getApiVersion().getVersionId());
 			}
+		}
+		if(!(versionIdsBuf.length() > 0)){
+			_LOGGER.info("versionidBuf的长度为0,查询不到api");
+			_LOGGER.info("不推送网关，直接分配clientId和secret");
+			// TODO 紧急
+			return true;
 		}
 		versionIdsBuf.deleteCharAt(0); //versionId用逗号分隔的长字符串
 		Map<String, List<String>> apiInfos = new HashMap<String,List<String>>();
