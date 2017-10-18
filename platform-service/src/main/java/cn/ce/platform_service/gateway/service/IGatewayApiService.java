@@ -1,6 +1,7 @@
 package cn.ce.platform_service.gateway.service;
 
-import cn.ce.platform_service.common.Result;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @Description : 说明
@@ -9,12 +10,11 @@ import cn.ce.platform_service.common.Result;
 */
 public interface IGatewayApiService {
 
-//	Result<String> auditApi(String apiId, Integer checkState, String checkMem);
+
+	String pushPolicy(String policyId, Integer rate, Integer per, Integer quotaMax, 
+			Integer quotaRenewRate, Map<String,List<String>> apiInfos /**key是versionId,value是多个version的名称*/);
 	
-//	Result<String> auditKey(String secretKey, Integer checkState);
+	String pushClient(String clientId, String secret, String apiIds, String policyId);
 	
-//	Result<String> deleKey(String secretKey, String applyId);
-	
-//	Result<String> auditApi2(String apiId, Integer checkState, String checkMem);
 	
 }

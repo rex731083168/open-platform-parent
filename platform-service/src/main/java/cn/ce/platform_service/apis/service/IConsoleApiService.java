@@ -30,4 +30,14 @@ public interface IConsoleApiService {
 
 	Result<?> checkVersion(String apiId, String version);
 
+	boolean boundDiyApplyWithApi(
+			String policyId,
+			String clientId,
+			String secret,
+			Integer rate,
+			Integer per,
+			Integer quotaMax,
+			Integer quotaRenewRate,
+			List<String> openApplyIds);
+
 }
