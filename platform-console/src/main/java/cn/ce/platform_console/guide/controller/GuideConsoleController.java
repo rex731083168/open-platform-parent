@@ -91,14 +91,13 @@ public class GuideConsoleController {
 	/***
 	 * 
 	 * @Title: submitVerify @Description: 提交审核 @param : @param request @param
-	 * : @param response @param : @param id @param : @return @return:
-	 * Result<?> @throws
+	 *         : @param response @param : @param id @param : @return @return:
+	 *         Result<?> @throws
 	 */
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
 	@ResponseBody
-	public Result<?> submitVerify(@RequestParam String ids, @RequestParam Integer state,
-			@RequestParam String checkMem) {
-		return iConsoleGuideService.submitVerify(ids, state, checkMem);
+	public Result<?> submitVerify(@RequestParam String ids) {
+		return iConsoleGuideService.submitVerify(ids);
 	}
 
 }

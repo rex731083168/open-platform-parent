@@ -198,11 +198,11 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	}
 
 	@Override
-	public Result<String> submitVerify(String id, Integer state, String checkMem) {
+	public Result<String> submitVerify(String id) {
 		Result<String> result = new Result<>();
 		List<String> asList = SplitUtil.splitStringWithComma(id);
 		try {
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(asList, state, checkMem));
+			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(asList,AuditConstants.GUIDE_COMMITED, ""));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;
