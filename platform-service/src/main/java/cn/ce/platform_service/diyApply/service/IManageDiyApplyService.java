@@ -9,6 +9,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
 /**
  * @Description : 说明
@@ -32,5 +33,12 @@ public interface IManageDiyApplyService {
 	 *         : @return @return: ApplyEntity @throws
 	 */
 	public Result<DiyApplyEntity> findById(String applyId);
+	
+	/**
+	 * @Description 根据key获取产品实例
+	 * @param key
+	 * @return 产品实例
+	 */
+	public Result<TenantApps> findTenantAppsByTenantKey(String key);
 
 }
