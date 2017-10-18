@@ -66,15 +66,7 @@ public interface IConsoleDiyApplyService {
 	 */
 	public DiyApplyEntity findById(String applyId);
 
-	/**
-	 * @Description 根据key获取产品实例
-	 * @param key
-	 * @return 产品实例
-	 */
-	public Result<TenantApps> findTenantAppsByTenantKey(String key);
-
-	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize);
-
+	
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
 
