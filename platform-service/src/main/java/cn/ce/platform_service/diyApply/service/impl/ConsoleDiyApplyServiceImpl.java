@@ -93,6 +93,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		}
 
+		// 验证产品码
+		if (this.findTenantAppsByTenantKey(entity.getProductAuthCode()).getData()
+				.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE) {
+			result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS015);
+			return result;
+		}
+
 		// 新增
 		if (StringUtils.isBlank(entity.getId())) {
 			entity.setUserId(entity.getUser().getId());
