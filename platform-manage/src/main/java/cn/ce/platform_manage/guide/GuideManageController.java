@@ -1,8 +1,6 @@
 package cn.ce.platform_manage.guide;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
@@ -52,11 +49,8 @@ public class GuideManageController {
 
 	@ApiOperation("指南详情")
 	@RequestMapping(value = "/getGuideByid", method = RequestMethod.GET)
-	public Result<GuideEntity> getGuideByid(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "id", required = true) String id) {
-		Result<GuideEntity> result = new Result<GuideEntity>();
-		result = iManageGuideService.getByid(id);
-		return result;
+	public Result<GuideEntity> getGuideByid(@RequestParam(value = "id", required = true) String id) {
+		return iManageGuideService.getByid(id);
 
 	}
 

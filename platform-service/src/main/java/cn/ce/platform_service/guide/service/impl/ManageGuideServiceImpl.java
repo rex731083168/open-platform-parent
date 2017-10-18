@@ -80,7 +80,13 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	public Result<GuideEntity> getByid(String id) {
 		// TODO Auto-generated method stub
 		Result<GuideEntity> result = new Result<GuideEntity>();
-		result.setData(guideDaoImpl.getById(id));
+		GuideEntity byId = guideDaoImpl.getById(id);
+		if(null == byId){
+			result.setMessage("应用id不存在!");
+			result.setErrorCode(ErrorCodeNo.SYS009);
+		}else{
+			result.setSuccessData(byId);
+		}
 		return result;
 	}
 
