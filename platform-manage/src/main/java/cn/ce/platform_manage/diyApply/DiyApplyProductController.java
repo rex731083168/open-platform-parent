@@ -39,7 +39,7 @@ public class DiyApplyProductController {
 
 	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
-	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = true) String owner,
+	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = false) String owner,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {

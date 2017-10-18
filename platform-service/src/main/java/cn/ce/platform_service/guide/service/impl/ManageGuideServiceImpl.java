@@ -59,11 +59,11 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids,Integer state) {
+	public Result<String> batchUpdate(List<String> ids,Integer state,String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids,state));
+			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids,state,checkMem));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;
@@ -84,26 +84,5 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 		return result;
 	}
 
-	@Override
-	public Result<String> auditUpdate(String id, int checkState, String checkMem) {
-		// TODO Auto-generated method stub
-
-		Result<String> result = new Result<String>();
-		GuideEntity entity = guideDaoImpl.getById(id);
-		try {
-			if (entity != null) {
-
-				entity.setCheckState(checkState);
-				entity.setCheckMem(checkMem);
-			}
-			result.setSuccessMessage("操作成功");
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("审核失败");
-			return result;
-		}
-
-	}
+	
 }

@@ -42,11 +42,11 @@ public class GuideManageController {
 
 	@ApiOperation("指南列表")
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
-	public Result<?> guideList(String guideName, String creatUserName,String appIyId,
+	public Result<?> guideList(String guideName, String creatUserName, String appIyId,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		result = iManageGuideService.guideList(guideName, creatUserName,appIyId, currentPage, pageSize);
+		result = iManageGuideService.guideList(guideName, creatUserName, appIyId, currentPage, pageSize);
 		return result;
 	}
 
@@ -62,8 +62,9 @@ public class GuideManageController {
 
 	@ApiOperation("批量审核")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids) {
-		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids),AuditConstants.GUIDE_SUCCESS);
+	public Result<String> batchUpdate(@RequestBody String ids, @RequestParam Integer state,
+			@RequestParam String checkMem) {
+		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids), state, checkMem);
 	}
 
 }

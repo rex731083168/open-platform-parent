@@ -21,13 +21,13 @@ public interface IGuideDao {
 	public void saveOrUpdateGuide(GuideEntity g);
 
 	public Page<GuideEntity> listByPage(Page<GuideEntity> page, Query query);
-	
+
 	public List<GuideEntity> list(Query query);
-	
+
 	public GuideEntity getById(String id);
 
-	public int bachUpdateGuide(List<String> ids,Integer state);
-	
 	public void deleteByid(String id);
-	
+
+	String bachUpdateGuide(List<String> ids, Integer state, String checkMem);
+
 }

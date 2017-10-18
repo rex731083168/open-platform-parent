@@ -18,12 +18,10 @@ import cn.ce.platform_service.guide.entity.GuideEntity;
  **/
 public interface IManageGuideService {
 
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,String appIyId,
-			int currentPage, int pageSize);
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String appIyId, int currentPage,
+			int pageSize);
 
-	public Result<String> batchUpdate(List<String> ids,Integer state);
-	
-	public Result<String> auditUpdate(String id ,int checkState,String checkMem);
-	
 	public Result<GuideEntity> getByid(String id);
+
+	Result<String> batchUpdate(List<String> ids, Integer state, String checkMem);
 }

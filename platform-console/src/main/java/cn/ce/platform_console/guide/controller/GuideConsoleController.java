@@ -42,19 +42,19 @@ public class GuideConsoleController {
 
 	@RequestMapping(value = "/guide", method = RequestMethod.POST)
 	@ApiOperation("添加指南")
-	public Result<?> guideAdd(HttpSession session,@RequestBody GuideEntity g) {
+	public Result<?> guideAdd(HttpSession session, @RequestBody GuideEntity g) {
 		Result<?> result = new Result<>();
-		if(StringUtils.isBlank(g.getGuideName())){
+		if (StringUtils.isBlank(g.getGuideName())) {
 			result.setErrorCode(ErrorCodeNo.SYS005);
 			result.setMessage("指南名称不能为空!");
 			return result;
 		}
 		return iConsoleGuideService.add(session, g);
 	}
-	
+
 	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.PUT)
 	@ApiOperation("修改指南")
-	public Result<?> guideUpdate(@RequestBody GuideEntity g , @PathVariable("gid") String gid) {
+	public Result<?> guideUpdate(@RequestBody GuideEntity g, @PathVariable("gid") String gid) {
 		g.setId(gid);
 		return iConsoleGuideService.update(g);
 	}
@@ -71,7 +71,8 @@ public class GuideConsoleController {
 
 	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.DELETE)
 	@ApiOperation("删除指南")
-	public Result<?> guideDelete(HttpServletRequest request, HttpServletResponse response, HttpSession session,@PathVariable("gid") String id) {
+	public Result<?> guideDelete(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+			@PathVariable("gid") String id) {
 		return iConsoleGuideService.delete(id);
 	}
 
@@ -79,7 +80,7 @@ public class GuideConsoleController {
 	@ApiOperation("获取指南详情")
 	public Result<GuideEntity> getGuideByid(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("gid") String id) {
-		
+
 		Result<GuideEntity> result = new Result<>();
 		result = iConsoleGuideService.getByid(id);
 
@@ -89,20 +90,15 @@ public class GuideConsoleController {
 
 	/***
 	 * 
-	 * @Title: submitVerify
-	 * @Description: 提交审核
-	 * @param : @param request
-	 * @param : @param response
-	 * @param : @param id
-	 * @param : @return
-	 * @return: Result<?>
-	 * @throws
+	 * @Title: submitVerify @Description: 提交审核 @param : @param request @param
+	 * : @param response @param : @param id @param : @return @return:
+	 * Result<?> @throws
 	 */
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
 	@ResponseBody
-	public Result<?> submitVerify(@RequestParam(value = "id", required = true) String id) {
-		return iConsoleGuideService.submitVerify(id,AuditConstants.GUIDE_COMMITED);
+	public Result<?> submitVerify(@RequestParam String ids, @RequestParam Integer state,
+			@RequestParam String checkMem) {
+		return iConsoleGuideService.submitVerify(ids, state, checkMem);
 	}
-	
 
 }
