@@ -27,8 +27,11 @@ public interface INewApiDao {
 	ApiEntity findOneByFields(Map<String, Object> map);
 
 	List<ApiEntity> findApiByIds(List<String> apiId);
+	
+	List<ApiEntity> findApiByApplyIds(List<String> appIds);
 
 	List<ApiEntity> findByField(String key, String value);
+
 
 
 }

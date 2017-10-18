@@ -3,8 +3,10 @@ package cn.ce.platform_service.apis.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -322,20 +324,45 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			Integer per,
 			Integer quotaMax,
 			Integer quotaRenewRate,
-			List<String> appIds){
+			List<String> openApplyIds){
 		
-		//String policyResult =  gatewayApiService.pushPolicy(policyId, rate, per, quotaMax, quotaRenewRate, apiInfos);
+		//获取versionId集合以及用逗号隔开的长数组
+		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIds(openApplyIds);
+		StringBuffer versionIdsBuf = new StringBuffer(); // versionId用逗号分隔的长字符串
+		Set<String> versionIdList = new HashSet<String>(); //versionId的集合
+		for (ApiEntity apiEntity : apiEntityList) { //装参数
+			if(StringUtils.isNotBlank(apiEntity.getApiVersion().getVersionId())){
+				versionIdList.add(apiEntity.getApiVersion().getVersionId());
+				versionIdsBuf.append(","+apiEntity.getApiVersion().getVersionId());
+			}
+		}
+		String versionidsStr = versionIdsBuf.substring(1); //versionId用逗号分隔的长字符串
 		
-//		if(StringUtils.isBlank(policyResult)){ //推送policy失败
-//			_LOGGER.error("____________>error happens when execure push policy to gateway");
-//			return false;
-//		}
+		Map<String, List<String>> apiInfos = new HashMap<String,List<String>>();
+		for (String versionId : versionIdList) {
+			List<ApiEntity> apiList = newApiDao.findByField("apiVersion.versionId", versionId);
+			List<String> versionList = new ArrayList<String>();
+			for (ApiEntity apiEntity : apiList) {
+				versionList.add(apiEntity.getApiVersion().getVersion());
+			}
+			apiInfos.put(versionId, versionList);
+		}
+		//推送policy
+		String policyResult =  gatewayApiService.pushPolicy(policyId, rate, per, quotaMax, quotaRenewRate, apiInfos);
 		
-		//String clientResult = gatewayApiService.pushClient(clientId, secret, apiIds, policyId);
+		if(StringUtils.isBlank(policyResult)){ //推送policy失败
+			_LOGGER.error("____________>error happens when execute push policy to gateway");
+			return false;
+		}
 		
-//		if(StringUtils.isBlank(clientResult)){
-//			//_LOGGER.error(arg0);
-//		}
-		return false;
+		//推送clientId;
+		String clientResult = gatewayApiService.pushClient(clientId, secret, versionidsStr, policyId);
+		
+		if(StringUtils.isBlank(clientResult)){
+			_LOGGER.error("____________>error happens when execute push client to gateway");
+			return false;
+		}
+		
+		return true;
 	}
 }

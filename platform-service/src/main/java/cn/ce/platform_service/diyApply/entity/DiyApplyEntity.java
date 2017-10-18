@@ -48,12 +48,11 @@ public class DiyApplyEntity {
 	@Field("domainUrl")
 	private String domainUrl;
 
-	/** 访问频次类型 0:标准，1:定制，2:高定制 */
+	/** 访问频次类型 1:标准，2:定制，3:高定制 */
 	@Field("frequencyType")
-	private String frequencyType;
+	private Integer frequencyType;
 	
 	/** 访问频次 */
-
 	@Field("rate")
 	private Integer rate; 
 	@Field("per")
@@ -63,6 +62,14 @@ public class DiyApplyEntity {
 	@Field("quotaRenewRate")
 	private Integer quotaRenewRate;
 
+	/** 网关相关参数 */
+	@Field("policyId")
+	private String policyId;
+	@Field("clientId")
+	private String clientId;
+	@Field("secret")
+	private String secret;
+	
 	/** 应用logo */
 	@Field("logoImage")
 	private byte[] logoImage;
@@ -203,15 +210,13 @@ public class DiyApplyEntity {
 		this.enterpriseName = enterpriseName;
 	}
 
-	public String getFrequencyType() {
+	public Integer getFrequencyType() {
 		return frequencyType;
 	}
 
-	public void setFrequencyType(String frequencyType) {
+	public void setFrequencyType(Integer frequencyType) {
 		this.frequencyType = frequencyType;
 	}
-
-
 
 	public Integer getRate() {
 		return rate;
@@ -284,5 +289,31 @@ public class DiyApplyEntity {
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
+
+	public String getPolicyId() {
+		return policyId;
+	}
+
+	public void setPolicyId(String policyId) {
+		this.policyId = policyId;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getSecret() {
+		return secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+	
+	
 	
 }

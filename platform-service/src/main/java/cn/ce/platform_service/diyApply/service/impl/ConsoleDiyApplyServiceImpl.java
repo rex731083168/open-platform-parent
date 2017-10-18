@@ -22,10 +22,13 @@ import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.apis.service.IApiOauthService;
+import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.MongoFiledConstants;
+import cn.ce.platform_service.common.RateConstants;
+import cn.ce.platform_service.common.RateEnum;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
@@ -52,13 +55,15 @@ import net.sf.json.JSONObject;
 public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	/** 日志对象 */
-	private static Logger logger = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
+	private static Logger _LOGGER = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
 
 	@Resource
 	private IDiyApplyDao diyApplyDao;
 	@Resource
 	private IApiOauthService apiOauthService;
-
+	@Resource
+	private IConsoleApiService consoleApiService;
+	
 	@Override
 	public Result<String> saveApply(DiyApplyEntity entity) {
 		Result<String> result = new Result<>();
@@ -110,33 +115,70 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
 			} catch (Exception e) {
 				// TODO: handle exception
-				logger.error("get messaget from url faile resaon " + e.getMessage() + "");
+				_LOGGER.error("get messaget from url faile resaon " + e.getMessage() + "");
 			}
 
 			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
 			/***************************************************************
-			 * TODO 定制应用和api以及频次绑定操作
+			 * TODO 定制应用和api以及频次绑定操作推送网关
 			 * 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
 			 * 只在当前位置做了绑定关系，如果将来绑定关系和绑定位置发生变化需要修改这段代码 
 			 * *************************************************************/
+			_LOGGER.info("/********************创建定制应用绑定频次，推送网关开始***************************/");
+			String policyId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String clientId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
-			String policyId = UUID.randomUUID().toString().replaceAll("\\-", "");
-			List<Integer> appIdList = new ArrayList<Integer>();
+			List<String> appIdList = new ArrayList<String>();
 			for (AppList appList : apps.getData().getAppList()) {
-				appIdList.add(appList.getAppId()); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
+				appIdList.add(appList.getAppCode()); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
 			}
 			
+			//绑定频次，推送网关
+			Integer frequencyType = entity.getFrequencyType();
+			boolean flag = false;
+			if(frequencyType == RateEnum.RATE1.toValue()){
+				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_1_RATE, RateConstants.TYPE_1_PER, RateConstants.TYPE_1_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE, appIdList);
+				entity.setPer(RateConstants.TYPE_1_PER);
+				entity.setRate(RateConstants.TYPE_1_RATE);
+				entity.setQuotaMax(RateConstants.TYPE_1_QUOTA_MAX);
+				entity.setQuotaRenewRate(RateConstants.TYPE_1_QUOTA_RENEW_RATE);
+			}else if(frequencyType == RateEnum.RATE2.toValue()){
+				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_2_RATE, RateConstants.TYPE_2_PER, RateConstants.TYPE_2_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE, appIdList);
+				entity.setPer(RateConstants.TYPE_2_PER);
+				entity.setRate(RateConstants.TYPE_2_RATE);
+				entity.setQuotaMax(RateConstants.TYPE_2_QUOTA_MAX);
+				entity.setQuotaRenewRate(RateConstants.TYPE_2_QUOTA_RENEW_RATE);
+			}else if(frequencyType  == RateEnum.RATE3.toValue()){
+				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_3_RATE, RateConstants.TYPE_3_PER, RateConstants.TYPE_3_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE, appIdList);
+				entity.setPer(RateConstants.TYPE_3_PER);
+				entity.setRate(RateConstants.TYPE_3_RATE);
+				entity.setQuotaMax(RateConstants.TYPE_3_QUOTA_MAX);
+				entity.setQuotaRenewRate(RateConstants.TYPE_3_QUOTA_RENEW_RATE);
+			}else{
+				result.setErrorMessage("当前频次档位不存在", ErrorCodeNo.SYS012);
+				return result;
+			}
 			
-			logger.info("insert apply begin : " + JSON.toJSONString(entity));
+			if(flag == false){
+				_LOGGER.error("添加定制应用，推送网关发送异常");
+				result.setErrorMessage("", ErrorCodeNo.SYS014);
+				return result;
+			}
+			entity.setPolicyId(policyId);
+			entity.setClientId(clientId);
+			entity.setSecret(secret);
+			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
 
+			
+			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
 			diyApplyDao.saveOrUpdate(entity);
-			logger.info("save end");
+			_LOGGER.info("save end");
 			result.setSuccessMessage("新增成功!");
 
-		} else {
+		}
+		else {
 			// 修改
 			DiyApplyEntity applyById = diyApplyDao.findById(entity.getId());
 
@@ -158,9 +200,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				}
 			}
 
-			logger.info("update apply begin : " + JSON.toJSONString(applyById));
+			_LOGGER.info("update apply begin : " + JSON.toJSONString(applyById));
 			diyApplyDao.saveOrUpdate(applyById);
-			logger.info("save end");
+			_LOGGER.info("save end");
 			result.setSuccessMessage("修改成功!");
 
 		}
@@ -207,9 +249,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			result.setErrorMessage("该应用已审核,无法删除!");
 			return result;
 		} else {
-			logger.info("delete apply begin applyId:" + id);
+			_LOGGER.info("delete apply begin applyId:" + id);
 			diyApplyDao.delete(id);
-			logger.info("delete apply end");
+			_LOGGER.info("delete apply end");
 			result.setSuccessMessage("删除成功!");
 			return result;
 		}
@@ -326,14 +368,14 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				result.setSuccessMessage("");
 				return result;
 			} else {
-				logger.error(
+				_LOGGER.error(
 						"findTenantAppsByTenantKey data http getfaile return code :" + applyproduct.getMsg() + " ");
 				result.setErrorCode(ErrorCodeNo.SYS006);
 				return result;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error("findTenantAppsByTenantKey http error " + e + "");
+			_LOGGER.error("findTenantAppsByTenantKey http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("请求失败");
 			return result;
@@ -363,13 +405,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				result.setSuccessMessage("");
 				return result;
 			} else {
-				logger.error("generatorTenantKey data http getfaile return code :" + messageInfo.getMsg() + " ");
+				_LOGGER.error("generatorTenantKey data http getfaile return code :" + messageInfo.getMsg() + " ");
 				result.setErrorCode(ErrorCodeNo.SYS006);
 				return result;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error("generatorTenantKey http error " + e + "");
+			_LOGGER.error("generatorTenantKey http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("请求失败");
 			return result;
@@ -393,7 +435,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.error("auditUpdate failed reason " + e + "");
+			_LOGGER.error("auditUpdate failed reason " + e + "");
 			result.setErrorMessage("提交失败");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			return result;
@@ -401,7 +443,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Result<String> batchUpdate(String ids) {
 		// TODO Auto-generated method stub
@@ -409,12 +450,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		try {
 			List<String> idslist = SplitUtil.splitStringWithComma(ids);
 			String message = diyApplyDao.bathUpdateByid(idslist);
-			logger.info("bachUpdate diyApply message " + message + " count");
+			_LOGGER.info("bachUpdate diyApply message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.error("batchUpdate failed reason " + e + "");
+			_LOGGER.error("batchUpdate failed reason " + e + "");
 			result.setErrorMessage("提交失败");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			return result;
@@ -429,20 +470,20 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList");
 
 		if (StringUtils.isBlank(productMenuListURL)) {
-			logger.error("productMenuListURL is null !");
+			_LOGGER.error("productMenuListURL is null !");
 			result.setErrorMessage("获取产品菜单列表错误,请联系管理员!");
 			return result;
 		}
 
 		String reqURL = productMenuListURL.replace("{bossInstanceCode}", bossInstanceCode);
 
-		logger.info("send productMenuList URL is " + reqURL);
+		_LOGGER.info("send productMenuList URL is " + reqURL);
 
 		try {
 
 			String sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
 
-			logger.debug("produMenuList return json:" + sendGetRequest);
+			_LOGGER.debug("produMenuList return json:" + sendGetRequest);
 
 			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest);
 
@@ -471,13 +512,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				result.setMessage(jsonObject.get("msg").toString());
 
 			} else {
-				logger.error("获取产品菜单列表时,缺失返回值:" + jsonObject);
+				_LOGGER.error("获取产品菜单列表时,缺失返回值:" + jsonObject);
 
 				result.setErrorMessage("获取产品菜单列表错误!");
 			}
 
 		} catch (Exception e) {
-			logger.error("send productMenuList error e:" + e.toString());
+			_LOGGER.error("send productMenuList error e:" + e.toString());
 			result.setErrorMessage("获取产品菜单列表错误!");
 		}
 		// TODO Auto-generated method stub
@@ -491,7 +532,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		Result<String> result = new Result<>();
 		if (StringUtils.isBlank(registerMenuURL)) {
-			logger.error("registerMenuURL is null !");
+			_LOGGER.error("registerMenuURL is null !");
 			result.setErrorMessage("发布菜单错误,请联系管理员");
 			return result;
 		}
@@ -530,12 +571,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				}
 				result.setMessage(jsonObject.get("msg").toString());
 			} else {
-				logger.error("发布菜单时,缺失返回值:" + jsonObject);
+				_LOGGER.error("发布菜单时,缺失返回值:" + jsonObject);
 
 				result.setErrorMessage("发布菜单出现错误!");
 			}
 		} catch (Exception e) {
-			logger.error("send registerMenuURL error,e:" + e.toString());
+			_LOGGER.error("send registerMenuURL error,e:" + e.toString());
 			result.setErrorMessage("发布菜单错误!");
 		}
 		return result;
@@ -576,13 +617,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				result.setSuccessMessage("");
 				return result;
 			} else {
-				logger.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
+				_LOGGER.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
 				result.setErrorCode(ErrorCodeNo.SYS006);
 				return result;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error("findPagedApps http error " + e + "");
+			_LOGGER.error("findPagedApps http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("请求失败");
 			return result;
