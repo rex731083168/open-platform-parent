@@ -454,13 +454,15 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 				return result;
 			}
 			List<OpenApplyEntity> list = openApplyDao.getListByids(ids);
-			SaveOrUpdateAppsInParameterEntity[] queryVO = null;
+			SaveOrUpdateAppsInParameterEntity[] queryVO = new SaveOrUpdateAppsInParameterEntity[list.size()];
 			for (int i = 0; i < list.size(); i++) {
-				queryVO[i].setAppName(list.get(i).getApplyName());
-				queryVO[i].setAppDesc(list.get(i).getApplyDesc());
-				queryVO[i].setAppCode(list.get(i).getId());
-				queryVO[i].setAppType("1");
-				queryVO[i].setOwner(list.get(i).getEnterpriseName());
+				SaveOrUpdateAppsInParameterEntity sue = new SaveOrUpdateAppsInParameterEntity();
+				sue.setAppName(list.get(i).getApplyName());
+				sue.setAppDesc(list.get(i).getApplyDesc());
+				sue.setAppCode(list.get(i).getId());
+				sue.setAppType("1");
+				sue.setOwner(list.get(i).getEnterpriseName());
+				queryVO[i] = sue;
 			}
 			/* 调用接口推送信息 */
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this

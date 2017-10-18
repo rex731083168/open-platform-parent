@@ -1,5 +1,6 @@
 package cn.ce.platform_service.openApply.dao.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -141,7 +142,7 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 
 		return findAsPage;
 	}
-	
+
 	@Override
 	public Page<OpenApplyEntity> findOpenApplyByEntity(QueryOpenApplyEntity entity, int currentPage, int pageSize) {
 		Criteria c = new Criteria();
@@ -149,26 +150,25 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		if (StringUtils.isNotBlank(entity.getAppName())) {
 			c.and(MongoFiledConstants.OPEN_APPLY_APPLYNAME).regex(entity.getAppName());
 		}
-		
+
 		if (StringUtils.isNotBlank(entity.getUserName())) {
 			c.and(MongoFiledConstants.OPEN_APPLY_USERNAME).regex(entity.getUserName());
 		}
-		
+
 		if (StringUtils.isNotBlank(entity.getEnterpriseName())) {
 			c.and(MongoFiledConstants.OPEN_APPLY_ENTERPRISENAME).regex(entity.getEnterpriseName());
 		}
-		
-		if(null != entity.getCheckState()){
+
+		if (null != entity.getCheckState()) {
 			c.and(MongoFiledConstants.OPEN_APPLY_CHECKSTATE).is(entity.getCheckState());
 		}
-		
+
 		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
 		// 分页
-		Page<OpenApplyEntity> findAsPage = super.findAsPage(query, currentPage, pageSize,OpenApplyEntity.class);
+		Page<OpenApplyEntity> findAsPage = super.findAsPage(query, currentPage, pageSize, OpenApplyEntity.class);
 
 		return findAsPage;
 	}
-	
 
 	private Query generalSecretQueryBean(OpenApplyEntity entity) {
 		// 构建查询对象
@@ -216,23 +216,25 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		return listApp;
 	}
 
-	@SuppressWarnings("static-access")
 	@Override
 	/**
 	 * 批量审核
 	 */
-	public String bathUpdateByid(List<String> ids,Integer checkState,String checkMem) {
+	public String bathUpdateByid(List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
+		DecimalFormat df = new DecimalFormat("0");
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", checkState).update("checkMem", checkMem), true, true));
+					Update.update("checkState", checkState), true, true));
+			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+					Update.update("checkMem", checkMem), true, true));
 		}
-		return String.valueOf(super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list));
+		return String.valueOf(
+				df.format((float) super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list) / list.size()));
 
 	}
 
-	
 	@Override
 	public List<OpenApplyEntity> getListByids(List<String> ids) {
 		// TODO Auto-generated method stub

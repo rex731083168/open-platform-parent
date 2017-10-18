@@ -1,5 +1,6 @@
 package cn.ce.platform_service.diyApply.dao.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -62,26 +63,18 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 		return super.findById(id);
 	}
 
-	@SuppressWarnings("static-access")
 	public String bathUpdateByid(List<String> ids, int checkState, String checkMem) {
 		// TODO Auto-generated method stub
+		DecimalFormat df = new DecimalFormat("0");
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", checkState).update("checkMem", checkMem), false, true));
-		}
-		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
-
-	}
-
-	public String bathUpdateByid(List<String> ids) {
-		// TODO Auto-generated method stub
-		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
-		for (int i = 0; i < ids.size(); i++) {
+					Update.update("checkState", checkState), false, true));
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", AuditConstants.DIY_APPLY_CHECKED_COMMITED), false, true));
+					Update.update("checkMem", checkMem), false, true));
+
 		}
-		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
+		return df.format((float) super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list) / list.size());
 
 	}
 
@@ -96,23 +89,26 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 
 	}
 
-	@SuppressWarnings("static-access")
 	@Override
 	public String bathUpdateByidAndPush(List<String> ids, Map<String, Object> map, int checkState, String checkMem) {
 		// TODO Auto-generated method stub
+
+		DecimalFormat df = new DecimalFormat("0");
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
-			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", checkState).update("checkMem", checkMem), false, true));
 			Iterator<String> iter = map.keySet().iterator();
 			while (iter.hasNext()) {
 				String keytemp = iter.next();
 				if (keytemp.equals(ids.get(i))) {
 					list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
 							Update.update("appId", map.get(keytemp)), false, true));
+					list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+							Update.update("checkState", checkState), false, true));
+					list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+							Update.update("checkMem", checkMem), false, true));
 				}
 			}
 		}
-		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
+		return df.format((float) super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list) / list.size());
 	}
 }

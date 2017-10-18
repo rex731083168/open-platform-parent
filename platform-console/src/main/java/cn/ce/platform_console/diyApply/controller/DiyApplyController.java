@@ -124,16 +124,11 @@ public class DiyApplyController {
 		return consoleDiyApplyService.updateApply(apply);
 	}
 	
-	@RequestMapping(value = "/auditUpdate", method = RequestMethod.POST)
-	@ApiOperation("单个发布应用 更改checkState为1")
-	public Result<String> auditUpdate(@RequestParam String id) {
-		return consoleDiyApplyService.auditUpdate(id);
-	}
 	
 	@ApiOperation("批量发布应用 更改checkState为1 ")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids) {
-		return consoleDiyApplyService.batchUpdate(ids);
+	public Result<String> batchUpdate(@RequestBody String ids ,@RequestParam int checkState ,@RequestParam String checkMem) {
+		return consoleDiyApplyService.batchUpdate(ids,checkState,checkMem);
 	}
 	
 	

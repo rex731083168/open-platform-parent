@@ -86,14 +86,17 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			Query query = new Query(Criteria.where("id").is(ids.get(0)));
 			List<DiyApplyEntity> diyApply = diyApplyDao.findListByEntity(query);
 
-			RegisterBathAppInParameterEntity[] queryVO = null;
+			RegisterBathAppInParameterEntity[] queryVO = new RegisterBathAppInParameterEntity[diyApply.size()];
 			for (int i = 0; i < diyApply.size(); i++) {
-				queryVO[i].setAppName(diyApply.get(i).getApplyName());
-				queryVO[i].setAppUrl(diyApply.get(i).getDomainUrl());
-				queryVO[i].setAppDesc(diyApply.get(i).getApplyDesc());
-				queryVO[i].setAppCode(diyApply.get(i).getId());
-				queryVO[i].setAppType("2");
-				queryVO[i].setOwner(diyApply.get(i).getEnterpriseName());
+				RegisterBathAppInParameterEntity rapentity= new RegisterBathAppInParameterEntity();
+				rapentity.setAppName(diyApply.get(i).getApplyName());
+				rapentity.setAppUrl(diyApply.get(i).getDomainUrl());
+				rapentity.setAppDesc(diyApply.get(i).getApplyDesc());
+				rapentity.setAppCode(diyApply.get(i).getId());
+				rapentity.setAppType("2");
+				rapentity.setOwner(diyApply.get(i).getEnterpriseName());
+				
+				queryVO[i]=rapentity;
 			}
 			/* 开发者在开放平台发布应用审核 */
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
@@ -112,6 +115,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			}
 			/* 审核成功 */
 			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
+				
 				String message = String.valueOf(diyApplyDao.bathUpdateByidAndPush(ids, map, checkState, checkMem));
 				_LOGGER.info("bachUpdate diyApply message " + message + " count");
 				result.setSuccessMessage("审核成功:" + message + "条");
@@ -123,7 +127,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			_LOGGER.info("bachUpdate diyApply message faile " + e + " ");
+			_LOGGER.error("bachUpdate diyApply message faile ",e);
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("审核失败");
 			return result;

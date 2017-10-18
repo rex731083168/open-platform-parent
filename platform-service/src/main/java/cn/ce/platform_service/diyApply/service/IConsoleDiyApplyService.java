@@ -77,35 +77,25 @@ public interface IConsoleDiyApplyService {
 
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
-	public Result<String> auditUpdate(String id);
 
-	public Result<String> batchUpdate(String ids);
-	
-	
+	public Result<String> batchUpdate(String ids,int checkState, String checkMem);
+
 	/**
 	 * 
-	 * @Title: productMenuList
-	 * @Description: 获取产品菜单列表
-	 * @param : @param bossInstanceCode
-	 * @param : @return
-	 * @return: Result<InterfaMessageInfoJasonObject>
-	 * @throws
+	 * @Title: productMenuList @Description: 获取产品菜单列表 @param : @param
+	 * bossInstanceCode @param : @return @return:
+	 * Result<InterfaMessageInfoJasonObject> @throws
 	 */
 	public Result<String> productMenuList(String bossInstanceCode);
-	
+
 	/**
 	 * 
-	 * @Title: registerMenu
-	 * @Description: 注册菜单
-	 * @param : @param appid
-	 * @param : @param bossInstanceCode
-	 * @param : @param menuJson
-	 * @param : @return
-	 * @return: Result<InterfaMessageInfoJasonObject>
-	 * @throws
+	 * @Title: registerMenu @Description: 注册菜单 @param : @param appid @param : @param
+	 * bossInstanceCode @param : @param menuJson @param : @return @return:
+	 * Result<InterfaMessageInfoJasonObject> @throws
 	 */
-	public Result<String> registerMenu(String appid,String bossInstanceCode,String menuJson);
- 
+	public Result<String> registerMenu(String appid, String bossInstanceCode, String menuJson);
+
 	Result<?> updateApply(DiyApplyEntity apply);
 
 }

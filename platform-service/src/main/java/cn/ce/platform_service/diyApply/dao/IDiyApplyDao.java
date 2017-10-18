@@ -58,7 +58,6 @@ public interface IDiyApplyDao {
 	 */
 	public String bathUpdateByid(List<String> ids,int checkState,String checkMem) ;
 	
-	public String bathUpdateByid(List<String> ids) ;
 	
 	/**
 	 * 批量審核并发布

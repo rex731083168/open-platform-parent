@@ -117,10 +117,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
 			/***************************************************************
-			 * TODO 定制应用和api以及频次绑定操作
-			 * 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
-			 * 只在当前位置做了绑定关系，如果将来绑定关系和绑定位置发生变化需要修改这段代码 
-			 * *************************************************************/
+			 * TODO 定制应用和api以及频次绑定操作 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
+			 * 只在当前位置做了绑定关系，如果将来绑定关系和绑定位置发生变化需要修改这段代码
+			 *************************************************************/
 			String clientId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String policyId = UUID.randomUUID().toString().replaceAll("\\-", "");
@@ -128,8 +127,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			for (AppList appList : apps.getData().getAppList()) {
 				appIdList.add(appList.getAppId()); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
 			}
-			
-			
+
 			logger.info("insert apply begin : " + JSON.toJSONString(entity));
 
 			diyApplyDao.saveOrUpdate(entity);
@@ -170,19 +168,19 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Override
 	public Result<?> updateApply(DiyApplyEntity apply) {
-		
+
 		Result<String> result = new Result<String>();
-		if(StringUtils.isBlank(apply.getId())){
+		if (StringUtils.isBlank(apply.getId())) {
 			result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
 		}
-		
+
 		DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
-		
-		if(null == apply1){
+
+		if (null == apply1) {
 			result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
 			return result;
 		}
-		if(apply1.getProductAuthCode() != apply.getProductAuthCode()){
+		if (apply1.getProductAuthCode() != apply.getProductAuthCode()) {
 			result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
 			return result;
 		}
@@ -377,52 +375,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<String> auditUpdate(String id) {
-		// TODO Auto-generated method stub
-		Result<String> result = new Result<String>();
-		try {
-			DiyApplyEntity dae = diyApplyDao.findById(id);
-			if (dae != null) {
-
-				dae.setCheckState(AuditConstants.DIY_APPLY_CHECKED_COMMITED);
-				diyApplyDao.saveOrUpdate(dae);
-
-				result.setSuccessMessage("操作成功");
-			}
-			return result;
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error("auditUpdate failed reason " + e + "");
-			result.setErrorMessage("提交失败");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			return result;
-		}
-
-	}
-
-	@SuppressWarnings("null")
-	@Override
-	public Result<String> batchUpdate(String ids) {
-		// TODO Auto-generated method stub
-		Result<String> result = new Result<String>();
-		try {
-			List<String> idslist = SplitUtil.splitStringWithComma(ids);
-			String message = diyApplyDao.bathUpdateByid(idslist);
-			logger.info("bachUpdate diyApply message " + message + " count");
-			result.setSuccessMessage("审核成功:" + message + "条");
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error("batchUpdate failed reason " + e + "");
-			result.setErrorMessage("提交失败");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			return result;
-		}
-
-	}
-
-	@Override
 	public Result<String> productMenuList(String bossInstanceCode) {
 		Result<String> result = new Result<>();
 
@@ -585,6 +537,25 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			logger.error("findPagedApps http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("请求失败");
+			return result;
+		}
+
+	}
+
+	@Override
+	public Result<String> batchUpdate(String ids, int checkState, String checkMem) {
+		// TODO Auto-generated method stub
+		Result<String> result = new Result<>();
+		try {
+			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+			logger.info("bachUpdate diyApply message " + message + " count");
+			result.setSuccessMessage("审核成功:" + message + "条");
+			return result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("bachUpdate diyApply message error ", e);
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("审核失败");
 			return result;
 		}
 
