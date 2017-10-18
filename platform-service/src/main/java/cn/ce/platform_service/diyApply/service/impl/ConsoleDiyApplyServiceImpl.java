@@ -110,7 +110,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			try {
 				apps = this.findTenantAppsByTenantKey(key).getData(); // 接入产品中心获取产品信息和开放应用信息
 
-				if (apps.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE) {
+				if (apps.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE || apps.getData().getTenant() == null) {
 					result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS015);
 					return result;
 				}
