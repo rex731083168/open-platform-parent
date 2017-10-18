@@ -60,11 +60,10 @@ public class GatewayTest {
 	public String testPushClient(
 			String clientId,
 			String secret,
-			String apiIds,
+			StringBuffer apiIds,
 			String policyId){
 		
 		String str = gatewayApiService.pushClient(clientId, secret, apiIds, policyId);
 		return str;
 	}
-	
 }

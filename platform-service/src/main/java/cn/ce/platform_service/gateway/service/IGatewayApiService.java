@@ -14,7 +14,7 @@ public interface IGatewayApiService {
 	String pushPolicy(String policyId, Integer rate, Integer per, Integer quotaMax, 
 			Integer quotaRenewRate, Map<String,List<String>> apiInfos /**key是versionId,value是多个version的名称*/);
 	
-	String pushClient(String clientId, String secret, String apiIds, String policyId);
+	String pushClient(String clientId, String secret, StringBuffer versionIdsBuf, String policyId);
 	
 	
 }

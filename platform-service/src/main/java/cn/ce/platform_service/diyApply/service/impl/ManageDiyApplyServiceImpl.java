@@ -196,7 +196,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		String replacedurl = url.replaceAll(o$, owner).replaceAll(n$, name).replaceAll(p$, String.valueOf(pageNum))
 				.replaceAll(z$, String.valueOf(pageSize));
 
-		Map<String, Class> classMap = new HashMap<String, Class>();
+		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
 		classMap.put("list", cn.ce.platform_service.diyApply.entity.appsEntity.AppList.class);
 		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
 

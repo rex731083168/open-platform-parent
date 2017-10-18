@@ -63,6 +63,7 @@ import net.sf.json.JSONObject;
  * @date dat2017年10月14日 time上午10:45:32
  *
  **/
+@SuppressWarnings("deprecation")
 public class HttpClientUtil {
 	private HttpClientUtil() {
 	}
@@ -496,7 +497,7 @@ public class HttpClientUtil {
 		return resData;
 	}
 
-	public static Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class> classMap) {
+	public static Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class<?>> classMap) {
 		String jasonResultHttpGet = sendGetRequest(url, null);
 		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
 		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
@@ -509,7 +510,7 @@ public class HttpClientUtil {
 		return jsonobject;
 	}
 
-	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class> classMap)
+	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class<?>> classMap)
 			throws Exception {
 
 		BufferedReader br = null;

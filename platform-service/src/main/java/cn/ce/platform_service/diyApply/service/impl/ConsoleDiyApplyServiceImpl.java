@@ -364,7 +364,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
 		String key$ = Pattern.quote("${key}");
 		String replacedurl = url.replaceAll(key$, key);
-		Map<String, Class> classMap = new HashMap<String, Class>();
+		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
 		classMap.put("appList", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList.class);
 		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant.class);
 
@@ -568,7 +568,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		String replacedurl = url.replaceAll(o$, owner).replaceAll(n$, name).replaceAll(p$, String.valueOf(pageNum))
 				.replaceAll(z$, String.valueOf(pageSize));
 
-		Map<String, Class> classMap = new HashMap<String, Class>();
+		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
 		classMap.put("list", cn.ce.platform_service.diyApply.entity.appsEntity.AppList.class);
 		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
 

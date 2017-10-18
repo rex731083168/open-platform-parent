@@ -53,7 +53,7 @@ public class GatewayApiServiceImpl implements IGatewayApiService{
 		return str;
 	}
 	
-	public String pushClient(String clientId, String secret, String apiIds, String policyId){
+	public String pushClient(String clientId, String secret, StringBuffer versionIdsBuf, String policyId){
 		
 //		String apiIds = "";
 //		for (String str : apiId) {
@@ -65,7 +65,7 @@ public class GatewayApiServiceImpl implements IGatewayApiService{
 		params.put(DBFieldsConstants.GW_CLIENT_ID, clientId);
 		params.put(DBFieldsConstants.GW_SECRET, secret);
 		params.put(DBFieldsConstants.GW_POLICY_ID_FULL, policyId);
-		params.put(DBFieldsConstants.GW_API_ID, apiIds);
+		params.put(DBFieldsConstants.GW_API_ID, versionIdsBuf);
 		params.put(DBFieldsConstants.GW_REDIRECT_URI, "/");
 		
 		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+

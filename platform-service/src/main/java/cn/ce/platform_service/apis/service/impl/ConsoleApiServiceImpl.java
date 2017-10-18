@@ -31,7 +31,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
-import cn.ce.platform_service.gateway.service.impl.GatewayApiServiceImpl;
+import cn.ce.platform_service.gateway.service.IGatewayApiService;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.users.entity.User;
@@ -53,7 +53,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Resource
 	private IOpenApplyDao openApplyDao;
 	@Resource
-	private GatewayApiServiceImpl gatewayApiService;
+	private IGatewayApiService gatewayApiService;
 	
 	
 	/**
@@ -336,8 +336,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 				versionIdsBuf.append(","+apiEntity.getApiVersion().getVersionId());
 			}
 		}
-		String versionidsStr = versionIdsBuf.substring(1); //versionId用逗号分隔的长字符串
-		
+		versionIdsBuf.deleteCharAt(0); //versionId用逗号分隔的长字符串
 		Map<String, List<String>> apiInfos = new HashMap<String,List<String>>();
 		for (String versionId : versionIdList) {
 			List<ApiEntity> apiList = newApiDao.findByField("apiVersion.versionId", versionId);
@@ -356,7 +355,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		
 		//推送clientId;
-		String clientResult = gatewayApiService.pushClient(clientId, secret, versionidsStr, policyId);
+		String clientResult = gatewayApiService.pushClient(clientId, secret, versionIdsBuf, policyId);
 		
 		if(StringUtils.isBlank(clientResult)){
 			_LOGGER.error("____________>error happens when execute push client to gateway");
@@ -365,4 +364,5 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		return true;
 	}
+	
 }
