@@ -44,7 +44,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	private IDiyApplyDao diyApplyDao;
 
 	@Override
-	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, int checkState,
+	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, Integer checkState,
 			String applyName, int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<DiyApplyEntity>> result = new Result<>();
@@ -57,7 +57,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		if (StringUtils.isNotBlank(userName)) {
 			c.and("userName").regex(userName);
 		}
-		if (StringUtils.isNotBlank(String.valueOf(checkState))) {
+		if (null != checkState) {
 			c.and("checkState").is(checkState);
 		}
 		if (StringUtils.isNotBlank(applyName)) {
@@ -65,7 +65,8 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
 		page = diyApplyDao.findPageByEntity(query, page);
-		result.setData(page);
+		result.setSuccessData(page);
+//		result.setData(page);
 
 		return result;
 	}
@@ -224,6 +225,20 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			return result;
 		}
 
+	}
+	
+	@Override
+	public Result<DiyApplyEntity> findById(String applyId) {
+		Result<DiyApplyEntity> result = new Result<>();
+		DiyApplyEntity findById = diyApplyDao.findById(applyId);
+		if (null == findById) {
+			result.setErrorMessage("该应用不存在!");
+			result.setErrorCode(ErrorCodeNo.SYS009);
+		}else{
+			result.setSuccessData(findById);
+		}
+		// TODO Auto-generated method stub
+		return result;
 	}
 
 }

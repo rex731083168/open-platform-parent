@@ -45,8 +45,9 @@ public class OpenApplyController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids,Integer checkState,String checkMem) {
-		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids),checkState,checkMem);
+	public Result<String> batchUpdate(@RequestParam(value = "ids", required = true) String ids,
+			@RequestParam(value = "checkState",required = true) Integer checkState, @RequestParam(value = "checkMem", required = false) String checkMem) {
+		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 	}
 
 	/***

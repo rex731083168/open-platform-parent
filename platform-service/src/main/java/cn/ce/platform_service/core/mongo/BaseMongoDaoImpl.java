@@ -182,10 +182,10 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 					c.and(k).regex(entity.getValue().toString());
 //					query.addCriteria(Criteria.where(k).regex(entity.getValue().toString()));
 				} else if (entity.getMethod() == ConditionEnum.EQ) {
-					c.and(k).is(entity.getValue().toString());
+					c.and(k).is(entity.getValue());
 //					query.addCriteria(Criteria.where(k).is(entity.getValue()));
 				} else if (entity.getMethod() == ConditionEnum.NEQ) {
-					c.and(k).ne(entity.getValue().toString());
+					c.and(k).ne(entity.getValue());
 //					query.addCriteria(Criteria.where(k).ne(entity.getValue()));
 				} else if (entity.getMethod() == ConditionEnum.IN) {
 //					query.addCriteria(Criteria.where(k).in(entity.getValue()));

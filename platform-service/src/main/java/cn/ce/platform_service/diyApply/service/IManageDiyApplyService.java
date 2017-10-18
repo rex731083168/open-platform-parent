@@ -17,7 +17,7 @@ import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessag
  */
 public interface IManageDiyApplyService {
 
-	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, int checkState,
+	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, Integer checkState,
 			String applyName, int currentPage, int pageSize);
 
 	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem);
@@ -25,5 +25,12 @@ public interface IManageDiyApplyService {
 	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize);
 
 	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps);
+
+	/***
+	 * 
+	 * @Title: findById @Description: 根据id加载应用信息 @param : @param applyId @param
+	 *         : @return @return: ApplyEntity @throws
+	 */
+	public Result<DiyApplyEntity> findById(String applyId);
 
 }
