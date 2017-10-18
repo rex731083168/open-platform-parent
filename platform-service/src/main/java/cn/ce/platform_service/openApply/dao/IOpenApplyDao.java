@@ -141,4 +141,6 @@ public interface IOpenApplyDao {
 	 * 
 	 */
 	public List<OpenApplyEntity> getListByids(List<String> ids);
+
+	OpenApplyEntity findByAppId(String openApplyId);
 }

@@ -85,7 +85,8 @@ public class ManageApiServiceImpl implements IManageApiService{
 				 * 所以这个bug由业务来避免了。
 				 */
 				String apiEnName = apiVersionList.get(0).getApiEnName();
-				OpenApplyEntity openApplyEntity = openApplyDao.findById(apiVersionList.get(0).getOpenApplyId());
+				OpenApplyEntity openApplyEntity = openApplyDao.findByAppId(apiVersionList.get(0).getOpenApplyId());
+				
 				String listenPath = "/"+openApplyEntity.getApplyKey()+"/"+apiEnName+"/";
 				apiEntity.setListenPath(listenPath);//listenPath
 				

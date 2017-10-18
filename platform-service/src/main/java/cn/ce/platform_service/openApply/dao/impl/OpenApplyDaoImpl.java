@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.common.page.PageContext;
@@ -239,6 +240,12 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 	public List<OpenApplyEntity> getListByids(List<String> ids) {
 		// TODO Auto-generated method stub
 		return super.find(new Query(Criteria.where("id").in(ids)), OpenApplyEntity.class);
+	}
+
+	@Override
+	public OpenApplyEntity findByAppId(String openApplyId) {
+		
+		return super.findOneByField(DBFieldsConstants.APIS_APPID, openApplyId, OpenApplyEntity.class);
 	}
 
 }
