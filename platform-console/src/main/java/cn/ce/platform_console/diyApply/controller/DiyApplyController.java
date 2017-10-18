@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.apis.service.IAPIService;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
@@ -83,15 +84,15 @@ public class DiyApplyController {
 
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
 	@ApiOperation("根据应用标识查询应用")
-	public Result<DiyApplyEntity> getApplyById(@RequestParam(value="applyId",required = true) String applyId){
+	public Result<DiyApplyEntity> getApplyById(@RequestParam(value = "applyId", required = true) String applyId) {
 		Result<DiyApplyEntity> result = new Result<>();
 		DiyApplyEntity findById = consoleDiyApplyService.findById(applyId);
-		if(null == findById){
+		if (null == findById) {
 			result.setErrorMessage("应用不存在!");
-		}else{
+		} else {
 			result.setSuccessData(findById);
 		}
 		return result;
@@ -117,20 +118,17 @@ public class DiyApplyController {
 		return result;
 	}
 
-	@RequestMapping(value="updateApply",method=RequestMethod.POST)
+	@RequestMapping(value = "updateApply", method = RequestMethod.POST)
 	@ApiOperation("修改应用，不能修改产品密钥")
-	public Result<?> updateApply(HttpSession session, @RequestBody DiyApplyEntity apply){
-		
+	public Result<?> updateApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
+
 		return consoleDiyApplyService.updateApply(apply);
 	}
-	
-	
+
 	@ApiOperation("批量发布应用 更改checkState为1 ")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids ,@RequestParam int checkState ,@RequestParam String checkMem) {
-		return consoleDiyApplyService.batchUpdate(ids,checkState,checkMem);
+	public Result<String> batchUpdate(@RequestBody String ids) {
+		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
 	}
-	
-	
 
 }
