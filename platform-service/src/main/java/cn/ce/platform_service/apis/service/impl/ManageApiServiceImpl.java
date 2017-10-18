@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
@@ -163,28 +165,26 @@ public class ManageApiServiceImpl implements IManageApiService{
 	public Result<?> showApi(String apiId) {
 		
 		Result<JSONObject> result = new Result<JSONObject>();
-		ApiEntity apiEntity = newApiDao.findApiById(apiId);
-		if(apiEntity == null){
-			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);;
+		
+		ApiEntity api = newApiDao.findApiById(apiId);
+		if (api == null) {
+			result.setErrorMessage("当前id不存在",ErrorCodeNo.SYS006);
 			return result;
 		}
-		//隐藏数据
-		apiEntity.setTestEndPoint("");
-		apiEntity.setEndPoint("");
-		
+
+		// 添加网关访问地址
+		//String openApplyId = api.getOpenApplyId();
+		//OpenApplyEntity openApplyEntity = openApplyDao.findById(openApplyId);
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+apiEntity.getListenPath()+"/"+apiEntity.getApiVersion().getVersion()+"/");
+			// TODO 这里的路径是否正确。网关是否修改这里
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getListenPath()+"/"+api.getApiVersion().getVersion()+"/");
 		}
-		JSONObject jsonObject = new JSONObject(apiEntity);
-		jsonObject.put("gatewayUrls", gatewayUrlList);
-		//jsonObject.put("appName", app.getApplyName());
-//		if(StringUtils.isNotBlank(apiEntity.getOpenApplyId())){
-//			OpenApplyEntity findById = openApplyDao.findById(apiEntity.getOpenApplyId());
-//			apiEntity.setOpenApplyEntity(findById);
-//		}
 		
+		JSONObject jsonObject = new JSONObject(api);
+		jsonObject.put("gatewayUrls", gatewayUrlList);
+		//jsonObject.put("applyName", openApplyEntity.getApplyName());
 		result.setSuccessData(jsonObject);
 		return result;
 	}

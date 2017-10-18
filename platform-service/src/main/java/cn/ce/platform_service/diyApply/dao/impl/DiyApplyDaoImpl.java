@@ -74,7 +74,7 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 					Update.update("checkMem", checkMem), false, true));
 
 		}
-		return df.format((float) super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list) / list.size());
+		return df.format((float) super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list) / ids.size());
 
 	}
 
