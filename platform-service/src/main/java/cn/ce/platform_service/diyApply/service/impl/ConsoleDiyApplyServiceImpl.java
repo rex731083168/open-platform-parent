@@ -63,7 +63,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	private IApiOauthService apiOauthService;
 	@Resource
 	private IConsoleApiService consoleApiService;
-	
+
 	@Override
 	public Result<String> saveApply(DiyApplyEntity entity) {
 		Result<String> result = new Result<>();
@@ -122,56 +122,55 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
 			/***************************************************************
-<<<<<<< HEAD
+			 * 
 			 * TODO 定制应用和api以及频次绑定操作 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
 			 * 只在当前位置做了绑定关系，如果将来绑定关系和绑定位置发生变化需要修改这段代码
 			 *************************************************************/
-=======
-			 * TODO 定制应用和api以及频次绑定操作推送网关
-			 * 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
-			 * 只在当前位置做了绑定关系，如果将来绑定关系和绑定位置发生变化需要修改这段代码 
-			 * *************************************************************/
+
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关开始***************************/");
 			String policyId = UUID.randomUUID().toString().replaceAll("\\-", "");
->>>>>>> branch 'feature/review' of http://gitlab.300.cn/paas-code/open-platform-parent.git
 			String clientId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
 			List<String> appIdList = new ArrayList<String>();
 			for (AppList appList : apps.getData().getAppList()) {
 				appIdList.add(appList.getAppCode()); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
 			}
-<<<<<<< HEAD
 
-			logger.info("insert apply begin : " + JSON.toJSONString(entity));
-=======
-			
-			//绑定频次，推送网关
+			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
+
+			// 绑定频次，推送网关
 			Integer frequencyType = entity.getFrequencyType();
 			boolean flag = false;
-			if(frequencyType == RateEnum.RATE1.toValue()){
-				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_1_RATE, RateConstants.TYPE_1_PER, RateConstants.TYPE_1_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE, appIdList);
+			if (frequencyType == RateEnum.RATE1.toValue()) {
+				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_1_RATE,
+						RateConstants.TYPE_1_PER, RateConstants.TYPE_1_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE,
+						appIdList);
 				entity.setPer(RateConstants.TYPE_1_PER);
 				entity.setRate(RateConstants.TYPE_1_RATE);
 				entity.setQuotaMax(RateConstants.TYPE_1_QUOTA_MAX);
 				entity.setQuotaRenewRate(RateConstants.TYPE_1_QUOTA_RENEW_RATE);
-			}else if(frequencyType == RateEnum.RATE2.toValue()){
-				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_2_RATE, RateConstants.TYPE_2_PER, RateConstants.TYPE_2_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE, appIdList);
+			} else if (frequencyType == RateEnum.RATE2.toValue()) {
+				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_2_RATE,
+						RateConstants.TYPE_2_PER, RateConstants.TYPE_2_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE,
+						appIdList);
 				entity.setPer(RateConstants.TYPE_2_PER);
 				entity.setRate(RateConstants.TYPE_2_RATE);
 				entity.setQuotaMax(RateConstants.TYPE_2_QUOTA_MAX);
 				entity.setQuotaRenewRate(RateConstants.TYPE_2_QUOTA_RENEW_RATE);
-			}else if(frequencyType  == RateEnum.RATE3.toValue()){
-				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_3_RATE, RateConstants.TYPE_3_PER, RateConstants.TYPE_3_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE, appIdList);
+			} else if (frequencyType == RateEnum.RATE3.toValue()) {
+				flag = consoleApiService.boundDiyApplyWithApi(policyId, clientId, secret, RateConstants.TYPE_3_RATE,
+						RateConstants.TYPE_3_PER, RateConstants.TYPE_3_QUOTA_MAX, RateConstants.TYPE_1_QUOTA_RENEW_RATE,
+						appIdList);
 				entity.setPer(RateConstants.TYPE_3_PER);
 				entity.setRate(RateConstants.TYPE_3_RATE);
 				entity.setQuotaMax(RateConstants.TYPE_3_QUOTA_MAX);
 				entity.setQuotaRenewRate(RateConstants.TYPE_3_QUOTA_RENEW_RATE);
-			}else{
+			} else {
 				result.setErrorMessage("当前频次档位不存在", ErrorCodeNo.SYS012);
 				return result;
 			}
-			
-			if(flag == false){
+
+			if (flag == false) {
 				_LOGGER.error("添加定制应用，推送网关发送异常");
 				result.setErrorMessage("", ErrorCodeNo.SYS014);
 				return result;
@@ -180,16 +179,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setClientId(clientId);
 			entity.setSecret(secret);
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
->>>>>>> branch 'feature/review' of http://gitlab.300.cn/paas-code/open-platform-parent.git
-
-			
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
 			diyApplyDao.saveOrUpdate(entity);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("新增成功!");
 
-		}
-		else {
+		} else {
 			// 修改
 			DiyApplyEntity applyById = diyApplyDao.findById(entity.getId());
 
@@ -429,55 +424,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 	}
 
-	@Override
-<<<<<<< HEAD
-=======
-	public Result<String> auditUpdate(String id) {
-		// TODO Auto-generated method stub
-		Result<String> result = new Result<String>();
-		try {
-			DiyApplyEntity dae = diyApplyDao.findById(id);
-			if (dae != null) {
-
-				dae.setCheckState(AuditConstants.DIY_APPLY_CHECKED_COMMITED);
-				diyApplyDao.saveOrUpdate(dae);
-
-				result.setSuccessMessage("操作成功");
-			}
-			return result;
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			_LOGGER.error("auditUpdate failed reason " + e + "");
-			result.setErrorMessage("提交失败");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			return result;
-		}
-
-	}
-
-	@Override
-	public Result<String> batchUpdate(String ids) {
-		// TODO Auto-generated method stub
-		Result<String> result = new Result<String>();
-		try {
-			List<String> idslist = SplitUtil.splitStringWithComma(ids);
-			String message = diyApplyDao.bathUpdateByid(idslist);
-			_LOGGER.info("bachUpdate diyApply message " + message + " count");
-			result.setSuccessMessage("审核成功:" + message + "条");
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			_LOGGER.error("batchUpdate failed reason " + e + "");
-			result.setErrorMessage("提交失败");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			return result;
-		}
-
-	}
-
-	@Override
->>>>>>> branch 'feature/review' of http://gitlab.300.cn/paas-code/open-platform-parent.git
 	public Result<String> productMenuList(String bossInstanceCode) {
 		Result<String> result = new Result<>();
 
@@ -651,12 +597,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		Result<String> result = new Result<>();
 		try {
 			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
-			logger.info("bachUpdate diyApply message " + message + " count");
+			_LOGGER.info("bachUpdate diyApply message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.error("bachUpdate diyApply message error ", e);
+			_LOGGER.error("bachUpdate diyApply message error ", e);
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("审核失败");
 			return result;
