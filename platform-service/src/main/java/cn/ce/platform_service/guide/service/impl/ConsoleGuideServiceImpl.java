@@ -198,7 +198,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	}
 
 	@Override
-	public Result<String> submitVerify(String id/*, Integer state, String checkMem*/) {
+	public Result<String> submitVerify(String id) {
 		Result<String> result = new Result<>();
 		List<String> asList = SplitUtil.splitStringWithComma(id);
 		try {
