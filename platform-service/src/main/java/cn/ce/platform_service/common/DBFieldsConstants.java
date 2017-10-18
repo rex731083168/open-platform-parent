@@ -28,6 +28,8 @@ public class DBFieldsConstants {
 	
 	public static final String APIS_CREATE_TIME = "createTime";
 	
+	public static final String APIS_LISTEN_PATH = "listenPath";
+	
 	/*************** user相关字段 **********************/
 	public static final String USER_USERTYPE = "userType";
 	public static final String USER_USERNAME = "userName";

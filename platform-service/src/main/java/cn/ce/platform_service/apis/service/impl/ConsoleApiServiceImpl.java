@@ -80,6 +80,15 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			return result;
 		}
 		
+		
+		Map<String,Object> whereMap = new HashMap<>();
+		whereMap.put(DBFieldsConstants.APIS_LISTEN_PATH, apiEntity.getListenPath());
+		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
+		if(null != findOneByFields){
+			result.setMessage("访问路径已存在,请检查后重试!");
+			result.setErrorCode(ErrorCodeNo.SYS010);
+		}
+		
 		// 第一次添加接口,并且选择未开启版本控制
 		if (apiEntity.getApiVersion() == null || 
 				StringUtils.isBlank(apiEntity.getApiVersion().getVersion())) {
@@ -94,7 +103,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			apiEntity.setApiVersion(version);
 			
 			// 过滤apienname不能以/开头和结尾
-			apiEntity.setApiEnName(apiEntity.getApiEnName().replaceAll("/", ""));
+			// TODO 2期无法获取开放应用的enName，所以添加时不拼接和处理apiEnName lida 2017年10月18日17:10:19
+			if(StringUtils.isNotBlank(apiEntity.getApiEnName())){
+				apiEntity.setApiEnName(apiEntity.getApiEnName().replaceAll("/", ""));
+			}
 
 			newApiDao.save(apiEntity);
 

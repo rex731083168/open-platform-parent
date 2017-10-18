@@ -56,9 +56,9 @@ public class GuideManageController {
 
 	@ApiOperation("批量审核")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestBody String ids, @RequestParam Integer state,
+	public Result<String> batchUpdate(@RequestBody String ids, @RequestParam Integer checkState,
 			@RequestParam String checkMem) {
-		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids), state, checkMem);
+		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 	}
 
 }
