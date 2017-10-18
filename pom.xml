@@ -599,6 +599,5 @@
 		<module>platform-service</module>
 		<module>platform-console</module>
 		<module>platform-manage</module>
-		<module>paas-oauth-tykcode</module>
 	</modules>
 </project>
