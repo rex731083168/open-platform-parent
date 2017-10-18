@@ -80,13 +80,13 @@ public interface IManageOpenApplyService {
 
 	List<OpenApplyEntity> findAppsByEntity(OpenApplyEntity entity);
 
-	public Result<String> deleteById(String appId);
+//	public Result<String> deleteById(String appId);
 
 	public Result<JSONObject> appList(HttpServletRequest request, HttpServletResponse response);
 
 	// public Result<String> addGroup(HttpSession session, OpenApplyEntity app);
 
-	public Result<String> delGroup(String appId);
+//	public Result<String> delGroup(String appId);
 
 	// public Result<String> modifyGroup(OpenApplyEntity app);
 
@@ -96,7 +96,7 @@ public interface IManageOpenApplyService {
 
 	public Result<String> addGroup1(HttpSession session, OpenApplyEntity app);
 
-	public Result<String> deleteGroup(String id);
+//	public Result<String> deleteGroup(String id);
 
 	public Result<String> modifyGroup1(OpenApplyEntity app);
 

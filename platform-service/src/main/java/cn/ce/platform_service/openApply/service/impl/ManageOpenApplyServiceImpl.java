@@ -1,9 +1,7 @@
 package cn.ce.platform_service.openApply.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -17,7 +15,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.admin.entity.AdminEntity;
-import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -28,7 +25,6 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.common.page.PageContext;
 import cn.ce.platform_service.diyApply.entity.inparameter.SaveOrUpdateAppsInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
-import cn.ce.platform_service.oauth.service.IOauthService;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
@@ -53,10 +49,10 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	/** 功能分组数据库操作对象 */
 	@Resource
 	private IOpenApplyDao openApplyDao;
-	@Resource
-	private IOauthService oauthService;
-	@Resource
-	private IAPIService apiService;
+//	@Resource
+//	private IOauthService oauthService;
+//	@Resource
+//	private IAPIService apiService;
 
 	public void addApp(OpenApplyEntity app) {
 		openApplyDao.addApp(app);
@@ -144,33 +140,33 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		return result;
 	}
 
-	@Override
-	public Result<String> deleteById(String appId) {
-
-		Result<String> result = new Result<String>();
-
-		if (StringUtils.isBlank(appId)) {
-			result.setMessage("appId不能为空");
-			return result;
-		}
-		// 查看当前app中是否有api已经被使用，如果已经被使用，就不能删除
-		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put("app_id", appId);
-		queryMap.put("check_state", 2);
-		int num = oauthService.findByFields(queryMap);
-
-		if (num > 0) {
-			result.setMessage("当前分组已经有api被使用，无法删除该分组");
-			return result;
-		} else {
-			// 删除
-			int i = openApplyDao.delById(appId);
-			_LOGGER.info("删除了" + i + "条app分组数据");
-			result.setStatus(Status.SUCCESS);
-			result.setMessage("删除成功");
-			return result;
-		}
-	}
+//	@Override
+//	public Result<String> deleteById(String appId) {
+//
+//		Result<String> result = new Result<String>();
+//
+//		if (StringUtils.isBlank(appId)) {
+//			result.setMessage("appId不能为空");
+//			return result;
+//		}
+//		// 查看当前app中是否有api已经被使用，如果已经被使用，就不能删除
+//		Map<String, Object> queryMap = new HashMap<String, Object>();
+//		queryMap.put("app_id", appId);
+//		queryMap.put("check_state", 2);
+//		int num = oauthService.findByFields(queryMap);
+//
+//		if (num > 0) {
+//			result.setMessage("当前分组已经有api被使用，无法删除该分组");
+//			return result;
+//		} else {
+//			// 删除
+//			int i = openApplyDao.delById(appId);
+//			_LOGGER.info("删除了" + i + "条app分组数据");
+//			result.setStatus(Status.SUCCESS);
+//			result.setMessage("删除成功");
+//			return result;
+//		}
+//	}
 
 	@Override
 	public Result<JSONObject> appList(HttpServletRequest request, HttpServletResponse response) {
@@ -241,25 +237,25 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	// }
 	// }
 
-	@Override
-	public Result<String> delGroup(String appId) {
-		Result<String> result = new Result<String>();
-		try {
-			/** 删除前要求分组内无API存在！ */
-			// 这是丁佳一个大坑
-			if (apiService.haveAPIs(appId)) {
-				result.setErrorMessage("当前服务分组中存在API接口定义!", ErrorCodeNo.SYS007);
-			}
-			delById(appId);
-			result.setSuccessData("");
-		} catch (Exception e) {
-
-			// TODO
-			_LOGGER.error("error happens when del group", e);
-			result.setErrorMessage("");
-		}
-		return result;
-	}
+//	@Override
+//	public Result<String> delGroup(String appId) {
+//		Result<String> result = new Result<String>();
+//		try {
+//			/** 删除前要求分组内无API存在！ */
+//			// 这是丁佳一个大坑
+//			if (apiService.haveAPIs(appId)) {
+//				result.setErrorMessage("当前服务分组中存在API接口定义!", ErrorCodeNo.SYS007);
+//			}
+//			delById(appId);
+//			result.setSuccessData("");
+//		} catch (Exception e) {
+//
+//			// TODO
+//			_LOGGER.error("error happens when del group", e);
+//			result.setErrorMessage("");
+//		}
+//		return result;
+//	}
 
 	// @Override
 	// public Result<String> modifyGroup(OpenApplyEntity app) {
@@ -351,26 +347,26 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		return result;
 	}
 
-	@Override
-	public Result<String> deleteGroup(String id) {
-
-		Result<String> result = new Result<String>();
-
-		try {
-			/** 删除前要求分组内无API存在！ */
-			// TODO 这是丁佳一个大坑
-			if (apiService.haveAPIs(id)) {
-				result.setErrorMessage("当前服务分组中存在API接口定义!", ErrorCodeNo.SYS009);
-			}
-			delById(id);
-			result.setSuccessMessage("");
-			return result;
-		} catch (Exception e) {
-			_LOGGER.info("error happens when execute admin log out", e);
-			result.setErrorMessage("");
-			return result;
-		}
-	}
+//	@Override
+//	public Result<String> deleteGroup(String id) {
+//
+//		Result<String> result = new Result<String>();
+//
+//		try {
+//			/** 删除前要求分组内无API存在！ */
+//			// TODO 这是丁佳一个大坑
+//			if (apiService.haveAPIs(id)) {
+//				result.setErrorMessage("当前服务分组中存在API接口定义!", ErrorCodeNo.SYS009);
+//			}
+//			delById(id);
+//			result.setSuccessMessage("");
+//			return result;
+//		} catch (Exception e) {
+//			_LOGGER.info("error happens when execute admin log out", e);
+//			result.setErrorMessage("");
+//			return result;
+//		}
+//	}
 
 	@Override
 	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize) {
@@ -515,5 +511,8 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			return result;
 		}
 	}
+
+
+
 
 }

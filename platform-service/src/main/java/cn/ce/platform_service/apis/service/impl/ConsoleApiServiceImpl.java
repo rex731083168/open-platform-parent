@@ -32,8 +32,6 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
-import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
-import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.users.entity.User;
 
 /**
@@ -50,8 +48,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	private INewApiDao newApiDao;
 //	@Resource
 //	private IManageOpenApplyService manageOpenApplyService;
-	@Resource
-	private IOpenApplyDao openApplyDao;
+//	@Resource
+//	private IOpenApplyDao openApplyDao;
 	@Resource
 	private IGatewayApiService gatewayApiService;
 	
@@ -199,18 +197,18 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 
 		// 添加网关访问地址
-		String openApplyId = api.getOpenApplyId();
-		OpenApplyEntity openApplyEntity = openApplyDao.findById(openApplyId);
+		//String openApplyId = api.getOpenApplyId();
+		//OpenApplyEntity openApplyEntity = openApplyDao.findById(openApplyId);
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
 			// TODO 这里的路径是否正确。网关是否修改这里
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+openApplyEntity.getApplyKey()+"/" + api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getListenPath()+"/"+api.getApiVersion().getVersion()+"/");
 		}
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
-		jsonObject.put("applyName", openApplyEntity.getApplyName());
+		//jsonObject.put("applyName", openApplyEntity.getApplyName());
 		result.setSuccessData(jsonObject);
 		return result;
 	}

@@ -1,7 +1,6 @@
 package cn.ce.platform_console.diyApply.controller;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
@@ -45,8 +43,8 @@ public class DiyApplyController {
 	@Resource
 	private IConsoleDiyApplyService consoleDiyApplyService;
 
-	@Resource
-	private IAPIService apiService;
+//	@Resource
+//	private IAPIService apiService;
 
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
 	@ApiOperation(value = "根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
@@ -73,17 +71,17 @@ public class DiyApplyController {
 		return result;
 	}
 
-	@RequestMapping(value = "/getApplyApisById", method = RequestMethod.GET)
-	@ApiOperation("查询应用及api分页集合")
-	public Result<DiyApplyEntity> getApplyByid(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "id", required = true) String id,
-			@RequestParam(required = false, defaultValue = "10") int pageSize,
-			@RequestParam(required = false, defaultValue = "1") int currentPage) {
-
-		Result<DiyApplyEntity> result = consoleDiyApplyService.getApplyById(id, pageSize, currentPage);
-
-		return result;
-	}
+//	@RequestMapping(value = "/getApplyApisById", method = RequestMethod.GET)
+//	@ApiOperation("查询应用及api分页集合")
+//	public Result<DiyApplyEntity> getApplyByid(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam(value = "id", required = true) String id,
+//			@RequestParam(required = false, defaultValue = "10") int pageSize,
+//			@RequestParam(required = false, defaultValue = "1") int currentPage) {
+//
+//		Result<DiyApplyEntity> result = consoleDiyApplyService.getApplyById(id, pageSize, currentPage);
+//
+//		return result;
+//	}
 
 	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
 	@ApiOperation("根据应用标识查询应用")

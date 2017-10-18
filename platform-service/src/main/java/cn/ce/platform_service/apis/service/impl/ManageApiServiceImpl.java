@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -161,9 +160,9 @@ public class ManageApiServiceImpl implements IManageApiService{
 	}
 
 	@Override
-	public Result<ApiEntity> showApi(String apiId) {
+	public Result<?> showApi(String apiId) {
 		
-		Result<ApiEntity> result = new Result<ApiEntity>();
+		Result<JSONObject> result = new Result<JSONObject>();
 		ApiEntity apiEntity = newApiDao.findApiById(apiId);
 		if(apiEntity == null){
 			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);;
@@ -173,13 +172,20 @@ public class ManageApiServiceImpl implements IManageApiService{
 		apiEntity.setTestEndPoint("");
 		apiEntity.setEndPoint("");
 		
-		if(StringUtils.isNotBlank(apiEntity.getOpenApplyId())){
-			OpenApplyEntity findById = openApplyDao.findById(apiEntity.getOpenApplyId());
-			apiEntity.setOpenApplyEntity(findById);
+		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
+		List<String> gatewayUrlList = new ArrayList<String>();
+		for (GatewayColonyEntity gatewayColonyEntity : colList) {
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+apiEntity.getListenPath()+"/"+apiEntity.getApiVersion().getVersion()+"/");
 		}
+		JSONObject jsonObject = new JSONObject(apiEntity);
+		jsonObject.put("gatewayUrls", gatewayUrlList);
+		//jsonObject.put("appName", app.getApplyName());
+//		if(StringUtils.isNotBlank(apiEntity.getOpenApplyId())){
+//			OpenApplyEntity findById = openApplyDao.findById(apiEntity.getOpenApplyId());
+//			apiEntity.setOpenApplyEntity(findById);
+//		}
 		
-		
-		result.setSuccessData(apiEntity);
+		result.setSuccessData(jsonObject);
 		return result;
 	}
 

@@ -16,7 +16,7 @@ public interface IManageApiService {
 
 	Result<?> auditApi(List<String> apiId, Integer checkState, String checkMem);
 
-	Result<ApiEntity> showApi(String apiId);
+	Result<?> showApi(String apiId);
 
 	Result<Page<ApiEntity>> apiList(QueryApiEntity entity, int currentPage, int pageSize);
 

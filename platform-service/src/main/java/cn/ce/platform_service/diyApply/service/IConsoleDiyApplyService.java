@@ -57,7 +57,7 @@ public interface IConsoleDiyApplyService {
 	 * @param id
 	 * @return
 	 */
-	Result<DiyApplyEntity> getApplyById(String id, int pageSize, int currentPage);
+	//Result<DiyApplyEntity> getApplyById(String id, int pageSize, int currentPage);
 
 	/***
 	 * 

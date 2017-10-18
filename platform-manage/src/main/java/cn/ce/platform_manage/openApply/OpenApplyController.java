@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_manage.base.BaseController;
-import cn.ce.platform_service.apis.service.IAPIService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
@@ -32,8 +31,8 @@ public class OpenApplyController extends BaseController {
 
 	private static Logger _LOGGER = Logger.getLogger(OpenApplyController.class);
 
-	@Resource
-	private IAPIService apiService;
+//	@Resource
+//	private IAPIService apiService;
 
 	@Resource
 	private IManageOpenApplyService openApplyService;

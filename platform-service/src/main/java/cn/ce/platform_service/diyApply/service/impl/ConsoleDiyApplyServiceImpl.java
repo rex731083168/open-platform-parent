@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.platform_service.apis.entity.ApiAuditEntity;
-import cn.ce.platform_service.apis.service.IApiOauthService;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -59,8 +57,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Resource
 	private IDiyApplyDao diyApplyDao;
-	@Resource
-	private IApiOauthService apiOauthService;
+//	@Resource
+//	private IApiOauthService apiOauthService;
 	@Resource
 	private IConsoleApiService consoleApiService;
 
@@ -284,36 +282,36 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		return null;
 	}
 
-	@Override
-	public Result<DiyApplyEntity> getApplyById(String id, int pageSize, int currentPage) {
-		Result<DiyApplyEntity> result = new Result<>();
-		DiyApplyEntity apply = diyApplyDao.findById(id);
-
-		if (null == apply) {
-			result.setErrorMessage("该应用不存在!");
-		} else if (null == apply.getAuthIds()) {
-			result.setErrorMessage("该应用下暂无api信息!");
-		} else {
-			List<String> authIds = apply.getAuthIds();
-			if (null != authIds) {
-				int begin = (currentPage - 1) * pageSize;
-
-				int end = pageSize * currentPage;
-
-				if (authIds.size() < end) {
-					end = authIds.size();
-				}
-
-				authIds = authIds.subList(begin, end);
-
-				List<ApiAuditEntity> apiAuditList = apiOauthService.getApiAuditEntity(authIds);
-
-				apply.setAuditList(apiAuditList);
-				result.setSuccessData(apply);
-			}
-		}
-		return result;
-	}
+//	@Override
+//	public Result<DiyApplyEntity> getApplyById(String id, int pageSize, int currentPage) {
+//		Result<DiyApplyEntity> result = new Result<>();
+//		DiyApplyEntity apply = diyApplyDao.findById(id);
+//
+//		if (null == apply) {
+//			result.setErrorMessage("该应用不存在!");
+//		} else if (null == apply.getAuthIds()) {
+//			result.setErrorMessage("该应用下暂无api信息!");
+//		} else {
+//			List<String> authIds = apply.getAuthIds();
+//			if (null != authIds) {
+//				int begin = (currentPage - 1) * pageSize;
+//
+//				int end = pageSize * currentPage;
+//
+//				if (authIds.size() < end) {
+//					end = authIds.size();
+//				}
+//
+//				authIds = authIds.subList(begin, end);
+//
+//				List<ApiAuditEntity> apiAuditList = apiOauthService.getApiAuditEntity(authIds);
+//
+//				apply.setAuditList(apiAuditList);
+//				result.setSuccessData(apply);
+//			}
+//		}
+//		return result;
+//	}
 
 	/***
 	 * 根据实体对象构建查询条件
