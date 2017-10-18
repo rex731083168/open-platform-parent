@@ -58,8 +58,10 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
 					Update.update("checkState", state), false, true));
-			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkMem", checkMem), false, true));
+			if(StringUtils.isNotBlank(checkMem)){
+				list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+						Update.update("checkMem", checkMem), false, true));
+			}
 
 		}
 		return df.format((float)(super.bathUpdate(super.mongoTemplate, GuideEntity.class, list))/list.size());

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
@@ -96,9 +95,8 @@ public class GuideConsoleController {
 	 */
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
 	@ResponseBody
-	public Result<?> submitVerify(@RequestParam String ids, @RequestParam Integer state,
-			@RequestParam String checkMem) {
-		return iConsoleGuideService.submitVerify(ids, state, checkMem);
+	public Result<?> submitVerify(@RequestParam String ids) {
+		return iConsoleGuideService.submitVerify(ids);
 	}
 
 }
