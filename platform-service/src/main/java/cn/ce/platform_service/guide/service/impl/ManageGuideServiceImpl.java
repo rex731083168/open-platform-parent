@@ -80,7 +80,7 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	public Result<GuideEntity> getByid(String id) {
 		// TODO Auto-generated method stub
 		Result<GuideEntity> result = new Result<GuideEntity>();
-		result.setData(guideDaoImpl.getById(id));
+		result.setSuccessData(guideDaoImpl.getById(id));
 		return result;
 	}
 
