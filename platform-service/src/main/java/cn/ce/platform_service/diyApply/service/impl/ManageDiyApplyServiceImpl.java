@@ -277,7 +277,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			// TODO Auto-generated catch block
 			_LOGGER.error("findTenantAppsByTenantKey http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
+			result.setErrorMessage("请求失败");	
 			return result;
 		}
 
