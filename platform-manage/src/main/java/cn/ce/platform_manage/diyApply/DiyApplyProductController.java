@@ -17,6 +17,7 @@ import cn.ce.platform_service.diyApply.entity.inparameter.SaveOrUpdateAppsInPara
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
+import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONArray;
@@ -37,6 +38,8 @@ public class DiyApplyProductController {
 
 	@Resource
 	private IManageDiyApplyService manageDiyApplyService;
+	@Resource
+	private IPlublicDiyApplyService plublicDiyApplyService;
 
 	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
@@ -44,7 +47,13 @@ public class DiyApplyProductController {
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
-		return manageDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
+		return plublicDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
+	}
+
+	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
+	@ApiOperation("获取产品实例")
+	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key) {
+		return plublicDiyApplyService.findTenantAppsByTenantKey(key);
 	}
 
 	@RequestMapping(value = "registerBathApp", method = RequestMethod.POST)
@@ -56,10 +65,4 @@ public class DiyApplyProductController {
 		return manageDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());
 	}
 
-	
-	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
-	@ApiOperation("获取产品实例")
-	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key) {
-		return manageDiyApplyService.findTenantAppsByTenantKey(key);
-	}
 }

@@ -180,55 +180,6 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	}
 
 	@Override
-	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize) {
-		// TODO Auto-generated method stub
-		Result<Apps> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("findPagedApps");
-		String o$ = Pattern.quote("${o}");
-		String n$ = Pattern.quote("${n}");
-		String p$ = Pattern.quote("${p}");
-		String z$ = Pattern.quote("${z}");
-		if (StringUtils.isBlank(owner)) {
-			owner = "";
-		}
-		if (StringUtils.isBlank(name)) {
-			name = "";
-		}
-
-		String replacedurl = url.replaceAll(o$, owner).replaceAll(n$, name).replaceAll(p$, String.valueOf(pageNum))
-				.replaceAll(z$, String.valueOf(pageSize));
-
-		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
-		classMap.put("list", cn.ce.platform_service.diyApply.entity.appsEntity.AppList.class);
-		classMap.put("appTypes", cn.ce.platform_service.diyApply.entity.appsEntity.AppTypes.class);
-
-		try {
-			/* get请求方法 */
-			Apps apps = (Apps) HttpClientUtil.getUrlReturnObject(replacedurl, Apps.class, classMap);
-
-			/* 无接口时的测试方法 */
-			// Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl,
-			// Apps.class, classMap);
-			if (apps.getStatus() == 200 || apps.getStatus() == 110) {
-				result.setData(apps);
-				result.setSuccessMessage("");
-				return result;
-			} else {
-				_LOGGER.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			_LOGGER.error("findPagedApps http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
-			return result;
-		}
-
-	}
-
-	@Override
 	public Result<DiyApplyEntity> findById(String applyId) {
 		Result<DiyApplyEntity> result = new Result<>();
 		DiyApplyEntity findById = diyApplyDao.findById(applyId);
@@ -242,45 +193,6 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		return result;
 	}
 
-	@Override
-	public Result<TenantApps> findTenantAppsByTenantKey(String key) {
-
-		// TODO 需要把key查询出来的定制应用和多个开放应用的绑定关系存入数据库
-
-		Result<TenantApps> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
-		String key$ = Pattern.quote("${key}");
-		String replacedurl = url.replaceAll(key$, key);
-		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
-		classMap.put("appList", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList.class);
-		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant.class);
-
-		try {
-			/* get请求方法 */
-			TenantApps applyproduct = (TenantApps) HttpClientUtil.getUrlReturnObject(replacedurl, TenantApps.class,
-					classMap);
-			/* 无接口时的测试方法 */
-			// TenantApps applyproduct = (TenantApps)
-			// testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,
-			// TenantApps.class, classMap);
-			if (applyproduct.getStatus() == 200) {
-				result.setData(applyproduct);
-				result.setSuccessMessage("");
-				return result;
-			} else {
-				_LOGGER.error(
-						"findTenantAppsByTenantKey data http getfaile return code :" + applyproduct.getMsg() + " ");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			_LOGGER.error("findTenantAppsByTenantKey http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");	
-			return result;
-		}
-
-	}
+	
 
 }
