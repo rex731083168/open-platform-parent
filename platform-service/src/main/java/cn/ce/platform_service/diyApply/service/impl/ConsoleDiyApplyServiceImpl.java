@@ -94,11 +94,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 
 		// 验证产品码
-		if (this.findTenantAppsByTenantKey(entity.getProductAuthCode()).getData()
-				.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE) {
-			result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS015);
-			return result;
-		}
 
 		// 新增
 		if (StringUtils.isBlank(entity.getId())) {
@@ -116,6 +111,11 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			TenantApps apps = new TenantApps();
 			try {
 				apps = this.findTenantAppsByTenantKey(key).getData(); // 接入产品中心获取产品信息和开放应用信息
+
+				if (apps.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE) {
+					result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS015);
+					return result;
+				}
 
 				int findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
 				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
