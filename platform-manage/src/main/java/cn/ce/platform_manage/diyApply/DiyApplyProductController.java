@@ -15,6 +15,7 @@ import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.inparameter.RegisterBathAppInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.inparameter.SaveOrUpdateAppsInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,4 +56,10 @@ public class DiyApplyProductController {
 		return manageDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());
 	}
 
+	
+	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
+	@ApiOperation("获取产品实例")
+	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key) {
+		return manageDiyApplyService.findTenantAppsByTenantKey(key);
+	}
 }
