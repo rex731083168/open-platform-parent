@@ -164,7 +164,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 	@Override
 	public Result<?> showApi(String apiId) {
 		
-		Result<JSONObject> result = new Result<JSONObject>();
+		Result<com.alibaba.fastjson.JSONObject> result = new Result<com.alibaba.fastjson.JSONObject>();
 		
 		ApiEntity api = newApiDao.findApiById(apiId);
 		if (api == null) {
@@ -182,7 +182,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getListenPath()+"/"+api.getApiVersion().getVersion()+"/");
 		}
 		
-		JSONObject jsonObject = new JSONObject(api);
+		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(JSON.toJSONString(api));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
 		//jsonObject.put("applyName", openApplyEntity.getApplyName());
 		result.setSuccessData(jsonObject);
