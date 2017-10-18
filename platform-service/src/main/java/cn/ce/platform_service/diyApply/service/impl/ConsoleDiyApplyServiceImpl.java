@@ -612,7 +612,5 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			result.setErrorMessage("审核失败");
 			return result;
 		}
-
 	}
-
 }
