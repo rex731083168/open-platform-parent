@@ -75,18 +75,6 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 
 		}
 		return df.format((float) super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list) / ids.size());
-
-	}
-
-	public String bathUpdateByidSaveAppID(List<String> ids, int checkState, List<String> appid) {
-		// TODO Auto-generated method stub
-		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
-		for (int i = 0; i < ids.size(); i++) {
-			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
-					Update.update("checkState", checkState), false, true));
-		}
-		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
-
 	}
 
 	@Override
@@ -115,15 +103,15 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 	@Override
 	public Page<DiyApplyEntity> findApplyList(String applyName, String productName, Integer checkState,
 			Page<DiyApplyEntity> page) {
-		
+
 		Criteria c = new Criteria();
-		if(StringUtils.isNotBlank(applyName)){
+		if (StringUtils.isNotBlank(applyName)) {
 			c.and(DBFieldsConstants.DIY_APPLY_APPLYNAME).regex(applyName);
 		}
-		if(StringUtils.isNotBlank(productName)){
+		if (StringUtils.isNotBlank(productName)) {
 			c.and(DBFieldsConstants.DIY_APPLY_PRODUCTNAME).regex(productName);
 		}
-		if(checkState != null){
+		if (checkState != null) {
 			c.and(DBFieldsConstants.DIY_APPLY_CHECKSTATE).is(checkState);
 		}
 		Query query = new Query(c);

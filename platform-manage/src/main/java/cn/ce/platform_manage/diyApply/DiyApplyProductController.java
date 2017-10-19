@@ -52,7 +52,9 @@ public class DiyApplyProductController {
 
 	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
 	@ApiOperation("获取产品实例")
-	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key) {
+	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key,
+			@RequestParam String appName, @RequestParam(required = true, defaultValue = "10") int pageSize,
+			@RequestParam(required = true, defaultValue = "1") int currentPage) {
 		return plublicDiyApplyService.findTenantAppsByTenantKey(key);
 	}
 

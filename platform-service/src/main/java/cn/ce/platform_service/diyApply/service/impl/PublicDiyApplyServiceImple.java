@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,9 @@ import org.springframework.stereotype.Service;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
@@ -118,6 +119,12 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 			return result;
 		}
 
+	}
+
+	@Override
+	public Result<AppList> findTenantAppsByTenantKeyPage(String key, String appName, int pageNum, int pageSize) {
+
+		return null;
 	}
 
 }
