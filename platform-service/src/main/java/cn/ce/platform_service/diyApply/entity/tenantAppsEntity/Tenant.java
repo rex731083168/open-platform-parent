@@ -5,8 +5,10 @@ package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
 
 import java.util.List;
 
+import net.sf.json.JSONObject;
+
 /**
- * Auto-generated: 2017-10-13 11:28:45
+ * Auto-generated: 2017-10-19 14:44:5
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
@@ -27,13 +29,31 @@ public class Tenant {
 	private String mobileDomain;
 	private Integer mobileStatus;
 	private Integer pcPublishTime;
-	private Integer mobilePublishTime;
-	private String productInstanceId;
+	private String mobilePublishTime;
+	private Integer productInstanceId;
 	private String appList;
-	private List<String> instanceList;
-	private String productAttrId;
-	private String attr;
-	private String productInstance;
+	private ProductInstance productInstance;
+
+	public ProductInstance getProductInstance() {
+		return productInstance;
+	}
+
+	public void setProductInstance(ProductInstance productInstance) {
+		this.productInstance = productInstance;
+	}
+
+	public List<InstanceList> getInstanceList() {
+		return instanceList;
+	}
+
+	public void setInstanceList(List<InstanceList> instanceList) {
+		this.instanceList = instanceList;
+	}
+
+	private List<InstanceList> instanceList;
+	private Integer productAttrId;
+	private Attr attr;
+
 	private String productInstanceCode;
 	private String unittype;
 	private String templateCode;
@@ -48,276 +68,260 @@ public class Tenant {
 	private String domainInfo;
 	private boolean ceYun;
 
-	public Integer getId() {
-		return id;
-	}
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Integer getId() {
+		return id;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getTenantCode() {
-		return tenantCode;
+	public String getName() {
+		return name;
 	}
 
 	public void setTenantCode(String tenantCode) {
 		this.tenantCode = tenantCode;
 	}
 
-	public String getTennatCode() {
-		return tennatCode;
+	public String getTenantCode() {
+		return tenantCode;
 	}
 
 	public void setTennatCode(String tennatCode) {
 		this.tennatCode = tennatCode;
 	}
 
-	public String getCdnFlag() {
-		return cdnFlag;
+	public String getTennatCode() {
+		return tennatCode;
 	}
 
 	public void setCdnFlag(String cdnFlag) {
 		this.cdnFlag = cdnFlag;
 	}
 
-	public String getLanguage() {
-		return language;
+	public String getCdnFlag() {
+		return cdnFlag;
 	}
 
 	public void setLanguage(String language) {
 		this.language = language;
 	}
 
-	public String getProductDomain() {
-		return productDomain;
+	public String getLanguage() {
+		return language;
 	}
 
 	public void setProductDomain(String productDomain) {
 		this.productDomain = productDomain;
 	}
 
-	public String getMobileProductDomain() {
-		return mobileProductDomain;
+	public String getProductDomain() {
+		return productDomain;
 	}
 
 	public void setMobileProductDomain(String mobileProductDomain) {
 		this.mobileProductDomain = mobileProductDomain;
 	}
 
-	public String getMobileMakeDomain() {
-		return mobileMakeDomain;
+	public String getMobileProductDomain() {
+		return mobileProductDomain;
 	}
 
 	public void setMobileMakeDomain(String mobileMakeDomain) {
 		this.mobileMakeDomain = mobileMakeDomain;
 	}
 
-	public String getDomain() {
-		return domain;
+	public String getMobileMakeDomain() {
+		return mobileMakeDomain;
 	}
 
 	public void setDomain(String domain) {
 		this.domain = domain;
 	}
 
-	public String getMakeDomain() {
-		return makeDomain;
+	public String getDomain() {
+		return domain;
 	}
 
 	public void setMakeDomain(String makeDomain) {
 		this.makeDomain = makeDomain;
 	}
 
-	public String getMobileDomain() {
-		return mobileDomain;
+	public String getMakeDomain() {
+		return makeDomain;
 	}
 
 	public void setMobileDomain(String mobileDomain) {
 		this.mobileDomain = mobileDomain;
 	}
 
-	public Integer getMobileStatus() {
-		return mobileStatus;
+	public String getMobileDomain() {
+		return mobileDomain;
 	}
 
 	public void setMobileStatus(Integer mobileStatus) {
 		this.mobileStatus = mobileStatus;
 	}
 
-	public Integer getPcPublishTime() {
-		return pcPublishTime;
+	public Integer getMobileStatus() {
+		return mobileStatus;
 	}
 
 	public void setPcPublishTime(Integer pcPublishTime) {
 		this.pcPublishTime = pcPublishTime;
 	}
 
-	public Integer getMobilePublishTime() {
-		return mobilePublishTime;
+	public Integer getPcPublishTime() {
+		return pcPublishTime;
 	}
 
-	public void setMobilePublishTime(Integer mobilePublishTime) {
+	public void setMobilePublishTime(String mobilePublishTime) {
 		this.mobilePublishTime = mobilePublishTime;
 	}
 
-	public String getProductInstanceId() {
-		return productInstanceId;
+	public String getMobilePublishTime() {
+		return mobilePublishTime;
 	}
 
-	public void setProductInstanceId(String productInstanceId) {
+	public void setProductInstanceId(Integer productInstanceId) {
 		this.productInstanceId = productInstanceId;
 	}
 
-	public String getAppList() {
-		return appList;
+	public Integer getProductInstanceId() {
+		return productInstanceId;
 	}
 
 	public void setAppList(String appList) {
 		this.appList = appList;
 	}
 
-	public List<String> getInstanceList() {
-		return instanceList;
+	public String getAppList() {
+		return appList;
 	}
 
-	public void setInstanceList(List<String> instanceList) {
-		this.instanceList = instanceList;
-	}
-
-	public String getProductAttrId() {
-		return productAttrId;
-	}
-
-	public void setProductAttrId(String productAttrId) {
+	public void setProductAttrId(Integer productAttrId) {
 		this.productAttrId = productAttrId;
 	}
 
-	public String getAttr() {
-		return attr;
+	public Integer getProductAttrId() {
+		return productAttrId;
 	}
 
-	public void setAttr(String attr) {
+	public void setAttr(Attr attr) {
 		this.attr = attr;
 	}
 
-	public String getProductInstance() {
-		return productInstance;
-	}
-
-	public void setProductInstance(String productInstance) {
-		this.productInstance = productInstance;
-	}
-
-	public String getProductInstanceCode() {
-		return productInstanceCode;
+	public Attr getAttr() {
+		return attr;
 	}
 
 	public void setProductInstanceCode(String productInstanceCode) {
 		this.productInstanceCode = productInstanceCode;
 	}
 
-	public String getUnittype() {
-		return unittype;
+	public String getProductInstanceCode() {
+		return productInstanceCode;
 	}
 
 	public void setUnittype(String unittype) {
 		this.unittype = unittype;
 	}
 
-	public String getTemplateCode() {
-		return templateCode;
+	public String getUnittype() {
+		return unittype;
 	}
 
 	public void setTemplateCode(String templateCode) {
 		this.templateCode = templateCode;
 	}
 
-	public String getYouyiProductName() {
-		return youyiProductName;
+	public String getTemplateCode() {
+		return templateCode;
 	}
 
 	public void setYouyiProductName(String youyiProductName) {
 		this.youyiProductName = youyiProductName;
 	}
 
-	public List<String> getDomains() {
-		return domains;
+	public String getYouyiProductName() {
+		return youyiProductName;
 	}
 
 	public void setDomains(List<String> domains) {
 		this.domains = domains;
 	}
 
-	public String getNingkerDomain() {
-		return ningkerDomain;
+	public List<String> getDomains() {
+		return domains;
 	}
 
 	public void setNingkerDomain(String ningkerDomain) {
 		this.ningkerDomain = ningkerDomain;
 	}
 
-	public String getNingkerCusdomain() {
-		return ningkerCusdomain;
+	public String getNingkerDomain() {
+		return ningkerDomain;
 	}
 
 	public void setNingkerCusdomain(String ningkerCusdomain) {
 		this.ningkerCusdomain = ningkerCusdomain;
 	}
 
-	public String getHotelDomain() {
-		return hotelDomain;
+	public String getNingkerCusdomain() {
+		return ningkerCusdomain;
 	}
 
 	public void setHotelDomain(String hotelDomain) {
 		this.hotelDomain = hotelDomain;
 	}
 
-	public String getHotelCusdomain() {
-		return hotelCusdomain;
+	public String getHotelDomain() {
+		return hotelDomain;
 	}
 
 	public void setHotelCusdomain(String hotelCusdomain) {
 		this.hotelCusdomain = hotelCusdomain;
 	}
 
-	public String getDomainStatus() {
-		return domainStatus;
+	public String getHotelCusdomain() {
+		return hotelCusdomain;
 	}
 
 	public void setDomainStatus(String domainStatus) {
 		this.domainStatus = domainStatus;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public String getDomainStatus() {
+		return domainStatus;
 	}
 
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
-	public String getDomainInfo() {
-		return domainInfo;
+	public Integer getStatus() {
+		return status;
 	}
 
 	public void setDomainInfo(String domainInfo) {
 		this.domainInfo = domainInfo;
 	}
 
-	public boolean isCeYun() {
-		return ceYun;
+	public String getDomainInfo() {
+		return domainInfo;
 	}
 
 	public void setCeYun(boolean ceYun) {
 		this.ceYun = ceYun;
+	}
+
+	public boolean getCeYun() {
+		return ceYun;
 	}
 
 }

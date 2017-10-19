@@ -1,31 +1,30 @@
 /**
   * Copyright 2017 bejson.com 
   */
-package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
-import java.util.List;
+package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 
 /**
- * Auto-generated: 2017-10-19 14:44:5
+ * Auto-generated: 2017-10-19 19:32:56
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
 public class Data {
 
-    private List<AppList> appList;
     private Tenant tenant;
-    public void setAppList(List<AppList> appList) {
-         this.appList = appList;
-     }
-     public List<AppList> getAppList() {
-         return appList;
-     }
-
+    private Pages pages;
     public void setTenant(Tenant tenant) {
          this.tenant = tenant;
      }
      public Tenant getTenant() {
          return tenant;
+     }
+
+    public void setPages(Pages pages) {
+         this.pages = pages;
+     }
+     public Pages getPages() {
+         return pages;
      }
 
 }

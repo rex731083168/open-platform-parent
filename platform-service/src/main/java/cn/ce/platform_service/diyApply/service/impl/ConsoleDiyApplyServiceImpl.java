@@ -128,7 +128,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				// TODO: handle exception
 				_LOGGER.error("get messaget from url faile resaon " + e.getMessage() + "");
 			}
-
+			entity.setBossProductInstance(apps.getData().getTenant().getProductInstance().getBossProductInstance());
 			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
@@ -144,7 +144,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
 			List<String> appIdList = new ArrayList<String>();
 			for (AppList appList : apps.getData().getAppList()) {
-				appIdList.add(appList.getAppId()+""); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
+				appIdList.add(appList.getAppId() + ""); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
 			}
 
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
@@ -189,18 +189,18 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setPolicyId(policyId);
 			entity.setClientId(clientId);
 			entity.setSecret(secret);
-			
+
 			_LOGGER.info("****************将绑定关系保存到实体中****************");
-			Map<String ,List<String>> map= new HashMap<String,List<String>>();
-			int i=1;
+			Map<String, List<String>> map = new HashMap<String, List<String>>();
+			int i = 1;
 			for (String appId : appIdList) {
 				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
-				List<String> apiIds = new ArrayList<String>(); 
+				List<String> apiIds = new ArrayList<String>();
 				for (ApiEntity apiEntity : apiList) {
 					apiIds.add(apiEntity.getId());
 				}
-				_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用"+appId+"下绑定的api："+apiIds);
-				if(apiIds.size()>0){
+				_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api：" + apiIds);
+				if (apiIds.size() > 0) {
 					map.put(appId, apiIds);
 				}
 			}
@@ -235,7 +235,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			}
 
 			_LOGGER.info("update apply begin : " + JSON.toJSONString(applyById));
-			
+
 			_LOGGER.info("save end");
 			result.setSuccessMessage("修改成功!");
 
@@ -295,8 +295,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	@Override
 	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page) {
 		Result<Page<DiyApplyEntity>> result = new Result<>();
-		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(),entity.getProductName(),entity.getCheckState(),page);
-		//Page<DiyApplyEntity> findPageByEntity = diyApplyDao.findPageByEntity(generalApplyQuery(entity, null), page);
+		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(), entity.getProductName(),
+				entity.getCheckState(), page);
+		// Page<DiyApplyEntity> findPageByEntity =
+		// diyApplyDao.findPageByEntity(generalApplyQuery(entity, null), page);
 		result.setSuccessData(diyApplyPage);
 		return result;
 	}
@@ -339,40 +341,40 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	// return result;
 	// }
 
-//	/***
-//	 * 根据实体对象构建查询条件
-//	 * 
-//	 * @param entity
-//	 *            实体对象
-//	 * @author lida
-//	 * @return
-//	 */
-//	private Criteria generalApplyCriteria(DiyApplyEntity entity) {
-//		// 构建查询对象
-//		Criteria c = new Criteria();
-//
-//		if (StringUtils.isNotBlank(entity.getId())) {
-//			c.and("id").is(entity.getId());
-//		}
-//
-//		if (StringUtils.isNotBlank(entity.getUserId())) {
-//			c.and("userId").is(entity.getUserId());
-//		}
-//
-//		if (StringUtils.isNotBlank(entity.getApplyName())) {
-//			c.and("applyName").regex(entity.getApplyName());
-//		}
-//
-//		return c;
-//	}
+	// /***
+	// * 根据实体对象构建查询条件
+	// *
+	// * @param entity
+	// * 实体对象
+	// * @author lida
+	// * @return
+	// */
+	// private Criteria generalApplyCriteria(DiyApplyEntity entity) {
+	// // 构建查询对象
+	// Criteria c = new Criteria();
+	//
+	// if (StringUtils.isNotBlank(entity.getId())) {
+	// c.and("id").is(entity.getId());
+	// }
+	//
+	// if (StringUtils.isNotBlank(entity.getUserId())) {
+	// c.and("userId").is(entity.getUserId());
+	// }
+	//
+	// if (StringUtils.isNotBlank(entity.getApplyName())) {
+	// c.and("applyName").regex(entity.getApplyName());
+	// }
+	//
+	// return c;
+	// }
 
-//	private Query generalApplyQuery(DiyApplyEntity apply, Sort sort) {
-//		if (sort == null) {
-//			sort = new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE);
-//		}
-//		Query query = new Query(generalApplyCriteria(apply)).with(sort);
-//		return query;
-//	}
+	// private Query generalApplyQuery(DiyApplyEntity apply, Sort sort) {
+	// if (sort == null) {
+	// sort = new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE);
+	// }
+	// Query query = new Query(generalApplyCriteria(apply)).with(sort);
+	// return query;
+	// }
 
 	@Override
 	public DiyApplyEntity findById(String applyId) {
@@ -431,7 +433,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		try {
 
-			String sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
+			StringBuffer sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
 
 			_LOGGER.debug("produMenuList return json:" + sendGetRequest);
 
@@ -546,27 +548,27 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 	}
 
-	@Override 
+	@Override
 	public Result<?> limitScope(String diyApplyId, String openApplyId) {
-		
+
 		Result<List<ApiEntity>> result = new Result<List<ApiEntity>>();
 		DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
-		if(null == diyEntity){
+		if (null == diyEntity) {
 			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS015);
 			return result;
 		}
-		Map<String,List<String>> limitMap = diyEntity.getLimitList();
-		if(limitMap == null || limitMap.size() == 0){
-			result.setErrorMessage("当前定制应用暂时未绑定该开放应用",ErrorCodeNo.SYS017);
+		Map<String, List<String>> limitMap = diyEntity.getLimitList();
+		if (limitMap == null || limitMap.size() == 0) {
+			result.setErrorMessage("当前定制应用暂时未绑定该开放应用", ErrorCodeNo.SYS017);
 			return result;
 		}
-		
+
 		Set<String> openApplySet = limitMap.keySet();
-		if(openApplySet.contains(openApplyId)){
+		if (openApplySet.contains(openApplyId)) {
 			List<String> apiIds = limitMap.get(openApplyId);
 			List<ApiEntity> apiList = newApiDao.findApiByIds(apiIds);
 			result.setSuccessData(apiList);
-		}else{
+		} else {
 			result.setErrorMessage("当前开放应用不可用", ErrorCodeNo.SYS017);
 		}
 		return result;

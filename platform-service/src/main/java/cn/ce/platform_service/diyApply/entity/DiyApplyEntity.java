@@ -28,7 +28,7 @@ public class DiyApplyEntity {
 	private String id; // 对应接口应用code 2， 开发者在开放平台发布应用审核
 
 	@Field("appId")
-	private String appId; // 对应接口返回应用id 2， 开发者在开放平台发布应用审核 
+	private String appId; // 对应接口返回应用id 2， 开发者在开放平台发布应用审核
 
 	@Field("applyName")
 	private String applyName;// 应用名称
@@ -40,6 +40,9 @@ public class DiyApplyEntity {
 	/** 产品实例ID */
 	@Field("productInstanceId")
 	private String productInstanceId;
+	/** bossProductInstance */
+	@Field("bossProductInstance")
+	private String bossProductInstance;
 
 	/** 产品名称 */
 	@Field("productName")
@@ -52,10 +55,10 @@ public class DiyApplyEntity {
 	/** 访问频次类型 1:标准，2:定制，3:高定制 */
 	@Field("frequencyType")
 	private Integer frequencyType;
-	
+
 	/** 访问频次 */
 	@Field("rate")
-	private Integer rate; 
+	private Integer rate;
 	@Field("per")
 	private Integer per;
 	@Field("quotaMax")
@@ -70,7 +73,7 @@ public class DiyApplyEntity {
 	private String clientId;
 	@Field("secret")
 	private String secret;
-	
+
 	/** 应用logo */
 	@Field("logoImage")
 	private byte[] logoImage;
@@ -90,9 +93,9 @@ public class DiyApplyEntity {
 	@Field("enterpriseName")
 	private String enterpriseName; // 企业名称
 
-	@Field("limitList") //可访问的api权限列表
-	private Map<String,List<String>> limitList; //键是开放应用id，值是开放应用id对应的api的id
-	
+	@Field("limitList") // 可访问的api权限列表
+	private Map<String, List<String>> limitList; // 键是开放应用id，值是开放应用id对应的api的id
+
 	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
 	@Field("checkState")
 	private Integer checkState;
@@ -325,5 +328,13 @@ public class DiyApplyEntity {
 	public void setLimitList(Map<String, List<String>> limitList) {
 		this.limitList = limitList;
 	}
-	
+
+	public String getBossProductInstance() {
+		return bossProductInstance;
+	}
+
+	public void setBossProductInstance(String bossProductInstance) {
+		this.bossProductInstance = bossProductInstance;
+	}
+
 }

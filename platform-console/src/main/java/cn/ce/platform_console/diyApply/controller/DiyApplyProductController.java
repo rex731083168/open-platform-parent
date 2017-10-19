@@ -14,6 +14,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.inparameter.GeneratorTenantKeyInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
+import cn.ce.platform_service.diyApply.entity.tenantAppPage.TenantAppPage;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
@@ -41,13 +42,12 @@ public class DiyApplyProductController {
 	private IPlublicDiyApplyService plublicDiyApplyService;
 
 	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
-	@ApiOperation("获取产品实例")
-	public Result<TenantApps> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key,@RequestParam String appName,
-			@RequestParam(required = true, defaultValue = "10") int pageSize,
+	@ApiOperation("获取产品实例 查询带分页")
+	public Result<TenantAppPage> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key,
+			@RequestParam(required = false) String appName, @RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
-		return plublicDiyApplyService.findTenantAppsByTenantKey(key);
+		return plublicDiyApplyService.findTenantAppsByTenantKeyPage(key, appName, currentPage, pageSize);
 	}
-
 	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
 	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = false) String owner,
