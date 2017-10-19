@@ -128,7 +128,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				// TODO: handle exception
 				_LOGGER.error("get messaget from url faile resaon " + e.getMessage() + "");
 			}
-
+			entity.setBossProductInstance(apps.getData().getTenant().getProductInstance().getBossProductInstance());
 			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
