@@ -55,7 +55,8 @@ public interface IConsoleDiyApplyService {
 	 * @param id
 	 * @return
 	 */
-	//Result<DiyApplyEntity> getApplyById(String id, int pageSize, int currentPage);
+	// Result<DiyApplyEntity> getApplyById(String id, int pageSize, int
+	// currentPage);
 
 	/***
 	 * 
@@ -64,30 +65,30 @@ public interface IConsoleDiyApplyService {
 	 */
 	public DiyApplyEntity findById(String applyId);
 
-	
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
-
-	public Result<String> batchUpdate(String ids,int checkState, String checkMem);
+	public Result<String> batchUpdate(String ids, int checkState, String checkMem);
 
 	/**
 	 * 
 	 * @Title: productMenuList @Description: 获取产品菜单列表 @param : @param
-	 * bossInstanceCode @param : @return @return:
-	 * Result<InterfaMessageInfoJasonObject> @throws
+	 *         bossInstanceCode @param : @return @return:
+	 *         Result<InterfaMessageInfoJasonObject> @throws
 	 */
 	public Result<String> productMenuList(String bossInstanceCode);
 
 	/**
 	 * 
 	 * @Title: registerMenu @Description: 注册菜单 @param : @param appid @param : @param
-	 * bossInstanceCode @param : @param menuJson @param : @return @return:
-	 * Result<InterfaMessageInfoJasonObject> @throws
+	 *         bossInstanceCode @param : @param menuJson @param : @return @return:
+	 *         Result<InterfaMessageInfoJasonObject> @throws
 	 */
 	public Result<String> registerMenu(String appid, String bossInstanceCode, String menuJson);
 
 	Result<?> updateApply(DiyApplyEntity apply);
 
 	Result<?> limitScope(String diyApplyId, String openApplyId);
+
+	Result<?> checkLimit(String diyApplyId, String openApplyId, String apiId);
 
 }

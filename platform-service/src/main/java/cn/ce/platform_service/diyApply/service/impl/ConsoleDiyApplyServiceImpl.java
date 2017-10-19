@@ -28,6 +28,7 @@ import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
+import cn.ce.platform_service.common.HttpClientUtilsNew;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.RateConstants;
 import cn.ce.platform_service.common.RateEnum;
@@ -200,8 +201,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				for (ApiEntity apiEntity : apiList) {
 					apiIds.add(apiEntity.getId());
 				}
-				_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+appId+"下绑定的api："+apiIds);
-				map.put(appId, appIdList);
+				_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用"+appId+"下绑定的api："+apiIds);
+				if(apiIds.size()>0){
+					map.put(appId, apiIds);
+				}
 			}
 			entity.setLimitList(map);
 			
@@ -430,7 +433,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		try {
 
-			String sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
+			StringBuffer sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
 
 			_LOGGER.debug("produMenuList return json:" + sendGetRequest);
 
