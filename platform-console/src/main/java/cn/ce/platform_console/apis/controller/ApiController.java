@@ -57,6 +57,12 @@ public class ApiController {
 		
 		_LOGGER.info(apiEntity.toString());
 		
+		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNAUDITED
+				|| apiEntity.getCheckState() < AuditConstants.API_CHECK_STATE_UNCOMMITED){
+			Result<String> result = new Result<String>();
+			result.setErrorMessage("api审核状态不可用", ErrorCodeNo.SYS012);
+			return result;
+		}
 		return consoleApiService.publishApi(user, apiEntity);
 	}
 	

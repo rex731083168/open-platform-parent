@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
@@ -80,7 +81,6 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 					Update.update("checkState", checkState), false, true));
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
-
 	}
 
 	@Override
@@ -101,5 +101,23 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 			}
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
+	}
+
+	@Override
+	public Page<DiyApplyEntity> findApplyList(String applyName, String productName, Integer checkState,
+			Page<DiyApplyEntity> page) {
+
+		Criteria c = new Criteria();
+		if (StringUtils.isNotBlank(applyName)) {
+			c.and(DBFieldsConstants.DIY_APPLY_APPLYNAME).regex(applyName);
+		}
+		if (StringUtils.isNotBlank(productName)) {
+			c.and(DBFieldsConstants.DIY_APPLY_PRODUCTNAME).regex(productName);
+		}
+		if (checkState != null) {
+			c.and(DBFieldsConstants.DIY_APPLY_CHECKSTATE).is(checkState);
+		}
+		Query query = new Query(c);
+		return super.findPage(page, query);
 	}
 }

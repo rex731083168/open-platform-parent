@@ -2,6 +2,7 @@ package cn.ce.platform_service.diyApply.entity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -89,6 +90,9 @@ public class DiyApplyEntity {
 	@Field("enterpriseName")
 	private String enterpriseName; // 企业名称
 
+	@Field("limitList") //可访问的api权限列表
+	private Map<String,List<String>> limitList; //键是开放应用id，值是开放应用id对应的api的id
+	
 	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
 	@Field("checkState")
 	private Integer checkState;
@@ -313,7 +317,13 @@ public class DiyApplyEntity {
 	public void setSecret(String secret) {
 		this.secret = secret;
 	}
-	
-	
+
+	public Map<String, List<String>> getLimitList() {
+		return limitList;
+	}
+
+	public void setLimitList(Map<String, List<String>> limitList) {
+		this.limitList = limitList;
+	}
 	
 }

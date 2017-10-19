@@ -455,7 +455,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 				SaveOrUpdateAppsInParameterEntity sue = new SaveOrUpdateAppsInParameterEntity();
 				sue.setAppName(list.get(i).getApplyName());
 				sue.setAppDesc(list.get(i).getApplyDesc());
-				sue.setAppCode(list.get(i).getId());
+				sue.setAppCode(list.get(i).getApplyKey());
 				sue.setAppType("1");
 				sue.setOwner(list.get(i).getEnterpriseName());
 				queryVO[i] = sue;

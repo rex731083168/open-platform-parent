@@ -230,7 +230,6 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 					Update.update("checkMem", checkMem), true, true));
 		}
 		return String.valueOf(super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list));
-
 	}
 
 	@Override

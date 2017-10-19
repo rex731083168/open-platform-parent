@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -87,6 +88,10 @@ public class ManageApiServiceImpl implements IManageApiService{
 				
 				// TODO 紧急 listenpath的校验规则
 				String listenPath = apiEntity.getListenPath();
+				if(StringUtils.isBlank(listenPath)){
+					result.setErrorMessage("listenPath不能为空", ErrorCodeNo.SYS005);
+					return result;
+				}
 				if(!listenPath.startsWith("/")){
 					listenPath = "/"+listenPath;
 				}else if(!listenPath.endsWith("/")){
