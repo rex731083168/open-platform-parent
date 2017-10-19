@@ -199,9 +199,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				for (ApiEntity apiEntity : apiList) {
 					apiIds.add(apiEntity.getId());
 				}
-				_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api：" + apiIds);
 				if (apiIds.size() > 0) {
 					map.put(appId, apiIds);
+					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api：" + apiIds);
 				}
 			}
 			entity.setLimitList(map);
