@@ -149,7 +149,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		Result<String> result = new Result<String>();
 		for (String apiId : apiIds) {
 			ApiEntity api = newApiDao.findApiById(apiId);
-			api.setCheckState(1);
+			api.setCheckState(AuditConstants.API_CHECK_STATE_UNAUDITED);
 			newApiDao.save(api);
 		}
 		result.setSuccessMessage("修改成功");

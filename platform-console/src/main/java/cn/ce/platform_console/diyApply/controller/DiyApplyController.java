@@ -43,9 +43,6 @@ public class DiyApplyController {
 	@Resource
 	private IConsoleDiyApplyService consoleDiyApplyService;
 
-//	@Resource
-//	private IAPIService apiService;
-
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
 	@ApiOperation(value = "根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
 	public Result<Page<DiyApplyEntity>> findApplyList(@RequestBody DiyApplyEntity apply,

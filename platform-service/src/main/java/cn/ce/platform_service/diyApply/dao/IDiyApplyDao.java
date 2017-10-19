@@ -65,4 +65,13 @@ public interface IDiyApplyDao {
 	 * @return
 	 */
 	public String bathUpdateByidAndPush(List<String> ids,Map<String, Object> map,int checkState,String checkMem) ;
+
+	/**
+	 * @Title: findApplyList
+	 * @Description: 根据部分参数查询定制应用
+	 * @author: makangwei 
+	 * @date:   2017年10月19日 上午10:36:35 
+	 */
+	Page<DiyApplyEntity> findApplyList(String applyName, String productName, Integer checkState,
+			Page<DiyApplyEntity> page);
 }

@@ -9,26 +9,17 @@ public class DBFieldsConstants {
 
 	/*************** api相关字段 **********************/
 	public static final String APIS_APIVERSION_VERSIONID = "apiVersion.versionId";
-	
 	public static final String APIS_APIVERSION_NEWVERSION = "apiVersion.newVersion"; 
-	
 	public static final String APIS_APIENNAME = "apiEnName";
-	
 	public static final String APIS_APICHNAME = "apiChName";
-	
 	public static final String APIS_OPENAPPLY_ID = "openApplyId";
-	
 	public static final String APIS_VERSION= "version";
-	
 	public static final String APIS_ID = "id";
-	
 	public static final String APIS_USERID = "userId";
-	
 	public static final String APIS_CHECKSTATE = "checkState";
-	
 	public static final String APIS_CREATE_TIME = "createTime";
-	
 	public static final String APIS_LISTEN_PATH = "listenPath";
+	public static final String APIS_APPID = "appId";
 	
 	/*************** user相关字段 **********************/
 	public static final String USER_USERTYPE = "userType";
@@ -66,6 +57,9 @@ public class DBFieldsConstants {
 	public static final String GW_SECRET= "secret";
 	public static final String GW_REDIRECT_URI = "redirect_uri";
 
-	public static final String APIS_APPID = "appId";
-
+	/*************** 定制应用相关字段 **********************/
+	public static final String DIY_APPLY_APPLYNAME = "applyName";
+	public static final String DIY_APPLY_PRODUCTNAME = "productName";
+	public static final String DIY_APPLY_CHECKSTATE = "checkState";
+	
 }

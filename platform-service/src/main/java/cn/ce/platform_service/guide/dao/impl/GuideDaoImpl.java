@@ -64,7 +64,7 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 			}
 
 		}
-		return df.format((float)(super.bathUpdate(super.mongoTemplate, GuideEntity.class, list))/list.size());
+		return df.format((float)(super.bathUpdate(super.mongoTemplate, GuideEntity.class, list))/ids.size());
 	}
 
 	@Override
