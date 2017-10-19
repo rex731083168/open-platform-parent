@@ -98,7 +98,7 @@ public class DiyApplyController {
 		return result;
 	}
 
-	@RequestMapping(value = "updateApply", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateApply", method = RequestMethod.POST)
 	@ApiOperation("修改应用，不能修改产品密钥")
 	public Result<?> updateApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
@@ -111,13 +111,12 @@ public class DiyApplyController {
 		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
 	}
 
-	@RequestMapping("checkLimit") //查看当前定制应用是否有权限访问某组api或者某个api
-	public Result<?> checkLimit(
+	@RequestMapping(value="/limitScope",method=RequestMethod.GET) //查看当前定制应用是否有权限访问某组api或者某个api
+	public Result<?> limitScope(
 			@RequestParam String diyApplyId,
-			@RequestParam String openApplyId,
-			@RequestParam(required=false) String apiId){
+			@RequestParam String openApplyId){
 		
-		return consoleDiyApplyService.checkLimit(diyApplyId,openApplyId,apiId);
+		return consoleDiyApplyService.limitScope(diyApplyId,openApplyId);
 	}
 
 }

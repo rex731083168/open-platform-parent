@@ -1,6 +1,5 @@
 package cn.ce.platform_service.guide.dao.impl;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,6 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 
 	@Override
 	public Page<GuideEntity> listByPage(Page<GuideEntity> page, Query query) {
-		// TODO Auto-generated method stub
 		return super.findPage(page, query);
 	}
 
@@ -52,8 +50,6 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 
 	@Override
 	public String bachUpdateGuide(List<String> ids, Integer state, String checkMem) {
-		// TODO Auto-generated method stub
-		DecimalFormat df = new DecimalFormat("0");
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
@@ -64,7 +60,7 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 			}
 
 		}
-		return df.format((float)(super.bathUpdate(super.mongoTemplate, GuideEntity.class, list))/ids.size());
+		return String.valueOf(super.bathUpdate(super.mongoTemplate, GuideEntity.class, list));
 	}
 
 	@Override

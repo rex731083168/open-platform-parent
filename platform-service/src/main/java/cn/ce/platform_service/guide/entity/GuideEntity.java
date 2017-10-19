@@ -71,11 +71,11 @@ public class GuideEntity implements Serializable {
 		this.guideDesc = guideDesc;
 	}
 
-	public String getAppIyId() {
+	public String getApplyId() {
 		return applyId;
 	}
 
-	public void setAppIyId(String applyId) {
+	public void setApplyId(String applyId) {
 		this.applyId = applyId;
 	}
 

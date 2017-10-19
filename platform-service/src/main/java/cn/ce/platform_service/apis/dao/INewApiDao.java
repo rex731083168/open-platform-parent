@@ -28,7 +28,7 @@ public interface INewApiDao {
 
 	List<ApiEntity> findApiByIds(List<String> apiId);
 	
-	List<ApiEntity> findApiByApplyIds(List<String> appIds);
+	List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> appIds,Integer checkState);
 
 	List<ApiEntity> findByField(String key, String value);
 

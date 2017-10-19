@@ -222,7 +222,7 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 		command.put("updates", updateList);
 		command.put("ordered", ordered);
 		CommandResult commandResult = dbCollection.getDB().command(command);
-		return Integer.parseInt(commandResult.get("n").toString());
+		return Integer.parseInt(commandResult.get("nModified").toString());
 	}
 
 	/**
@@ -286,6 +286,14 @@ public class BaseMongoDaoImpl<T> implements BaseMongoDao<T> {
 	public static int bathUpdate(DBCollection dbCollection, Class<?> entityClass, List<BathUpdateOptions> options) {
 		return doBathUpdate(dbCollection, determineCollectionName(entityClass), options, true);
 	}
+	
+	public int batchUpdate(Query q,Map<String,Object> basicMap,Class<?> class1){
 
-	/**** bathupdate code begain ****/
+		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
+		for(String key : basicMap.keySet()){
+			list.add(new BathUpdateOptions(q,Update.update(key, basicMap.get(key)), false, true));
+		}
+		return bathUpdate(mongoTemplate,class1,list);
+	}
+
 }

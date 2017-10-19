@@ -48,7 +48,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Result<String> result = new Result<String>();
 		try {
 
-			Query query = new Query(Criteria.where("guideName").is(g.getGuideName()));
+			Query query = new Query(Criteria.where("guideName").is(g.getGuideName()).and("applyId").is(g.getApplyId()));
 
 			List<GuideEntity> list = guideDaoImpl.list(query);
 
@@ -133,8 +133,8 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
 			c.and("creatUserName").regex(entity.getCreatUserName());
 		}
-		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
-			c.and("applyId").is(entity.getCreatUserName());
+		if (StringUtils.isNotBlank(entity.getApplyId())) {
+			c.and("applyId").is(entity.getApplyId());
 		}
 
 		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));

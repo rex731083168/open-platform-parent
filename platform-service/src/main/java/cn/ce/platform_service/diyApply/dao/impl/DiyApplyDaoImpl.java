@@ -1,6 +1,5 @@
 package cn.ce.platform_service.diyApply.dao.impl;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,8 +63,6 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 	}
 
 	public String bathUpdateByid(List<String> ids, int checkState, String checkMem) {
-		// TODO Auto-generated method stub
-		DecimalFormat df = new DecimalFormat("0");
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
@@ -74,14 +71,20 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 					Update.update("checkMem", checkMem), false, true));
 
 		}
-		return df.format((float) super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list) / ids.size());
+		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
+	}
+
+	public String bathUpdateByidSaveAppID(List<String> ids, int checkState, List<String> appid) {
+		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
+		for (int i = 0; i < ids.size(); i++) {
+			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
+					Update.update("checkState", checkState), false, true));
+		}
+		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
 	}
 
 	@Override
 	public String bathUpdateByidAndPush(List<String> ids, Map<String, Object> map, int checkState, String checkMem) {
-		// TODO Auto-generated method stub
-
-		DecimalFormat df = new DecimalFormat("0");
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			Iterator<String> iter = map.keySet().iterator();
@@ -97,7 +100,7 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 				}
 			}
 		}
-		return df.format((float) super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list) / ids.size());
+		return String.valueOf(super.bathUpdate(super.mongoTemplate, DiyApplyEntity.class, list));
 	}
 
 	@Override

@@ -24,10 +24,8 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.inparameter.RegisterBathAppInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
 import net.sf.json.JSONArray;
@@ -85,7 +83,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				return result;
 			}
 
-			Query query = new Query(Criteria.where("id").is(ids.get(0)));
+			Query query = new Query(Criteria.where("id").in(ids));
 			List<DiyApplyEntity> diyApply = diyApplyDao.findListByEntity(query);
 
 			RegisterBathAppInParameterEntity[] queryVO = new RegisterBathAppInParameterEntity[diyApply.size()];

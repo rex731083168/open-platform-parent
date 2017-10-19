@@ -74,8 +74,7 @@ public class DiyApplyProductController {
 	@ApiOperation("注册菜单")
 	@RequestMapping(value = "/registerMenu", method = RequestMethod.POST)
 	public Result<String> registerMenu(@RequestParam(value = "appid", required = true) String appid,
-			@RequestParam(value = "bossInstanceCode", required = true) String bossInstanceCode,
-			@RequestBody(required = true) String menuJson) {
+			@RequestParam(value = "bossInstanceCode", required = true) String bossInstanceCode,String menuJson) {
 		return consoleDiyApplyService.registerMenu(appid, bossInstanceCode, menuJson);
 	}
 }

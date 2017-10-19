@@ -1,6 +1,5 @@
 package cn.ce.platform_service.openApply.dao.impl;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -223,7 +222,6 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 	 */
 	public String bathUpdateByid(List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
-		DecimalFormat df = new DecimalFormat("0");
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
@@ -231,9 +229,7 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 			list.add(new BathUpdateOptions(Query.query(Criteria.where("_id").is(new ObjectId(ids.get(i)))),
 					Update.update("checkMem", checkMem), true, true));
 		}
-		return String.valueOf(
-				df.format((float) super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list) / ids.size()));
-
+		return String.valueOf(super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list));
 	}
 
 	@Override

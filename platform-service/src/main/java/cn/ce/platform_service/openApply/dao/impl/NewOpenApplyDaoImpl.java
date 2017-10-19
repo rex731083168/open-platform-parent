@@ -18,7 +18,6 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
-import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.openApply.dao.INewOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 
@@ -85,7 +84,6 @@ public class NewOpenApplyDaoImpl extends  BaseMongoDaoImpl<OpenApplyEntity> impl
 	
 	@Override
 	public int batchSaveApply(List<String> ids,Integer checkState) {
-		// TODO Auto-generated method stub
 		List<BathUpdateOptions> list = new ArrayList<BathUpdateOptions>();
 		for (int i = 0; i < ids.size(); i++) {
 			list.add(new BathUpdateOptions(Query.query(Criteria.where(MongoFiledConstants.OPEN_APPLY_ID).is(new ObjectId(ids.get(i)))),

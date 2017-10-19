@@ -66,6 +66,15 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		Result<String> result = new Result<String>();
 		
+		
+		if(StringUtils.isBlank(apiEntity.getAppCode())){
+			result.setErrorMessage("appCode不能为空", ErrorCodeNo.SYS005);
+			return result;
+		}else if(StringUtils.isBlank(apiEntity.getApiEnName())){
+			result.setErrorMessage("apiEnName不能为空", ErrorCodeNo.SYS005);
+		}
+		
+		
 		//设置默认值，否则会后面审核api会报错
 		if(apiEntity.getCheckState() == null){
 			apiEntity.setCheckState(0);
@@ -80,11 +89,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		
 		Map<String,Object> whereMap = new HashMap<>();
-		whereMap.put(DBFieldsConstants.APIS_LISTEN_PATH, apiEntity.getListenPath());
+		whereMap.put(DBFieldsConstants.APIS_APP_CODE, apiEntity.getAppCode());
+		whereMap.put(DBFieldsConstants.APIS_APIENNAME,apiEntity.getApiEnName());
 		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
 		if(null != findOneByFields){
-			result.setMessage("访问路径已存在,请检查后重试!");
+			result.setMessage("当前开放应用下appEnName已存在,请检查后重试!");
 			result.setErrorCode(ErrorCodeNo.SYS010);
+			return result;
 		}
 		
 		// 第一次添加接口,并且选择未开启版本控制
@@ -203,7 +214,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
 			// TODO 这里的路径是否正确。网关是否修改这里
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getListenPath()+"/"+api.getApiVersion().getVersion()+"/");
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getAppCode()+"/"+api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
 		}
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
@@ -228,13 +239,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 		//提供者查看api列表
 		Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
-		
-		//隐藏真实地址
-//		List<ApiEntity> list = page.getItems();
-//		for (ApiEntity apiEntity : list) {
-//			//将正式的url地址设置为空，不能让用户看到
-//			apiEntity.setTestEndPoint("");
-//		}
 			
 		result.setSuccessData(page);
 		return result;
@@ -296,6 +300,22 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
+//	@Override
+//	public Result<String> checkListenPath(String listenPath){
+//		Result<String> result = new Result<>();
+//		Map<String,Object> whereMap = new HashMap<>();
+//		whereMap.put(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
+//		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
+//		if(null == findOneByFields){
+//			result.setSuccessMessage("访问路径可用!");
+//		}else{
+//			result.setMessage("访问路径已存在,请检查后重试!");
+//			result.setErrorCode(ErrorCodeNo.SYS010);
+//			return result;
+//		}
+//		return result;
+//	}
+
 
 	/**
 	 * @Title: checkVersion
@@ -337,7 +357,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			List<String> openApplyIds){
 		
 		//获取versionId集合以及用逗号隔开的长数组
-		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIds(openApplyIds);
+		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS);
 		_LOGGER.info("根据开放应用Id查询的api列表"+apiEntityList.size());
 		StringBuffer versionIdsBuf = new StringBuffer(); // versionId用逗号分隔的长字符串
 		Set<String> versionIdList = new HashSet<String>(); //versionId的集合
@@ -353,6 +373,18 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			// TODO 紧急
 			return true;
 		}
+		
+		//记录绑定日志
+		int i=1;
+		for (String appId : openApplyIds) {
+			List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
+			List<String> apiIds = new ArrayList<String>(); 
+			for (ApiEntity apiEntity : apiList) {
+				apiIds.add(apiEntity.getId());
+			}
+			_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+appId+"下绑定的api："+apiIds);
+		}
+		
 		versionIdsBuf.deleteCharAt(0); //versionId用逗号分隔的长字符串
 		Map<String, List<String>> apiInfos = new HashMap<String,List<String>>();
 		for (String versionId : versionIdList) {
