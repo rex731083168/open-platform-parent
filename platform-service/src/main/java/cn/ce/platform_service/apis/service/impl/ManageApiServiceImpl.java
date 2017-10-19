@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -86,19 +85,6 @@ public class ManageApiServiceImpl implements IManageApiService{
 				 * 所以这个bug由业务来避免了。
 				 */
 				
-				// TODO 紧急 listenpath的校验规则
-				String listenPath = apiEntity.getListenPath();
-				if(StringUtils.isBlank(listenPath)){
-					result.setErrorMessage("listenPath不能为空", ErrorCodeNo.SYS005);
-					return result;
-				}
-				if(!listenPath.startsWith("/")){
-					listenPath = "/"+listenPath;
-				}else if(!listenPath.endsWith("/")){
-					listenPath = listenPath+"/";
-				}
-				apiEntity.setListenPath(listenPath);//listenPath
-				
 				Map<String,String> map = new HashMap<String,String>(); //map中放着不同的版本和版本对应的endPoint.
 				for (ApiEntity entity : apiVersionList) { //查询旧的版本信息和Url
 					if(entity.getCheckState() == 2 ){
@@ -113,6 +99,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 					_LOGGER.info("版本键："+key+","+"请求地址是："+map.get(key));
 				}
 				
+				String listenPath = "/"+apiEntity.getAppCode()+"/"+apiEntity.getApiEnName();
 				/*** 添加api到网关接口 ***/
 				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), apiEntity.getApiEnName(), listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 				
@@ -185,7 +172,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
 			// TODO 这里的路径是否正确。网关是否修改这里
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getListenPath()+"/"+api.getApiVersion().getVersion()+"/");
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getAppCode()+"/"+api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
 		}
 		
 		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(JSON.toJSONString(api));

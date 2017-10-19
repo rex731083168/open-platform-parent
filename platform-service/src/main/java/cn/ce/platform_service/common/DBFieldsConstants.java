@@ -18,7 +18,7 @@ public class DBFieldsConstants {
 	public static final String APIS_USERID = "userId";
 	public static final String APIS_CHECKSTATE = "checkState";
 	public static final String APIS_CREATE_TIME = "createTime";
-	public static final String APIS_LISTEN_PATH = "listenPath";
+	public static final String APIS_APP_CODE = "appCode";
 	public static final String APIS_APPID = "appId";
 	
 	/*************** user相关字段 **********************/

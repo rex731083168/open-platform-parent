@@ -88,6 +88,6 @@ public interface IConsoleDiyApplyService {
 
 	Result<?> updateApply(DiyApplyEntity apply);
 
-	Result<?> checkLimit(String diyApplyId, String openApplyId, String apiId);
+	Result<?> checkLimit(String diyApplyId, String openApplyId);
 
 }
