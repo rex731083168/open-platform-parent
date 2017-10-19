@@ -99,7 +99,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 					_LOGGER.info("版本键："+key+","+"请求地址是："+map.get(key));
 				}
 				
-				String listenPath = "/"+apiEntity.getAppCode()+"/"+apiEntity.getApiEnName();
+				String listenPath = "/"+apiEntity.getAppCode()+"/"+apiEntity.getApiEnName()+"/";
 				/*** 添加api到网关接口 ***/
 				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), apiEntity.getApiEnName(), listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 				
