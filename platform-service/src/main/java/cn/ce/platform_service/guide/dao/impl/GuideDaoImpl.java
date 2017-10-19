@@ -40,7 +40,6 @@ public class GuideDaoImpl extends BaseMongoDaoImpl<GuideEntity> implements IGuid
 
 	@Override
 	public Page<GuideEntity> listByPage(Page<GuideEntity> page, Query query) {
-		// TODO Auto-generated method stub
 		return super.findPage(page, query);
 	}
 

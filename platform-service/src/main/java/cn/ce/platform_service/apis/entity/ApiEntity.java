@@ -41,22 +41,21 @@ public class ApiEntity implements Serializable {
 	/** 用户姓名 */
 	@Field("userName")
 	private String userName;
-	
 	/** 接口名称 */
 	@Field("apiChName")
 	private String apiChName;
 	/** 接口中文名称 */
 	@Field("apiEnName")
 	private String apiEnName;
+	/**/
+	@Field("appCode") 
+	private String appCode;
 	/** 接口地址 */
 	@Field("testEndPoint")
 	private String testEndPoint;
 	/** 接口地址 */
 	@Field("endPoint")
 	private String endPoint;
-	
-	@Field("listenPath")
-	private String listenPath; //每个api的监听路径
 	
 	/** http方法GET或POST */
 	@Field("httpMethod")
@@ -333,25 +332,24 @@ public class ApiEntity implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	public String getListenPath() {
-		return listenPath;
+
+	public String getAppCode() {
+		return appCode;
 	}
 
-	public void setListenPath(String listenPath) {
-		this.listenPath = listenPath;
+	public void setAppCode(String appCode) {
+		this.appCode = appCode;
 	}
 
 	@Override
 	public String toString() {
 		return "ApiEntity [id=" + id + ", openApplyId=" + openApplyId + ", userId=" + userId + ", userName=" + userName
-				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", testEndPoint=" + testEndPoint
-				+ ", endPoint=" + endPoint + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod + ", headers="
-				+ headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample + ", errCodes="
-				+ errCodes + ", apiVersion=" + apiVersion + ", desc=" + desc + ", state=" + state + ", countByDay="
-				+ countByDay + ", checkState=" + checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax
+				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", appCode=" + appCode + ", testEndPoint="
+				+ testEndPoint + ", endPoint=" + endPoint + ", httpMethod=" + httpMethod + ", headers=" + headers
+				+ ", args=" + args + ", result=" + result + ", retExample=" + retExample + ", errCodes=" + errCodes
+				+ ", apiVersion=" + apiVersion + ", desc=" + desc + ", state=" + state + ", countByDay=" + countByDay
+				+ ", checkState=" + checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax
 				+ ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime="
 				+ createTime + ", openApplyEntity=" + openApplyEntity + "]";
 	}
-
 }

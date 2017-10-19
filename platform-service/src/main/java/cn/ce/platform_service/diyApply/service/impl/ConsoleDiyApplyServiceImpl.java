@@ -146,7 +146,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
 			List<String> appIdList = new ArrayList<String>();
 			for (AppList appList : apps.getData().getAppList()) {
-				appIdList.add(appList.getAppCode()); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
+				appIdList.add(appList.getAppId()+""); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
 			}
 
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
@@ -195,17 +195,17 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.info("****************将绑定关系保存到实体中****************");
 			Map<String ,List<String>> map= new HashMap<String,List<String>>();
 			int i=1;
-			for (String appId : appIdList) {
-				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
+			for (AppList app : apps.getData().getAppList()) {
+				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, app.getAppId()+"");
 				List<String> apiIds = new ArrayList<String>(); 
 				for (ApiEntity apiEntity : apiList) {
 					apiIds.add(apiEntity.getId());
 				}
-				_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+appId+"下绑定的api："+apiIds);
-				map.put(appId, appIdList);
+				_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+app.getAppCode()+":"+app.getAppId()+"下绑定的api："+apiIds);
+				map.put(app.getAppId()+"", appIdList);
 			}
 			entity.setLimitList(map);
-			
+			_LOGGER.info("****************绑定关系实体保存完成****************");
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
 			diyApplyDao.saveOrUpdate(entity);
@@ -258,11 +258,11 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
 			return result;
 		}
-		if (apply1.getProductAuthCode() != apply.getProductAuthCode()) {
+		if (!apply1.getProductAuthCode().equals(apply.getProductAuthCode())) {
 			result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
 			return result;
 		}
-		diyApplyDao.saveOrUpdate(apply1);
+		diyApplyDao.saveOrUpdate(apply);
 		result.setSuccessMessage("修改成功");
 		return result;
 	}
@@ -547,9 +547,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override 
-	public Result<?> checkLimit(String diyApplyId, String openApplyId, String apiId) {
+	public Result<?> checkLimit(String diyApplyId, String openApplyId) {
 		
-		Result<String> result = new Result<String>();
+		Result<List<ApiEntity>> result = new Result<List<ApiEntity>>();
 		DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
 		if(null == diyEntity){
 			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS015);
@@ -563,16 +563,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		
 		Set<String> openApplySet = limitMap.keySet();
 		if(openApplySet.contains(openApplyId)){
-			if(StringUtils.isNotBlank(apiId)){
-				List<String> apiList = limitMap.get(openApplyId);
-				if(apiList.contains(apiId)){
-					result.setSuccessMessage("当前api可用");
-				}else{
-					result.setErrorMessage("当前api不可用", ErrorCodeNo.SYS017);
-				}
-			}else{
-				result.setSuccessMessage("当前开放应用可用");
-			}
+			List<String> apiIds = limitMap.get(openApplyId);
+			List<ApiEntity> apiList = newApiDao.findApiByIds(apiIds);
+			result.setSuccessData(apiList);
 		}else{
 			result.setErrorMessage("当前开放应用不可用", ErrorCodeNo.SYS017);
 		}
