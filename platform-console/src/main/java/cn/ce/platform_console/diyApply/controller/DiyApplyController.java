@@ -36,9 +36,6 @@ import io.swagger.annotations.ApiOperation;
 @Api("定制应用控制类")
 public class DiyApplyController {
 
-	/** 日志对象 */
-	// private static Logger logger =
-	// LogManager.getLogger(DiyApplyController.class);
 
 	@Resource
 	private IConsoleDiyApplyService consoleDiyApplyService;
@@ -67,18 +64,6 @@ public class DiyApplyController {
 
 		return result;
 	}
-
-//	@RequestMapping(value = "/getApplyApisById", method = RequestMethod.GET)
-//	@ApiOperation("查询应用及api分页集合")
-//	public Result<DiyApplyEntity> getApplyByid(HttpServletRequest request, HttpServletResponse response,
-//			@RequestParam(value = "id", required = true) String id,
-//			@RequestParam(required = false, defaultValue = "10") int pageSize,
-//			@RequestParam(required = false, defaultValue = "1") int currentPage) {
-//
-//		Result<DiyApplyEntity> result = consoleDiyApplyService.getApplyById(id, pageSize, currentPage);
-//
-//		return result;
-//	}
 
 	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
 	@ApiOperation("根据应用标识查询应用")
@@ -124,6 +109,15 @@ public class DiyApplyController {
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestParam String ids) {
 		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
+	}
+
+	@RequestMapping("checkLimit") //查看当前定制应用是否有权限访问某组api或者某个api
+	public Result<?> checkLimit(
+			@RequestParam String diyApplyId,
+			@RequestParam String openApplyId,
+			@RequestParam(required=false) String apiId){
+		
+		return consoleDiyApplyService.checkLimit(diyApplyId,openApplyId,apiId);
 	}
 
 }

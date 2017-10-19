@@ -24,6 +24,7 @@ public enum ErrorCodeNo {
 	,SYS014("调用网关发生异常")
 	,SYS015("数据不存在")
 	,SYS016("数据不一致")
+	,SYS017("暂不可用")
 	;
 	
 	
