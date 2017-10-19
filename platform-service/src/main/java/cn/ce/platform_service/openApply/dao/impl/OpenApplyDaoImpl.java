@@ -232,7 +232,7 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 					Update.update("checkMem", checkMem), true, true));
 		}
 		return String.valueOf(
-				df.format((float) super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list) / list.size()));
+				df.format((float) super.bathUpdate(super.mongoTemplate, OpenApplyEntity.class, list) / ids.size()));
 
 	}
 
