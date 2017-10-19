@@ -300,21 +300,21 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
-	@Override
-	public Result<String> checkListenPath(String listenPath){
-		Result<String> result = new Result<>();
-		Map<String,Object> whereMap = new HashMap<>();
-		whereMap.put(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
-		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
-		if(null == findOneByFields){
-			result.setSuccessMessage("访问路径可用!");
-		}else{
-			result.setMessage("访问路径已存在,请检查后重试!");
-			result.setErrorCode(ErrorCodeNo.SYS010);
-			return result;
-		}
-		return result;
-	}
+//	@Override
+//	public Result<String> checkListenPath(String listenPath){
+//		Result<String> result = new Result<>();
+//		Map<String,Object> whereMap = new HashMap<>();
+//		whereMap.put(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
+//		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
+//		if(null == findOneByFields){
+//			result.setSuccessMessage("访问路径可用!");
+//		}else{
+//			result.setMessage("访问路径已存在,请检查后重试!");
+//			result.setErrorCode(ErrorCodeNo.SYS010);
+//			return result;
+//		}
+//		return result;
+//	}
 
 
 	/**

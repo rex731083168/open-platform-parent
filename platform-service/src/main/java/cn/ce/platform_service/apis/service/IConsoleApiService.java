@@ -31,7 +31,7 @@ public interface IConsoleApiService {
 
 	Result<?> checkVersion(String apiId, String version);
 	
-	Result<?> checkListenPath(String listenPath); 
+//	Result<?> checkListenPath(String listenPath); 
 
 	boolean boundDiyApplyWithApi(
 			String policyId,

@@ -111,12 +111,12 @@ public class DiyApplyController {
 		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
 	}
 
-	@RequestMapping(value="/checkLimit",method=RequestMethod.GET) //查看当前定制应用是否有权限访问某组api或者某个api
-	public Result<?> checkLimit(
+	@RequestMapping(value="/limitScope",method=RequestMethod.GET) //查看当前定制应用是否有权限访问某组api或者某个api
+	public Result<?> limitScope(
 			@RequestParam String diyApplyId,
 			@RequestParam String openApplyId){
 		
-		return consoleDiyApplyService.checkLimit(diyApplyId,openApplyId);
+		return consoleDiyApplyService.limitScope(diyApplyId,openApplyId);
 	}
 
 }

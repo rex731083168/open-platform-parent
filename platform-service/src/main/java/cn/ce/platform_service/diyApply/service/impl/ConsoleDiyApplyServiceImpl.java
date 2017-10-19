@@ -547,7 +547,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override 
-	public Result<?> checkLimit(String diyApplyId, String openApplyId) {
+	public Result<?> limitScope(String diyApplyId, String openApplyId) {
 		
 		Result<List<ApiEntity>> result = new Result<List<ApiEntity>>();
 		DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
