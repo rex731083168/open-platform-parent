@@ -98,8 +98,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		}
 
-		// 验证产品码
-
 		// 新增
 		if (StringUtils.isBlank(entity.getId())) {
 			entity.setUserId(entity.getUser().getId());
@@ -195,14 +193,16 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.info("****************将绑定关系保存到实体中****************");
 			Map<String ,List<String>> map= new HashMap<String,List<String>>();
 			int i=1;
-			for (AppList app : apps.getData().getAppList()) {
-				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, app.getAppId()+"");
+			for (String appId : appIdList) {
+				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
 				List<String> apiIds = new ArrayList<String>(); 
 				for (ApiEntity apiEntity : apiList) {
 					apiIds.add(apiEntity.getId());
 				}
-				_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+app.getAppCode()+":"+app.getAppId()+"下绑定的api："+apiIds);
-				map.put(app.getAppId()+"", appIdList);
+				_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用"+appId+"下绑定的api："+apiIds);
+				if(apiIds.size()>0){
+					map.put(appId, apiIds);
+				}
 			}
 			entity.setLimitList(map);
 			_LOGGER.info("****************绑定关系实体保存完成****************");
@@ -557,7 +557,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 		Map<String,List<String>> limitMap = diyEntity.getLimitList();
 		if(limitMap == null || limitMap.size() == 0){
-			result.setErrorMessage("当前定制应用暂时未绑定开放应用",ErrorCodeNo.SYS017);
+			result.setErrorMessage("当前定制应用暂时未绑定该开放应用",ErrorCodeNo.SYS017);
 			return result;
 		}
 		

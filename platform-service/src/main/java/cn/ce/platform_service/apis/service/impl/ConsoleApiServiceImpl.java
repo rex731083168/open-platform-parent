@@ -374,16 +374,16 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			return true;
 		}
 		
-		//记录绑定日志
-		int i=1;
-		for (String appId : openApplyIds) {
-			List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
-			List<String> apiIds = new ArrayList<String>(); 
-			for (ApiEntity apiEntity : apiList) {
-				apiIds.add(apiEntity.getId());
-			}
-			_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+appId+"下绑定的api："+apiIds);
-		}
+//		//记录绑定日志
+//		int i=1;
+//		for (String appId : openApplyIds) {
+//			List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
+//			List<String> apiIds = new ArrayList<String>(); 
+//			for (ApiEntity apiEntity : apiList) {
+//				apiIds.add(apiEntity.getId());
+//			}
+//			_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+appId+"下绑定的api："+apiIds);
+//		}
 		
 		versionIdsBuf.deleteCharAt(0); //versionId用逗号分隔的长字符串
 		Map<String, List<String>> apiInfos = new HashMap<String,List<String>>();
