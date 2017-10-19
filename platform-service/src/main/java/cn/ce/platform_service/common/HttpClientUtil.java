@@ -556,7 +556,7 @@ public class HttpClientUtil {
 
 	public static Object getUrlReturnJsonObject(String url) {
 		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
-		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
 		return jsonobject;
 	}
 
