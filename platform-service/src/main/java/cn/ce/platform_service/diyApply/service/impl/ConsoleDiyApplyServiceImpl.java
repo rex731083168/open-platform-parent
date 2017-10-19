@@ -28,6 +28,7 @@ import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
+import cn.ce.platform_service.common.HttpClientUtilsNew;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.RateConstants;
 import cn.ce.platform_service.common.RateEnum;
@@ -491,12 +492,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		body.put("menuJson", menuJson);
 
 		try {
-			String sendPostByJson = HttpClientUtil.sendPostRequestByJava(registerMenuURL, body);
-			// String sendPostByJson = ApiCallUtils.putOrPostMethod(registerMenuURL, body,
-			// null, HttpMethod.POST);
-
-			// String sendPostByJson = HttpClientUtil.sendPostByJson(registerMenuURL,
-			// body.toString());
+			String sendPostByJson = HttpClientUtilsNew.getResponseString(registerMenuURL, body);
 
 			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
 
@@ -507,6 +503,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				switch (status) {
 				case "101":
 					result.setStatus(Status.SUCCESS);
+					result.setErrorCode(ErrorCodeNo.SYS000);
 					break;
 				case "201":
 					result.setStatus(Status.FAILED);

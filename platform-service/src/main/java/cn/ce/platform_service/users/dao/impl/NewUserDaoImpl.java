@@ -36,7 +36,12 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 		Criteria c = new Criteria();
 		c.and("userName").is(userName);
 		c.and("password").is(password);
-		Query query = new Query().addCriteria(c);
+		Criteria c1 = new Criteria();
+		c1.and("telNumber").is(userName);
+		c1.and("password").is(password);
+		
+		
+		Query query = new Query().addCriteria(c.orOperator(c,c1));
 		return super.findOne(query);
 	}
 
