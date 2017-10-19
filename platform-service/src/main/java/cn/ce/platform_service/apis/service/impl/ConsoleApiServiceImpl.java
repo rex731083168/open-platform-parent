@@ -381,5 +381,4 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		return true;
 	}
-	
 }

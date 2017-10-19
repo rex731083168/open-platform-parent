@@ -5,9 +5,7 @@ import java.util.List;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
 /***
  * 
@@ -89,5 +87,7 @@ public interface IConsoleDiyApplyService {
 	public Result<String> registerMenu(String appid, String bossInstanceCode, String menuJson);
 
 	Result<?> updateApply(DiyApplyEntity apply);
+
+	Result<?> checkLimit(String diyApplyId, String openApplyId, String apiId);
 
 }

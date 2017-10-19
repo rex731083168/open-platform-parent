@@ -101,11 +101,5 @@ public class ApiController {
 		return manageApiService.apiList(apiEntity,currentPage,pageSize);
 	}
 
-//	@RequestMapping(value = "/delApi", method = RequestMethod.GET)
-//	@ResponseBody
-//	public Result<String> delAPI(HttpServletRequest request, HttpServletResponse response, String apIid) {
-//		_LOGGER.info("--------------->> Action!  del api. ID: " + apIid);
-//
-//		return apiService.delById(apIid);
-//	}
+
 }
