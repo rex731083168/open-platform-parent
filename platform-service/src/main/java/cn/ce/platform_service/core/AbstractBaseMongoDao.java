@@ -612,7 +612,7 @@ public abstract class AbstractBaseMongoDao<T> implements BaseMongoDao<T> {
 		command.put("updates", updateList);
 		command.put("ordered", ordered);
 		CommandResult commandResult = dbCollection.getDB().command(command);
-		return Integer.parseInt(commandResult.get("n").toString());
+		return Integer.parseInt(commandResult.get("nModified").toString());
 	}
 
 	private static String determineCollectionName(Class<?> entityClass) {
