@@ -275,8 +275,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	@Override
 	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page) {
 		Result<Page<DiyApplyEntity>> result = new Result<>();
-		Page<DiyApplyEntity> findPageByEntity = diyApplyDao.findPageByEntity(generalApplyQuery(entity, null), page);
-		result.setSuccessData(findPageByEntity);
+		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(),entity.getProductName(),entity.getCheckState(),page);
+		//Page<DiyApplyEntity> findPageByEntity = diyApplyDao.findPageByEntity(generalApplyQuery(entity, null), page);
+		result.setSuccessData(diyApplyPage);
 		return result;
 	}
 
@@ -345,13 +346,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		return c;
 	}
 
-	private Query generalApplyQuery(DiyApplyEntity apply, Sort sort) {
-		if (sort == null) {
-			sort = new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE);
-		}
-		Query query = new Query(generalApplyCriteria(apply)).with(sort);
-		return query;
-	}
+//	private Query generalApplyQuery(DiyApplyEntity apply, Sort sort) {
+//		if (sort == null) {
+//			sort = new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE);
+//		}
+//		Query query = new Query(generalApplyCriteria(apply)).with(sort);
+//		return query;
+//	}
 
 	@Override
 	public DiyApplyEntity findById(String applyId) {
