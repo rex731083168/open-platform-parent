@@ -85,6 +85,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		if(null != findOneByFields){
 			result.setMessage("访问路径已存在,请检查后重试!");
 			result.setErrorCode(ErrorCodeNo.SYS010);
+			return result;
 		}
 		
 		// 第一次添加接口,并且选择未开启版本控制
@@ -292,6 +293,22 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			result.setSuccessMessage("当前名称可用");
 		}else{
 			result.setErrorMessage("当前名称已经被占用",ErrorCodeNo.SYS010);
+		}
+		return result;
+	}
+
+	@Override
+	public Result<String> checkListenPath(String listenPath){
+		Result<String> result = new Result<>();
+		Map<String,Object> whereMap = new HashMap<>();
+		whereMap.put(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
+		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
+		if(null == findOneByFields){
+			result.setSuccessMessage("访问路径可用!");
+		}else{
+			result.setMessage("访问路径已存在,请检查后重试!");
+			result.setErrorCode(ErrorCodeNo.SYS010);
+			return result;
 		}
 		return result;
 	}
