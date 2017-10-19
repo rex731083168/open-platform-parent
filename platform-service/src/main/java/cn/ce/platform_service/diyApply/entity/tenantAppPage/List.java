@@ -1,42 +1,42 @@
 /**
   * Copyright 2017 bejson.com 
   */
-package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
+package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 
 /**
- * Auto-generated: 2017-10-19 14:44:5
+ * Auto-generated: 2017-10-19 19:32:56
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class AppList {
+public class List {
 
     private String id;
-    private Integer appId;
+    private int appId;
     private String appName;
     private String appAlias;
     private String appTypes;
     private String appUrl;
     private String appDesc;
-    private String appCatogroyId;
-    private Integer appTag;
-    private Integer appStatus;
-    private String isRelation;
+    private int appCatogroyId;
+    private int appTag;
+    private String appStatus;
+    private int isRelation;
     private String resourcetype;
     private String offresourcetype;
-    private String isSearch;
-    private String isShow;
+    private int isSearch;
+    private int isShow;
     private String appCode;
     private String unitType;
-    private Integer appType;
+    private int appType;
     private String owner;
     private String templateCode;
     private String productCode;
-    private Integer parentAppId;
+    private int parentAppId;
     private String isAppMenu;
-    private String isApp;
+    private int isApp;
     private String appIcon;
-    private String appCreateTime;
+    private int appCreateTime;
     public void setId(String id) {
          this.id = id;
      }
@@ -44,10 +44,10 @@ public class AppList {
          return id;
      }
 
-    public void setAppId(Integer appId) {
+    public void setAppId(int appId) {
          this.appId = appId;
      }
-     public Integer getAppId() {
+     public int getAppId() {
          return appId;
      }
 
@@ -86,31 +86,31 @@ public class AppList {
          return appDesc;
      }
 
-    public void setAppCatogroyId(String appCatogroyId) {
+    public void setAppCatogroyId(int appCatogroyId) {
          this.appCatogroyId = appCatogroyId;
      }
-     public String getAppCatogroyId() {
+     public int getAppCatogroyId() {
          return appCatogroyId;
      }
 
-    public void setAppTag(Integer appTag) {
+    public void setAppTag(int appTag) {
          this.appTag = appTag;
      }
-     public Integer getAppTag() {
+     public int getAppTag() {
          return appTag;
      }
 
-    public void setAppStatus(Integer appStatus) {
+    public void setAppStatus(String appStatus) {
          this.appStatus = appStatus;
      }
-     public Integer getAppStatus() {
+     public String getAppStatus() {
          return appStatus;
      }
 
-    public void setIsRelation(String isRelation) {
+    public void setIsRelation(int isRelation) {
          this.isRelation = isRelation;
      }
-     public String getIsRelation() {
+     public int getIsRelation() {
          return isRelation;
      }
 
@@ -128,17 +128,17 @@ public class AppList {
          return offresourcetype;
      }
 
-    public void setIsSearch(String isSearch) {
+    public void setIsSearch(int isSearch) {
          this.isSearch = isSearch;
      }
-     public String getIsSearch() {
+     public int getIsSearch() {
          return isSearch;
      }
 
-    public void setIsShow(String isShow) {
+    public void setIsShow(int isShow) {
          this.isShow = isShow;
      }
-     public String getIsShow() {
+     public int getIsShow() {
          return isShow;
      }
 
@@ -156,10 +156,10 @@ public class AppList {
          return unitType;
      }
 
-    public void setAppType(Integer appType) {
+    public void setAppType(int appType) {
          this.appType = appType;
      }
-     public Integer getAppType() {
+     public int getAppType() {
          return appType;
      }
 
@@ -184,10 +184,10 @@ public class AppList {
          return productCode;
      }
 
-    public void setParentAppId(Integer parentAppId) {
+    public void setParentAppId(int parentAppId) {
          this.parentAppId = parentAppId;
      }
-     public Integer getParentAppId() {
+     public int getParentAppId() {
          return parentAppId;
      }
 
@@ -198,10 +198,10 @@ public class AppList {
          return isAppMenu;
      }
 
-    public void setIsApp(String isApp) {
+    public void setIsApp(int isApp) {
          this.isApp = isApp;
      }
-     public String getIsApp() {
+     public int getIsApp() {
          return isApp;
      }
 
@@ -212,10 +212,10 @@ public class AppList {
          return appIcon;
      }
 
-    public void setAppCreateTime(String appCreateTime) {
+    public void setAppCreateTime(int appCreateTime) {
          this.appCreateTime = appCreateTime;
      }
-     public String getAppCreateTime() {
+     public int getAppCreateTime() {
          return appCreateTime;
      }
 

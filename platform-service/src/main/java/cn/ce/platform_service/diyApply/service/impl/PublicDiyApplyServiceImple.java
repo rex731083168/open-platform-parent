@@ -13,6 +13,7 @@ import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.tenantAppPage.TenantAppPage;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
@@ -89,18 +90,10 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
 		String key$ = Pattern.quote("${key}");
 		String replacedurl = url.replaceAll(key$, key);
-		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
-		classMap.put("appList", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList.class);
-		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant.class);
-
 		try {
 			/* get请求方法 */
-			TenantApps applyproduct = (TenantApps) HttpClientUtil.getUrlReturnObject(replacedurl, TenantApps.class,
-					classMap);
-			/* 无接口时的测试方法 */
-			// TenantApps applyproduct = (TenantApps)
-			// testgetUrlReturnObject("findTenantAppsByTenantKey", replacedurl,
-			// TenantApps.class, classMap);
+			TenantApps applyproduct = (TenantApps) HttpClientUtil.specialTenantRetrunObject(replacedurl);
+
 			if (applyproduct.getStatus() == 200) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
@@ -112,7 +105,6 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 				return result;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			_LOGGER.error("findTenantAppsByTenantKey http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
 			result.setErrorMessage("请求失败");
@@ -122,9 +114,46 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	}
 
 	@Override
-	public Result<AppList> findTenantAppsByTenantKeyPage(String key, String appName, int pageNum, int pageSize) {
+	public Result<TenantAppPage> findTenantAppsByTenantKeyPage(String key, String appName, int pageNum, int pageSize) {
 
-		return null;
+		Result<TenantAppPage> result = new Result<>();
+		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKeypage");
+		String key$ = Pattern.quote("${key}");
+		String n$ = Pattern.quote("${n}");
+		String p$ = Pattern.quote("${p}");
+		String z$ = Pattern.quote("${z}");
+		if (StringUtils.isBlank(appName)) {
+			appName = "";
+		}
+		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
+
+		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppPage.Tenant.class);
+		classMap.put("pages", cn.ce.platform_service.diyApply.entity.tenantAppPage.Pages.class);
+		classMap.put("list", cn.ce.platform_service.diyApply.entity.tenantAppPage.List.class);
+
+		String replacedurl = url.replaceAll(key$, key).replaceAll(n$, appName).replaceAll(z$, String.valueOf(pageSize))
+				.replaceAll(p$, String.valueOf(pageNum));
+		try {
+			TenantAppPage applyproduct = (TenantAppPage) HttpClientUtil.getUrlReturnObject(replacedurl,
+					TenantAppPage.class, classMap);
+
+			if (applyproduct.getStatus() == 200) {
+				result.setData(applyproduct);
+				result.setSuccessMessage("");
+				return result;
+			} else {
+				_LOGGER.error(
+						"findTenantAppsByTenantKey data http getfaile return code :" + applyproduct.getMsg() + " ");
+				result.setErrorCode(ErrorCodeNo.SYS006);
+				return result;
+			}
+		} catch (Exception e) {
+			_LOGGER.error("findTenantAppsByTenantKey http error " + e + "");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("请求失败");
+			return result;
+		}
+
 	}
 
 }

@@ -15,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +53,17 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 
+import com.alibaba.fastjson.serializer.JSONSerializer;
+
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.InstanceList;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.ProductInstance;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant;
+import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
+import io.swagger.util.Json;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -80,10 +92,11 @@ public class HttpClientUtil {
 	 *            解码字符集,解析响应数据时用之,其为null时默认采用UTF-8解码
 	 * @return 远程主机响应正文
 	 */
-	public static String sendGetRequest(String reqURL, String decodeCharset) {
+	public static StringBuffer sendGetRequest(String reqURL, String decodeCharset) {
 		long responseLength = 0; // 响应长度
-		String responseContent = null; // 响应内容
+		StringBuffer responseContent = null; // 响应内容
 		HttpClient httpClient = new DefaultHttpClient(); // 创建默认的httpClient实例
+		StringBuffer sb = new StringBuffer();
 
 		try {
 
@@ -95,7 +108,8 @@ public class HttpClientUtil {
 			HttpEntity entity = response.getEntity(); // 获取响应实体
 			if (null != entity) {
 				responseLength = entity.getContentLength();
-				responseContent = EntityUtils.toString(entity, decodeCharset == null ? "UTF-8" : decodeCharset);
+				responseContent = sb
+						.append(EntityUtils.toString(entity, decodeCharset == null ? "UTF-8" : decodeCharset));
 				EntityUtils.consume(entity); // Consume response content
 			}
 			System.out.println("请求地址: " + httpGet.getURI());
@@ -114,7 +128,8 @@ public class HttpClientUtil {
 		} finally {
 			httpClient.getConnectionManager().shutdown(); // 关闭连接,释放资源
 		}
-		return responseContent;
+
+		return sb.append(responseContent);
 	}
 
 	/**
@@ -498,14 +513,49 @@ public class HttpClientUtil {
 	}
 
 	public static Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class<?>> classMap) {
-		String jasonResultHttpGet = sendGetRequest(url, null);
-		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
+		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
+
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
 		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
 		return object;
 	}
 
+	public static TenantApps specialTenantRetrunObject(String url) {
+		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
+		TenantApps taps = new TenantApps();
+		Tenant t = new Tenant();
+		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
+		JSONObject jdata = (JSONObject) jsonobject.get("data");
+		JSONArray jarry = (JSONArray) jdata.get("appList");
+
+		List<AppList> applist = (List<AppList>) JSONArray.toList(jarry, AppList.class);
+
+		String msg = jsonobject.get("msg").toString();
+		String status = jsonobject.get("status").toString();
+
+		JSONObject jtenant = (JSONObject) jdata.get("tenant");
+		JSONObject jproductInstance = (JSONObject) jtenant.get("productInstance");
+
+		JSONArray instancearry = (JSONArray) jtenant.get("instanceList");
+
+		List<InstanceList> instanceList = (List<InstanceList>) JSONArray.toList(instancearry, InstanceList.class);
+		cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data data = (cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data) JSONObject
+				.toBean(jdata, cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data.class);
+
+		t = (Tenant) JSONObject.toBean(jtenant, Tenant.class);
+		t.setInstanceList(instanceList);
+		ProductInstance pit = (ProductInstance) JSONObject.toBean(jproductInstance, ProductInstance.class);
+		t.setProductInstance(pit);
+		data.setAppList(applist);
+		data.setTenant(t);
+		taps.setData(data);
+		taps.setMsg(msg);
+		taps.setStatus(Integer.valueOf(status));
+		return taps;
+	}
+
 	public static Object getUrlReturnJsonObject(String url) {
-		String jasonResultHttpGet = sendGetRequest(url, null);
+		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
 		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet);
 		return jsonobject;
 	}
