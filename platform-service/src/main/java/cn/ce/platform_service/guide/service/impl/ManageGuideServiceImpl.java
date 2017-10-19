@@ -37,15 +37,15 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	private IGuideDao guideDaoImpl;
 
 	@Override
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,String appIyId, int currentPage, int pageSize) {
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,String applyId, int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
 		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
 		Criteria c = new Criteria();
 		c.and("checkState").is(AuditConstants.GUIDE_COMMITED);
 		
-		if(StringUtils.isNotBlank(appIyId)){
-			c.and("appIyId").is(appIyId);
+		if(StringUtils.isNotBlank(applyId)){
+			c.and("applyId").is(applyId);
 		}
 		if (StringUtils.isNotBlank(guideName)) {
 			c.and("guideName").regex(guideName);

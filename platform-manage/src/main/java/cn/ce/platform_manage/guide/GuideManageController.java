@@ -39,11 +39,11 @@ public class GuideManageController {
 
 	@ApiOperation("指南列表")
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
-	public Result<?> guideList(String guideName, String creatUserName, String appIyId,
+	public Result<?> guideList(String guideName, String creatUserName, String applyId,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		result = iManageGuideService.guideList(guideName, creatUserName, appIyId, currentPage, pageSize);
+		result = iManageGuideService.guideList(guideName, creatUserName, applyId, currentPage, pageSize);
 		return result;
 	}
 

@@ -18,7 +18,7 @@ import cn.ce.platform_service.guide.entity.GuideEntity;
  **/
 public interface IManageGuideService {
 
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String appIyId, int currentPage,
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String applyId, int currentPage,
 			int pageSize);
 
 	public Result<GuideEntity> getByid(String id);

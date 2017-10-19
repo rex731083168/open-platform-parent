@@ -26,8 +26,8 @@ public class GuideEntity implements Serializable {
 	private String guideName; // 指南名稱
 	@Field("guideDesc")
 	private String guideDesc; // 指南描述
-	@Field("appIyId")
-	private String appIyId; // 應用id
+	@Field("applyId")
+	private String applyId; // 應用id
 	@Field("creatUserName")
 	private String creatUserName; // 創建人
 	@Field("creatTime") // 創建時間
@@ -72,11 +72,11 @@ public class GuideEntity implements Serializable {
 	}
 
 	public String getAppIyId() {
-		return appIyId;
+		return applyId;
 	}
 
-	public void setAppIyId(String appIyId) {
-		this.appIyId = appIyId;
+	public void setAppIyId(String applyId) {
+		this.applyId = applyId;
 	}
 
 	public String getCreatUserName() {

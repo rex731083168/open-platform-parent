@@ -29,7 +29,6 @@ import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
-import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.util.LocalFileReadUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
@@ -85,10 +84,14 @@ public class ManageApiServiceImpl implements IManageApiService{
 				/** 这里有一个问题是如果不同版本但是其他相同api同时提交审核会往网关推送两次，但是我们的业务是每次只能是最新的版本进行提交
 				 * 所以这个bug由业务来避免了。
 				 */
-				String apiEnName = apiVersionList.get(0).getApiEnName();
-				OpenApplyEntity openApplyEntity = openApplyDao.findByAppId(apiVersionList.get(0).getOpenApplyId());
 				
-				String listenPath = "/"+openApplyEntity.getApplyKey()+"/"+apiEnName+"/";
+				// TODO 紧急 listenpath的校验规则
+				String listenPath = apiEntity.getListenPath();
+				if(!listenPath.startsWith("/")){
+					listenPath = "/"+listenPath;
+				}else if(!listenPath.endsWith("/")){
+					listenPath = listenPath+"/";
+				}
 				apiEntity.setListenPath(listenPath);//listenPath
 				
 				Map<String,String> map = new HashMap<String,String>(); //map中放着不同的版本和版本对应的endPoint.
@@ -173,8 +176,6 @@ public class ManageApiServiceImpl implements IManageApiService{
 		}
 
 		// 添加网关访问地址
-		//String openApplyId = api.getOpenApplyId();
-		//OpenApplyEntity openApplyEntity = openApplyDao.findById(openApplyId);
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
@@ -236,9 +237,5 @@ public class ManageApiServiceImpl implements IManageApiService{
 		
 		return job;
 	}
-
-
-
-
 
 }

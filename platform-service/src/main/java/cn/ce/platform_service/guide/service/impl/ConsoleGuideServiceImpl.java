@@ -134,7 +134,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			c.and("creatUserName").regex(entity.getCreatUserName());
 		}
 		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
-			c.and("appIyId").is(entity.getCreatUserName());
+			c.and("applyId").is(entity.getCreatUserName());
 		}
 
 		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
