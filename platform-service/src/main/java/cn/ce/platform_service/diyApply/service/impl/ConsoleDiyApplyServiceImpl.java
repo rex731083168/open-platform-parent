@@ -128,7 +128,11 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				// TODO: handle exception
 				_LOGGER.error("get messaget from url faile resaon " + e.getMessage() + "");
 			}
-			entity.setBossProductInstance(apps.getData().getTenant().getProductInstance().getBossProductInstance());
+			if (StringUtils.isNotBlank(apps.getData().getTenant().getProductInstance().getBossProductInstance())) {
+				entity.setBossProductInstance(apps.getData().getTenant().getProductInstance().getBossProductInstance());
+			} else {
+				result.setMessage("该产品为旧版产品,无法发布菜单");
+			}
 			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
