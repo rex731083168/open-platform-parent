@@ -374,7 +374,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 			_LOGGER.debug("produMenuList return json:" + sendGetRequest);
 
-			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest);
+			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest.toString());
 
 			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg") && jsonObject.has("data")) {
 

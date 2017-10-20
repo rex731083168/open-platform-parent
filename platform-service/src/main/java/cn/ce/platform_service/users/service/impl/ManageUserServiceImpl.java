@@ -8,6 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
+import cn.ce.platform_service.common.AuditConstants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.mail.MailInfo;
 import cn.ce.platform_service.common.mail.MailUtil;
@@ -47,22 +51,30 @@ public class ManageUserServiceImpl implements IManageUserService{
 
 	@Override
 	public Result<String> auditUsers(List<String> userIdArray, String checkMem, Integer checkState) {
+		
+		_LOGGER.info("manageAuditUsers start:userIdArray" + JSON.toJSONString(userIdArray) + ",checkState" + checkState + ",checkMem:" + checkMem);
+		
 		Result<String> result = new Result<String>();
 	
 		for (String userId : userIdArray) {
+			
 			User user = newUserDao.findUserById(userId);
+			
 			user.setCheckState(checkState);
+			
 			user.setCheckMem(checkMem);
+			
 			newUserDao.save(user);
-		
+			
 			_LOGGER.info("------->邮件通知用户，帐号审核结果");
-			if(2 == checkState) {
+			
+			if(AuditConstants.USER__CHECKED_SUCCESS == checkState) {
 				MailInfo mailInfo = new MailInfo();
 				mailInfo.setContent("您申请注册的开放平台帐号已经审核通过。欢迎使用中企云Pass开放平台！");
 				mailInfo.setSubject("中企云Paas开放平台账户审核结果通知");
 				mailInfo.setToOne(user.getEmail());
 				MailUtil.send(mailInfo, false);
-			}else if(3 == checkState){
+			}else if(AuditConstants.USER__CHECKED_FAILED == checkState){
 				MailInfo mailInfo = new MailInfo();
 				mailInfo.setContent("很抱歉通知您，您申请的开放平台账户未审核通过，原因是："+checkMem+",请重新申请");
 				mailInfo.setSubject("中企云Paas开放平台账户审核结果通知");
@@ -70,7 +82,11 @@ public class ManageUserServiceImpl implements IManageUserService{
 				MailUtil.send(mailInfo, false);
 			}
 		} 
-		result.setSuccessMessage("");
+		
+		_LOGGER.info("manageAuditUsers success!");
+		
+		result.setSuccessMessage("审核成功!");
+		
 		return result;
 	}
 
@@ -78,11 +94,29 @@ public class ManageUserServiceImpl implements IManageUserService{
 	@Override
 	public Result<String> activeOrForbidUsers(String userId, Integer state) {
 		
+		_LOGGER.info("manageActiveOrForbidUsers start:userId" + userId + ",state" + state);
+		
 		Result<String> result = new Result<String>();
-		User user = newUserDao.findUserById(userId);
-		user.setState(state);
-		newUserDao.save(user);
-		result.setSuccessMessage("");
+		
+		try {
+			User user = newUserDao.findUserById(userId);
+			
+			if(null == user){
+				result.setMessage("用户不存在!");
+				result.setErrorCode(ErrorCodeNo.SYS015);
+				return result;
+			}
+			
+			user.setState(state);
+			
+			newUserDao.save(user);
+			
+			result.setSuccessMessage("保存成功!");
+		} catch (Exception e) {
+			_LOGGER.error("manageActiveOrForbidUsers error,e:" + e.toString());
+			result.setErrorMessage("保存失败!");
+		}
+		
 		return result;
 	}
 

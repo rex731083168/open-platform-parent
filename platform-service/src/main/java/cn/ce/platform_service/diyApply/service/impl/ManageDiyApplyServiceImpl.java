@@ -16,6 +16,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
@@ -85,6 +87,12 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 
 			Query query = new Query(Criteria.where("id").in(ids));
 			List<DiyApplyEntity> diyApply = diyApplyDao.findListByEntity(query);
+			if(null == diyApply || diyApply.size() == 0){
+				_LOGGER.info("diyApply List is Null,ids:" + JSON.toJSONString(ids));
+				result.setMessage("应用不存在!");
+				result.setErrorCode(ErrorCodeNo.SYS015);
+				return result;
+			}
 
 			RegisterBathAppInParameterEntity[] queryVO = new RegisterBathAppInParameterEntity[diyApply.size()];
 			for (int i = 0; i < diyApply.size(); i++) {
@@ -95,7 +103,6 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				rapentity.setAppCode(diyApply.get(i).getId());
 				rapentity.setAppType("2");
 				rapentity.setOwner(diyApply.get(i).getEnterpriseName());
-
 				queryVO[i] = rapentity;
 			}
 			/* 开发者在开放平台发布应用审核 */
@@ -118,7 +125,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			}
 			/* 审核成功 */
 			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
-
+				_LOGGER.info("调用批量审核发布应用参数:ids:"+JSON.toJSONString(ids)+",map:"+JSON.toJSONString(map)+",checkState:"+checkState+",checkMem:"+checkMem);
 				String message = String.valueOf(diyApplyDao.bathUpdateByidAndPush(ids, map, checkState, checkMem));
 				_LOGGER.info("bachUpdate diyApply message " + message + " count");
 				result.setSuccessMessage("审核成功:" + message + "条");
@@ -140,7 +147,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 
 	@Override
 	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps) {
-		// TODO Auto-generated method stub
+		
 		Result<InterfaMessageInfoString> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("registerBathApp");
 		String tId$ = Pattern.quote("${tId}");

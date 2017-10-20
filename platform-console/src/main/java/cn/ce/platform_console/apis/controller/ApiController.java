@@ -55,7 +55,7 @@ public class ApiController {
 			
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		
-		_LOGGER.info(apiEntity.toString());
+		_LOGGER.info("publish api Entity:"+apiEntity.toString());
 		
 		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNAUDITED
 				|| apiEntity.getCheckState() < AuditConstants.API_CHECK_STATE_UNCOMMITED){
@@ -76,6 +76,7 @@ public class ApiController {
 	@RequestMapping(value = "/submitApi", method = RequestMethod.POST)
 	public Result<?> submitApi(@RequestParam String apiIds) {
 
+		_LOGGER.info("多个api提交审核："+apiIds);
 		// DOTO 多个参数将参数用逗号隔开传入
 		List<String> apiId = SplitUtil.splitStringWithComma(apiIds);
 		

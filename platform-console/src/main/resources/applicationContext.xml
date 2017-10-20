@@ -33,25 +33,21 @@
 
     <!-- filter -->  
     <mvc:interceptors>  
-<!--         <mvc:interceptor>
+        <mvc:interceptor>
 			<mvc:mapping path="/**"/> 
-			<mvc:exclude-mapping path="/user/*"/>
-			test api
-			<mvc:exclude-mapping path="/test/*"/> 
-			swagger pet store demo
-			<mvc:exclude-mapping path="/api/pet/*"/> 
-			<mvc:exclude-mapping path="/api/store/*"/>
-			<mvc:exclude-mapping path="/api/user/*"/>
-			swagger api json
+			<mvc:exclude-mapping path="/user/**"/>
+			<!-- test api -->
+			<mvc:exclude-mapping path="/test/**"/> 
+			<!-- swagger api json -->
 			<mvc:exclude-mapping path="/v2/api-docs"/> 
-			swagger ui page
+			<!-- swagger ui page -->
 			<mvc:exclude-mapping path="/swagger/index.html"/> 
             <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
-        </mvc:interceptor> -->
-        <!-- <mvc:interceptor>
+        </mvc:interceptor>
+        <mvc:interceptor>
         	<mvc:mapping path="/**"/>
         	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
-        </mvc:interceptor> -->
+        </mvc:interceptor>
         <mvc:interceptor>
        	<mvc:mapping path="/**"/>
         	<bean class="cn.ce.platform_service.interceptors.ExceptionInterceptor" />

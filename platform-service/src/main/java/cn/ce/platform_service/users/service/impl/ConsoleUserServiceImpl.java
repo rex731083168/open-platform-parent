@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -33,6 +35,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
     
 	@Override
 	public Result<String> userRegister(User user) {
+		
+		_LOGGER.info("consoleUserRegister begin user:" + JSON.toJSONString(user));
 		
 		Result<String> result = new Result<String>();
 		
@@ -65,10 +69,13 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			user.setCheckState(AuditConstants.USER_STATE_ON);//默认启用
 			user.setAppSecret(Util.getRandomStrs(Constants.SECRET_LENGTH));
 			newUserDao.save(user);
+			
+			_LOGGER.info("consoleUserRegister success! user:" + JSON.toJSONString(user));
+			
 			result.setSuccessMessage("添加成功");
 		} catch (Exception e) {
 			_LOGGER.error("error happens when execute save user to db",e);
-			result.setErrorMessage("");
+			result.setErrorMessage("添加失败!");
 		}
 		return result;
 	}
@@ -88,8 +95,15 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		user.setIdCard(idCard);
 		user.setUserRealName(userRealName);
 		user.setCheckState(1);
+		
+		_LOGGER.info("consoleUserAuthenticate begin user:" + JSON.toJSONString(user));
+		
 		newUserDao.save(user);
-		result.setSuccessMessage("");;
+		
+		_LOGGER.info("consoleUserAuthenticate success!");
+		
+		result.setSuccessMessage("保存成功!");
+		
 		return result;
 	}
 	
@@ -98,7 +112,9 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	public Result<User> login(HttpSession session,String userName, String password) {
 
 		Result<User> result = new Result<User>();
+		
 		User user = newUserDao.findUserByUsernameAndPwd(userName, password);
+		
 		if (user == null) {
 			result.setErrorMessage("用户名或者密码错误", ErrorCodeNo.SYS008);
 			return result;
@@ -115,8 +131,12 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	@Override
 	public Result<?> sendRegistSms(String telNumber, HttpSession session) {
 		
+		_LOGGER.info("consoleUserSendRegisterSms begin,telNumber:" + telNumber);
+		
 		User user = newUserDao.findUserByTelNumber(telNumber);
+		
 		Result<String> result = new Result<String>();
+		
 		if(user != null) {
 			result.setErrorMessage("当前手机号已经被注册");
 		}
@@ -125,7 +145,11 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		// TODO 发送短信
 		
 		session.setAttribute(telNumber, 123456);
+		
 		session.setAttribute(telNumber+"TransTime", System.currentTimeMillis()); //验证码发送时间
+		
+		_LOGGER.info("consoleUserSendRegisterSms end,code:" + session.getAttribute(telNumber));
+		
 		result.setSuccessMessage("发送成功");
 		
 		return result;
@@ -135,9 +159,12 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	@Override
 	public Result<?> sendRePwdSms(String telNumber, HttpSession session) {
 		
+		_LOGGER.info("consoleUserSendRePwdSms begin,telNumber:" + telNumber);
+		
 		Result<String> result = new Result<String>();
 		
 		User user = newUserDao.findUserByTelNumber(telNumber);
+		
 		if(user == null){
 			result.setErrorMessage("当前用户不存在",ErrorCodeNo.SYS006);
 			return result;
@@ -146,7 +173,11 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		// TODO 发送短信
 		//Integer checkCode = RandomUtil.random6Number();
 		session.setAttribute(telNumber, 123456);
+		
 		session.setAttribute(telNumber+"TransTime", System.currentTimeMillis()); //验证码发送时间
+		
+		_LOGGER.info("consoleUserSendRePwdSms end,code:" + session.getAttribute(telNumber));
+		
 		result.setSuccessMessage("发送成功");
 		
 		return result;
@@ -195,16 +226,25 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	@Override
 	public Result<?> modifyPassword(String telNumber, String newPassword) {
 		
+		_LOGGER.info("consoleUserModifyPassword start:telNumber" + telNumber + ",newPassword:" + newPassword);
+		
 		Result<String> result = new Result<String>();
+		
 		User user = newUserDao.findUserByTelNumber(telNumber);
+		
 		if(user == null){
 			result.setErrorMessage("当前用户不存在",ErrorCodeNo.SYS006);
 			return result;
 		}
 		
 		user.setPassword(newPassword);
+		
 		newUserDao.save(user);
+		
+		_LOGGER.info("consoleUserModifyPassword success!");
+		
 		result.setSuccessMessage("修改成功");
+		
 		return result;
 	}
 
