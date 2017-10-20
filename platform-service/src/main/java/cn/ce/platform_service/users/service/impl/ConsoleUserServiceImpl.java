@@ -15,9 +15,12 @@ import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.mail.MailInfo;
+import cn.ce.platform_service.common.mail.MailUtil;
 import cn.ce.platform_service.users.dao.INewUserDao;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
+import cn.ce.platform_service.util.RandomUtil;
 import cn.ce.platform_service.util.Util;
 
 /**
@@ -129,26 +132,35 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	
 	@Override
-	public Result<?> sendRegistSms(String telNumber, HttpSession session) {
+	public Result<?> sendRegistEmail(String email, HttpSession session) {
 		
-		_LOGGER.info("consoleUserSendRegisterSms begin,telNumber:" + telNumber);
+		_LOGGER.info("consoleUserSendRegisterEmail begin,email:" + email);
 		
-		User user = newUserDao.findUserByTelNumber(telNumber);
+		User user = newUserDao.findUserByEmail(email);
 		
 		Result<String> result = new Result<String>();
 		
 		if(user != null) {
-			result.setErrorMessage("当前手机号已经被注册");
+			result.setErrorMessage("当前邮箱已经被注册");
 		}
 		
-		//Integer checkCode = RandomUtil.random6Number();
-		// TODO 发送短信
+		Integer checkCode = RandomUtil.random6Number();
 		
-		session.setAttribute(telNumber, 123456);
+		MailInfo mailinfo = new MailInfo();
+		mailinfo.setToOne(email);
+		mailinfo.setSubject("开放平台注册验证码"); 
+		mailinfo.setContent("验证码为：" + checkCode + ";有效期为3分钟");
 		
-		session.setAttribute(telNumber+"TransTime", System.currentTimeMillis()); //验证码发送时间
+		// TODO 发送邮箱验证 123123123
+		MailUtil.send(mailinfo, false);
 		
-		_LOGGER.info("consoleUserSendRegisterSms end,code:" + session.getAttribute(telNumber));
+		session.setAttribute(email, checkCode);
+		
+		session.setAttribute(email+"TransTime", System.currentTimeMillis()); //验证码发送时间
+		
+		session.setMaxInactiveInterval(180); //设置过期时间为3分钟
+		
+		_LOGGER.info("consoleUserSendRegisterEmail end,code:" + session.getAttribute(email));
 		
 		result.setSuccessMessage("发送成功");
 		
@@ -157,26 +169,36 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	
 	@Override
-	public Result<?> sendRePwdSms(String telNumber, HttpSession session) {
+	public Result<?> sendRePwdEmail(String email, HttpSession session) {
 		
-		_LOGGER.info("consoleUserSendRePwdSms begin,telNumber:" + telNumber);
+		_LOGGER.info("consoleUserSendRePwdEmail begin,email:" + email);
 		
 		Result<String> result = new Result<String>();
 		
-		User user = newUserDao.findUserByTelNumber(telNumber);
+		User user = newUserDao.findUserByEmail(email);
 		
 		if(user == null){
 			result.setErrorMessage("当前用户不存在",ErrorCodeNo.SYS006);
 			return result;
 		}
 		
-		// TODO 发送短信
-		//Integer checkCode = RandomUtil.random6Number();
-		session.setAttribute(telNumber, 123456);
+		// TODO 发送邮箱验证 123123123
+		Integer checkCode = RandomUtil.random6Number();
 		
-		session.setAttribute(telNumber+"TransTime", System.currentTimeMillis()); //验证码发送时间
+		MailInfo mailinfo = new MailInfo();
+		mailinfo.setToOne(email);
+		mailinfo.setSubject("开放平台重置密码验证码"); 
+		mailinfo.setContent("验证码为：" + checkCode + ";有效期为3分钟");
 		
-		_LOGGER.info("consoleUserSendRePwdSms end,code:" + session.getAttribute(telNumber));
+		MailUtil.send(mailinfo, false);
+		
+		session.setAttribute(email, checkCode);
+		
+		session.setAttribute(email+"TransTime", System.currentTimeMillis()); //验证码发送时间
+		
+		session.setMaxInactiveInterval(180); //设置过期时间为3分钟
+		
+		_LOGGER.info("consoleUserSendRePwdEmail end,code:" + session.getAttribute(email));
 		
 		result.setSuccessMessage("发送成功");
 		
@@ -224,13 +246,13 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	
 	@Override
-	public Result<?> modifyPassword(String telNumber, String newPassword) {
+	public Result<?> modifyPassword(String email, String newPassword) {
 		
-		_LOGGER.info("consoleUserModifyPassword start:telNumber" + telNumber + ",newPassword:" + newPassword);
+		_LOGGER.info("consoleUserModifyPassword start:email" + email + ",newPassword:" + newPassword);
 		
 		Result<String> result = new Result<String>();
 		
-		User user = newUserDao.findUserByTelNumber(telNumber);
+		User user = newUserDao.findUserByEmail(email);
 		
 		if(user == null){
 			result.setErrorMessage("当前用户不存在",ErrorCodeNo.SYS006);

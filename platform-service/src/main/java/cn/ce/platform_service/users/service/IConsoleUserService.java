@@ -17,9 +17,9 @@ public interface IConsoleUserService {
 	
 	Result<?> login(HttpSession session, String userName, String password);
 	
-	Result<?> sendRegistSms(String telNumber, HttpSession session);
+	Result<?> sendRegistEmail(String email, HttpSession session);
 
-	Result<?> sendRePwdSms(String telNumber, HttpSession session);
+	Result<?> sendRePwdEmail(String email, HttpSession session);
 	
 	Result<?> checkTelNumber(String telNumber);
 
@@ -27,7 +27,7 @@ public interface IConsoleUserService {
 	
 	Result<?> checkUserName(String userName);
 
-	Result<?> modifyPassword(String telNumber, String newPassword);
+	Result<?> modifyPassword(String email, String newPassword);
 	//用户认证信息
 	Result<?> authenticate(String userId, String enterpriseName, String idCard, String userRealName);
 

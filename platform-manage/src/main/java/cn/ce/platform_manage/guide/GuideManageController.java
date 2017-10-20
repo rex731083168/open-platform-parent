@@ -2,8 +2,6 @@ package cn.ce.platform_manage.guide;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,17 +31,17 @@ import io.swagger.annotations.ApiOperation;
 public class GuideManageController {
 
 	/** 日志对象 */
-	private static Logger _LOGGER = Logger.getLogger(GuideManageController.class);
+//	private static Logger _LOGGER = Logger.getLogger(GuideManageController.class);
 	@Resource
 	private IManageGuideService iManageGuideService;
 
 	@ApiOperation("指南列表")
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
-	public Result<?> guideList(String guideName, String creatUserName, String applyId,
+	public Result<?> guideList(String guideName, String creatUserName, String applyId,Integer checkState,
 			@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		result = iManageGuideService.guideList(guideName, creatUserName, applyId, currentPage, pageSize);
+		result = iManageGuideService.guideList(guideName, creatUserName, applyId, checkState, currentPage, pageSize);
 		return result;
 	}
 

@@ -55,7 +55,7 @@ public class UserController {
 		Integer checkCode1 = (Integer)session.getAttribute(user.getTelNumber());
 		
 		
-		//短信验证码校验
+		//邮箱验证码校验
 		Result<String> result = new Result<String>();
 		
 		if(checkCode1 == null){
@@ -120,7 +120,7 @@ public class UserController {
 
 	@RequestMapping(value = "/logOut", method = RequestMethod.POST)
 	@ApiOperation("退出登录")
-	public Result<?> logOut(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	public Result<?> logOut(HttpSession session) {
 		_LOGGER.info("---------->> Action for logout");
 		Result<String> result = new Result<String>();
 		try {
@@ -135,9 +135,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="modifyPassword",method=RequestMethod.POST)
-	@ApiOperation("忘记密码后重置密码(需先经过短信验证)")
+	@ApiOperation("忘记密码后重置密码(需先经过邮箱验证)")
 	public Result<?> modifyPassword(HttpSession session,
-			@RequestParam String telNumber,
+			@RequestParam String email,
 			@RequestParam String newPassword,
 			@RequestParam String uuid){
 		
@@ -148,31 +148,31 @@ public class UserController {
 			return result;
 		}
 		
-		return consoleUserService.modifyPassword(telNumber,newPassword);
+		return consoleUserService.modifyPassword(email,newPassword);
 	}
 	
-	@RequestMapping(value="/sendRegistSms", method=RequestMethod.POST)
-	@ApiOperation("注册时发送短信验证码")
-	public Result<?> sendRegistSms(HttpSession session, @RequestParam String telNumber){
+	@RequestMapping(value="/sendRegistEmail", method=RequestMethod.POST)
+	@ApiOperation("注册时发送邮箱验证码")
+	public Result<?> sendRegistEmail(HttpSession session, @RequestParam String email){
 		
-		return consoleUserService.sendRegistSms(telNumber,session);
+		return consoleUserService.sendRegistEmail(email,session);
 	}
 	
-	@RequestMapping(value="/sendRePwdSms", method=RequestMethod.POST)
-	@ApiOperation("忘记密码时发送短信验证码")
-	public Result<?> sendRePwdSms(HttpSession session, @RequestParam String telNumber){
+	@RequestMapping(value="/sendRePwdEmail", method=RequestMethod.POST)
+	@ApiOperation("忘记密码时发送邮箱验证码")
+	public Result<?> sendRePwdEmail(HttpSession session, @RequestParam String email){
 		
-		return consoleUserService.sendRePwdSms(telNumber,session);
+		return consoleUserService.sendRePwdEmail(email,session);
 	}
 	
 	@RequestMapping(value="checkTelVerifyCode",method=RequestMethod.POST)
 	@ApiOperation("校验忘记密码时发送的验证码")
 	public Result<?> checkTelVerifyCode(HttpSession session,
-			@RequestParam String telNumber,
+			@RequestParam String email,
 			@RequestParam String telVerifyCode){
 		
-		String verifyCode = session.getAttribute(telNumber) == null ? "" : session.getAttribute(telNumber).toString();
-		Long transTime = (Long) session.getAttribute(telNumber+"TransTime");
+		String verifyCode = session.getAttribute(email) == null ? "" : session.getAttribute(email).toString();
+		Long transTime = (Long) session.getAttribute(email+"TransTime");
 		
 		Result<String> result = new Result<String>();
 		if(StringUtils.isBlank(verifyCode) || transTime == null){

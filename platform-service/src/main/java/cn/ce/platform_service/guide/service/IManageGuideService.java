@@ -1,6 +1,5 @@
 package cn.ce.platform_service.guide.service;
 
-import java.security.interfaces.RSAKey;
 import java.util.List;
 
 import cn.ce.platform_service.common.Result;
@@ -18,7 +17,7 @@ import cn.ce.platform_service.guide.entity.GuideEntity;
  **/
 public interface IManageGuideService {
 
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String applyId, int currentPage,
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,String applyId,Integer checkState, int currentPage,
 			int pageSize);
 
 	public Result<GuideEntity> getByid(String id);

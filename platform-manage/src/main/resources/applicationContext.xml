@@ -56,13 +56,12 @@
     	<property name="maxUploadSize" value="100000"/>	
 	</bean>
 
-	<!-- sms -->
+	<!-- sms
 	<bean id="smsutil" class="cn.ce.platform_service.util.SmsUtil">
-		<!-- 构造器注入 -->
 		<constructor-arg value="${sms.websiteid}"></constructor-arg>
 		<constructor-arg value="${sms.sign}"></constructor-arg>
 		<constructor-arg value="${sms.provider.id}"></constructor-arg>
-	</bean>		
+	</bean>	 -->	
 	
     <!-- Loads MongoDB configuraton -->  
     <import resource="mongo-config.xml"/>   

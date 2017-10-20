@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
@@ -37,13 +36,16 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	private IGuideDao guideDaoImpl;
 
 	@Override
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String applyId, int currentPage,
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String applyId, Integer checkState, int currentPage,
 			int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
 		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
 		Criteria c = new Criteria();
-		c.and("checkState").is(AuditConstants.GUIDE_COMMITED);
+		
+		if(null != checkState){
+			c.and("checkState").is(checkState);
+		}
 
 		if (StringUtils.isNotBlank(applyId)) {
 			c.and("applyId").is(applyId);
