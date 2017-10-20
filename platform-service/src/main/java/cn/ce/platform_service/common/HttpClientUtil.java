@@ -15,8 +15,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,16 +51,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.converter.json.GsonBuilderUtils;
-
-import com.alibaba.fastjson.serializer.JSONSerializer;
 
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.InstanceList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.ProductInstance;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
-import io.swagger.util.Json;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -112,10 +106,10 @@ public class HttpClientUtil {
 						.append(EntityUtils.toString(entity, decodeCharset == null ? "UTF-8" : decodeCharset));
 				EntityUtils.consume(entity); // Consume response content
 			}
-			System.out.println("请求地址: " + httpGet.getURI());
-			System.out.println("响应状态: " + response.getStatusLine());
-			System.out.println("响应长度: " + responseLength);
-			System.out.println("响应内容: " + responseContent);
+			logger.info("请求地址: " + httpGet.getURI());
+			logger.info("响应状态: " + response.getStatusLine());
+			logger.debug("响应长度: " + responseLength);
+			logger.debug("响应内容: " + responseContent);
 		} catch (ClientProtocolException e) {
 			logger.debug("该异常通常是协议错误导致,比如构造HttpGet对象时传入的协议不对(将'http'写成'htp')或者服务器端返回的内容不符合HTTP协议要求等,堆栈信息如下", e);
 		} catch (ParseException e) {
