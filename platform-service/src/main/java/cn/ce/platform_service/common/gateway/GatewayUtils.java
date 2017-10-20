@@ -1,11 +1,8 @@
 package cn.ce.platform_service.common.gateway;
 
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -24,7 +21,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +29,11 @@ import org.springframework.stereotype.Controller;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.IOUtils;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.gateway.dao.IGatewayColonyManageDao;
 import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
 import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
-import cn.ce.platform_service.gateway.entity.GatewayKeyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
-import cn.ce.platform_service.util.RandomUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
 

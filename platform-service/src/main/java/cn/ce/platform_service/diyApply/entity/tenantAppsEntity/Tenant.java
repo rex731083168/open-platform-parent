@@ -5,8 +5,6 @@ package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
 
 import java.util.List;
 
-import net.sf.json.JSONObject;
-
 /**
  * Auto-generated: 2017-10-19 14:44:5
  *

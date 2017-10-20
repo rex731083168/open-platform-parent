@@ -1,10 +1,8 @@
 package cn.ce.platform_service.diyApply.service;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.tenantAppPage.TenantAppPage;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
 /**

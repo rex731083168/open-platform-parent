@@ -6,9 +6,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.data.mongodb.core.IndexOperations;
-import org.springframework.data.mongodb.core.index.Index;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.stereotype.Repository;
 
 import com.mongodb.DBCollection;

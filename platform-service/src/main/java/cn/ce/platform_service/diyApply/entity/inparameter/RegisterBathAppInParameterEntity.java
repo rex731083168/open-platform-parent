@@ -1,7 +1,5 @@
 package cn.ce.platform_service.diyApply.entity.inparameter;
 
-import net.sf.json.JSONArray;
-
 /**
  *
  * @Title: InParameterEntity.java

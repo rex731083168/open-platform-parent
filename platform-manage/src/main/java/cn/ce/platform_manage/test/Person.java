@@ -1,7 +1,5 @@
 package cn.ce.platform_manage.test;
 
-import java.util.List;
-
 /**
 * @Description : 说明
 * @Author : makangwei

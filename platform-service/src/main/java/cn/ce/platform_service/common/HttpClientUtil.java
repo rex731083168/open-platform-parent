@@ -16,8 +16,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,16 +52,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.converter.json.GsonBuilderUtils;
-
-import com.alibaba.fastjson.serializer.JSONSerializer;
 
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.InstanceList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.ProductInstance;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
-import io.swagger.util.Json;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 

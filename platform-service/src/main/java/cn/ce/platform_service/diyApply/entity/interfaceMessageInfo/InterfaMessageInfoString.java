@@ -3,8 +3,6 @@
   */
 package cn.ce.platform_service.diyApply.entity.interfaceMessageInfo;
 
-import net.sf.json.JSONObject;
-
 /**
  * Auto-generated: 2017-10-13 16:18:9
  *

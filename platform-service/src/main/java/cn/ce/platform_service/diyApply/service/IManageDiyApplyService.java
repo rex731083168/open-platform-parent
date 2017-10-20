@@ -2,14 +2,10 @@ package cn.ce.platform_service.diyApply.service;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 
 /**
  * @Description : 说明
