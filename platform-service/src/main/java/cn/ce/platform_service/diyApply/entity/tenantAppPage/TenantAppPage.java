@@ -13,7 +13,7 @@ public class TenantAppPage {
 
     private Data data;
     private String msg;
-    private int status;
+    private Integer status;
     public void setData(Data data) {
          this.data = data;
      }
@@ -28,10 +28,10 @@ public class TenantAppPage {
          return msg;
      }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
          this.status = status;
      }
-     public int getStatus() {
+     public Integer getStatus() {
          return status;
      }
 

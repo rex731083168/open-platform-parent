@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Tenant {
 
-    private int id;
+    private Integer id;
     private String name;
     private String tenantCode;
     private String tennatCode;
@@ -24,13 +24,13 @@ public class Tenant {
     private String domain;
     private String makeDomain;
     private String mobileDomain;
-    private int mobileStatus;
-    private int pcPublishTime;
+    private Integer mobileStatus;
+    private Integer pcPublishTime;
     private String mobilePublishTime;
-    private int productInstanceId;
+    private Integer productInstanceId;
     private String appList;
     private List<InstanceList> instanceList;
-    private int productAttrId;
+    private Integer productAttrId;
     private Attr attr;
     private ProductInstance productInstance;
     private String productInstanceCode;
@@ -43,13 +43,13 @@ public class Tenant {
     private String hotelDomain;
     private String hotelCusdomain;
     private String domainStatus;
-    private int status;
+    private Integer status;
     private String domainInfo;
     private boolean ceYun;
-    public void setId(int id) {
+    public void setId(Integer id) {
          this.id = id;
      }
-     public int getId() {
+     public Integer getId() {
          return id;
      }
 
@@ -130,17 +130,17 @@ public class Tenant {
          return mobileDomain;
      }
 
-    public void setMobileStatus(int mobileStatus) {
+    public void setMobileStatus(Integer mobileStatus) {
          this.mobileStatus = mobileStatus;
      }
-     public int getMobileStatus() {
+     public Integer getMobileStatus() {
          return mobileStatus;
      }
 
-    public void setPcPublishTime(int pcPublishTime) {
+    public void setPcPublishTime(Integer pcPublishTime) {
          this.pcPublishTime = pcPublishTime;
      }
-     public int getPcPublishTime() {
+     public Integer getPcPublishTime() {
          return pcPublishTime;
      }
 
@@ -151,10 +151,10 @@ public class Tenant {
          return mobilePublishTime;
      }
 
-    public void setProductInstanceId(int productInstanceId) {
+    public void setProductInstanceId(Integer productInstanceId) {
          this.productInstanceId = productInstanceId;
      }
-     public int getProductInstanceId() {
+     public Integer getProductInstanceId() {
          return productInstanceId;
      }
 
@@ -172,10 +172,10 @@ public class Tenant {
          return instanceList;
      }
 
-    public void setProductAttrId(int productAttrId) {
+    public void setProductAttrId(Integer productAttrId) {
          this.productAttrId = productAttrId;
      }
-     public int getProductAttrId() {
+     public Integer getProductAttrId() {
          return productAttrId;
      }
 
@@ -263,10 +263,10 @@ public class Tenant {
          return domainStatus;
      }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
          this.status = status;
      }
-     public int getStatus() {
+     public Integer getStatus() {
          return status;
      }
 

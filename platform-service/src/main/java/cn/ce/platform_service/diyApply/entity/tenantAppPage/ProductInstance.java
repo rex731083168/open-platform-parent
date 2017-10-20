@@ -11,7 +11,7 @@ package cn.ce.platform_service.diyApply.entity.tenantAppPage;
  */
 public class ProductInstance {
 
-    private int id;
+    private Integer id;
     private String cusId;
     private String productionId;
     private String tenantId;
@@ -23,15 +23,15 @@ public class ProductInstance {
     private String tenantApp;
     private String parentId;
     private String parent;
-    private int producttype;
+    private Integer producttype;
     private String appCodes;
-    private int insertDate;
-    private int flag;
+    private Integer insertDate;
+    private Integer flag;
     private String unittype;
-    public void setId(int id) {
+    public void setId(Integer id) {
          this.id = id;
      }
-     public int getId() {
+     public Integer getId() {
          return id;
      }
 
@@ -112,10 +112,10 @@ public class ProductInstance {
          return parent;
      }
 
-    public void setProducttype(int producttype) {
+    public void setProducttype(Integer producttype) {
          this.producttype = producttype;
      }
-     public int getProducttype() {
+     public Integer getProducttype() {
          return producttype;
      }
 
@@ -126,17 +126,17 @@ public class ProductInstance {
          return appCodes;
      }
 
-    public void setInsertDate(int insertDate) {
+    public void setInsertDate(Integer insertDate) {
          this.insertDate = insertDate;
      }
-     public int getInsertDate() {
+     public Integer getInsertDate() {
          return insertDate;
      }
 
-    public void setFlag(int flag) {
+    public void setFlag(Integer flag) {
          this.flag = flag;
      }
-     public int getFlag() {
+     public Integer getFlag() {
          return flag;
      }
 

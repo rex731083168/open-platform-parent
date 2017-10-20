@@ -15,7 +15,7 @@ public class Params {
     private boolean mobileRunning;
     private boolean pcRunning;
     private boolean useViewType;
-    private int tenaId;
+    private Integer tenaId;
     public void setAppName(String appName) {
          this.appName = appName;
      }
@@ -44,10 +44,10 @@ public class Params {
          return useViewType;
      }
 
-    public void setTenaId(int tenaId) {
+    public void setTenaId(Integer tenaId) {
          this.tenaId = tenaId;
      }
-     public int getTenaId() {
+     public Integer getTenaId() {
          return tenaId;
      }
 

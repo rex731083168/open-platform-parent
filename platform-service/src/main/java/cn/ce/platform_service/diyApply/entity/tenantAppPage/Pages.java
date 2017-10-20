@@ -12,37 +12,37 @@ import java.util.List;
  */
 public class Pages {
 
-    private int pageSize;
-    private int currentPage;
-    private int totalPages;
-    private int totalCount;
+    private Integer pageSize;
+    private Integer currentPage;
+    private Integer totalPages;
+    private Integer totalCount;
     private List<List> list;
     private Params params;
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
          this.pageSize = pageSize;
      }
-     public int getPageSize() {
+     public Integer getPageSize() {
          return pageSize;
      }
 
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(Integer currentPage) {
          this.currentPage = currentPage;
      }
-     public int getCurrentPage() {
+     public Integer getCurrentPage() {
          return currentPage;
      }
 
-    public void setTotalPages(int totalPages) {
+    public void setTotalPages(Integer totalPages) {
          this.totalPages = totalPages;
      }
-     public int getTotalPages() {
+     public Integer getTotalPages() {
          return totalPages;
      }
 
-    public void setTotalCount(int totalCount) {
+    public void setTotalCount(Integer totalCount) {
          this.totalCount = totalCount;
      }
-     public int getTotalCount() {
+     public Integer getTotalCount() {
          return totalCount;
      }
 

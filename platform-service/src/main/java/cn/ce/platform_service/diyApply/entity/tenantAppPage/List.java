@@ -12,31 +12,31 @@ package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 public class List {
 
     private String id;
-    private int appId;
+    private Integer appId;
     private String appName;
     private String appAlias;
     private String appTypes;
     private String appUrl;
     private String appDesc;
-    private int appCatogroyId;
-    private int appTag;
+    private Integer appCatogroyId;
+    private Integer appTag;
     private String appStatus;
-    private int isRelation;
+    private Integer isRelation;
     private String resourcetype;
     private String offresourcetype;
-    private int isSearch;
-    private int isShow;
+    private Integer isSearch;
+    private Integer isShow;
     private String appCode;
     private String unitType;
-    private int appType;
+    private Integer appType;
     private String owner;
     private String templateCode;
     private String productCode;
-    private int parentAppId;
+    private Integer parentAppId;
     private String isAppMenu;
-    private int isApp;
+    private Integer isApp;
     private String appIcon;
-    private int appCreateTime;
+    private Integer appCreateTime;
     public void setId(String id) {
          this.id = id;
      }
@@ -44,10 +44,10 @@ public class List {
          return id;
      }
 
-    public void setAppId(int appId) {
+    public void setAppId(Integer appId) {
          this.appId = appId;
      }
-     public int getAppId() {
+     public Integer getAppId() {
          return appId;
      }
 
@@ -86,17 +86,17 @@ public class List {
          return appDesc;
      }
 
-    public void setAppCatogroyId(int appCatogroyId) {
+    public void setAppCatogroyId(Integer appCatogroyId) {
          this.appCatogroyId = appCatogroyId;
      }
-     public int getAppCatogroyId() {
+     public Integer getAppCatogroyId() {
          return appCatogroyId;
      }
 
-    public void setAppTag(int appTag) {
+    public void setAppTag(Integer appTag) {
          this.appTag = appTag;
      }
-     public int getAppTag() {
+     public Integer getAppTag() {
          return appTag;
      }
 
@@ -107,10 +107,10 @@ public class List {
          return appStatus;
      }
 
-    public void setIsRelation(int isRelation) {
+    public void setIsRelation(Integer isRelation) {
          this.isRelation = isRelation;
      }
-     public int getIsRelation() {
+     public Integer getIsRelation() {
          return isRelation;
      }
 
@@ -128,17 +128,17 @@ public class List {
          return offresourcetype;
      }
 
-    public void setIsSearch(int isSearch) {
+    public void setIsSearch(Integer isSearch) {
          this.isSearch = isSearch;
      }
-     public int getIsSearch() {
+     public Integer getIsSearch() {
          return isSearch;
      }
 
-    public void setIsShow(int isShow) {
+    public void setIsShow(Integer isShow) {
          this.isShow = isShow;
      }
-     public int getIsShow() {
+     public Integer getIsShow() {
          return isShow;
      }
 
@@ -156,10 +156,10 @@ public class List {
          return unitType;
      }
 
-    public void setAppType(int appType) {
+    public void setAppType(Integer appType) {
          this.appType = appType;
      }
-     public int getAppType() {
+     public Integer getAppType() {
          return appType;
      }
 
@@ -184,10 +184,10 @@ public class List {
          return productCode;
      }
 
-    public void setParentAppId(int parentAppId) {
+    public void setParentAppId(Integer parentAppId) {
          this.parentAppId = parentAppId;
      }
-     public int getParentAppId() {
+     public Integer getParentAppId() {
          return parentAppId;
      }
 
@@ -198,10 +198,10 @@ public class List {
          return isAppMenu;
      }
 
-    public void setIsApp(int isApp) {
+    public void setIsApp(Integer isApp) {
          this.isApp = isApp;
      }
-     public int getIsApp() {
+     public Integer getIsApp() {
          return isApp;
      }
 
@@ -212,10 +212,10 @@ public class List {
          return appIcon;
      }
 
-    public void setAppCreateTime(int appCreateTime) {
+    public void setAppCreateTime(Integer appCreateTime) {
          this.appCreateTime = appCreateTime;
      }
-     public int getAppCreateTime() {
+     public Integer getAppCreateTime() {
          return appCreateTime;
      }
 
