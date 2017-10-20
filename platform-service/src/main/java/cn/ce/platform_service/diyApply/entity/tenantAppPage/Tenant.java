@@ -5,7 +5,7 @@ package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 import java.util.List;
 
 /**
- * Auto-generated: 2017-10-19 19:32:56
+ * Auto-generated: 2017-10-20 11:35:58
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
@@ -26,13 +26,13 @@ public class Tenant {
     private String mobileDomain;
     private int mobileStatus;
     private int pcPublishTime;
-    private int mobilePublishTime;
-    private String productInstanceId;
+    private String mobilePublishTime;
+    private int productInstanceId;
     private String appList;
-    private List<String> instanceList;
-    private String productAttrId;
-    private String attr;
-    private String productInstance;
+    private List<InstanceList> instanceList;
+    private int productAttrId;
+    private Attr attr;
+    private ProductInstance productInstance;
     private String productInstanceCode;
     private String unittype;
     private String templateCode;
@@ -144,17 +144,17 @@ public class Tenant {
          return pcPublishTime;
      }
 
-    public void setMobilePublishTime(int mobilePublishTime) {
+    public void setMobilePublishTime(String mobilePublishTime) {
          this.mobilePublishTime = mobilePublishTime;
      }
-     public int getMobilePublishTime() {
+     public String getMobilePublishTime() {
          return mobilePublishTime;
      }
 
-    public void setProductInstanceId(String productInstanceId) {
+    public void setProductInstanceId(int productInstanceId) {
          this.productInstanceId = productInstanceId;
      }
-     public String getProductInstanceId() {
+     public int getProductInstanceId() {
          return productInstanceId;
      }
 
@@ -165,31 +165,31 @@ public class Tenant {
          return appList;
      }
 
-    public void setInstanceList(List<String> instanceList) {
+    public void setInstanceList(List<InstanceList> instanceList) {
          this.instanceList = instanceList;
      }
-     public List<String> getInstanceList() {
+     public List<InstanceList> getInstanceList() {
          return instanceList;
      }
 
-    public void setProductAttrId(String productAttrId) {
+    public void setProductAttrId(int productAttrId) {
          this.productAttrId = productAttrId;
      }
-     public String getProductAttrId() {
+     public int getProductAttrId() {
          return productAttrId;
      }
 
-    public void setAttr(String attr) {
+    public void setAttr(Attr attr) {
          this.attr = attr;
      }
-     public String getAttr() {
+     public Attr getAttr() {
          return attr;
      }
 
-    public void setProductInstance(String productInstance) {
+    public void setProductInstance(ProductInstance productInstance) {
          this.productInstance = productInstance;
      }
-     public String getProductInstance() {
+     public ProductInstance getProductInstance() {
          return productInstance;
      }
 

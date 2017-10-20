@@ -130,6 +130,9 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 		classMap.put("tenant", cn.ce.platform_service.diyApply.entity.tenantAppPage.Tenant.class);
 		classMap.put("pages", cn.ce.platform_service.diyApply.entity.tenantAppPage.Pages.class);
 		classMap.put("list", cn.ce.platform_service.diyApply.entity.tenantAppPage.List.class);
+		classMap.put("attr", cn.ce.platform_service.diyApply.entity.tenantAppPage.Attr.class);
+		classMap.put("params", cn.ce.platform_service.diyApply.entity.tenantAppPage.Params.class);
+		classMap.put("instanceList", cn.ce.platform_service.diyApply.entity.tenantAppPage.InstanceList.class);
 
 		String replacedurl = url.replaceAll(key$, key).replaceAll(n$, appName).replaceAll(z$, String.valueOf(pageSize))
 				.replaceAll(p$, String.valueOf(pageNum));

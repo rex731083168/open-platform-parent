@@ -5,7 +5,7 @@ package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 import java.util.List;
 
 /**
- * Auto-generated: 2017-10-19 19:32:56
+ * Auto-generated: 2017-10-20 11:35:58
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
