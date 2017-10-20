@@ -90,7 +90,14 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 			if (user.getUserType() == AuditConstants.USER_ADMINISTRATOR) {
 				apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS); // 后台系统添加服务分类默认审核通过
 			} else {
-				apply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED); // 提供者添加服务分类需要提交审核
+				if(apply.getCheckState() == null || apply.getCheckState() == 0){
+					apply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED); // 提供者添加服务分类需要提交审核
+				}else if(apply.getCheckState() == 1){
+					apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
+				}else{
+					result.setErrorMessage("当前审核状态不可用", ErrorCodeNo.SYS012);
+					return result;
+				}
 			}
 			apply.setCreateDate(new Date());
 			apply.setUserId(user.getId());

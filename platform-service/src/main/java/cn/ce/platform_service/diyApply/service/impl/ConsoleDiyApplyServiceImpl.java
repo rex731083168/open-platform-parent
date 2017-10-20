@@ -485,29 +485,5 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 	}
 
-	@Override
-	public Result<?> limitScope(String diyApplyId, String openApplyId) {
 
-		Result<List<ApiEntity>> result = new Result<List<ApiEntity>>();
-		DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
-		if (null == diyEntity) {
-			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS015);
-			return result;
-		}
-		Map<String, List<String>> limitMap = diyEntity.getLimitList();
-		if (limitMap == null || limitMap.size() == 0) {
-			result.setErrorMessage("当前定制应用暂时未绑定该开放应用", ErrorCodeNo.SYS017);
-			return result;
-		}
-
-		Set<String> openApplySet = limitMap.keySet();
-		if (openApplySet.contains(openApplyId)) {
-			List<String> apiIds = limitMap.get(openApplyId);
-			List<ApiEntity> apiList = newApiDao.findApiByIds(apiIds);
-			result.setSuccessData(apiList);
-		} else {
-			result.setErrorMessage("当前开放应用不可用", ErrorCodeNo.SYS017);
-		}
-		return result;
-	}
 }

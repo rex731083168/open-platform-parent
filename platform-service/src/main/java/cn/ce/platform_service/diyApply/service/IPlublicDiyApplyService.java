@@ -28,4 +28,7 @@ public interface IPlublicDiyApplyService {
 	public Result<TenantAppPage> findTenantAppsByTenantKeyPage(
 			String key, String appName, int pageNum, int pageSize);
 
+	Result<?> limitScope(String diyApplyId, String openApplyId, String apiName, Integer currentPage, Integer pageSize);
+
+
 }

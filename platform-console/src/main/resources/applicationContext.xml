@@ -42,6 +42,12 @@
 			<mvc:exclude-mapping path="/v2/api-docs"/> 
 			<!-- swagger ui page -->
 			<mvc:exclude-mapping path="/swagger/index.html"/> 
+			<!-- 文档中心接口 -->
+			<mvc:exclude-mapping path="/diyapplyProduct/findPagedApps"/>
+			<mvc:exclude-mapping path="/guideConsole/guideList"/>
+			<mvc:exclude-mapping path="/guideConsole/guideList"/>
+			<mvc:exclude-mapping path="/api/showApiList"/>
+			<mvc:exclude-mapping path="/api/showApi"/>
             <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>

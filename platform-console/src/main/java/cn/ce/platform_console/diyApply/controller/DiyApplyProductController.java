@@ -17,6 +17,7 @@ import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessag
 import cn.ce.platform_service.diyApply.entity.tenantAppPage.TenantAppPage;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
+import cn.ce.platform_service.util.PageValidateUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -76,5 +77,17 @@ public class DiyApplyProductController {
 	public Result<String> registerMenu(@RequestParam(value = "appid", required = true) String appid,
 			@RequestParam(value = "bossInstanceCode", required = true) String bossInstanceCode,String menuJson) {
 		return consoleDiyApplyService.registerMenu(appid, bossInstanceCode, menuJson);
+	}
+	
+	// 查看当前应用可以访问哪些开放应用下的哪些api
+	@RequestMapping(value="/getLimitScope",method=RequestMethod.GET) //查看当前定制应用是否有权限访问某组api或者某个api
+	public Result<?> getLimitScope(
+			@RequestParam String diyApplyId,
+			@RequestParam String openApplyId,
+			@RequestParam(required=false) String apiName,
+			@RequestParam(required=false, defaultValue="1") Integer currentPage,
+			@RequestParam(required=false, defaultValue="10") Integer pageSize){
+		
+		return plublicDiyApplyService.limitScope(diyApplyId, openApplyId, apiName, PageValidateUtil.checkCurrentPage(currentPage), PageValidateUtil.checkPageSize(pageSize));
 	}
 }

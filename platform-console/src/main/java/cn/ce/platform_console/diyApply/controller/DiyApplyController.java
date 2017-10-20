@@ -18,6 +18,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.PageValidateUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -111,13 +112,5 @@ public class DiyApplyController {
 		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
 	}
 
-	// 查看当前应用可以访问哪些开放应用下的哪些api
-	@RequestMapping(value="/getLimitScope",method=RequestMethod.GET) //查看当前定制应用是否有权限访问某组api或者某个api
-	public Result<?> getLimitScope(
-			@RequestParam String diyApplyId,
-			@RequestParam String openApplyId){
-		
-		return consoleDiyApplyService.limitScope(diyApplyId,openApplyId);
-	}
 
 }

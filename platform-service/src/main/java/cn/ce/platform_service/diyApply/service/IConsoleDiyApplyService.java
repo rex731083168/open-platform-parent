@@ -79,6 +79,5 @@ public interface IConsoleDiyApplyService {
 
 	Result<?> updateApply(DiyApplyEntity apply);
 
-	Result<?> limitScope(String diyApplyId, String openApplyId);
-
+	
 }

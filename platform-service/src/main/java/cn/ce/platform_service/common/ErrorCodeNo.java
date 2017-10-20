@@ -25,6 +25,7 @@ public enum ErrorCodeNo {
 	,SYS015("数据不存在")
 	,SYS016("数据不一致")
 	,SYS017("暂不可用")
+	,SYS018("调用产品中心发生异常")
 	;
 	
 	

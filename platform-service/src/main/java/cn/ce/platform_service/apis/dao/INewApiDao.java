@@ -32,6 +32,8 @@ public interface INewApiDao {
 
 	List<ApiEntity> findByField(String key, String value);
 
+	Page<ApiEntity> findApiPageByIds(List<String> apiIds, Page<ApiEntity> page);
+
 
 
 }

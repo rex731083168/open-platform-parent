@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
@@ -61,7 +62,9 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 			g.setCreatUserName(user.getUserName());
 			g.setCreatTime(new Date());
-			g.setCheckState(AuditConstants.GUIDE_UNCHECKED);
+			if(g.getCheckState() == null){
+				g.setCheckState(AuditConstants.GUIDE_UNCHECKED);
+			}
 			guideDaoImpl.saveOrUpdateGuide(g);
 			result.setSuccessMessage("添加成功");
 			_LOGGER.info("add guide message success");
@@ -129,13 +132,16 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Criteria c = new Criteria();
 
 		if (StringUtils.isNotBlank(entity.getGuideName())) {
-			c.and("guideName").regex(entity.getGuideName());
+			c.and(DBFieldsConstants.GUIDE_NAME).regex(entity.getGuideName());
 		}
 		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
-			c.and("creatUserName").regex(entity.getCreatUserName());
+			c.and(DBFieldsConstants.GUIDE_CREATE_USERNAME).regex(entity.getCreatUserName());
 		}
 		if (StringUtils.isNotBlank(entity.getApplyId())) {
-			c.and("applyId").is(entity.getApplyId());
+			c.and(DBFieldsConstants.GUIDE_APPLYID).is(entity.getApplyId());
+		}
+		if(entity.getCheckState() != null){
+			c.and(DBFieldsConstants.GUIDE_CHECKSTATE).is(entity.getCheckState());
 		}
 
 		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));

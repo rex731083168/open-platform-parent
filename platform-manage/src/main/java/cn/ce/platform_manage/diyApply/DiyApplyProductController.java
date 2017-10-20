@@ -4,6 +4,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,17 +38,25 @@ import net.sf.json.JSONArray;
 @Api("manage租户接口")
 public class DiyApplyProductController {
 
+	private static Logger _LOGGER = LoggerFactory.getLogger(DiyApplyProductController.class);
 	@Resource
 	private IManageDiyApplyService manageDiyApplyService;
 	@Resource
 	private IPlublicDiyApplyService plublicDiyApplyService;
 
-	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
+	@RequestMapping(value = "/findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
 	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = false) String owner,
 			@RequestParam(required = false) String name,
 			@RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
+		
+		_LOGGER.info("*************获取所有产品列表************");
+		_LOGGER.info("查询条件：");
+		_LOGGER.info("所属企业:"+owner);
+		_LOGGER.info("名称模糊："+name);
+		_LOGGER.info("传入页码："+currentPage);
+		_LOGGER.info("页码大小："+pageSize);
 		
 		return plublicDiyApplyService.findPagedApps(owner, name, PageValidateUtil.checkCurrentPage(currentPage), 
 				PageValidateUtil.checkPageSize(pageSize));
@@ -67,6 +77,18 @@ public class DiyApplyProductController {
 			@RequestBody RegisterBathAppInParameterEntity[] queryVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		return manageDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());
+	}
+	
+	// 查看当前应用可以访问哪些开放应用下的哪些api
+	@RequestMapping(value="/getLimitScope",method=RequestMethod.GET) //查看当前定制应用是否有权限访问某组api或者某个api
+	public Result<?> getLimitScope(
+			@RequestParam String diyApplyId,
+			@RequestParam String openApplyId,
+			@RequestParam(required=false) String apiName,
+			@RequestParam(required=false, defaultValue="1") Integer currentPage,
+			@RequestParam(required=false, defaultValue="10") Integer pageSize){
+		
+		return plublicDiyApplyService.limitScope(diyApplyId, openApplyId, apiName, PageValidateUtil.checkCurrentPage(currentPage), PageValidateUtil.checkPageSize(pageSize));
 	}
 
 }
