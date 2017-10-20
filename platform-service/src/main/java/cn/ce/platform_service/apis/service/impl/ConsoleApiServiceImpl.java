@@ -21,7 +21,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.apis.entity.ApiVersion;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
@@ -46,10 +45,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	
 	@Resource
 	private INewApiDao newApiDao;
-//	@Resource
-//	private IManageOpenApplyService manageOpenApplyService;
-//	@Resource
-//	private IOpenApplyDao openApplyDao;
 	@Resource
 	private IGatewayApiService gatewayApiService;
 	
@@ -89,43 +84,47 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		
 		Map<String,Object> whereMap = new HashMap<>();
-		whereMap.put(DBFieldsConstants.APIS_APP_CODE, apiEntity.getAppCode());
+		whereMap.put(DBFieldsConstants.APIS_OPENAPPLY_ID, apiEntity.getAppCode());
 		whereMap.put(DBFieldsConstants.APIS_APIENNAME,apiEntity.getApiEnName());
 		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
 		if(null != findOneByFields){
+			_LOGGER.info("appCode和apiEnName重复出现");
 			result.setMessage("当前开放应用下appEnName已存在,请检查后重试!");
 			result.setErrorCode(ErrorCodeNo.SYS010);
 			return result;
 		}
 		
+		if(StringUtils.isBlank(apiEntity.getApiVersion().getVersion())){
+			result.setErrorMessage("版本名称不能为空", ErrorCodeNo.SYS005);
+			return result;
+		}
 		// 第一次添加接口,并且选择未开启版本控制
-		if (apiEntity.getApiVersion() == null || 
-				StringUtils.isBlank(apiEntity.getApiVersion().getVersion())) {
-			//api添加者信息和添加时间
-			apiEntity.setUserId(user.getId());
-			apiEntity.setUserName(user.getUserName());
-			apiEntity.setCreateTime(new Date());
-			
-			//未开启版本控制的version信息
-			ApiVersion version = new ApiVersion();
-			version.setVersionId(UUID.randomUUID().toString().replace("-", ""));
-			apiEntity.setApiVersion(version);
-			
-			// 过滤apienname不能以/开头和结尾
-			// TODO 2期无法获取开放应用的enName，所以添加时不拼接和处理apiEnName lida 2017年10月18日17:10:19
-			if(StringUtils.isNotBlank(apiEntity.getApiEnName())){
-				apiEntity.setApiEnName(apiEntity.getApiEnName().replaceAll("/", ""));
-			}
-
-			newApiDao.save(apiEntity);
-
-		} else {
+//		if (apiEntity.getApiVersion() == null || 
+//				StringUtils.isBlank(apiEntity.getApiVersion().getVersion())) {
+//			//api添加者信息和添加时间
+//			apiEntity.setUserId(user.getId());
+//			apiEntity.setUserName(user.getUserName());
+//			apiEntity.setCreateTime(new Date());
+//			
+//			//未开启版本控制的version信息
+//			ApiVersion version = new ApiVersion();
+//			version.setVersionId(UUID.randomUUID().toString().replace("-", ""));
+//			apiEntity.setApiVersion(version);
+//			
+//			// 过滤apienname不能以/开头和结尾
+//			// TODO 2期无法获取开放应用的enName，所以添加时不拼接和处理apiEnName lida 2017年10月18日17:10:19
+//			if(StringUtils.isNotBlank(apiEntity.getApiEnName())){
+//				apiEntity.setApiEnName(apiEntity.getApiEnName().replaceAll("/", ""));
+//			}
+//
+//			newApiDao.save(apiEntity);
+//
+//		} else {
 			
 			// 开启版本控制
 			apiEntity.setUserId(user.getId());
 			apiEntity.setUserName(user.getUserName());
 			apiEntity.setCreateTime(new Date());
-			// TODO 校验apiEnName,apiChName,version
 			
 			int num = newApiDao.updApiVersionByApiId(apiEntity.getApiVersion().getVersionId(),false);
 			_LOGGER.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");
@@ -134,7 +133,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			apiEntity.getApiVersion().setNewVersion(true);
 			//如果前端没有传入版本的版本的apiId则重新生成版本versionId
 			if(StringUtils.isBlank(apiEntity.getApiVersion().getVersionId())){
-				// TODO versionId是java生成
+				_LOGGER.info("当前添加的api是新的api不存在旧的版本，生成新的versionId");
 				String versionId = UUID.randomUUID().toString().replace("-", "");
 				apiEntity.getApiVersion().setVersionId(versionId);
 			}
@@ -142,7 +141,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			newApiDao.save(apiEntity);
 			
 			_LOGGER.info("------新添加的数据为："+apiEntity.toString());
-		}
+//		}
 		result.setSuccessData("添加成功");
 		return result;
 	}
@@ -373,17 +372,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			// TODO 紧急
 			return true;
 		}
-		
-//		//记录绑定日志
-//		int i=1;
-//		for (String appId : openApplyIds) {
-//			List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
-//			List<String> apiIds = new ArrayList<String>(); 
-//			for (ApiEntity apiEntity : apiList) {
-//				apiIds.add(apiEntity.getId());
-//			}
-//			_LOGGER.info("当前定制应用和第"+ i++ +"个开放应用，"+appId+"下绑定的api："+apiIds);
-//		}
 		
 		versionIdsBuf.deleteCharAt(0); //versionId用逗号分隔的长字符串
 		Map<String, List<String>> apiInfos = new HashMap<String,List<String>>();
