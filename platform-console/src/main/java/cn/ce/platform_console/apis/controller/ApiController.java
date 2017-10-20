@@ -125,9 +125,7 @@ public class ApiController {
 			@RequestParam(required=false,defaultValue= "1") int currentPage, 
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
-		if(pageSize == 0){
-			pageSize = Constants.PAGE_COMMON_SIZE;
-		}else if(pageSize > 30){
+		if(pageSize > 30){
 			pageSize = Constants.PAGE_MAX_SIZE; //最大超过三十
 		}
 		

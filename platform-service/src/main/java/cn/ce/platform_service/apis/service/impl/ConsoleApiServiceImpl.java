@@ -159,6 +159,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		Result<String> result = new Result<String>();
 		for (String apiId : apiIds) {
 			ApiEntity api = newApiDao.findApiById(apiId);
+			if(null == api){
+				_LOGGER.info("当前api:"+apiId+"在数据库中不存在");
+				continue;
+			}
 			api.setCheckState(AuditConstants.API_CHECK_STATE_UNAUDITED);
 			newApiDao.save(api);
 		}
@@ -180,8 +184,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		Result<String> result = new Result<String>();
 		if(null == newApiDao.findApiById(apiEntity.getId())){
 			result.setErrorMessage("当前id不可用", ErrorCodeNo.SYS006);
-		}else if (apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
-			result.setErrorMessage("当前状态不可修改", ErrorCodeNo.SYS012);
+			return result;
 		}
 		newApiDao.save(apiEntity);
 		result.setSuccessData("");
@@ -207,18 +210,15 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 
 		// 添加网关访问地址
-		//String openApplyId = api.getOpenApplyId();
-		//OpenApplyEntity openApplyEntity = openApplyDao.findById(openApplyId);
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
-			// TODO 这里的路径是否正确。网关是否修改这里
 			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getAppCode()+"/"+api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
 		}
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
-		//jsonObject.put("applyName", openApplyEntity.getApplyName());
+		jsonObject.put("listenPath", "/"+api.getAppCode()+"/"+api.getApiEnName()+"/");
 		result.setSuccessData(jsonObject);
 		return result;
 	}
