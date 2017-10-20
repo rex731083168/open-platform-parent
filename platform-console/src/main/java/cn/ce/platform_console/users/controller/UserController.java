@@ -52,7 +52,7 @@ public class UserController {
 		_LOGGER.info("tel:"+user.getTelNumber());
 		
 		_LOGGER.info("校验验证码是否正确");
-		Integer checkCode1 = (Integer)session.getAttribute(user.getTelNumber());
+		Integer checkCode1 = (Integer)session.getAttribute(user.getEmail());
 		
 		
 		//邮箱验证码校验
