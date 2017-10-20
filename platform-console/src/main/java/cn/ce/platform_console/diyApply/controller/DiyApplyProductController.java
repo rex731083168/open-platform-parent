@@ -48,7 +48,8 @@ public class DiyApplyProductController {
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
 		return plublicDiyApplyService.findTenantAppsByTenantKeyPage(key, appName, currentPage, pageSize);
 	}
-	@RequestMapping(value = "findPagedApps", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
 	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = false) String owner,
 			@RequestParam(value = "name", required = false) String name,

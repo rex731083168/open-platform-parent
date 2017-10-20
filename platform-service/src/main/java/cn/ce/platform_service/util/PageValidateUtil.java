@@ -1,5 +1,7 @@
 package cn.ce.platform_service.util;
 
+import cn.ce.platform_service.common.Constants;
+
 /**
  * @ClassName:  PageValidateUtil   
  * @Description:页参数校验   
@@ -17,7 +19,12 @@ public class PageValidateUtil {
 	}
 	
 	public static Integer checkPageSize(Integer pageSize){
-//		if(pageSize > )
-		return null;
+		if(pageSize > Constants.PAGE_MAX_SIZE){
+			pageSize = Constants.PAGE_MAX_SIZE;
+		}
+		if(pageSize < 0 || pageSize == null){
+			pageSize = Constants.PAGE_COMMON_SIZE;
+		}
+		return pageSize;
 	}
 }

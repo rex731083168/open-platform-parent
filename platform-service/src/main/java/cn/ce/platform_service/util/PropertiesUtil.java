@@ -34,7 +34,7 @@ public class PropertiesUtil {
 			InputStream iss = res.getInputStream();
 			Properties prop = new Properties();
 			prop.load(iss);
-			Enumeration enKey = prop.keys();// getKeys();
+			Enumeration<Object> enKey = prop.keys();// getKeys();
 			while (enKey.hasMoreElements()) {
 				String key = (String) enKey.nextElement();
 				String val = (String) prop.get(key);

@@ -34,7 +34,6 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 
 	@Override
 	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize) {
-		// TODO Auto-generated method stub
 		Result<Apps> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("findPagedApps");
 		String o$ = Pattern.quote("${o}");

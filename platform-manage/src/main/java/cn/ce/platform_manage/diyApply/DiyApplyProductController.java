@@ -19,6 +19,7 @@ import cn.ce.platform_service.diyApply.entity.tenantAppPage.TenantAppPage;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
+import cn.ce.platform_service.util.PageValidateUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONArray;
@@ -48,7 +49,9 @@ public class DiyApplyProductController {
 			@RequestParam(required = false) String name,
 			@RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
-		return plublicDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
+		
+		return plublicDiyApplyService.findPagedApps(owner, name, PageValidateUtil.checkCurrentPage(currentPage), 
+				PageValidateUtil.checkPageSize(pageSize));
 	}
 
 	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
