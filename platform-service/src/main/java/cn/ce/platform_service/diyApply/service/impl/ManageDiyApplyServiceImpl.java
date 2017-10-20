@@ -99,9 +99,12 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				queryVO[i] = rapentity;
 			}
 			/* 开发者在开放平台发布应用审核 */
+
+			_LOGGER.info("registerBathApp to interface satar");
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
 					.registerBathApp(diyApply.get(0).getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
 					.getData();
+			_LOGGER.info("registerBathApp to interface states" + interfaMessageInfoJasonObjectResult.getStatus() + "");
 			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
 			Iterator<String> keys = jsonObjecttest.keys();
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -122,14 +125,15 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				return result;
 			} else {
 				result.setErrorCode(ErrorCodeNo.SYS001);
-				result.setErrorMessage("发布失败");
+				result.setErrorMessage("审核失败");
+				_LOGGER.info("bachUpdate diyApply message faile");
 				return result;
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			_LOGGER.error("bachUpdate diyApply message faile ", e);
 			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("审核失败");
+			result.setErrorMessage("系统错误");
 			return result;
 		}
 	}
@@ -153,17 +157,13 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			messageInfo.setMsg(jsonObject.getString("msg"));
 			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
 
-			/* 无接口时的测试方法 */
-			// InterfaMessageInfoJasonObject messageInfo = (InterfaMessageInfoJasonObject)
-			// testgetUrlReturnObject(
-			// "registerBathApp", replacedurl, InterfaMessageInfoJasonObject.class, null);
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
 				return result;
 			} else {
 				_LOGGER.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
-				result.setErrorMessage("接口请求成功,");
+				result.setErrorMessage("请求失败");
 				result.setErrorCode(ErrorCodeNo.SYS006);
 				return result;
 			}
@@ -171,7 +171,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			// TODO Auto-generated catch block
 			_LOGGER.error("registerBathApp http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
+			result.setErrorMessage("系统错误,请求失败");
 			return result;
 		}
 
@@ -190,7 +190,5 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		// TODO Auto-generated method stub
 		return result;
 	}
-
-	
 
 }

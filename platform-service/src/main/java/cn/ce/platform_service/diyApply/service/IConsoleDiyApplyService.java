@@ -41,13 +41,6 @@ public interface IConsoleDiyApplyService {
 	 */
 	Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page);
 
-	/***
-	 * 根据条件查询应用列表
-	 * 
-	 * @param query
-	 * @return
-	 */
-	Result<List<DiyApplyEntity>> findApplyList(DiyApplyEntity entity);
 
 	/**
 	 * 根据id加载应用信息

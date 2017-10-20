@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -113,18 +114,22 @@ public class HttpClientUtil {
 				EntityUtils.consume(entity); // Consume response content
 			}
 			System.out.println("请求地址: " + httpGet.getURI());
+			logger.info("请求地址: " + httpGet.getURI());
 			System.out.println("响应状态: " + response.getStatusLine());
+			logger.info("响应状态: " + response.getStatusLine());
 			System.out.println("响应长度: " + responseLength);
+			logger.info("响应长度: " + responseLength);
 			System.out.println("响应内容: " + responseContent);
+			logger.info("响应内容: " + responseContent);
 		} catch (ClientProtocolException e) {
-			logger.debug("该异常通常是协议错误导致,比如构造HttpGet对象时传入的协议不对(将'http'写成'htp')或者服务器端返回的内容不符合HTTP协议要求等,堆栈信息如下", e);
+			logger.error("该异常通常是协议错误导致,比如构造HttpGet对象时传入的协议不对(将'http'写成'htp')或者服务器端返回的内容不符合HTTP协议要求等,堆栈信息如下", e);
 		} catch (ParseException e) {
-			logger.debug(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
-			logger.debug("该异常通常是网络原因引起的,如HTTP服务器未启动等,堆栈信息如下", e);
-		} catch (Exception e) {
-			logger.debug("该异常通常是网络原因引起的,如HTTP服务器未启动等,堆栈信息如下", e);
-			e.printStackTrace();
+			logger.error("该异常通常是网络原因引起的,如HTTP服务器未启动等,堆栈信息如下", e);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			logger.error("URL转URI的时候出错,检测“HttpClientUtil.sendGetRequest”方法105行", e);
 		} finally {
 			httpClient.getConnectionManager().shutdown(); // 关闭连接,释放资源
 		}
@@ -193,7 +198,7 @@ public class HttpClientUtil {
 				EntityUtils.consume(entity);
 			}
 		} catch (Exception e) {
-			logger.debug("与[" + reqURL + "]通信过程中发生异常,堆栈信息如下", e);
+			logger.error("与[" + reqURL + "]通信过程中发生异常,堆栈信息如下", e);
 		} finally {
 			httpClient.getConnectionManager().shutdown();
 		}
@@ -306,7 +311,7 @@ public class HttpClientUtil {
 				EntityUtils.consume(entity);
 			}
 		} catch (Exception e) {
-			logger.debug("与[" + reqURL + "]通信过程中发生异常,堆栈信息为", e);
+			logger.error("与[" + reqURL + "]通信过程中发生异常,堆栈信息为", e);
 		} finally {
 			httpClient.getConnectionManager().shutdown();
 		}
@@ -516,48 +521,68 @@ public class HttpClientUtil {
 		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
 
 		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
-		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
-		return object;
+		try {
+			Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+			return object;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("getUrlReturnObject jsontoBean error", e);
+			return null;
+		}
 	}
 
 	public static TenantApps specialTenantRetrunObject(String url) {
 		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
 		TenantApps taps = new TenantApps();
-		Tenant t = new Tenant();
-		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
-		JSONObject jdata = (JSONObject) jsonobject.get("data");
-		JSONArray jarry = (JSONArray) jdata.get("appList");
+		try {
+			Tenant t = new Tenant();
+			JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
+			JSONObject jdata = (JSONObject) jsonobject.get("data");
+			JSONArray jarry = (JSONArray) jdata.get("appList");
 
-		List<AppList> applist = (List<AppList>) JSONArray.toList(jarry, AppList.class);
+			List<AppList> applist = (List<AppList>) JSONArray.toList(jarry, AppList.class);
 
-		String msg = jsonobject.get("msg").toString();
-		String status = jsonobject.get("status").toString();
+			String msg = jsonobject.get("msg").toString();
+			String status = jsonobject.get("status").toString();
 
-		JSONObject jtenant = (JSONObject) jdata.get("tenant");
-		JSONObject jproductInstance = (JSONObject) jtenant.get("productInstance");
+			JSONObject jtenant = (JSONObject) jdata.get("tenant");
+			JSONObject jproductInstance = (JSONObject) jtenant.get("productInstance");
 
-		JSONArray instancearry = (JSONArray) jtenant.get("instanceList");
+			JSONArray instancearry = (JSONArray) jtenant.get("instanceList");
 
-		List<InstanceList> instanceList = (List<InstanceList>) JSONArray.toList(instancearry, InstanceList.class);
-		cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data data = (cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data) JSONObject
-				.toBean(jdata, cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data.class);
+			List<InstanceList> instanceList = (List<InstanceList>) JSONArray.toList(instancearry, InstanceList.class);
+			cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data data = (cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data) JSONObject
+					.toBean(jdata, cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data.class);
 
-		t = (Tenant) JSONObject.toBean(jtenant, Tenant.class);
-		t.setInstanceList(instanceList);
-		ProductInstance pit = (ProductInstance) JSONObject.toBean(jproductInstance, ProductInstance.class);
-		t.setProductInstance(pit);
-		data.setAppList(applist);
-		data.setTenant(t);
-		taps.setData(data);
-		taps.setMsg(msg);
-		taps.setStatus(Integer.valueOf(status));
-		return taps;
+			t = (Tenant) JSONObject.toBean(jtenant, Tenant.class);
+			t.setInstanceList(instanceList);
+			ProductInstance pit = (ProductInstance) JSONObject.toBean(jproductInstance, ProductInstance.class);
+			t.setProductInstance(pit);
+			data.setAppList(applist);
+			data.setTenant(t);
+			taps.setData(data);
+			taps.setMsg(msg);
+			taps.setStatus(Integer.valueOf(status));
+			return taps;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("specialTenantRetrunObject jsontoBean error", e);
+			return taps;
+		}
+
 	}
 
 	public static Object getUrlReturnJsonObject(String url) {
 		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
-		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
-		return jsonobject;
+		try {
+			JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
+			return jsonobject;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("getUrlReturnJsonObject jsontoBean error", e);
+			return null;
+		}
 	}
 
 	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class<?>> classMap)

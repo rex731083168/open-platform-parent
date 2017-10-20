@@ -113,7 +113,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			// 产品信息
 			TenantApps apps = new TenantApps();
 			try {
+				_LOGGER.info("get message from interface satar");
 				apps = plublicDiyApplyService.findTenantAppsByTenantKey(key).getData(); // 接入产品中心获取产品信息和开放应用信息
+				_LOGGER.info("get message from interface states " + apps.getStatus() + "");
 
 				if (apps.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE
 						|| apps.getData().getTenant() == null) {
@@ -121,7 +123,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 					return result;
 				}
 
-				int findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
+				Integer findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
 				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
 				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
 			} catch (Exception e) {
@@ -250,25 +252,32 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Override
 	public Result<?> updateApply(DiyApplyEntity apply) {
-
 		Result<String> result = new Result<String>();
-		if (StringUtils.isBlank(apply.getId())) {
-			result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
-		}
-
-		DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
-
-		if (null == apply1) {
-			result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
+		try {
+			_LOGGER.info("updateApply");
+			if (StringUtils.isBlank(apply.getId())) {
+				result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
+			}
+			DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+			if (null == apply1) {
+				result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
+				return result;
+			}
+			if (!apply1.getProductAuthCode().equals(apply.getProductAuthCode())) {
+				result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
+				return result;
+			}
+			diyApplyDao.saveOrUpdate(apply);
+			_LOGGER.info("updateApply success");
+			result.setSuccessMessage("修改成功");
+			return result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			result.setErrorMessage("修改失败");
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			_LOGGER.error("updateApply faile", e);
 			return result;
 		}
-		if (!apply1.getProductAuthCode().equals(apply.getProductAuthCode())) {
-			result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
-			return result;
-		}
-		diyApplyDao.saveOrUpdate(apply);
-		result.setSuccessMessage("修改成功");
-		return result;
 	}
 
 	@Override
@@ -308,79 +317,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<List<DiyApplyEntity>> findApplyList(DiyApplyEntity entity) {
-		return null;
-	}
-
-	// @Override
-	// public Result<DiyApplyEntity> getApplyById(String id, int pageSize, int
-	// currentPage) {
-	// Result<DiyApplyEntity> result = new Result<>();
-	// DiyApplyEntity apply = diyApplyDao.findById(id);
-	//
-	// if (null == apply) {
-	// result.setErrorMessage("该应用不存在!");
-	// } else if (null == apply.getAuthIds()) {
-	// result.setErrorMessage("该应用下暂无api信息!");
-	// } else {
-	// List<String> authIds = apply.getAuthIds();
-	// if (null != authIds) {
-	// int begin = (currentPage - 1) * pageSize;
-	//
-	// int end = pageSize * currentPage;
-	//
-	// if (authIds.size() < end) {
-	// end = authIds.size();
-	// }
-	//
-	// authIds = authIds.subList(begin, end);
-	//
-	// List<ApiAuditEntity> apiAuditList =
-	// apiOauthService.getApiAuditEntity(authIds);
-	//
-	// apply.setAuditList(apiAuditList);
-	// result.setSuccessData(apply);
-	// }
-	// }
-	// return result;
-	// }
-
-	// /***
-	// * 根据实体对象构建查询条件
-	// *
-	// * @param entity
-	// * 实体对象
-	// * @author lida
-	// * @return
-	// */
-	// private Criteria generalApplyCriteria(DiyApplyEntity entity) {
-	// // 构建查询对象
-	// Criteria c = new Criteria();
-	//
-	// if (StringUtils.isNotBlank(entity.getId())) {
-	// c.and("id").is(entity.getId());
-	// }
-	//
-	// if (StringUtils.isNotBlank(entity.getUserId())) {
-	// c.and("userId").is(entity.getUserId());
-	// }
-	//
-	// if (StringUtils.isNotBlank(entity.getApplyName())) {
-	// c.and("applyName").regex(entity.getApplyName());
-	// }
-	//
-	// return c;
-	// }
-
-	// private Query generalApplyQuery(DiyApplyEntity apply, Sort sort) {
-	// if (sort == null) {
-	// sort = new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE);
-	// }
-	// Query query = new Query(generalApplyCriteria(apply)).with(sort);
-	// return query;
-	// }
-
-	@Override
 	public DiyApplyEntity findById(String applyId) {
 		return diyApplyDao.findById(applyId);
 	}
@@ -398,10 +334,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) HttpClientUtil
 					.getUrlReturnObject(replacedurl, InterfaMessageInfoString.class, null);
 
-			/* 无接口时的测试方法 */
-			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)
-			// testgetUrlReturnObject(
-			// "generatorTenantKey", replacedurl, InterfaMessageInfoString.class, null);
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
@@ -409,13 +341,14 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			} else {
 				_LOGGER.error("generatorTenantKey data http getfaile return code :" + messageInfo.getMsg() + " ");
 				result.setErrorCode(ErrorCodeNo.SYS006);
+				result.setErrorMessage("请求失败");
 				return result;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			_LOGGER.error("generatorTenantKey http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
+			result.setErrorMessage("系统错误，接口请求失败");
 			return result;
 		}
 	}

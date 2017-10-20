@@ -49,10 +49,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	/** 功能分组数据库操作对象 */
 	@Resource
 	private IOpenApplyDao openApplyDao;
-//	@Resource
-//	private IOauthService oauthService;
-//	@Resource
-//	private IAPIService apiService;
 
 	public void addApp(OpenApplyEntity app) {
 		openApplyDao.addApp(app);
@@ -140,34 +136,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		return result;
 	}
 
-//	@Override
-//	public Result<String> deleteById(String appId) {
-//
-//		Result<String> result = new Result<String>();
-//
-//		if (StringUtils.isBlank(appId)) {
-//			result.setMessage("appId不能为空");
-//			return result;
-//		}
-//		// 查看当前app中是否有api已经被使用，如果已经被使用，就不能删除
-//		Map<String, Object> queryMap = new HashMap<String, Object>();
-//		queryMap.put("app_id", appId);
-//		queryMap.put("check_state", 2);
-//		int num = oauthService.findByFields(queryMap);
-//
-//		if (num > 0) {
-//			result.setMessage("当前分组已经有api被使用，无法删除该分组");
-//			return result;
-//		} else {
-//			// 删除
-//			int i = openApplyDao.delById(appId);
-//			_LOGGER.info("删除了" + i + "条app分组数据");
-//			result.setStatus(Status.SUCCESS);
-//			result.setMessage("删除成功");
-//			return result;
-//		}
-//	}
-
 	@Override
 	public Result<JSONObject> appList(HttpServletRequest request, HttpServletResponse response) {
 
@@ -194,95 +162,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			return result;
 		}
 	}
-
-	// @Override
-	// public Result<?> addApply(HttpSession session,OpenApplyEntity apply) {
-	//
-	// Result<String> result = new Result<String>();
-	// try {
-	// Result<OpenApplyEntity> checkAppIsHave = checkAppIsHave(apply);
-	//
-	// if (Status.SUCCESS == checkAppIsHave.getStatus()) {
-	// User user = (User) session. getAttribute(Constants.SES_LOGIN_USER);
-	// String uuid = UUID.randomUUID().toString().replace("-", "");
-	// apply.setId(uuid);
-	// apply.setCreateDate(new Date());
-	// if (user.getUserType() == 0) {
-	// apply.setCheckState(2); // 后台系统添加服务分类默认审核通过
-	// } else {
-	// apply.setCheckState(0);
-	// }
-	// apply.setUserId(user.getId());
-	// apply.setUserName(user.getUserName());
-	//
-	// // appKey不能以/开头和结尾
-	// if (apply.getApplyKey().startsWith("/") || apply.getApplyKey().endsWith("/"))
-	// {
-	// result.setErrorMessage("appKey不能以/开头和/结尾");
-	// return result;
-	// }
-	// addApp(apply);
-	// result.setSuccessMessage("");
-	// return result;
-	// } else{
-	// // TODO
-	// result.setErrorMessage(checkAppIsHave.getMessage());
-	// }
-	// return result;
-	// } catch (Exception e) {
-	// // TODO
-	// _LOGGER.error("error happens when add group", e);
-	// result.setErrorMessage("");
-	// return result;
-	// }
-	// }
-
-//	@Override
-//	public Result<String> delGroup(String appId) {
-//		Result<String> result = new Result<String>();
-//		try {
-//			/** 删除前要求分组内无API存在！ */
-//			// 这是丁佳一个大坑
-//			if (apiService.haveAPIs(appId)) {
-//				result.setErrorMessage("当前服务分组中存在API接口定义!", ErrorCodeNo.SYS007);
-//			}
-//			delById(appId);
-//			result.setSuccessData("");
-//		} catch (Exception e) {
-//
-//			// TODO
-//			_LOGGER.error("error happens when del group", e);
-//			result.setErrorMessage("");
-//		}
-//		return result;
-//	}
-
-	// @Override
-	// public Result<String> modifyGroup(OpenApplyEntity app) {
-	// Result<String> result = new Result<String>();
-	// try {
-	// OpenApplyEntity appAfter = findById(app.getId());
-	// if (null == appAfter) {
-	// result.setErrorMessage("当前分组不存在", ErrorCodeNo.SYS006);
-	// } else {
-	// app.setNeqId(app.getId());// 查询非当前修改数据进行判断
-	// List<OpenApplyEntity> findAppsByEntity = findAppsByEntity(app);
-	// if (findAppsByEntity.isEmpty()) {
-	// appAfter.setApplyName(app.getApplyName().trim());
-	// appAfter.setApplyKey(app.getApplyKey().trim());
-	// modifyById(appAfter);
-	// result.setSuccessMessage("");
-	// } else {
-	// result.setErrorMessage("");
-	// }
-	// }
-	// return result;
-	// } catch (Exception e) {
-	// _LOGGER.error("error happeen when execute app service modify group",e);
-	// result.setErrorMessage("");
-	// return result;
-	// }
-	// }
 
 	@Override
 	public Result<Page<OpenApplyEntity>> groupList(String userId, int currentPage, int pageSize) {
@@ -346,27 +225,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		}
 		return result;
 	}
-
-//	@Override
-//	public Result<String> deleteGroup(String id) {
-//
-//		Result<String> result = new Result<String>();
-//
-//		try {
-//			/** 删除前要求分组内无API存在！ */
-//			// TODO 这是丁佳一个大坑
-//			if (apiService.haveAPIs(id)) {
-//				result.setErrorMessage("当前服务分组中存在API接口定义!", ErrorCodeNo.SYS009);
-//			}
-//			delById(id);
-//			result.setSuccessMessage("");
-//			return result;
-//		} catch (Exception e) {
-//			_LOGGER.info("error happens when execute admin log out", e);
-//			result.setErrorMessage("");
-//			return result;
-//		}
-//	}
 
 	@Override
 	public Result<Page<OpenApplyEntity>> groupList1(String appName, String checkState, int currentPage, int pageSize) {
@@ -461,8 +319,11 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 				queryVO[i] = sue;
 			}
 			/* 调用接口推送信息 */
+			_LOGGER.info("saveOrUpdateApps to interface satar");
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
 					.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
+			_LOGGER.info(
+					"saveOrUpdateApps to interface states " + interfaMessageInfoJasonObjectResult.getStatus() + "");
 			/* 审核成功提交 */
 			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
 				String message = openApplyDao.bathUpdateByid(ids, checkState, checkMem);
@@ -475,6 +336,9 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception
+			_LOGGER.error("bachUpdate openapply message faile ", e);
+			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorMessage("");
 			return result;
 		}
 	}
@@ -490,10 +354,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			/* get请求方法 */
 			InterfaMessageInfoString messageInfo = (InterfaMessageInfoString) HttpClientUtil
 					.getUrlReturnObject(replacedurl, InterfaMessageInfoString.class, null);
-			/* 无接口时的测试方法 */
-			// InterfaMessageInfoString messageInfo = (InterfaMessageInfoString)
-			// HttpClientUtil.testgetUrlReturnObject("saveOrUpdateApps",
-			// replacedurl, InterfaMessageInfoString.class, null);
+
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
 				result.setData(messageInfo);
 				result.setSuccessMessage("");
@@ -501,18 +362,16 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			} else {
 				_LOGGER.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");
 				result.setErrorCode(ErrorCodeNo.SYS006);
+				result.setErrorMessage("请求失败");
 				return result;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			_LOGGER.error("saveOrUpdateApps http error " + e + "");
 			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("请求失败");
+			result.setErrorMessage("系统错误,请求失败");
 			return result;
 		}
 	}
-
-
-
 
 }

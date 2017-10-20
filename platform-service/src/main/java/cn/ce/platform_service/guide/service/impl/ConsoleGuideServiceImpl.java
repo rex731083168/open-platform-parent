@@ -57,7 +57,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 				result.setErrorMessage("指南已存在");
 				return result;
 			}
-
+			_LOGGER.info("add guide message");
 			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 			g.setCreatUserName(user.getUserName());
 			g.setCreatTime(new Date());
@@ -109,6 +109,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 
 			guideDaoImpl.saveOrUpdateGuide(g);
 			result.setSuccessMessage("修改成功");
+			_LOGGER.info("update guide message success");
 			return result;
 
 		} catch (Exception e) {
@@ -170,6 +171,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			guideDaoImpl.deleteByid(id);
 
 			result.setSuccessMessage("删除成功");
+			_LOGGER.info("delete guide message success");
 			return result;
 
 		} catch (Exception e) {
@@ -202,7 +204,8 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Result<String> result = new Result<>();
 		List<String> asList = SplitUtil.splitStringWithComma(id);
 		try {
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(asList,AuditConstants.DIY_APPLY_CHECKED_COMMITED,null));
+			String message = String
+					.valueOf(guideDaoImpl.bachUpdateGuide(asList, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;

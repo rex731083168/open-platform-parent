@@ -37,14 +37,15 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	private IGuideDao guideDaoImpl;
 
 	@Override
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,String applyId, int currentPage, int pageSize) {
+	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String applyId, int currentPage,
+			int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
 		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
 		Criteria c = new Criteria();
 		c.and("checkState").is(AuditConstants.GUIDE_COMMITED);
-		
-		if(StringUtils.isNotBlank(applyId)){
+
+		if (StringUtils.isNotBlank(applyId)) {
 			c.and("applyId").is(applyId);
 		}
 		if (StringUtils.isNotBlank(guideName)) {
@@ -59,11 +60,11 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids,Integer state,String checkMem) {
+	public Result<String> batchUpdate(List<String> ids, Integer state, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids,state,checkMem));
+			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids, state, checkMem));
 			_LOGGER.info("bachUpdate guide message " + message + " count");
 			result.setSuccessMessage("审核成功:" + message + "条");
 			return result;
@@ -81,14 +82,15 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 		// TODO Auto-generated method stub
 		Result<GuideEntity> result = new Result<GuideEntity>();
 		GuideEntity byId = guideDaoImpl.getById(id);
-		if(null == byId){
+		if (null == byId) {
 			result.setMessage("应用id不存在!");
+			_LOGGER.info("getByid success 应用id不存在! ");
 			result.setErrorCode(ErrorCodeNo.SYS009);
-		}else{
+		} else {
 			result.setSuccessData(byId);
 		}
+		_LOGGER.info("getByid success ");
 		return result;
 	}
 
-	
 }
