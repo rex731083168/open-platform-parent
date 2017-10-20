@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -48,6 +50,8 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	@Override
 	public Result<?> addApply(HttpSession session, OpenApplyEntity apply) {
 
+		_LOGGER.info("addConsoleApply begin apply:" + JSON.toJSONString(apply));
+		
 		Result<String> result = new Result<String>();
 
 		try {
@@ -99,6 +103,9 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 				return result;
 			}
 			newOpenApplyDao.save(apply);
+			
+			_LOGGER.info("addApply end general applyId:" + apply.getId());
+			
 			result.setSuccessMessage("保存成功!");
 		} catch (Exception e) {
 			_LOGGER.error("添加应用时出现错误,e:" + e.toString());
@@ -111,6 +118,8 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	@Override
 	public Result<?> modifyApply(OpenApplyEntity openApply) {
 
+		_LOGGER.info("modifyConsoleOpenApply begin apply:" + JSON.toJSONString(openApply));
+		
 		Result<String> result = new Result<String>();
 
 		try {
@@ -156,8 +165,11 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 				}
 
 				newOpenApplyDao.save(openApply);
+				
+				_LOGGER.info("modifyConsoleOpenApply end success!");
+				
 				result.setSuccessMessage("保存成功!");
-
+				
 			}
 		} catch (Exception e) {
 			_LOGGER.error("修改应用时出现错误,e:" + e.toString());
@@ -209,12 +221,17 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	@Override
 	public Result<?> submitVerify(String id, Integer checkState) {
 
+		_LOGGER.info("consoleOpenApplySubmitVerify begin ids:" + id + ",checkState:" + checkState);
+		
 		Result<Page<OpenApplyEntity>> result = new Result<>();
 
 		List<String> asList = SplitUtil.splitStringWithComma(id);
 
 		try {
 			newOpenApplyDao.batchSaveApply(asList, checkState);
+			
+			_LOGGER.info("consoleOpenApplySubmitVerify success!");
+			
 			result.setSuccessMessage("保存成功!");
 		} catch (Exception e) {
 			_LOGGER.error("审核应用时出现错误,e:" + e.toString());

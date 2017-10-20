@@ -14,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
@@ -49,10 +51,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	/** 功能分组数据库操作对象 */
 	@Resource
 	private IOpenApplyDao openApplyDao;
-//	@Resource
-//	private IOauthService oauthService;
-//	@Resource
-//	private IAPIService apiService;
 
 	public void addApp(OpenApplyEntity app) {
 		openApplyDao.addApp(app);
@@ -91,7 +89,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	@Override
 	public void delById(String id) {
 		openApplyDao.delById(id);
-
 	}
 
 	@Override
@@ -303,25 +300,35 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 
 	@Override
 	public Result<String> submitVerify(String id) {
+		
+		_LOGGER.info("manageOpenAplySubmitVerify begin id:" + id);
+		
 		Result<String> result = new Result<String>();
 		try {
 			OpenApplyEntity app = openApplyDao.findById(id);
-			app.setCheckState(1);
+			
+			app.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
+			
 			modifyById(app);
-
-			result.setSuccessMessage("");
+			
+			_LOGGER.info("manageOpenAplySubmitVerify success!");
+			
+			result.setSuccessMessage("提交审核成功!");
 		} catch (Exception e) {
 			_LOGGER.error("error happens when submit verify", e);
-
+			
 			result.setErrorMessage("");
-
 		}
 		return result;
 	}
 
 	@Override
 	public Result<String> addGroup1(HttpSession session, OpenApplyEntity app) {
+		
+		
+		
 		Result<String> result = new Result<String>();
+		
 		try {
 
 			Result<OpenApplyEntity> checkAppIsHave = checkAppIsHave(app);
@@ -331,10 +338,16 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 				String uuid = UUID.randomUUID().toString().replace("-", "");
 				app.setId(uuid);
 				app.setCreateDate(new Date());
-				app.setCheckState(2); // 后台系统添加服务分类默认审核通过
+				app.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS); // 后台系统添加服务分类默认审核通过
 				app.setUserId(user.getId());
 				app.setUserName(user.getUserName());
+				
+				_LOGGER.info("manageOpenAplySubmitVerify begin apply:" + JSON.toJSONString(app));
+				
 				addApp(app);
+				
+				_LOGGER.info("manageOpenAplySubmitVerify success!");
+				
 				result.setSuccessData(uuid);
 			} else {
 				// TODO
@@ -396,7 +409,11 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 
 	@Override
 	public Result<String> modifyGroup1(OpenApplyEntity app) {
+		
+		_LOGGER.info("manageOpenAplyModifyGroup1 begin apply:" + JSON.toJSONString(app));
+		
 		Result<String> result = new Result<String>();
+		
 		try {
 
 			OpenApplyEntity appAfter = openApplyDao.findById(app.getId());
@@ -409,6 +426,9 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 					appAfter.setApplyName(app.getApplyName().trim());
 					appAfter.setApplyKey(app.getApplyKey().trim());
 					modifyById(appAfter);
+					
+					_LOGGER.info("manageOpenAplyModifyGroup1 success!");
+					
 					result.setSuccessMessage("");
 				} else {
 					result.setErrorMessage("分组名称或分组key不可重复！", ErrorCodeNo.SYS010);
@@ -439,18 +459,30 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 
 	@Override
 	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem) {
+		
+		_LOGGER.info("manageOpenAplyBatchUpdate begin ids:" + JSON.toJSONString(ids) + ",checkState:" + checkState + "checkMem" + checkMem);
+		
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		try {
 			/* 审核失败返回 */
 			if (checkState == AuditConstants.OPEN_APPLY_CHECKED_FAILED) {
 				String message = openApplyDao.bathUpdateByid(ids, checkState, checkMem);
-				_LOGGER.info("bachUpdate message " + message + " count");
+				_LOGGER.info("manageOpenAplyBatchUpdate success,message " + message + " count");
 				result.setSuccessMessage("审核:" + message + "条");
 				return result;
 			}
 			List<OpenApplyEntity> list = openApplyDao.getListByids(ids);
+			if(list == null || list.size() == 0){
+				_LOGGER.info("manageOpenAplyBatchUpdate applyIds is not find! ids:" + JSON.toJSONString(ids));
+				result.setMessage("应用不存在!");
+				result.setErrorCode(ErrorCodeNo.SYS015);
+				return result;
+			}
+			
+			
 			SaveOrUpdateAppsInParameterEntity[] queryVO = new SaveOrUpdateAppsInParameterEntity[list.size()];
+			
 			for (int i = 0; i < list.size(); i++) {
 				SaveOrUpdateAppsInParameterEntity sue = new SaveOrUpdateAppsInParameterEntity();
 				sue.setAppName(list.get(i).getApplyName());
@@ -460,13 +492,14 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 				sue.setOwner(list.get(i).getEnterpriseName());
 				queryVO[i] = sue;
 			}
+			
 			/* 调用接口推送信息 */
-			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
-					.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
+			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
+			
 			/* 审核成功提交 */
 			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
 				String message = openApplyDao.bathUpdateByid(ids, checkState, checkMem);
-				_LOGGER.info("bachUpdate message " + message + " count");
+				_LOGGER.info("manageOpenAplyBatchUpdate message " + message + " count");
 				result.setSuccessMessage("成功审核:" + message + "条");
 			} else {
 				result.setErrorMessage("审核失败");
@@ -474,9 +507,11 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			}
 			return result;
 		} catch (Exception e) {
+			_LOGGER.error("manageOpenAplyBatchUpdate error,e:" + e.toString());
 			// TODO: handle exception
-			return result;
+			result.setErrorMessage("审核失败!");
 		}
+		return result;
 	}
 
 	@Override
@@ -511,8 +546,5 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			return result;
 		}
 	}
-
-
-
 
 }
