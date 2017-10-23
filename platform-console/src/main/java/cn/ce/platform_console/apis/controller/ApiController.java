@@ -23,6 +23,7 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.PageValidateUtil;
 import cn.ce.platform_service.util.SplitUtil;
 
 /**
@@ -109,7 +110,7 @@ public class ApiController {
 	 */
 	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
 	public Result<?> showApi(String apiId) {
-		
+		_LOGGER.info("显示当前api："+apiId);
 		return consoleApiService.showApi(apiId);
 	}
 
@@ -125,13 +126,10 @@ public class ApiController {
 			@RequestParam(required=false,defaultValue= "1") int currentPage, 
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
-		if(pageSize > 30){
-			pageSize = Constants.PAGE_MAX_SIZE; //最大超过三十
-		}
 		
-		return consoleApiService.showApiList(apiEntity,currentPage,pageSize);
+		return consoleApiService.showApiList(apiEntity, PageValidateUtil.checkCurrentPage(currentPage), 
+				PageValidateUtil.checkPageSize(pageSize));
 	}
-	
 	
 	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
 	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
@@ -152,13 +150,10 @@ public class ApiController {
 	@RequestMapping(value="/checkVersion",method=RequestMethod.GET,produces="application/json;charset=utf-8")
 	public Result<?> checkVersion(String apiId, String version){
 		
-		Result<String> result = new Result<String>();
 		if(StringUtils.isBlank(apiId)){
-			result.setMessage("apiId不能为空");	
-			return result;
+			return Result.errorResult("apiId不能为空", ErrorCodeNo.SYS005, null, null);
 		}if(StringUtils.isBlank(version)){
-			result.setMessage("version不能为空");
-			return result;
+			return Result.errorResult("version不能为空", ErrorCodeNo.SYS005, null, null);
 		}
 		
 		return consoleApiService.checkVersion(apiId,version);

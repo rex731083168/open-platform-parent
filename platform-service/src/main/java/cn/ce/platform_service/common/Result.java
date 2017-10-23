@@ -80,5 +80,31 @@ public class Result <T> {
 				+ message + ", errorCode=" + errorCode + "]";
 	}
 	
+	/**
+	 * @Title: errorResult
+	 * @Description: 快速拼装返回对象
+	 * @author: makangwei 
+	 * @date:   2017年10月20日 下午8:57:34 
+	 * @param : @param message消息
+	 * @param : @param errorCodeNo错误码，如果传入null则设置为SYS001
+	 * @param : @param data 泛型数据
+	 * @param : @param success or failed
+	 */
+	public static <T> Result<T> errorResult(String message, ErrorCodeNo errorCodeNo, T data, String status){
+		Result<T> result = new Result<T>();
+		result.setMessage(message);
+		result.setData(data);
+		if(errorCodeNo == null){
+			result.setErrorCode(ErrorCodeNo.SYS001);
+		}else{
+			result.setErrorCode(errorCodeNo);
+		}
+		if(Status.SUCCESS == status){
+			result.setStatus(Status.SUCCESS);
+		}else{
+			result.setStatus(Status.FAILED);
+		}
+		return result;
+	}
 	
 }

@@ -34,18 +34,17 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 	@Override
 	public User findUserByUsernameAndPwd(String userName, String password) {
 		Criteria c = new Criteria();
-		c.and("userName").is(userName);
-		c.and("password").is(password);
 		Criteria c1 = new Criteria();
-		c1.and("telNumber").is(userName);
+		c1.and("userName").is(userName);
 		c1.and("password").is(password);
-		
 		Criteria c2 = new Criteria();
-		c2.and("email").is(userName);
-		c2.and("password").is("password");
+		c2.and("telNumber").is(userName);
+		c2.and("password").is(password);
+		Criteria c3 = new Criteria();
+		c3.and("email").is(userName);
+		c3.and("password").is(password);
 		
-		
-		Query query = new Query().addCriteria(c.orOperator(c,c1,c));
+		Query query = new Query().addCriteria(c.orOperator(c1,c2,c3));
 		return super.findOne(query);
 	}
 

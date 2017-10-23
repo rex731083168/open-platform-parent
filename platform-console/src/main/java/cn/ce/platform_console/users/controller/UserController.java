@@ -59,16 +59,11 @@ public class UserController {
 		Result<String> result = new Result<String>();
 		
 		if(checkCode1 == null){
-			result.setErrorMessage("session数据不存在", ErrorCodeNo.SYS001);
+			result.setErrorMessage("session数据不存在", ErrorCodeNo.SYS019);
 			return result;
 		}
 		if(!user.getCheckCode().equals(checkCode1)){
 			result.setErrorMessage("验证码错误", ErrorCodeNo.SYS008);
-			return result;
-		}
-		Long codeTime = (Long)session.getAttribute(user.getTelNumber()+"TransTime");
-		if((codeTime+Constants.TEL_VALIDITY) < System.currentTimeMillis()){
-			result.setErrorMessage("验证码已过期",ErrorCodeNo.SYS011);
 			return result;
 		}
 		 
@@ -144,7 +139,7 @@ public class UserController {
 		String uuid1 = (String)session.getAttribute("uuid");
 		if(!uuid.equals(uuid1)){
 			Result<String> result = new Result<String>();
-			result.setSuccessMessage("uuid错误");
+			result.setErrorMessage("uuid错误",ErrorCodeNo.SYS016);
 			return result;
 		}
 		
