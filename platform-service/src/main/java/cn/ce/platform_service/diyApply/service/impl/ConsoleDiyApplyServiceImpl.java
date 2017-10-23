@@ -122,6 +122,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 					result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS015);
 					return result;
 				}
+				for (int i = 0; i < apps.getData().getAppList().size(); i++) {
+					if (apps.getData().getAppList().get(i).getAppName() != null
+							&& apps.getData().getAppList().get(i).getAppName().equals(entity.getApplyName())) {
+						result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
+						return result;
+					}
+				}
 
 				Integer findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
 				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
@@ -484,6 +491,5 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		}
 	}
-
 
 }
