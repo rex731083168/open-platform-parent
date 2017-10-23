@@ -30,19 +30,19 @@ public class LogInterceptor extends HandlerInterceptorAdapter{
 		
 		millLong = System.currentTimeMillis();
 		// TODO 是否将日志信息保存到数据库中
-		_LOGGER.info("_____________>request uri:"+request.getRequestURI());
-		_LOGGER.info("_____________>invoke time:"+new Date());
-		_LOGGER.info("_____________>request method:"+request.getMethod());
+		_LOGGER.debug("_____________>request uri:"+request.getRequestURI());
+		_LOGGER.debug("_____________>invoke time:"+new Date());
+		_LOGGER.debug("_____________>request method:"+request.getMethod());
 		
 		// TODO 如何从request中多次读取流信息
 		//_LOGGER.debug("_____________>request body:"+IOUtils.convertStreamToString(IOUtils.deepCopyInputStream(request.getInputStream())));
-		_LOGGER.info("_____________>request parameters:");
+		_LOGGER.debug("_____________>request parameters:");
 		Enumeration<String> enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();  
 			_LOGGER.info(paraName+": "+request.getParameter(paraName));  
 		}
-		_LOGGER.info("_____________>log interceptor finished");
+		_LOGGER.debug("_____________>log interceptor finished");
 		return true;
 	}
 

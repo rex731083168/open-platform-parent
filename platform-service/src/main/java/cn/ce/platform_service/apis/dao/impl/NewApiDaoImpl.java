@@ -67,14 +67,11 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		if(StringUtils.isNotBlank(entity.getUserId())){
 			c.and(DBFieldsConstants.APIS_USERID).is(entity.getUserId());
 		}
-		if(!StringUtils.isBlank(entity.getApiChName())){
-			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
-		}
 		if(null != entity.getCheckState()){
 			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(entity.getCheckState());
 		}
-		if(null != entity.getUserType()){
-			c.and(DBFieldsConstants.USER_USERTYPE).is(entity.getUserType());
+		if(!StringUtils.isBlank(entity.getApiChName())){
+			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		
