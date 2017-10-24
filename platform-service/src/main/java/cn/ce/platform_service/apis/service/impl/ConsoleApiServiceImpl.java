@@ -62,12 +62,12 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		Result<String> result = new Result<String>();
 		
 		
-		if(StringUtils.isBlank(apiEntity.getAppCode())){
-			result.setErrorMessage("appCode不能为空", ErrorCodeNo.SYS005);
-			return result;
-		}else if(StringUtils.isBlank(apiEntity.getApiEnName())){
-			result.setErrorMessage("apiEnName不能为空", ErrorCodeNo.SYS005);
-		}
+//		if(StringUtils.isBlank(apiEntity.getAppCode())){
+//			result.setErrorMessage("appCode不能为空", ErrorCodeNo.SYS005);
+//			return result;
+//		}else if(StringUtils.isBlank(apiEntity.getApiEnName())){
+//			result.setErrorMessage("apiEnName不能为空", ErrorCodeNo.SYS005);
+//		}
 		
 		
 		//设置默认值，否则会后面审核api会报错
@@ -83,16 +83,16 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		
 		
-		Map<String,Object> whereMap = new HashMap<>();
-		whereMap.put(DBFieldsConstants.APIS_OPENAPPLY_ID, apiEntity.getAppCode());
-		whereMap.put(DBFieldsConstants.APIS_APIENNAME,apiEntity.getApiEnName());
-		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
-		if(null != findOneByFields){
-			_LOGGER.info("appCode和apiEnName重复出现");
-			result.setMessage("当前开放应用下appEnName已存在,请检查后重试!");
-			result.setErrorCode(ErrorCodeNo.SYS010);
-			return result;
-		}
+//		Map<String,Object> whereMap = new HashMap<>();
+//		whereMap.put(DBFieldsConstants.APIS_OPENAPPLY_ID, apiEntity.getAppCode());
+//		whereMap.put(DBFieldsConstants.APIS_APIENNAME,apiEntity.getApiEnName());
+//		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
+//		if(null != findOneByFields){
+//			_LOGGER.info("appCode和apiEnName重复出现");
+//			result.setMessage("当前开放应用下appEnName已存在,请检查后重试!");
+//			result.setErrorCode(ErrorCodeNo.SYS010);
+//			return result;
+//		}
 		
 		if(StringUtils.isBlank(apiEntity.getApiVersion().getVersion())){
 			result.setErrorMessage("版本名称不能为空", ErrorCodeNo.SYS005);
@@ -213,12 +213,12 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +"/"+api.getAppCode()+"/"+api.getApiEnName()+"/"+api.getApiVersion().getVersion()+"/");
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
 		}
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
-		jsonObject.put("listenPath", "/"+api.getAppCode()+"/"+api.getApiEnName()+"/");
+		jsonObject.put("listenPath", api.getListenPath());
 		result.setSuccessData(jsonObject);
 		return result;
 	}
@@ -383,5 +383,19 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		
 		return true;
+	}
+
+
+	@Override
+	public Result<?> checkListenPath(String listenPath) {
+		
+		List<ApiEntity> list = newApiDao.findByField(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
+		Result<String> result = new Result<String>();
+		if(list == null || list.size() < 1){
+			result.setSuccessMessage("当前监听路径可用");
+		}else{
+			result.setErrorMessage("当前监听路径不可用",ErrorCodeNo.SYS009);
+		}
+		return result;
 	}
 }

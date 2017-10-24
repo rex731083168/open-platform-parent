@@ -20,6 +20,7 @@ public class DBFieldsConstants {
 	public static final String APIS_CREATE_TIME = "createTime";
 	public static final String APIS_APP_CODE = "appCode";
 	public static final String APIS_APPID = "appId";
+	public static final String APIS_LISTEN_PATH = "listenPath";
 	
 	/*************** user相关字段 **********************/
 	public static final String USER_USERTYPE = "userType";
@@ -67,5 +68,6 @@ public class DBFieldsConstants {
 	public static final String GUIDE_CREATE_USERNAME= "creatUserName";
 	public static final String GUIDE_APPLYID = "applyId";
 	public static final String GUIDE_CHECKSTATE = "checkState";
+
 	
 }

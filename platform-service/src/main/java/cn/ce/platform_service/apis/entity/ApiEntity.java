@@ -57,6 +57,9 @@ public class ApiEntity implements Serializable {
 	@Field("endPoint")
 	private String endPoint;
 	
+	@Field("listenPath")
+	private String listenPath;
+	
 	/** http方法GET或POST */
 	@Field("httpMethod")
 	private String httpMethod;
@@ -339,6 +342,16 @@ public class ApiEntity implements Serializable {
 
 	public void setAppCode(String appCode) {
 		this.appCode = appCode;
+	}
+	
+	
+
+	public String getListenPath() {
+		return listenPath;
+	}
+
+	public void setListenPath(String listenPath) {
+		this.listenPath = listenPath;
 	}
 
 	@Override

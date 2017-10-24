@@ -42,4 +42,6 @@ public interface IConsoleApiService {
 			Integer quotaRenewRate,
 			List<String> openApplyIds);
 
+	Result<?> checkListenPath(String listenPath);
+
 }

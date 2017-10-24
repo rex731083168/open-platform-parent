@@ -68,6 +68,22 @@ public class ApiController {
 		return consoleApiService.publishApi(user, apiEntity);
 	}
 	
+	@RequestMapping(value="/checkListenPath", method= RequestMethod.GET)
+	public Result<?> checkListenPath(String listenPath){
+		
+		if(StringUtils.isBlank(listenPath)){
+			return Result.errorResult("listenPath不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
+		
+		if(!listenPath.startsWith("/")){
+			listenPath = "/"+listenPath;
+		}
+		if(!listenPath.endsWith("/")){
+			listenPath = listenPath+"/";
+		}
+		return consoleApiService.checkListenPath(listenPath);
+	}
+	
 	/**
 	 * 
 	 * @Title: submitApi
