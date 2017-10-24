@@ -55,12 +55,12 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			result.setErrorMessage("当前邮箱已经被注册", ErrorCodeNo.SYS009);
 			return result;
 		}
-		//校验手机号
-		User user3 = newUserDao.findUserByTelNumber(user.getTelNumber());
-		if(user3 != null){
-			result.setErrorMessage("当前手机号已经被使用", ErrorCodeNo.SYS009);
-			return result;
-		}
+//		//校验手机号
+//		User user3 = newUserDao.findUserByTelNumber(user.getTelNumber());
+//		if(user3 != null){
+//			result.setErrorMessage("当前手机号已经被使用", ErrorCodeNo.SYS009);
+//			return result;
+//		}
 		
 		try {
 			// TODO appSecret使用Util生成的，这里有什么作用？
@@ -69,7 +69,7 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			user.setState(1);
 			user.setRegTime(new Date());
 			user.setUserType(AuditConstants.USER_DEVELOPER); // TODO 默认设置为普通用户
-			user.setCheckState(AuditConstants.USER_STATE_ON);//默认启用
+			user.setCheckState(AuditConstants.USER__UNCHECKED);//默认启用
 			user.setAppSecret(Util.getRandomStrs(Constants.SECRET_LENGTH));
 			newUserDao.save(user);
 			

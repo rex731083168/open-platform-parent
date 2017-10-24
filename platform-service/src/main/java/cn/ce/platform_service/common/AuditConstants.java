@@ -19,6 +19,9 @@ public class AuditConstants {
 	public static final int USER__CHECKED_SUCCESS = 2; // 审核成功
 	public static final int USER__CHECKED_FAILED = 3; // 审核失败
 	
+	public static final int USER_STATE_ENABLE = 1;
+	public static final int USER_STATE_DISABLE = 0;
+	
 	public static final int USER_STATE_OFF = 0; //禁用
 	
 	public static final int USER_STATE_ON = 1; //启用

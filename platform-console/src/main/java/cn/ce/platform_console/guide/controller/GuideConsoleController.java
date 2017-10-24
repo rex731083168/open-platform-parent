@@ -29,6 +29,7 @@ import io.swagger.annotations.ApiOperation;
  * @version V1.0
  * @author yang.yu@300.cn
  * @date dat2017年10月12日 time下午8:06:46
+
  *
  **/
 @RestController
@@ -51,11 +52,19 @@ public class GuideConsoleController {
 		return iConsoleGuideService.add(session, g);
 	}
 
-	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateGuide", method = RequestMethod.PUT)
 	@ApiOperation("修改指南")
-	public Result<?> guideUpdate(@RequestBody GuideEntity g, @PathVariable("gid") String gid) {
-		g.setId(gid);
-		return iConsoleGuideService.update(g);
+	public Result<?> guideUpdate(@RequestBody GuideEntity guideEntity) {
+		
+		Result<String> result = new Result<>();
+		
+		if(StringUtils.isBlank(guideEntity.getId())){
+			result.setMessage("指南不存在!");
+			result.setErrorCode(ErrorCodeNo.SYS015);
+			return result;
+		}
+		
+		return iConsoleGuideService.update(guideEntity);
 	}
 
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
