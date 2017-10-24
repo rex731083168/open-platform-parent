@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -56,15 +57,21 @@ public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
 //     //logger.info("requestUri:"+requestUri);    
 //     //logger.info("contextPath:"+contextPath);  
 //     //logger.info("url:"+url);    
+		
+		
+		//TODO 后期修改
+		if(StringUtils.contains(request.getRequestURI(), "/route/")){
+			return true;
+		}
      
-    AdminEntity admin =  (AdminEntity)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
-     if(admin != null){
-     	return true;
-     }
-     Result<String> result = new Result<>();
-     result.setErrorCode(ErrorCodeNo.SYS003);
-     result.setErrorMessage("用户未登录");
-     this.returnJson(response, JSON.toJSONString(result));
+		AdminEntity admin = (AdminEntity) request.getSession().getAttribute(Constants.SES_LOGIN_USER);
+		if (admin != null) {
+			return true;
+		}
+		Result<String> result = new Result<>();
+		result.setErrorCode(ErrorCodeNo.SYS003);
+		result.setErrorMessage("用户未登录");
+		this.returnJson(response, JSON.toJSONString(result));
 		return false;
      
 	}

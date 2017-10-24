@@ -37,7 +37,8 @@
    			<!-- swagger api json -->
 			<mvc:exclude-mapping path="/v2/api-docs"/> 
 			<!-- swagger ui page -->
-			<mvc:exclude-mapping path="/swagger/index.html"/> 
+			<mvc:exclude-mapping path="/swagger/index.html"/>
+			<mvc:exclude-mapping path="/route/*"/> 
 			<bean class="cn.ce.platform_service.interceptors.AdminLoginInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
