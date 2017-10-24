@@ -61,7 +61,7 @@ public class ExceptionInterceptor implements HandlerInterceptor{
 		//异常处理
 		if(null != ex){
 			
-			_LOGGER.error("error happens in location "+request.getRequestURI()); //这里不打印日志堆栈是因为springmvc还会打印一次
+			_LOGGER.error("error happens in location "+request.getRequestURI() + " e:" + ex.toString()); //这里不打印日志堆栈是因为springmvc还会打印一次
 			
 			try {
 				Result<String> result = new Result<String>();
