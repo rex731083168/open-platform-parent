@@ -31,7 +31,8 @@ public class DBFieldsConstants {
 	public static final String USER_CHECKSTATE = "checkState";
 	public static final String USER_STATE = "state";
 	public static final String USER_REGTIME = "regTime";
-
+	public static final String USER_ID_CARD = "idCard";
+	
 	/*************** 网关相关字段 **********************/
 	public static final String GW_API_NAME = "name";
 	public static final String GW_API_ID = "api_id";
@@ -68,6 +69,7 @@ public class DBFieldsConstants {
 	public static final String GUIDE_CREATE_USERNAME= "creatUserName";
 	public static final String GUIDE_APPLYID = "applyId";
 	public static final String GUIDE_CHECKSTATE = "checkState";
+
 
 	
 }

@@ -105,8 +105,9 @@ public class ManageUserServiceImpl implements IManageUserService{
 				result.setMessage("用户不存在!");
 				result.setErrorCode(ErrorCodeNo.SYS015);
 				return result;
+				
 			}
-			if(AuditConstants.USER_STATE_OFF == state || AuditConstants.USER_STATE_ON == state){
+			if(AuditConstants.USER_STATE_OFF != state && AuditConstants.USER_STATE_ON != state){
 				result.setErrorMessage("状态不可用", ErrorCodeNo.SYS012);
 				return result;
 			}

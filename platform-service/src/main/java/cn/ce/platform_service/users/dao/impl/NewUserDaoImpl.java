@@ -61,6 +61,19 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 		query.addCriteria(Criteria.where("userName").is(userName));
 		return super.findOne(query);
 	}
+	
+	public User findUserByName(String name){
+		Criteria c = new Criteria();
+		Criteria c1 = new Criteria();
+		c1.and("userName").is(name);
+		Criteria c2 = new Criteria();
+		c2.and("telNumber").is(name);
+		Criteria c3 = new Criteria();
+		c3.and("email").is(name);
+		
+		Query query = new Query().addCriteria(c.orOperator(c1,c2,c3));
+		return super.findOne(query);
+	}
 
 	@Override
 	public User findUserByTelNumber(String telNumber) {
@@ -107,4 +120,9 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
         return super.findPage(new Page<User>(currentPage, 0,pageSize),query);
 	}
 
+	@Override
+	public User findUserByIdCard(String idCard) {
+		Query query = new Query(Criteria.where(DBFieldsConstants.USER_ID_CARD).is(idCard));
+		return super.findOne(query);
+	}
 }
