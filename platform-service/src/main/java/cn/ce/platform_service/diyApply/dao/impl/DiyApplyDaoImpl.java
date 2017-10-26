@@ -104,10 +104,12 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 	}
 
 	@Override
-	public Page<DiyApplyEntity> findApplyList(String applyName, String productName, Integer checkState,
+	public Page<DiyApplyEntity> findApplyList(String applyName, String productName, Integer checkState, String userId,
 			Page<DiyApplyEntity> page) {
 
 		Criteria c = new Criteria();
+		
+		c.and(DBFieldsConstants.APIS_USERID).is(userId);
 		if (StringUtils.isNotBlank(applyName)) {
 			c.and(DBFieldsConstants.DIY_APPLY_APPLYNAME).regex(applyName);
 		}

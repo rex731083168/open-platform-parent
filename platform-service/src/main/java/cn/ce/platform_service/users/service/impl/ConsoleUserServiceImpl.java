@@ -95,6 +95,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			return result;
 		}
 		
+		// 判断当前的用户状态
+		
 		user.setEnterpriseName(enterpriseName);
 		user.setIdCard(idCard);
 		user.setUserRealName(userRealName);
