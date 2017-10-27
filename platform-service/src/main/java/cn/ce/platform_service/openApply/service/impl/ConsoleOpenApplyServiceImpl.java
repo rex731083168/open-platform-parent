@@ -24,6 +24,9 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.bean.ConditionEnum;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
+import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
 import cn.ce.platform_service.openApply.dao.INewOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
@@ -48,11 +51,14 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	@Resource
 	private INewOpenApplyDao newOpenApplyDao;
 
+	@Resource
+	private IPlublicDiyApplyService plublicDiyApplyService;
+
 	@Override
 	public Result<?> addApply(HttpSession session, OpenApplyEntity apply) {
 
 		_LOGGER.info("addConsoleApply begin apply:" + JSON.toJSONString(apply));
-		
+
 		Result<String> result = new Result<String>();
 
 		try {
@@ -68,11 +74,12 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 			tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
 
-			if (tempEntityList != null && tempEntityList.size() > 0) {
+			if (tempEntityList != null && tempEntityList.size() > 0
+					|| this.getRepatDiyApplyName(apply.getApplyName(), session)) {
 				result.setErrorMessage("应用名称已存在!", ErrorCodeNo.SYS009);
 				return result;
 			}
-			
+
 			whereEntity.clear();
 
 			if (StringUtils.isNotBlank(apply.getApplyKey())) {
@@ -91,11 +98,11 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 			if (user.getUserType() == AuditConstants.USER_ADMINISTRATOR) {
 				apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS); // 后台系统添加服务分类默认审核通过
 			} else {
-				if(apply.getCheckState() == null || apply.getCheckState() == 0){
+				if (apply.getCheckState() == null || apply.getCheckState() == 0) {
 					apply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED); // 提供者添加服务分类需要提交审核
-				}else if(apply.getCheckState() == 1){
+				} else if (apply.getCheckState() == 1) {
 					apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
-				}else{
+				} else {
 					result.setErrorMessage("当前审核状态不可用", ErrorCodeNo.SYS012);
 					return result;
 				}
@@ -111,9 +118,9 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 				return result;
 			}
 			newOpenApplyDao.save(apply);
-			
+
 			_LOGGER.info("addApply end general applyId:" + apply.getId());
-			
+
 			result.setSuccessMessage("保存成功!");
 		} catch (Exception e) {
 			_LOGGER.error("添加应用时出现错误,e:" + e.toString());
@@ -127,7 +134,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	public Result<?> modifyApply(OpenApplyEntity openApply) {
 
 		_LOGGER.info("modifyConsoleOpenApply begin apply:" + JSON.toJSONString(openApply));
-		
+
 		Result<String> result = new Result<String>();
 
 		try {
@@ -173,11 +180,11 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 				}
 
 				newOpenApplyDao.save(openApply);
-				
+
 				_LOGGER.info("modifyConsoleOpenApply end success!");
-				
+
 				result.setSuccessMessage("保存成功!");
-				
+
 			}
 		} catch (Exception e) {
 			_LOGGER.error("修改应用时出现错误,e:" + e.toString());
@@ -230,16 +237,16 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	public Result<?> submitVerify(String id, Integer checkState) {
 
 		_LOGGER.info("consoleOpenApplySubmitVerify begin ids:" + id + ",checkState:" + checkState);
-		
+
 		Result<Page<OpenApplyEntity>> result = new Result<>();
 
 		List<String> asList = SplitUtil.splitStringWithComma(id);
 
 		try {
 			newOpenApplyDao.batchSaveApply(asList, checkState);
-			
+
 			_LOGGER.info("consoleOpenApplySubmitVerify success!");
-			
+
 			result.setSuccessMessage("保存成功!");
 		} catch (Exception e) {
 			_LOGGER.error("审核应用时出现错误,e:" + e.toString());
@@ -285,7 +292,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 	@Override
 	public Result<?> checkApplyName(String applyName) {
-		
+
 		Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
 
 		List<OpenApplyEntity> tempEntityList;
@@ -301,5 +308,25 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 			return Result.errorResult("当前应用名称已经存在！", ErrorCodeNo.SYS009, null, Status.FAILED);
 		}
 		return Result.errorResult("可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+	}
+
+	public boolean getRepatDiyApplyName(String applyName, HttpSession session) {
+		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+
+		boolean falult = false;
+
+		Result<Apps> result = this.plublicDiyApplyService.findPagedApps(user.getEnterpriseName(), applyName, 1, 50);
+
+		List list = result.getData().getData().getList();
+		AppList applist = new AppList();
+		while (list.iterator().hasNext()) {
+			applist = (AppList) list.iterator().next();
+			if (applist.getAppName().equals(applyName)) {
+				falult = true;
+				return falult;
+			}
+		}
+		return falult;
+
 	}
 }
