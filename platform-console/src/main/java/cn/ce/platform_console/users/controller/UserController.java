@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import io.swagger.annotations.Api;
@@ -73,13 +74,25 @@ public class UserController {
 	@RequestMapping(value="/authenticate", method=RequestMethod.POST)
 	@ApiOperation("用户登陆后认证信息")
 	public Result<?> userAuthenticate(
+			HttpSession session,
 			@RequestParam String userId,
 			@RequestParam String enterpriseName, //企业名称 
 			@RequestParam String idCard, //用户身份证号码
 			@RequestParam String userRealName //用户真实姓名
 			){
 			
-		return consoleUserService.authenticate(userId,enterpriseName,idCard,userRealName);
+		return consoleUserService.authenticate(userId,enterpriseName,idCard,userRealName,session);
+	}
+	
+	@RequestMapping(value="/checkIdCard",method=RequestMethod.GET)
+	@ApiOperation("校验身份证唯一性")
+	public Result<?> checkIdCard(String idCard){
+		
+		if(StringUtils.isBlank(idCard)){
+			return Result.errorResult("idCard不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
+		
+		return consoleUserService.checkIdCard(idCard);
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)

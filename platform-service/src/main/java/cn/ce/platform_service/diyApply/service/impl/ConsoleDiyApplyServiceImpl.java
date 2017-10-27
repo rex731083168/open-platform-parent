@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -316,9 +315,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page) {
 		Result<Page<DiyApplyEntity>> result = new Result<>();
 		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(), entity.getProductName(),
-				entity.getCheckState(), page);
-		// Page<DiyApplyEntity> findPageByEntity =
-		// diyApplyDao.findPageByEntity(generalApplyQuery(entity, null), page);
+				entity.getCheckState(), entity.getUserId(), page);
+		
 		result.setSuccessData(diyApplyPage);
 		return result;
 	}

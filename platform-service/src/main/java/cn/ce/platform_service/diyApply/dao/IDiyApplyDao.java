@@ -70,8 +70,9 @@ public interface IDiyApplyDao {
 	 * @Title: findApplyList
 	 * @Description: 根据部分参数查询定制应用
 	 * @author: makangwei 
+	 * @param userId 
 	 * @date:   2017年10月19日 上午10:36:35 
 	 */
 	Page<DiyApplyEntity> findApplyList(String applyName, String productName, Integer checkState,
-			Page<DiyApplyEntity> page);
+			String userId, Page<DiyApplyEntity> page);
 }

@@ -15,6 +15,7 @@ import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.mail.MailInfo;
 import cn.ce.platform_service.common.mail.MailUtil;
 import cn.ce.platform_service.users.dao.INewUserDao;
@@ -85,7 +86,7 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 
 	@Override
-	public Result<?> authenticate(String userId, String enterpriseName, String idCard, String userRealName) {
+	public Result<?> authenticate(String userId, String enterpriseName, String idCard, String userRealName, HttpSession session) {
 		Result<String> result = new Result<String>();
 		User user = newUserDao.findUserById(userId);
 		
@@ -93,6 +94,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			result.setErrorMessage("当前用户不存在", ErrorCodeNo.SYS006);
 			return result;
 		}
+		
+		// 判断当前的用户状态
 		
 		user.setEnterpriseName(enterpriseName);
 		user.setIdCard(idCard);
@@ -107,6 +110,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		
 		result.setSuccessMessage("保存成功!");
 		
+		session.setAttribute(Constants.SES_LOGIN_USER, user);
+		
 		return result;
 	}
 	
@@ -116,10 +121,18 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 		Result<User> result = new Result<User>();
 		
-		User user = newUserDao.findUserByUsernameAndPwd(userName, password);
+		User user = newUserDao.findUserByName(userName);
 		
 		if (user == null) {
-			result.setErrorMessage("用户名或者密码错误", ErrorCodeNo.SYS008);
+			result.setErrorMessage("您输入的账号不存在", ErrorCodeNo.SYS020);
+			return result;
+		}else if(!password.equals(user.getPassword())){
+			result.setErrorMessage("密码错误", ErrorCodeNo.SYS021);
+			return result;
+		}
+		
+		if(user.getState() == 0){
+			result.setErrorMessage("当前账号已经被禁用", ErrorCodeNo.SYS023);
 			return result;
 		}
 		
@@ -274,6 +287,16 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	@Override
 	public User findUserById(String userId) {
 		return newUserDao.findUserById(userId);
+	}
+
+
+	@Override
+	public Result<?> checkIdCard(String idCard) {
+		User user = newUserDao.findUserByIdCard(idCard);
+		if(user != null){
+			return Result.errorResult("当前身份证号码已经被注册", ErrorCodeNo.SYS009, null, Status.FAILED);
+		}
+		return Result.errorResult("当前身份证号可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
 	}
 	
 }
