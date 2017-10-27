@@ -75,7 +75,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 			tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
 
 			if (tempEntityList != null && tempEntityList.size() > 0
-					|| this.getRepatDiyApplyName(apply.getApplyName(), session)) {
+					|| this.getRepatDiyApplyName(apply.getApplyName())) {
 				result.setErrorMessage("应用名称已存在!", ErrorCodeNo.SYS009);
 				return result;
 			}
@@ -304,18 +304,19 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 		tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
 
-		if (tempEntityList != null && tempEntityList.size() > 0) {
+		if (tempEntityList != null && tempEntityList.size() > 0 || this.getRepatDiyApplyName(applyName)) {
 			return Result.errorResult("当前应用名称已经存在！", ErrorCodeNo.SYS009, null, Status.FAILED);
 		}
+		
+		
 		return Result.errorResult("可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
 	}
 
-	public boolean getRepatDiyApplyName(String applyName, HttpSession session) {
-		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+	public boolean getRepatDiyApplyName(String applyName) {
 
 		boolean falult = false;
 
-		Result<Apps> result = this.plublicDiyApplyService.findPagedApps(user.getEnterpriseName(), applyName, 1, 50);
+		Result<Apps> result = this.plublicDiyApplyService.findPagedApps("", applyName, 1, 50);
 
 		List list = result.getData().getData().getList();
 		AppList applist = new AppList();
