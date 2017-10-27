@@ -69,7 +69,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	private IPlublicDiyApplyService plublicDiyApplyService;
 
 	@Override
-	public Result<String> saveApply(DiyApplyEntity entity) {
+	public Result<?> saveApply(DiyApplyEntity entity) {
 		Result<String> result = new Result<>();
 
 		// 构建查询对象
@@ -114,11 +114,14 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			try {
 				_LOGGER.info("get message from interface satar");
 				apps = plublicDiyApplyService.findTenantAppsByTenantKey(key).getData(); // 接入产品中心获取产品信息和开放应用信息
+				if(apps == null || apps.getStatus() != 200){
+					return Result.errorResult("产品码错误", ErrorCodeNo.SYS024, null, Status.FAILED);
+				}
 				_LOGGER.info("get message from interface states " + apps.getStatus() + "");
 
 				if (apps.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE
 						|| apps.getData().getTenant() == null) {
-					result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS015);
+					result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS024);
 					return result;
 				}
 				for (int i = 0; i < apps.getData().getAppList().size(); i++) {
@@ -133,13 +136,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
 				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
 			} catch (Exception e) {
-				// TODO: handle exception
 				_LOGGER.error("get messaget from url faile resaon " + e.getMessage() + "");
 			}
 			if (StringUtils.isNotBlank(apps.getData().getTenant().getProductInstance().getBossProductInstance())) {
 				entity.setBossProductInstance(apps.getData().getTenant().getProductInstance().getBossProductInstance());
 			} else {
-				result.setMessage("该产品为旧版产品,无法发布菜单");
+				result.setErrorMessage("该产品为旧版产品,无法发布菜单",ErrorCodeNo.SYS025);
+				return result;
 			}
 			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);

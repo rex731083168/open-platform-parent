@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
@@ -80,6 +81,7 @@ public class GatewayApiServiceImpl implements IGatewayApiService{
 			Map<String, List<String>> apiInfos) {//键是一组versionId相同版本不同的api的versionId，值是所有的version名称
 		
 		JSONObject policyJson = new JSONObject();
+		policyJson.put(DBFieldsConstants.GW_POLICY_ORG_ID, AuditConstants.GATEWAT_DEFAULT);
 		policyJson.put(DBFieldsConstants.GW_POLICY_ID, policyId);
 		policyJson.put(DBFieldsConstants.GW_POLICY_RATE, rate);
 		policyJson.put(DBFieldsConstants.GW_POLICY_PER, per);

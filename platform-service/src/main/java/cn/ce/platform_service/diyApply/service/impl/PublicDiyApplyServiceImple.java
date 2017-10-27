@@ -53,12 +53,12 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 		String url = PropertiesUtil.getInstance().getValue("findPagedApps");
 		String o$ = Pattern.quote("${o}");// ${o} 所属企业 CE 为中企动力 不填为所有
 		String n$ = Pattern.quote("${n}");// ${n} 名称 模糊搜索  不填为所有
-		String p$ = Pattern.quote("${p}");// ${p} 当前第几页      
+		String p$ = Pattern.quote("${p}");// ${p} 当前第几页
 		String z$ = Pattern.quote("${z}");// ${z} 每页显示多少条
 		if (StringUtils.isBlank(owner)) {
 			owner = "";
 		}
-		if (StringUtils.isBlank(name)) {
+		if (StringUtils.isBlank(name)) {	
 			name = "";
 		}
 
@@ -108,19 +108,19 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 			/* get请求方法 */
 			TenantApps applyproduct = (TenantApps) HttpClientUtil.specialTenantRetrunObject(replacedurl);
 
-			if (applyproduct.getStatus() == 200) {
+			if (applyproduct.getStatus() != null && applyproduct.getStatus().equals(200)) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
 				return result;
 			} else {
 				_LOGGER.error(
 						"findTenantAppsByTenantKey data http getfaile return code :" + applyproduct.getMsg() + " ");
-				result.setErrorCode(ErrorCodeNo.SYS006);
+				result.setErrorCode(ErrorCodeNo.SYS024);
 				return result;
 			}
 		} catch (Exception e) {
 			_LOGGER.error("findTenantAppsByTenantKey http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
+			result.setErrorCode(ErrorCodeNo.SYS024);
 			result.setErrorMessage("请求失败");
 			return result;
 		}

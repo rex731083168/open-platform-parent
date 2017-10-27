@@ -184,15 +184,15 @@ public class ApiController {
 	}
 	
 	@RequestMapping(value="/checkVersion",method=RequestMethod.GET,produces="application/json;charset=utf-8")
-	public Result<?> checkVersion(String apiId, String version){
+	public Result<?> checkVersion(String versionId, String version){
 		
-		if(StringUtils.isBlank(apiId)){
+		if(StringUtils.isBlank(versionId)){
 			return Result.errorResult("apiId不能为空", ErrorCodeNo.SYS005, null, null);
 		}if(StringUtils.isBlank(version)){
 			return Result.errorResult("version不能为空", ErrorCodeNo.SYS005, null, null);
 		}
 		
-		return consoleApiService.checkVersion(apiId,version);
+		return consoleApiService.checkVersion(versionId,version);
 	}
 		
 }

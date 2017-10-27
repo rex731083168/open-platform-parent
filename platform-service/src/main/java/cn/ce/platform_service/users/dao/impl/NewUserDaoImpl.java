@@ -121,8 +121,11 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 	}
 
 	@Override
-	public User findUserByIdCard(String idCard) {
-		Query query = new Query(Criteria.where(DBFieldsConstants.USER_ID_CARD).is(idCard));
+	public User findUserByIdCard(String idCard, Integer checkState) {
+		Criteria c = new Criteria();
+		c.and(DBFieldsConstants.USER_ID_CARD).is(idCard);
+		c.and(DBFieldsConstants.USER_CHECKSTATE).is(checkState);
+		Query query = new Query(c);
 		return super.findOne(query);
 	}
 }

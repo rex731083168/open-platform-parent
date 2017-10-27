@@ -535,8 +535,13 @@ public class HttpClientUtil {
 
 			String msg = jsonobject.get("msg").toString();
 			String status = jsonobject.get("status").toString();
-
-			JSONObject jtenant = (JSONObject) jdata.get("tenant");
+			JSONObject jtenant = null;
+			try{
+				jtenant = (JSONObject) jdata.get("tenant");
+			}catch(Exception e){
+				logger.info("***********产品码错误,拿不到数据************");
+				return taps;
+			}
 			JSONObject jproductInstance = (JSONObject) jtenant.get("productInstance");
 
 			JSONArray instancearry = (JSONArray) jtenant.get("instanceList");

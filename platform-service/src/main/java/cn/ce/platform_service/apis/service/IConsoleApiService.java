@@ -28,7 +28,7 @@ public interface IConsoleApiService {
 
 	Result<?> checkApiChName(String apiChName, String openApplyId);
 
-	Result<?> checkVersion(String apiId, String version);
+	Result<?> checkVersion(String versionId, String version);
 	
 //	Result<?> checkListenPath(String listenPath); 
 

@@ -54,6 +54,7 @@ public class AuditConstants {
 	/********** 网关相关状态 **********/
 	public static final boolean GATEWAY_API_VERSIONED_TRUE = true; //开启多版本
 	public static final boolean GATEWAY_API_VERSIONED_FALSES = false; //关闭多版本
+	public static final String GATEWAT_DEFAULT = "default";
 	
 	/********** 租户接口状态状态 **********/
 	public static final int INTERFACE_RETURNSATAS_SUCCESS=200;

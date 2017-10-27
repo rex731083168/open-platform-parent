@@ -95,7 +95,7 @@ public class DiyApplyController {
 
 	@RequestMapping(value = "/saveApply", method = RequestMethod.POST)
 	@ApiOperation("新增应用")
-	public Result<String> saveApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
+	public Result<?> saveApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
 		Result<String> result = new Result<>();
 
@@ -108,9 +108,8 @@ public class DiyApplyController {
 
 		apply.setUser(user);
 
-		result = consoleDiyApplyService.saveApply(apply);
+		return consoleDiyApplyService.saveApply(apply);
 
-		return result;
 	}
 
 	@RequestMapping(value = "/updateApply", method = RequestMethod.POST)

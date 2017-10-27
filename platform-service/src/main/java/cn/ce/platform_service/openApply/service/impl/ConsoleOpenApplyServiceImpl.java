@@ -20,6 +20,7 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.bean.ConditionEnum;
 import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
@@ -71,7 +72,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 				result.setErrorMessage("应用名称已存在!", ErrorCodeNo.SYS009);
 				return result;
 			}
-
+			
 			whereEntity.clear();
 
 			if (StringUtils.isNotBlank(apply.getApplyKey())) {
@@ -282,4 +283,23 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		return whereEntity;
 	}
 
+	@Override
+	public Result<?> checkApplyName(String applyName) {
+		
+		Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
+
+		List<OpenApplyEntity> tempEntityList;
+
+		if (StringUtils.isNotBlank(applyName)) {
+			whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME,
+					new MongoDBWhereEntity(applyName, ConditionEnum.EQ));
+		}
+
+		tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
+
+		if (tempEntityList != null && tempEntityList.size() > 0) {
+			return Result.errorResult("当前应用名称已经存在！", ErrorCodeNo.SYS009, null, Status.FAILED);
+		}
+		return Result.errorResult("可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+	}
 }

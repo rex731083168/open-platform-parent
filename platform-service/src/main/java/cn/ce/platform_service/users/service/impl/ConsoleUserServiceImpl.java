@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,16 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		}
 		
 		// 判断当前的用户状态
+		if(AuditConstants.USER__CHECKED_FAILED != user.getCheckState() &&
+				AuditConstants.USER__UNCHECKED != user.getCheckState()){
+			return Result.errorResult("状态不可用", ErrorCodeNo.SYS012, null, Status.FAILED);
+		}
+		
+		//判断当前身份证号码是否已经被占用
+		User userTemp = newUserDao.findUserByIdCard(idCard,AuditConstants.USER__CHECKED_SUCCESS);
+		if(StringUtils.isBlank(idCard) || userTemp != null){
+			return Result.errorResult("当前身份证号已经存在", ErrorCodeNo.SYS009, null, Status.FAILED);
+		}
 		
 		user.setEnterpriseName(enterpriseName);
 		user.setIdCard(idCard);
@@ -292,7 +303,9 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	@Override
 	public Result<?> checkIdCard(String idCard) {
-		User user = newUserDao.findUserByIdCard(idCard);
+		//根据chenckState来查询。只能检查checkState为2的身份证信息
+		User user = newUserDao.findUserByIdCard(idCard,AuditConstants.USER__CHECKED_SUCCESS);
+		
 		if(user != null){
 			return Result.errorResult("当前身份证号码已经被注册", ErrorCodeNo.SYS009, null, Status.FAILED);
 		}

@@ -31,7 +31,7 @@ public interface INewUserDao{
 	Page<User> getUserList(Integer userType, String userName, String email, String telNumber, String enterpriseName,
 			Integer checkState, Integer state, int currentPage, int pageSize);
 
-	User findUserByIdCard(String idCard);
+	User findUserByIdCard(String idCard, Integer checkState);
 	
 
 }

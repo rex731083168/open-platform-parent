@@ -145,4 +145,13 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		return super.findPage(page, query);
 	}
 
+	@Override
+	public ApiEntity findByVersion(String versionId, String version) {
+		Criteria c = new Criteria();
+		c.and(DBFieldsConstants.APIS_APIVERSION_VERSIONID).in(versionId);
+		c.and(DBFieldsConstants.APIS_APIVERSION_VERSION).is(version);
+		Query query = new Query(c);
+		return super.findOne(query);
+	}
+
 }

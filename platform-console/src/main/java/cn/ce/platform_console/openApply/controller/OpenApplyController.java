@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.AuditConstants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
@@ -105,6 +107,17 @@ public class OpenApplyController {
 		
 		return	result = consoleOpenApplyService.addApply(session,apply);
 		
+	}
+	
+	@RequestMapping(value="/checkApplyName",method=RequestMethod.GET)
+	public Result<?> checkApplyName(
+			@RequestParam String applyName){
+		
+		if(StringUtils.isBlank(applyName)){
+			return Result.errorResult("参数不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
+		
+		return consoleOpenApplyService.checkApplyName(applyName);
 	}
 	
 	/***

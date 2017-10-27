@@ -22,7 +22,7 @@ public class RateConstants {
 	public static final Integer	TYPE_2_QUOTA_MAX = 500000;
 	public static final Integer TYPE_2_QUOTA_RENEW_RATE = 86400;
 	
-	public static final Integer TYPE_3_RATE = 10000;
+	public static final Integer TYPE_3_RATE = 1000;
 	public static final Integer TYPE_3_PER = 1;
 	public static final Integer	TYPE_3_QUOTA_MAX = 1000000;
 	public static final Integer TYPE_3_QUOTA_RENEW_RATE =  86400;

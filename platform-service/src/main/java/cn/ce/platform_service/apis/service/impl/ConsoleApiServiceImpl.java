@@ -27,6 +27,7 @@ import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
@@ -97,6 +98,12 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		if(StringUtils.isBlank(apiEntity.getApiVersion().getVersion())){
 			result.setErrorMessage("版本名称不能为空", ErrorCodeNo.SYS005);
 			return result;
+		}
+		
+		ApiEntity vEntity = newApiDao.findByVersion(apiEntity.getApiVersion().getVersionId(),apiEntity.getApiVersion().getVersion());;
+		
+		if(vEntity != null){
+			return Result.errorResult("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
 		}
 		// 第一次添加接口,并且选择未开启版本控制
 //		if (apiEntity.getApiVersion() == null || 
@@ -306,13 +313,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 下午2:50:36 
 	 */
 	@Override
-	public Result<String> checkVersion(String apiId, String version) {
+	public Result<String> checkVersion(String versionId, String version) {
 		Result<String> result = new Result<String>();
 		
-		Map<String,Object> map =new HashMap<String,Object>();
-		map.put(DBFieldsConstants.APIS_VERSION, version);
-		map.put(DBFieldsConstants.APIS_ID, apiId);
-		ApiEntity entity = newApiDao.findOneByFields(map);
+		ApiEntity entity = newApiDao.findByVersion(versionId, version);
 
 		if(entity == null){
 			result.setSuccessMessage("当前version不存在，可以使用");

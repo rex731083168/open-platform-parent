@@ -115,14 +115,20 @@ public class UserController {
 			user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		}catch(Exception e){
 			_LOGGER.error("error happens when get user info from session",e);
+			return Result.errorResult("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
 		}
 		
-		if(user != null){
-			user.setPassword("");
-			result.setSuccessData(user);
-		}else{
-			result.setErrorMessage("");
+		_LOGGER.info("*********checkLogin 当前session仍然存在user数据");
+		User userNew = consoleUserService.findUserById(user.getId());
+		
+		if(userNew != null){
+			userNew.setPassword("");
 		}
+		_LOGGER.info("********checkLogin 获取新的用户数据：");
+		session.setAttribute(Constants.SES_LOGIN_USER, userNew);
+		
+		result.setSuccessData(userNew);
+		
 		return result;
 	}
 

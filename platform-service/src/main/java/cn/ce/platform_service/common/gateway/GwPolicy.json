@@ -1,7 +1,7 @@
 {
     "id": "p1",
     "org_id": "default",
-    "rate": 10,
+    "rate": 100,
     "per": 1,
     "quota_max": -1,
     "quota_renewal_rate": 60,

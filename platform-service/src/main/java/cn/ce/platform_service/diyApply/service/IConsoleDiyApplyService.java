@@ -20,7 +20,7 @@ public interface IConsoleDiyApplyService {
 	 * 
 	 * @param entity
 	 */
-	Result<String> saveApply(DiyApplyEntity entity);
+	Result<?> saveApply(DiyApplyEntity entity);
 
 	/***
 	 * 根据id删除实体

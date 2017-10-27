@@ -10,6 +10,7 @@ public class DBFieldsConstants {
 	/*************** api相关字段 **********************/
 	public static final String APIS_APIVERSION_VERSIONID = "apiVersion.versionId";
 	public static final String APIS_APIVERSION_NEWVERSION = "apiVersion.newVersion"; 
+	public static final String APIS_APIVERSION_VERSION = "apiVersion.version";
 	public static final String APIS_APIENNAME = "apiEnName";
 	public static final String APIS_APICHNAME = "apiChName";
 	public static final String APIS_OPENAPPLY_ID = "openApplyId";
@@ -32,6 +33,8 @@ public class DBFieldsConstants {
 	public static final String USER_STATE = "state";
 	public static final String USER_REGTIME = "regTime";
 	public static final String USER_ID_CARD = "idCard";
+	public static final String USER_ID = "id";
+	
 	
 	/*************** 网关相关字段 **********************/
 	public static final String GW_API_NAME = "name";
@@ -54,6 +57,7 @@ public class DBFieldsConstants {
 	public static final String GW_POLICY_ACCESS_RIGHTS_APIID = "api_id";
 	public static final String GW_POLICY_ACCESS_RIGHTS_APINAME = "api_name";
 	public static final String GW_POLICY_ACCESS_RIGHTS_VERSIONS = "versions";
+	public static final String GW_POLICY_ORG_ID = "org_id";
 	
 	public static final String GW_CLIENT_ID = "client_id";
 	public static final String GW_SECRET= "secret";
@@ -69,6 +73,8 @@ public class DBFieldsConstants {
 	public static final String GUIDE_CREATE_USERNAME= "creatUserName";
 	public static final String GUIDE_APPLYID = "applyId";
 	public static final String GUIDE_CHECKSTATE = "checkState";
+
+
 
 
 	

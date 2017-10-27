@@ -34,6 +34,8 @@ public interface INewApiDao {
 
 	Page<ApiEntity> findApiPageByIds(List<String> apiIds, Page<ApiEntity> page);
 
+	ApiEntity findByVersion(String versionId, String version);
+
 
 
 }
