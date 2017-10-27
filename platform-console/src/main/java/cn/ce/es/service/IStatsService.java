@@ -1,5 +1,6 @@
 package cn.ce.es.service;
 
+import cn.ce.platform_service.common.Result;
 import net.sf.json.JSONArray;
 
 /**
@@ -24,4 +25,7 @@ public interface IStatsService {
 
 	public JSONArray bucketsPie(String param, String dateTime, String apiKey, String type);
 
+	
+	public Result<String> getReport(String param, String dateTime, String apiKey, String type);
+	
 }

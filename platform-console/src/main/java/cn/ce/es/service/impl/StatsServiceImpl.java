@@ -1,6 +1,5 @@
 package cn.ce.es.service.impl;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import cn.ce.es.bean.LineData;
 import cn.ce.es.service.IStatsService;
 import cn.ce.es.util.ElasticsearchUtils;
 import cn.ce.es.util.SplitDateUtil;
+import cn.ce.platform_service.common.Result;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -119,14 +119,30 @@ public class StatsServiceImpl implements IStatsService{
 
 	}
 
-	public static void main(String[] args) {
-		ElasticsearchUtils es = new ElasticsearchUtils("my-application", "127.0.0.1");
-		StatsServiceImpl s = new StatsServiceImpl();
-		Date da = new Date();
-		System.out.println(da.getTime());
-		s.bucketsLine("2", "1504233289987", "c835da3e79ae45858fe6ed9315688989", "3");
-		s.bucketsPie("2", "1504233289987", "c835da3e79ae45858fe6ed9315688989", "3");
-		s.es.closeClient();
+//	public static void main(String[] args) {
+//		ElasticsearchUtils es = new ElasticsearchUtils("my-application", "127.0.0.1");
+//		StatsServiceImpl s = new StatsServiceImpl();
+//		Date da = new Date();
+//		System.out.println(da.getTime());
+//		s.bucketsLine("2", "1504233289987", "c835da3e79ae45858fe6ed9315688989", "3");
+//		s.bucketsPie("2", "1504233289987", "c835da3e79ae45858fe6ed9315688989", "3");
+//		s.es.closeClient();
+//	}
+
+	@Override
+	public Result<String> getReport(String param, String dateTime, String apiKey, String type) {
+		
+		Result<String> result = new Result<>();
+		JSONObject data = new JSONObject();
+		try {
+			data.put("bucketsLine", bucketsLine(param, dateTime, apiKey, type));
+			data.put("bucketsPie", bucketsPie(param, dateTime, apiKey, type));
+			result.setSuccessData(data.toString());
+		} catch (Exception e) {
+			result.setErrorMessage("查询统计图失败,请联系管理员!");
+		}
+		
+		return result;
 	}
 
 }
