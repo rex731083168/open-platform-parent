@@ -18,6 +18,7 @@ import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
  * @author makangwei
  * 2017-8-4
  */
+@SuppressWarnings("unchecked")
 @Repository
 public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity> implements IGatewayNodeManageDao {
 
@@ -46,7 +47,7 @@ public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity
 	}
 
 	public Page<GatewayNodeEntity> getAllGatewayNode(Integer currentPage,
-			Integer pageSize, Integer colId) {
+			Integer pageSize, String colId) {
 		
 		Query query = new Query();
 		query.addCriteria(Criteria.where("colId").is(colId));
@@ -70,6 +71,4 @@ public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity
 		}
 		return false;
 	}
-
-
 }

@@ -15,5 +15,7 @@ import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 public interface IGatewayColonyManageDao {
 	
 	GatewayColonyEntity getColonySingle();
+
+	GatewayColonyEntity findById(String colId);
 	
 }

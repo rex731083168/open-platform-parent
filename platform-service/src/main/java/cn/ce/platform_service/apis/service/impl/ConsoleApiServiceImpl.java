@@ -215,7 +215,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
-		jsonObject.put("listenPath", api.getListenPath());
 		result.setSuccessData(jsonObject);
 		return result;
 	}

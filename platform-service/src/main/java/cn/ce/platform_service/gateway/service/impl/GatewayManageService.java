@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.gateway.dao.IGatewayColonyManageDao;
 import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
 import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
@@ -35,6 +37,8 @@ public class GatewayManageService implements IGatewayManageService{
 	private IGatewayManageDao gatewayManageDao;
 	@Resource
 	private IGatewayNodeManageDao gatewayNodeManageDao;
+	@Resource 
+	private IGatewayColonyManageDao gatewayColonyManageDao; 
 	
 	Logger _LOGGER = LoggerFactory.getLogger(GatewayManageService.class);
 	/**
@@ -66,11 +70,6 @@ public class GatewayManageService implements IGatewayManageService{
 		}
 		
 		//查询当前网关id是否存在
-		List<GatewayColonyEntity> isExits = null;
-		do{
-			isExits = gatewayManageDao.findByField("_id", colEntity.getColId(), GatewayColonyEntity.class);
-		}while(isExits.size() >0);
-		
 		
 		//对集群的测试
 		boolean reloadBool = ApiCallUtils.getGwReload(colEntity.getColUrl()+Constants.NETWORK_RELOAD_PATH);
@@ -201,20 +200,19 @@ public class GatewayManageService implements IGatewayManageService{
 		Result<String> result = new Result<String>();
 		result.setErrorMessage("");
 		
-		if(nodeEntity.getNodeUrl() == null || nodeEntity.getNodeUrl().trim() == ""){
-			result.setMessage("请求url不能为空");
+		if(StringUtils.isBlank(nodeEntity.getNodeUrl())){
+			result.setErrorMessage("请求url不能为空",ErrorCodeNo.SYS005);
 			return result;
 		}
-		if(nodeEntity.getNodeName() == null || nodeEntity.getNodeName().trim() == ""){
-			result.setMessage("请求节点名称不能为空");
-			return result;
+		if(StringUtils.isBlank(nodeEntity.getNodeName())){
+			result.setErrorMessage("请求节点名称不能为空",ErrorCodeNo.SYS005);
 		}
 		if(StringUtils.isBlank(nodeEntity.getColId())){
 			result.setMessage("所属集群id不能为空");
 			return result;
 		}
 		
-		GatewayColonyEntity gatewayColonyEntity = gatewayManageDao.findById(nodeEntity.getColId(), GatewayColonyEntity.class);
+		GatewayColonyEntity gatewayColonyEntity = gatewayColonyManageDao.findById(nodeEntity.getColId());
 		
 		if(gatewayColonyEntity == null || gatewayColonyEntity.getColDesc() == null){
 			result.setMessage("当前集群不存在");
@@ -240,19 +238,16 @@ public class GatewayManageService implements IGatewayManageService{
 		boolean bool = gatewayNodeManageDao.addGatewayNode(nodeEntity);
 		
 		if(bool){
-			result.setMessage("添加成功");
+			result.setSuccessMessage("添加成功");
 			
-			//TODO 向新的网关中加入已经添加到别的网关的接口
-			result.setStatus(Status.SUCCESS);
 		}else{
-			result.setMessage("添加失败");
+			result.setErrorMessage("添加失败",ErrorCodeNo.SYS014);
 		}
-		
 		return result;
 	}
 
 	public Result<Page<GatewayNodeEntity>> getAllGatewayNode(Integer currentPage, Integer pageSize,
-			Integer colId) {
+			String colId) {
 		
 		
 		Result<Page<GatewayNodeEntity>> result = new Result<Page<GatewayNodeEntity>>();
@@ -273,11 +268,10 @@ public class GatewayManageService implements IGatewayManageService{
 		boolean bool= gatewayNodeManageDao.deleteGatewayNodeById(nodeId);
 		
 		if(bool){
-			result.setStatus(Status.SUCCESS);
-			result.setMessage("删除成功");
+			result.setSuccessMessage("删除成功");
 			return result;
 		}else{
-			result.setMessage("删除失败，查看当前集群是否存在");
+			result.setErrorMessage("删除失败，查看当前集群是否存在");
 			return result;
 		}
 	}
@@ -346,7 +340,6 @@ public class GatewayManageService implements IGatewayManageService{
 		}
 		
 	}
-
 
 
 }

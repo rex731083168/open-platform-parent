@@ -18,8 +18,6 @@ public interface IGatewayManageDao {
 	
 	boolean deleteGatewayColonyById(Integer colId);
 	
-	GatewayColonyEntity findById(Integer colId, Class<GatewayColonyEntity> entityclass);
-	
 	void updateById(String colId, GatewayColonyEntity entity);
 	
 	List<GatewayColonyEntity> findByField(String field, Object value, Class<?> entityClass);

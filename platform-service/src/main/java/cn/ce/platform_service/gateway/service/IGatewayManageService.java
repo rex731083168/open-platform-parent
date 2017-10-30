@@ -22,7 +22,7 @@ public interface IGatewayManageService {
 	
 	Result<String> addGatewayNode(GatewayNodeEntity nodeEntity);
 	
-	Result<Page<GatewayNodeEntity>> getAllGatewayNode(Integer currentPage, Integer pageSize, Integer colId);
+	Result<Page<GatewayNodeEntity>> getAllGatewayNode(Integer currentPage, Integer pageSize, String colId);
 	
 	Result<String> deleteGatewayNodeById(String nodeId);
 	

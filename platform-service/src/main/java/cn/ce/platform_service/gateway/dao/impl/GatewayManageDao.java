@@ -21,7 +21,7 @@ import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
  * @author makangwei
  * 2017-8-4
  */
-@Repository
+@Repository(value="gatewayManageDao")
 public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> implements IGatewayManageDao {
 
 	Logger LOGGER = LoggerFactory.getLogger(GatewayManageDao.class);
@@ -84,14 +84,6 @@ public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> 
 		return false;
 	}
 
-	public GatewayColonyEntity findById(Integer colId, Class<GatewayColonyEntity> entityclass) {
-		
-		Query query = new Query();
-		query.addCriteria(Criteria.where("_id").is(colId));
-		GatewayColonyEntity entity = mongoTemplate.findOne(query, GatewayColonyEntity.class);
-		return entity;
-		
-	}
 
 	public void updateById(String colId, GatewayColonyEntity entity) {
 		entity.setColId(colId);

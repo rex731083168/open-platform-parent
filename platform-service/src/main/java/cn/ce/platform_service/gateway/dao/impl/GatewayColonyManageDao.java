@@ -8,7 +8,7 @@ import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
 import cn.ce.platform_service.gateway.dao.IGatewayColonyManageDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 
-@Repository
+@Repository(value="gatewayColonyManageDao")
 public class GatewayColonyManageDao extends BaseMongoDaoImpl<GatewayColonyEntity> implements IGatewayColonyManageDao{
 
 	@Override
@@ -19,6 +19,11 @@ public class GatewayColonyManageDao extends BaseMongoDaoImpl<GatewayColonyEntity
 			gce = findAll.get(0);
 		}
 		return gce;
+	}
+	
+	@Override
+	public GatewayColonyEntity findById(String id){
+		return super.findById(id);
 	}
 
 }

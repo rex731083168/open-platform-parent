@@ -14,7 +14,7 @@ public interface IGatewayNodeManageDao {
 
 	boolean addGatewayNode(GatewayNodeEntity nodeEntity);
 	
-	Page<GatewayNodeEntity> getAllGatewayNode(Integer currentPage, Integer pageSize, Integer colId);
+	Page<GatewayNodeEntity> getAllGatewayNode(Integer currentPage, Integer pageSize, String colId);
 	
 	boolean deleteGatewayNodeById(String nodeId);
 

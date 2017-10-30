@@ -19,6 +19,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 import cn.ce.platform_service.gateway.service.impl.GatewayManageService;
+import cn.ce.platform_service.util.PageValidateUtil;
 
 /**
  *	
@@ -97,15 +98,9 @@ public class GatewayController {
 	@RequestMapping(value="/getAllGatewayNode",method=RequestMethod.GET)
 	@ResponseBody
 	public Result<Page<GatewayNodeEntity>> getAllGatewayNode(HttpServletRequest request,HttpServletResponse response,Integer currentPage,Integer pageSize,
-			@RequestParam(required=true)Integer colId){
+			@RequestParam(required=true)String colId){
 		
-		if(currentPage == null || currentPage < 1){
-			currentPage = 1;
-		} 
-		if(pageSize == null || pageSize > 30){	
-			pageSize = 10;
-		}
-		return gatewayManageService.getAllGatewayNode(currentPage,pageSize,colId);
+		return gatewayManageService.getAllGatewayNode(PageValidateUtil.checkCurrentPage(currentPage),PageValidateUtil.checkPageSize(pageSize),colId);
 	}
 	
 	//删除网关节点
