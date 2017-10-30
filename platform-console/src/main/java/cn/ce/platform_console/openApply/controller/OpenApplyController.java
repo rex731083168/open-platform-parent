@@ -41,7 +41,6 @@ public class OpenApplyController {
 	@Resource
 	private IConsoleOpenApplyService consoleOpenApplyService;
 
-	
 	/***
 	 * 
 	 * @Title: appList
@@ -77,7 +76,6 @@ public class OpenApplyController {
 			@RequestParam(value = "id", required = true) String id) {
 		return consoleOpenApplyService.getApplyById(id);
 	}
-	
 	
 	/***
 	 * 

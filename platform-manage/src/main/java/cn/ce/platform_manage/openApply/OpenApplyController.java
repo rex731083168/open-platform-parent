@@ -31,9 +31,6 @@ public class OpenApplyController extends BaseController {
 
 	private static Logger _LOGGER = Logger.getLogger(OpenApplyController.class);
 
-//	@Resource
-//	private IAPIService apiService;
-
 	@Resource
 	private IManageOpenApplyService openApplyService;
 

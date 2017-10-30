@@ -365,4 +365,5 @@ public class ApiEntity implements Serializable {
 				+ ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime="
 				+ createTime + ", openApplyEntity=" + openApplyEntity + "]";
 	}
+
 }

@@ -63,13 +63,11 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		Result<String> result = new Result<String>();
 		
 		
-//		if(StringUtils.isBlank(apiEntity.getAppCode())){
-//			result.setErrorMessage("appCode不能为空", ErrorCodeNo.SYS005);
-//			return result;
-//		}else if(StringUtils.isBlank(apiEntity.getApiEnName())){
-//			result.setErrorMessage("apiEnName不能为空", ErrorCodeNo.SYS005);
-//		}
-		
+		if(StringUtils.isBlank(apiEntity.getListenPath())){
+			result.setErrorMessage("listenPath不能为空", ErrorCodeNo.SYS005);
+			return result;
+		}
+		apiEntity.setListenPath(checkListenPathFormat(apiEntity.getListenPath()));
 		
 		//设置默认值，否则会后面审核api会报错
 		if(apiEntity.getCheckState() == null){
@@ -83,17 +81,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			return result;
 		}
 		
-		
-//		Map<String,Object> whereMap = new HashMap<>();
-//		whereMap.put(DBFieldsConstants.APIS_OPENAPPLY_ID, apiEntity.getAppCode());
-//		whereMap.put(DBFieldsConstants.APIS_APIENNAME,apiEntity.getApiEnName());
-//		ApiEntity findOneByFields = newApiDao.findOneByFields(whereMap);
-//		if(null != findOneByFields){
-//			_LOGGER.info("appCode和apiEnName重复出现");
-//			result.setMessage("当前开放应用下appEnName已存在,请检查后重试!");
-//			result.setErrorCode(ErrorCodeNo.SYS010);
-//			return result;
-//		}
 		
 		if(StringUtils.isBlank(apiEntity.getApiVersion().getVersion())){
 			result.setErrorMessage("版本名称不能为空", ErrorCodeNo.SYS005);
@@ -154,6 +141,9 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	}
 	
 	
+
+
+
 	/**
 	 * @Title: apiVerify
 	 * @Description: 从未审核状态改为待审核状态,批量提交审核
@@ -401,5 +391,15 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			result.setErrorMessage("当前监听路径不可用",ErrorCodeNo.SYS009);
 		}
 		return result;
+	}
+	
+	private String checkListenPathFormat(String listenPath) {
+		if(!listenPath.startsWith("/")){
+			listenPath = "/"+listenPath;
+		}
+		if(!listenPath.endsWith("/")){
+			listenPath = listenPath+"/";
+		}
+		return listenPath;
 	}
 }
