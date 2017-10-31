@@ -22,7 +22,7 @@ public class ProductInstance {
     private String tenants;
     private String tenantApp;
     private String parentId;
-    private String parent;
+    private Parent parent;
     private Integer producttype;
     private String appCodes;
     private Integer insertDate;
@@ -105,10 +105,10 @@ public class ProductInstance {
          return parentId;
      }
 
-    public void setParent(String parent) {
+    public void setParent(Parent parent) {
          this.parent = parent;
      }
-     public String getParent() {
+     public Parent getParent() {
          return parent;
      }
 
