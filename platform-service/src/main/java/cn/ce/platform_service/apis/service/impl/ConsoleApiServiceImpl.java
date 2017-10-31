@@ -90,7 +90,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			return result;
 		}
 		
-		ApiEntity vEntity = newApiDao.findByVersion(apiEntity.getApiVersion().getVersionId(),apiEntity.getApiVersion().getVersion());;
+		ApiEntity vEntity = newApiDao.findByVersion(apiEntity.getApiVersion().getVersionId(),apiEntity.getApiVersion().getVersion());
 		
 		if(vEntity != null){
 			return Result.errorResult("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
@@ -214,7 +214,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
 //			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl());
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl()+api.getListenPath());
 		}
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));

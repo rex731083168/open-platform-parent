@@ -78,9 +78,9 @@ public class ApiController {
 		if(!listenPath.startsWith("/")){
 			listenPath = "/"+listenPath;
 		}
-		if(!listenPath.endsWith("/")){
-			listenPath = listenPath+"/";
-		}
+//		if(!listenPath.endsWith("/")){
+//			listenPath = listenPath+"/";
+//		}
 		return consoleApiService.checkListenPath(listenPath);
 	}
 	

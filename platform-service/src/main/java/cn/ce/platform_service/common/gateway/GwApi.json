@@ -16,8 +16,8 @@
       "auth_login_redirect": ""
     },
     "definition" : {
-        "location" : "url",
-        "key" : ""
+        "location" : "header",
+        "key" : "api-version"
     },
     "version_data": {
       "not_versioned": false,
