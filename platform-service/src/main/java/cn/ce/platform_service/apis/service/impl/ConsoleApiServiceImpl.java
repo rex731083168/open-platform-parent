@@ -67,7 +67,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			result.setErrorMessage("listenPath不能为空", ErrorCodeNo.SYS005);
 			return result;
 		}
+		
 		apiEntity.setListenPath(checkListenPathFormat(apiEntity.getListenPath()));
+		
+		_LOGGER.info("************************** listenPath = " + apiEntity.getListenPath());
 		
 		//设置默认值，否则会后面审核api会报错
 		if(apiEntity.getCheckState() == null){
@@ -210,7 +213,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
+//			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl());
 		}
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
@@ -396,9 +400,9 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		if(!listenPath.startsWith("/")){
 			listenPath = "/"+listenPath;
 		}
-		if(!listenPath.endsWith("/")){
-			listenPath = listenPath+"/";
-		}
+//		if(!listenPath.endsWith("/")){
+//			listenPath = listenPath+"/";
+//		}
 		return listenPath;
 	}
 }

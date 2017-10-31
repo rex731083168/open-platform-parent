@@ -102,9 +102,9 @@ public class ManageApiServiceImpl implements IManageApiService{
 				if(!apiEntity.getListenPath().startsWith("/")){
 					apiEntity.setListenPath("/"+apiEntity.getListenPath());
 				}
-				if(!apiEntity.getListenPath().endsWith("/")){
-					apiEntity.setListenPath(apiEntity.getListenPath()+"/");
-				}
+//				if(!apiEntity.getListenPath().endsWith("/")){
+//					apiEntity.setListenPath(apiEntity.getListenPath()+"/");
+//				}
 				String listenPath = apiEntity.getListenPath();
 				/*** 添加api到网关接口 ***/
 				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), listenPath, listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
@@ -178,7 +178,8 @@ public class ManageApiServiceImpl implements IManageApiService{
 		List<String> gatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
 			// TODO 这里的路径是否正确。网关是否修改这里
-			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
+//			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
+			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath());
 		}
 		
 		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(JSON.toJSONString(api));
