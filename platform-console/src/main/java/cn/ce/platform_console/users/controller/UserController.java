@@ -111,6 +111,13 @@ public class UserController {
 		Result<User> result = new Result<User>();
 		User user = null;
 		
+		
+
+		Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
+		if(userObj == null){
+			return Result.errorResult("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
+		}
+		
 		try{
 			user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		}catch(Exception e){

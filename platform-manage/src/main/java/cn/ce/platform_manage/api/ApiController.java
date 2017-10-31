@@ -81,8 +81,8 @@ public class ApiController {
 	/**
 	 * @Title: showApi
 	 * @Description: 单个api查询
-	 * @author: makangwei 
-	 * @date:   2017年10月16日 下午3:41:04 
+	 * @author: makangwei
+	 * @date:   2017年10月16日 下午3:41:04
 	 */
 	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
 	public Result<?> showApi(HttpServletRequest request, HttpServletResponse response, String apiId) {

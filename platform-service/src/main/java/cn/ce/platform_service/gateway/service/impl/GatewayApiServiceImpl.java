@@ -56,12 +56,6 @@ public class GatewayApiServiceImpl implements IGatewayApiService{
 	
 	public String pushClient(String clientId, String secret, StringBuffer versionIdsBuf, String policyId){
 		
-//		String apiIds = "";
-//		for (String str : apiId) {
-//			apiIds = apiIds+","+str;
-//		}
-//		apiIds = apiIds.substring(1, apiIds.length());
-		
 		JSONObject params = new JSONObject();
 		params.put(DBFieldsConstants.GW_CLIENT_ID, clientId);
 		params.put(DBFieldsConstants.GW_SECRET, secret);

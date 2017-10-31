@@ -47,13 +47,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object object) throws Exception {
 		
-//		String requestUri = request.getRequestURI();  
-//        String contextPath = request.getContextPath();  
-//        String url = requestUri.substring(contextPath.length());  
-//        
-//        //logger.info("requestUri:"+requestUri);    
-//        //logger.info("contextPath:"+contextPath);  
-//        //logger.info("url:"+url);    
         
         User user =  (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
         if(user != null){
