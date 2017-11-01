@@ -212,13 +212,16 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		// 添加网关访问地址
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
+		List<String> wGatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
 //			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
 			gatewayUrlList.add(gatewayColonyEntity.getColUrl()+api.getListenPath());
+			wGatewayUrlList.add(gatewayColonyEntity.getwColUrl()+api.getListenPath());//外网访问地址
 		}
 		
 		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
+		jsonObject.put("wGatewayUrls", wGatewayUrlList);
 		result.setSuccessData(jsonObject);
 		return result;
 	}

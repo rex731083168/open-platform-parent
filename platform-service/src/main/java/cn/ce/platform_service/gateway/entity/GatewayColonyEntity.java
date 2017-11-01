@@ -18,12 +18,25 @@ public class GatewayColonyEntity {
 	@Field("colName") 
 	private String colName;	//集群名称	
 	@Field("colUrl")
-	private String colUrl;	//集群代理域名
+	private String colUrl;	//集群代理域名(内网)
+	
+	@Field("wColUrl")
+	private String wColUrl; //集群代理域名(外网)
+	
 	@Field("colStatus")
 	private Integer colStatus;	//集群状态
 	@Field("colDesc")
 	private String colDesc;  //集群描述
 	
+	
+	public String getwColUrl() {
+		return wColUrl;
+	}
+
+	public void setwColUrl(String wColUrl) {
+		this.wColUrl = wColUrl;
+	}
+
 	public Integer getColStatus() {
 		return colStatus;
 	}

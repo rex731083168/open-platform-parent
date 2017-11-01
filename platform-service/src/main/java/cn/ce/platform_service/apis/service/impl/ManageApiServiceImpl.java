@@ -176,14 +176,17 @@ public class ManageApiServiceImpl implements IManageApiService{
 		// 添加网关访问地址
 		List<GatewayColonyEntity> colList = GatewayUtils.getAllGatewayColony();
 		List<String> gatewayUrlList = new ArrayList<String>();
+		List<String> wGatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
 			// TODO 这里的路径是否正确。网关是否修改这里
 //			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
 			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath());
+			wGatewayUrlList.add(gatewayColonyEntity.getwColUrl()+api.getListenPath());//外网访问地址
 		}
 		
 		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(JSON.toJSONString(api));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
+		jsonObject.put("wGatewayUrls", wGatewayUrlList);
 		result.setSuccessData(jsonObject);
 		return result;
 	}
