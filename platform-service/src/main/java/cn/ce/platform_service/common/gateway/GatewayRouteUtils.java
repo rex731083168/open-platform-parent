@@ -69,6 +69,32 @@ public class GatewayRouteUtils {
 		
 	}
 	
+	public static String saveAppkey(String appkey,String tenantId,String method){
+		
+		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		
+		Result<String> result = new Result<>();
+		
+		String gwJsonApi = "";
+		
+		if(null == colonySingle){
+			LOGGER.error("网关集群信息为空!");
+			result.setErrorMessage("网关集群信息为空！");
+			return result.toString();
+		}
+		
+		try {
+			JSONObject params = new JSONObject();
+			params.put("saas_id", tenantId);
+			gwJsonApi = putOrPostGwJson(colonySingle.getColUrl()+Constants.NETWORK_APPKEY_URL+"/"+appkey, params,method);
+		}catch(Exception e){
+			LOGGER.error("调用网关时出现错误,信息为:" + gwJsonApi + ",异常:" + e.toString());
+			result.setErrorMessage("服务异常!");
+			gwJsonApi = result.toString();
+		}
+		return gwJsonApi;
+	}
+	
 	public static String saveRoute(String saasId,String targetUrl,String method){
 		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
 		Result<String> result = new Result<>();

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSON;
 
@@ -33,6 +34,7 @@ import cn.ce.platform_service.common.RateConstants;
 import cn.ce.platform_service.common.RateEnum;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
@@ -43,6 +45,7 @@ import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
 import cn.ce.platform_service.util.SplitUtil;
+import io.netty.handler.codec.http.HttpMethod;
 import net.sf.json.JSONObject;
 
 /***
@@ -133,17 +136,42 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				}
 
 				Integer findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
+				
+				if(null == findTenantAppsByTenantKeyTenantIdtemp){
+					result.setErrorMessage("网站实例tenantId不存在!");
+					result.setErrorCode(ErrorCodeNo.SYS015);
+					return result;
+				}
+				
 				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
 				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
+				
+				
+				
+				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantId:" + findTenantAppsByTenantKeyTenantIdtemp);
+				
+				//根据网站实例id查询是否配置资源IP
+				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantId,RequestMethod.GET.toString());
+				
+				if(StringUtils.isBlank(routeBySaasId)){
+					result.setErrorMessage("未配置定制应用资源池,请联系管理员!");
+					result.setErrorCode(ErrorCodeNo.SYS015);
+					return result;
+				}
+				
+				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantIdBindIp:" + routeBySaasId);
+				
 			} catch (Exception e) {
 				_LOGGER.error("get messaget from url faile resaon " + e.getMessage() + "");
 			}
+			
 			if (StringUtils.isNotBlank(apps.getData().getTenant().getProductInstance().getBossProductInstance())) {
 				entity.setBossProductInstance(apps.getData().getTenant().getProductInstance().getBossProductInstance());
 			} else {
 				result.setErrorMessage("该产品为旧版产品,无法发布菜单",ErrorCodeNo.SYS025);
 				return result;
 			}
+			
 			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
 			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
@@ -157,6 +185,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			String policyId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String clientId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
+			
+			_LOGGER.info("**********调用保存appkey与tenantId开始********* appkey:" + clientId + ";tenantId:" + entity.getProductInstanceId());
+			String saveAppkeyResult = GatewayRouteUtils.saveAppkey(clientId,entity.getProductInstanceId(),HttpMethod.POST.toString());
+			_LOGGER.info("**********调用保存appkey与tenantId结束 返回值:*********" + saveAppkeyResult);
+			
+			
 			List<String> appIdList = new ArrayList<String>();
 			for (AppList appList : apps.getData().getAppList()) {
 				appIdList.add(appList.getAppId() + ""); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
