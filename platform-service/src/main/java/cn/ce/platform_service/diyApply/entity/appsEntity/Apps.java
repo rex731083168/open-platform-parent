@@ -1,0 +1,40 @@
+/**
+  * Copyright 2017 bejson.com 
+  */
+package cn.ce.platform_service.diyApply.entity.appsEntity;
+
+/**
+ * Auto-generated: 2017-10-13 14:32:39
+ *
+ * @author bejson.com (i@bejson.com)
+ * @website http://www.bejson.com/java2pojo/
+ */
+public class Apps {
+
+    private Data data;
+    private String msg;
+    private Integer status;
+    public void setData(Data data) {
+         this.data = data;
+     }
+     public Data getData() {
+         return data;
+     }
+
+    public void setMsg(String msg) {
+         this.msg = msg;
+     }
+     public String getMsg() {
+         return msg;
+     }
+
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+  
+
+}

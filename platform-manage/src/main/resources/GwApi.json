@@ -1,0 +1,39 @@
+  {
+    "name": "override",
+    "api_id": "override",
+    "org_id": "default",
+    "use_oauth2": true,
+    "oauth_meta": {
+      "allowed_access_types": [
+        "authorization_code",
+        "refresh_token",
+        "client_credentials"
+      ],
+      "allowed_authorize_types": [
+        "code",
+        "token"
+      ],
+      "auth_login_redirect": ""
+    },
+    "definition" : {
+        "location" : "header",
+        "key" : "api-version"
+    },
+    "version_data": {
+      "not_versioned": false,
+      "versions": {
+          "override1": {
+          "name": "override1",
+          "expires": "-1",
+          "override_target": "override1"
+        }
+      }
+    },
+    "proxy": {
+      "listen_path": "override",
+      "target_url": "http://www.300.cn",
+      "strip_listen_path": false,
+      "enable_router_table": true
+    },
+    "active": true
+  }

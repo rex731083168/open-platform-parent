@@ -9,10 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import cn.ce.es.service.StatsService;
-import net.sf.json.JSONObject;
-
+import cn.ce.es.service.IStatsService;
+import cn.ce.platform_service.common.Result;
+import io.swagger.annotations.Api;
 
 /**
  *
@@ -25,10 +24,12 @@ import net.sf.json.JSONObject;
  **/
 @Controller
 @RequestMapping("/statistics")
+@Api("应用统计")
 public class StatsController {
 
-	@Autowired @Qualifier("statsService")
-	private StatsService statsService;
+	@Autowired
+	@Qualifier("statsService")
+	private IStatsService statsService;
 
 	/**
 	 * 
@@ -43,24 +44,10 @@ public class StatsController {
 	 *            0 lin 1 pie
 	 * @return
 	 */
-	@RequestMapping(value = "statisticsLineChartAndPie", method = RequestMethod.POST)
+	@RequestMapping(value = "/statisticsLineChartAndPie", method = RequestMethod.POST)
 	@ResponseBody
-	public String statisticsLineChartAndPie(HttpServletRequest request, HttpServletResponse response, String type,
+	public Result<String> statisticsLineChartAndPie(HttpServletRequest request, HttpServletResponse response, String type,
 			String dateTime, String apiKey, String param, String lineOrPie) {
-
-		JSONObject object = new JSONObject();
-		JSONObject data = new JSONObject();
-		try {
-			data.put("bucketsLine", statsService.bucketsLine(param, dateTime, apiKey, type));
-			data.put("bucketsPie", statsService.bucketsPie(param, dateTime, apiKey, type));
-			object.put("data", data);
-			object.put("code", "1");
-			object.put("message", "OK");
-		} catch (Exception e) {
-			object.put("code", "0");
-			object.put("message", "ERROR");
-			e.printStackTrace();
-		}
-		return object.toString();
+		return statsService.getReport(param, dateTime, apiKey, type);
 	}
 }
