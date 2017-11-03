@@ -1,0 +1,85 @@
+﻿开发工具及运行环境
+．Eclipse 4.6及以上版本，由项目组内对缩进/注释等进行配置
+．开发环境：Jdk8 Tomcat8.5及以上版本
+．项目代码缩进采用4个空格 1个制表符进行控制
+．项目打包采用Maven安装，采用profile设置编译参数
+
+
+
+
+Git版本管理说明
+．devlop（开发分支）
+	最全量的代码，开发期间均拥有权限进行操作
+．feature/*（目标分支）
+	根据每期的业务目标，创建对应的分支，控制版本分离
+．release/*（预上线分支）
+	此分支部分开发人员拥有权限，在feature分支开发完成并测试通过后，合并代码至此分支，进行上线前最后部署测试
+．master（主干分支）
+	**** 上线代码由此分支进行打包构建，采用jenkins自动构建打包，手动发布 ****
+	1.代码由release分支提交merge请求后合并
+	2.备份当前master形成 tag(1.0 2.0 3.0)
+	3.master主线代码合并完毕
+	4.删除release分支
+．hotfix（紧急修复分支）
+	处理当前master版本中的bug，修复完成后会将代码合并至devlop，问题处理完成后 删除此分支
+
+
+
+Controller
+．设定Controller为RestController，每个Controller需指定命名空间
+．按照Restful风格定义接口及入参出参
+．对参数进行校验，返回对应错误及警告编码
+．定义统一返回Result实体，调用service并进行异常拦截，返回对应错误编码
+．每个访问接口需按照SwaggerApi进行配置 命名空间/描述/返回值/请求方式等
+
+
+
+Service
+．采用@Autowired与@Qualifier("serviceName")注入其他service
+．避免调用不同实体的Dao层，如需调用可先查找对应业务的service，进行注入引用
+．
+．
+．
+．
+．
+
+
+
+Log
+．采用Aop切面对Controller日志进行同一处理，其中包括（前置通知，环绕通知，后置通知，异常通知）
+．Service层根据业务逻辑采用不同的日志级别进行输出 warning debug info error(采取自定义错误码)
+. Dao层在执行方法处进行统一日志规范管理，对于事物操作进行debug级日志记录,记录事物操作前与事物操作后的数据
+．设置log4j的日志输出，按照 应用-版本-模块-日期(yyyy-mm-dd)进行规范输出日志文件
+．
+．
+．
+．
+
+
+Session
+．Session采取 SpringSession集成redis集群方式进行管理
+．Session过期时间与前端保持一致，目前为(24h)
+．
+．
+．
+．
+．
+
+Dao
+．开发mongoDB数据交互工具类 对增删改查方法进行统一规范化处理
+．
+．
+．
+．
+．
+．
+
+
+Bean
+．定义Po Vo Bo Pojo实体对象
+．定义统一的错误编码
+．为避免多出定义字符串，采取定义 枚举类/常量类
+．
+．
+．
+．

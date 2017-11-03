@@ -1,0 +1,74 @@
+package cn.ce.platform_service.gateway.dao.impl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
+
+import com.mongodb.WriteResult;
+
+import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
+import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
+
+/**
+ *
+ * @author makangwei
+ * 2017-8-4
+ */
+@SuppressWarnings("unchecked")
+@Repository
+public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity> implements IGatewayNodeManageDao {
+
+	Logger LOGGER = LoggerFactory.getLogger(GatewayNodeManageDao.class);
+	
+	@Override
+	public void init() {
+		
+		boolean isHasCollection2 = mongoTemplate.collectionExists(GatewayNodeEntity.class);
+		
+		if(!isHasCollection2){
+			LOGGER.info("------------init create Collection GatewayNodeEntity:----------------");
+			mongoTemplate.createCollection(GatewayNodeEntity.class);
+		}
+	}
+	
+	public boolean addGatewayNode(GatewayNodeEntity nodeEntity) {
+		
+		try{
+			add(nodeEntity);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public Page<GatewayNodeEntity> getAllGatewayNode(Integer currentPage,
+			Integer pageSize, String colId) {
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("colId").is(colId));
+		Page<GatewayNodeEntity> page = findAsPage(query,currentPage,pageSize,GatewayNodeEntity.class);
+		
+		if(page != null){
+			return page;
+		}
+		return null;
+	}
+
+	public boolean deleteGatewayNodeById(String nodeId) {
+		Query query =new Query();
+		query.addCriteria(Criteria.where("_id").is(nodeId));
+		WriteResult rt = mongoTemplate.remove(query, GatewayNodeEntity.class);
+		
+		LOGGER.info("-------数据是否已删除:"+rt.getN());
+		
+		if(rt.getN() > 0 ){
+			return true;
+		}
+		return false;
+	}
+}

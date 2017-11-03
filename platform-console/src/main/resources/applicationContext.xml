@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>  
-<beans xmlns="http://www.springframework.org/schema/beans"  
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"  
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
     xmlns:p="http://www.springframework.org/schema/p"  
-    xmlns:context="http://www.springframework.org/schema/context"  
-    xmlns:mvc="http://www.springframework.org/schema/mvc"  
-    xsi:schemaLocation="http://www.springframework.org/schema/mvc   
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/mvc   
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd  
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">  
+        
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+        
+        http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd"> 
 
 
     <!-- Activates various annotations to be detected in bean classes -->  
@@ -15,16 +26,37 @@
       
     <!-- Scans the classpath for annotated components that will be auto-registered as Spring beans.For example @Controller and @Service . Make sure to set the correct base-package-->  
     <context:component-scan base-package="cn.ce" />   
-      
+  
     <!-- Configures the annotation-driven Spring MVC Controller programming model.Note that, with Spring 3.0, this tag works in Servlet MVC only!  -->  
     <mvc:annotation-driven />
     
+
     <!-- filter -->  
     <mvc:interceptors>  
         <mvc:interceptor>
 			<mvc:mapping path="/**"/> 
-			<mvc:exclude-mapping path="/user/*"/>  
-            <bean class="cn.ce.interceptor.LoginInterceptor" />
+			<mvc:exclude-mapping path="/user/**"/>
+			<!-- test api -->
+			<mvc:exclude-mapping path="/test/**"/> 
+			<!-- swagger api json -->
+			<mvc:exclude-mapping path="/v2/api-docs"/> 
+			<!-- swagger ui page -->
+			<mvc:exclude-mapping path="/swagger/index.html"/> 
+			<!-- 文档中心接口 -->
+			<mvc:exclude-mapping path="/diyapplyProduct/findPagedApps"/>
+			<mvc:exclude-mapping path="/guideConsole/guideList"/>
+			<mvc:exclude-mapping path="/guideConsole/guideList"/>
+			<mvc:exclude-mapping path="/api/showApiList"/>
+			<mvc:exclude-mapping path="/api/showApi"/>
+            <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+        	<mvc:mapping path="/**"/>
+        	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+       	<mvc:mapping path="/**"/>
+        	<bean class="cn.ce.platform_service.interceptors.ExceptionInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>  
     
@@ -35,14 +67,41 @@
 	<!-- redis -->
 	<import resource="spring-session.xml" />
 	
-	<!-- swagger -->
-	<bean class="cn.ce.config.SwaggerConfig" />	
-	
+	<!-- Swagger Configue -->
+    <bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
+    
+   	
 	<!-- es -->
 	<bean id="esclient" class="cn.ce.es.util.ElasticsearchUtils">
 		<!-- 构造器注入 -->
 		<constructor-arg value="open-platform"></constructor-arg>
 		<constructor-arg value="${es.path}"></constructor-arg>
 	</bean>	
+	
+	<!-- sms 
+	<bean id="smsutil" class="cn.ce.platform_service.util.SmsUtil">
+		<constructor-arg value="${sms.websiteid}"></constructor-arg>
+		<constructor-arg value="${sms.sign}"></constructor-arg>
+		<constructor-arg value="${sms.provider.id}"></constructor-arg>
+	</bean>	-->	
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    	<property name="maxUploadSize" value="100000"/>	
+	</bean>
+	<!-- spring thread pool executor -->           
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 线程池维护线程的最少数量 -->
+        <property name="corePoolSize" value="${taskExecutor.corePoolSize}" />
+        <!-- 允许的空闲时间 -->
+        <property name="keepAliveSeconds" value="${taskExecutor.keepAliveSeconds}" />
+        <!-- 线程池维护线程的最大数量 -->
+        <property name="maxPoolSize" value="${taskExecutor.maxPoolSize}" />
+        <!-- 缓存队列 -->
+        <property name="queueCapacity" value="${taskExecutor.queueCapacity}" />
+        <!-- 对拒绝task的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+        </property>
+    </bean>
 	
 </beans>
