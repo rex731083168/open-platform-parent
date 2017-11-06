@@ -473,7 +473,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		try {
 			String sendPostByJson = HttpClientUtilsNew.getResponseString(registerMenuURL, body);
-
+			
+			_LOGGER.info("registerMenuURL return senPostByJson : " + sendPostByJson);
+			
 			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
 
 			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {
