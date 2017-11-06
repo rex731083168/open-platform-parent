@@ -24,6 +24,19 @@ error.report.mail 错误日志发送邮件地址
 error.report.size 单位(k) 当错误日志文件达到${size}k时，发送邮件至${error.report.mail}邮箱中进行监控报警
 
 
+Git版本管理说明》》》
+分支定义：
+ devlop（开发分支）最全量的代码，与master分支保持同步
+ feature/*（目标分支）根据每期的业务目标，创建对应的分支 source:devlop  |  target:feature/*
+ release/*（预上线分支）
+	此分支在feature分支开发完成并测试通过后，合并代码至此分支，进行上线部署测试
+	线上测试出现bug,在此分支进行修改调整
+	线上测试通过后,合并至devlop分支，并删除分支
+ master（主干分支）
+  a. devlop分支代码发生变化时,发起merge请求,由项目管理员进行审批
+  b. master分支合并请求通过后，创建tag
+ hotfix（紧急修复分支）线上发现问题时,从master分支中创建hotfix分支，修复完成后会将代码合并至devlop分支，问题处理完成后 删除此分支
+
 
 versions:
 1.0.0
@@ -34,3 +47,5 @@ versions:
 重构代码，优化接口入参出参格式，log4j日志规范等
 2.0.1
 支持门户定制化项目所需中台的能力开放
+2.0.2
+调整对接产品中心接口的service实现类，实体属性得数据类型以及转化JSON字符串的工具类
