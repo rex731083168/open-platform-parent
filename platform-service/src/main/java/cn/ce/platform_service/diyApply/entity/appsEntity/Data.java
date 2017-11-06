@@ -13,42 +13,42 @@ import java.util.List;
  */
 public class Data {
 
-	private Integer pageSize;
-	private Integer currentPage;
-	private Integer totalPages;
-	private Integer totalCount;
+	private String pageSize;
+	private String currentPage;
+	private String totalPages;
+	private String totalCount;
 	private List<AppList> list;
 	private Params params;
 
-	public Integer getPageSize() {
+	public String getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(Integer pageSize) {
+	public void setPageSize(String pageSize) {
 		this.pageSize = pageSize;
 	}
 
-	public Integer getCurrentPage() {
+	public String getCurrentPage() {
 		return currentPage;
 	}
 
-	public void setCurrentPage(Integer currentPage) {
+	public void setCurrentPage(String currentPage) {
 		this.currentPage = currentPage;
 	}
 
-	public Integer getTotalPages() {
+	public String getTotalPages() {
 		return totalPages;
 	}
 
-	public void setTotalPages(Integer totalPages) {
+	public void setTotalPages(String totalPages) {
 		this.totalPages = totalPages;
 	}
 
-	public Integer getTotalCount() {
+	public String getTotalCount() {
 		return totalCount;
 	}
 
-	public void setTotalCount(Integer totalCount) {
+	public void setTotalCount(String totalCount) {
 		this.totalCount = totalCount;
 	}
 

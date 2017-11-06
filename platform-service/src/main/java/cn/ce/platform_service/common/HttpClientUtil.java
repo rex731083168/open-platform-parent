@@ -1,11 +1,9 @@
 package cn.ce.platform_service.common;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -53,12 +51,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.InstanceList;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.ProductInstance;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Tenant;
-import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
-import net.sf.json.JSONArray;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
 import net.sf.json.JSONObject;
 
 /**
@@ -511,9 +506,10 @@ public class HttpClientUtil {
 	public static Object getUrlReturnObject(String url, Class<?> clazz, Map<String, Class<?>> classMap) {
 		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
 
-		JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
 		try {
-			Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+			JsonReader reader = new JsonReader(new StringReader(jasonResultHttpGet.toString()));
+			reader.setLenient(true);
+			Object object = new Gson().fromJson(reader, clazz);
 			return object;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -522,51 +518,51 @@ public class HttpClientUtil {
 		}
 	}
 
-	public static TenantApps specialTenantRetrunObject(String url) {
-		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
-		TenantApps taps = new TenantApps();
-		try {
-			Tenant t = new Tenant();
-			JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
-			JSONObject jdata = (JSONObject) jsonobject.get("data");
-			JSONArray jarry = (JSONArray) jdata.get("appList");
-
-			List<AppList> applist = (List<AppList>) JSONArray.toList(jarry, AppList.class);
-
-			String msg = jsonobject.get("msg").toString();
-			String status = jsonobject.get("status").toString();
-			JSONObject jtenant = null;
-			try{
-				jtenant = (JSONObject) jdata.get("tenant");
-			}catch(Exception e){
-				logger.info("***********产品码错误,拿不到数据************");
-				return taps;
-			}
-			JSONObject jproductInstance = (JSONObject) jtenant.get("productInstance");
-
-			JSONArray instancearry = (JSONArray) jtenant.get("instanceList");
-
-			List<InstanceList> instanceList = (List<InstanceList>) JSONArray.toList(instancearry, InstanceList.class);
-			cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data data = (cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data) JSONObject
-					.toBean(jdata, cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data.class);
-
-			t = (Tenant) JSONObject.toBean(jtenant, Tenant.class);
-			t.setInstanceList(instanceList);
-			ProductInstance pit = (ProductInstance) JSONObject.toBean(jproductInstance, ProductInstance.class);
-			t.setProductInstance(pit);
-			data.setAppList(applist);
-			data.setTenant(t);
-			taps.setData(data);
-			taps.setMsg(msg);
-			taps.setStatus(Integer.valueOf(status));
-			return taps;
-		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error("specialTenantRetrunObject jsontoBean error", e);
-			return taps;
-		}
-
-	}
+//	public static TenantApps specialTenantRetrunObject(String url) {
+//		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
+//		TenantApps taps = new TenantApps();
+//		try {
+//			Tenant t = new Tenant();
+//			JSONObject jsonobject = JSONObject.fromObject(jasonResultHttpGet.toString());
+//			JSONObject jdata = (JSONObject) jsonobject.get("data");
+//			JSONArray jarry = (JSONArray) jdata.get("appList");
+//
+//			List<AppList> applist = (List<AppList>) JSONArray.toList(jarry, AppList.class);
+//
+//			String msg = jsonobject.get("msg").toString();
+//			String status = jsonobject.get("status").toString();
+//			JSONObject jtenant = null;
+//			try {
+//				jtenant = (JSONObject) jdata.get("tenant");
+//			} catch (Exception e) {
+//				logger.info("***********产品码错误,拿不到数据************");
+//				return taps;
+//			}
+//			JSONObject jproductInstance = (JSONObject) jtenant.get("productInstance");
+//
+//			JSONArray instancearry = (JSONArray) jtenant.get("instanceList");
+//
+//			List<InstanceList> instanceList = (List<InstanceList>) JSONArray.toList(instancearry, InstanceList.class);
+//			cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data data = (cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data) JSONObject
+//					.toBean(jdata, cn.ce.platform_service.diyApply.entity.tenantAppsEntity.Data.class);
+//
+//			t = (Tenant) JSONObject.toBean(jtenant, Tenant.class);
+//			t.setInstanceList(instanceList);
+//			ProductInstance pit = (ProductInstance) JSONObject.toBean(jproductInstance, ProductInstance.class);
+//			t.setProductInstance(pit);
+//			data.setAppList(applist);
+//			data.setTenant(t);
+//			taps.setData(data);
+//			taps.setMsg(msg);
+//			taps.setStatus(status);
+//			return taps;
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			logger.error("specialTenantRetrunObject jsontoBean error", e);
+//			return taps;
+//		}
+//
+//	}
 
 	public static Object getUrlReturnJsonObject(String url) {
 		StringBuffer jasonResultHttpGet = sendGetRequest(url, null);
@@ -580,53 +576,53 @@ public class HttpClientUtil {
 			return null;
 		}
 	}
-
-	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class<?>> classMap)
-			throws Exception {
-
-		BufferedReader br = null;
-
-		if (method.equals("findTenantAppsByTenantKey")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findTenantAppsByTenantKey.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-		if (method.equals("findPagedApps")) {
-
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findPagedApps.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-
-		}
-		if (method.equals("registerBathApp")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/registerBathApp.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-		if (method.equals("generatorTenantKey")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/generatorTenantKey.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-		if (method.equals("saveOrUpdateApps")) {
-			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/saveOrUpdateApps.json");
-
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
-		}
-
-		String s = "";
-		String tempString = null;
-		while ((tempString = br.readLine()) != null) {
-			s += tempString;
-
-		}
-
-		JSONObject jsonobject = JSONObject.fromObject(s);
-		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
-
-		br.close();
-		return object;
-
-	}
+//
+//	public Object testgetUrlReturnObject(String method, String url, Class<?> clazz, Map<String, Class<?>> classMap)
+//			throws Exception {
+//
+//		BufferedReader br = null;
+//
+//		if (method.equals("findTenantAppsByTenantKey")) {
+//			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findTenantAppsByTenantKey.json");
+//
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+//		}
+//		if (method.equals("findPagedApps")) {
+//
+//			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/findPagedApps.json");
+//
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+//
+//		}
+//		if (method.equals("registerBathApp")) {
+//			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/registerBathApp.json");
+//
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+//		}
+//		if (method.equals("generatorTenantKey")) {
+//			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/generatorTenantKey.json");
+//
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+//		}
+//		if (method.equals("saveOrUpdateApps")) {
+//			URL resourcesurl = this.getClass().getClassLoader().getResource("jason/saveOrUpdateApps.json");
+//
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(resourcesurl.getFile()), "UTF-8"));
+//		}
+//
+//		String s = "";
+//		String tempString = null;
+//		while ((tempString = br.readLine()) != null) {
+//			s += tempString;
+//
+//		}
+//
+//		JSONObject jsonobject = JSONObject.fromObject(s);
+//		Object object = JSONObject.toBean(jsonobject, clazz, classMap);
+//
+//		br.close();
+//		return object;
+//
+//	}
 
 }

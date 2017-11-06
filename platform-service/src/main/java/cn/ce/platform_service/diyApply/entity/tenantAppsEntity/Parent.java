@@ -13,19 +13,19 @@ public class Parent {
 
 	private String tenants;
 	private String parent;
-	private Integer flag;
+	private String flag;
 	private String unittype;
 	private String tenantApp;
-	private Integer insertDate;
+	private String insertDate;
 	private String tenantCode;
 	private String appCodes;
 	private String parentId;
 	private String bossProductInstance;
-	private Integer producttype;
+	private String producttype;
 	private String cusId;
 	private String productionId;
 	private String tenantId;
-	private Integer id;
+	private String id;
 	private String productDomain;
 	private String tenant;
 
@@ -45,11 +45,11 @@ public class Parent {
 		return parent;
 	}
 
-	public void setFlag(Integer flag) {
+	public void setFlag(String flag) {
 		this.flag = flag;
 	}
 
-	public Integer getFlag() {
+	public String getFlag() {
 		return flag;
 	}
 
@@ -69,11 +69,11 @@ public class Parent {
 		return tenantApp;
 	}
 
-	public void setInsertDate(Integer insertDate) {
+	public void setInsertDate(String insertDate) {
 		this.insertDate = insertDate;
 	}
 
-	public Integer getInsertDate() {
+	public String getInsertDate() {
 		return insertDate;
 	}
 
@@ -109,11 +109,11 @@ public class Parent {
 		return bossProductInstance;
 	}
 
-	public void setProducttype(Integer producttype) {
+	public void setProducttype(String producttype) {
 		this.producttype = producttype;
 	}
 
-	public Integer getProducttype() {
+	public String getProducttype() {
 		return producttype;
 	}
 
@@ -141,11 +141,11 @@ public class Parent {
 		return tenantId;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 

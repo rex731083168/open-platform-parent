@@ -13,13 +13,13 @@ public class Params {
 	
 	private String mobileRunning;
 	private String pcRunning;
-    private boolean useViewType;
+    private String useViewType;
     private String name;
     private String owner;
-    public void setUseViewType(boolean useViewType) {
+    public void setUseViewType(String useViewType) {
          this.useViewType = useViewType;
      }
-     public boolean getUseViewType() {
+     public String getUseViewType() {
          return useViewType;
      }
 

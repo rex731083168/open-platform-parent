@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Tenant {
 
-	private Integer id;
+	private String id;
 	private String name;
 	private String tenantCode;
 	private String tennatCode;
@@ -25,10 +25,10 @@ public class Tenant {
 	private String domain;
 	private String makeDomain;
 	private String mobileDomain;
-	private Integer mobileStatus;
-	private Integer pcPublishTime;
+	private String mobileStatus;
+	private String pcPublishTime;
 	private String mobilePublishTime;
-	private Integer productInstanceId;
+	private String productInstanceId;
 	private String appList;
 	private ProductInstance productInstance;
 
@@ -49,7 +49,7 @@ public class Tenant {
 	}
 
 	private List<InstanceList> instanceList;
-	private Integer productAttrId;
+	private String productAttrId;
 	private Attr attr;
 
 	private String productInstanceCode;
@@ -62,15 +62,15 @@ public class Tenant {
 	private String hotelDomain;
 	private String hotelCusdomain;
 	private String domainStatus;
-	private Integer status;
+	private String status;
 	private String domainInfo;
 	private boolean ceYun;
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -162,19 +162,19 @@ public class Tenant {
 		return mobileDomain;
 	}
 
-	public void setMobileStatus(Integer mobileStatus) {
+	public void setMobileStatus(String mobileStatus) {
 		this.mobileStatus = mobileStatus;
 	}
 
-	public Integer getMobileStatus() {
+	public String getMobileStatus() {
 		return mobileStatus;
 	}
 
-	public void setPcPublishTime(Integer pcPublishTime) {
+	public void setPcPublishTime(String pcPublishTime) {
 		this.pcPublishTime = pcPublishTime;
 	}
 
-	public Integer getPcPublishTime() {
+	public String getPcPublishTime() {
 		return pcPublishTime;
 	}
 
@@ -186,11 +186,11 @@ public class Tenant {
 		return mobilePublishTime;
 	}
 
-	public void setProductInstanceId(Integer productInstanceId) {
+	public void setProductInstanceId(String productInstanceId) {
 		this.productInstanceId = productInstanceId;
 	}
 
-	public Integer getProductInstanceId() {
+	public String getProductInstanceId() {
 		return productInstanceId;
 	}
 
@@ -202,11 +202,11 @@ public class Tenant {
 		return appList;
 	}
 
-	public void setProductAttrId(Integer productAttrId) {
+	public void setProductAttrId(String productAttrId) {
 		this.productAttrId = productAttrId;
 	}
 
-	public Integer getProductAttrId() {
+	public String getProductAttrId() {
 		return productAttrId;
 	}
 
@@ -298,11 +298,11 @@ public class Tenant {
 		return domainStatus;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 

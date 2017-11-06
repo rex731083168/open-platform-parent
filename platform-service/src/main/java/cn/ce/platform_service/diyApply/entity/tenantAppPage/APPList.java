@@ -1,15 +1,15 @@
 /**
   * Copyright 2017 bejson.com 
   */
-package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
+package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 
 /**
- * Auto-generated: 2017-10-19 14:44:5
+ * Auto-generated: 2017-10-20 11:35:58
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class AppList {
+public class APPList {
 
     private String id;
     private String appId;

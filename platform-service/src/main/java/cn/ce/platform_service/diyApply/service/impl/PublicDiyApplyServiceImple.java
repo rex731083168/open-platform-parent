@@ -76,7 +76,7 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 			/* 无接口时的测试方法 */
 			// Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl,
 			// Apps.class, classMap);
-			if (apps.getStatus() == 200 || apps.getStatus() == 110) {
+			if (apps.getStatus().equals("200") || apps.getStatus().equals("110")) {
 				result.setData(apps);
 				result.setSuccessMessage("");
 				return result;
@@ -106,9 +106,9 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 		String replacedurl = url.replaceAll(key$, key);
 		try {
 			/* get请求方法 */
-			TenantApps applyproduct = (TenantApps) HttpClientUtil.specialTenantRetrunObject(replacedurl);
+			TenantApps applyproduct = (TenantApps) HttpClientUtil.getUrlReturnObject(replacedurl, TenantApps.class, null);
 
-			if (applyproduct.getStatus() != null && applyproduct.getStatus().equals(200)) {
+			if (applyproduct.getStatus() != null && applyproduct.getStatus().equals("200")) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
 				return result;
@@ -154,7 +154,7 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 			TenantAppPage applyproduct = (TenantAppPage) HttpClientUtil.getUrlReturnObject(replacedurl,
 					TenantAppPage.class, classMap);
 
-			if (applyproduct.getStatus() == 200) {
+			if (applyproduct.getStatus().equals("200")) {
 				result.setData(applyproduct);
 				result.setSuccessMessage("");
 				return result;
