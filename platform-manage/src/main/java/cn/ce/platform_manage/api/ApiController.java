@@ -92,6 +92,12 @@ public class ApiController {
 		return manageApiService.showApi(apiId);
 	}
 
+	/**
+	 * 
+	 * @Description: api列表查询
+	 * @author: makangwei 
+	 * @date:   2017年11月14日 下午2:15:32 
+	 */
 	@RequestMapping(value = "/apiList", method = RequestMethod.POST)
 	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, 
 			@RequestBody QueryApiEntity apiEntity,

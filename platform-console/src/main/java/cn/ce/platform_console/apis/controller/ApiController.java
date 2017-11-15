@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.ApiType;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
@@ -65,7 +66,13 @@ public class ApiController {
 			result.setErrorMessage("api审核状态不可用", ErrorCodeNo.SYS012);
 			return result;
 		}
+		
+		if(apiEntity.getApiType() == null || StringUtils.isBlank(apiEntity.getApiType().toString())){
+			return Result.errorResult("api类型必须指定", ErrorCodeNo.SYS008, null, Status.FAILED);
+		}
+		
 		return consoleApiService.publishApi(user, apiEntity);
+		
 	}
 	
 	@RequestMapping(value="/checkListenPath", method= RequestMethod.GET)
@@ -166,7 +173,41 @@ public class ApiController {
 				PageValidateUtil.checkPageSize(pageSize));
 	}
 	
-	
+	/**
+	 * @Description: 文档中心api列表
+	 * @author: makangwei
+	 * @date:   2017年11月14日 下午2:14:13  
+	 */
+	@RequestMapping(value="/showDocApiList",method=RequestMethod.POST)
+	public Result<?> showDocApiList(
+			HttpSession session,
+			@RequestBody QueryApiEntity apiEntity,
+			@RequestParam(required=false,defaultValue= "1") int currentPage, 
+			@RequestParam(required=false,defaultValue= "10")int pageSize){
+		
+		if(apiEntity.getUserType() != null && 
+				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userIdd不能为空
+			
+			// 如果是提供者，从session中获取用户信息
+			Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
+			if(null == userObj){
+				return Result.errorResult("当前用户位登录", ErrorCodeNo.SYS003, null, Status.FAILED);
+			}else{
+				User user = (User)userObj;
+				apiEntity.setUserId(user.getId());
+			}
+			// TODO 支持根据不同的checkState查询出不同的结果
+			
+		}else{//如果当前是开发者登录，只能查看审核成功的api
+			apiEntity.setUserId(null);
+			apiEntity.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
+		}
+		
+		apiEntity.setApiType(ApiType.OPEN);
+		
+		return consoleApiService.showApiList(apiEntity, PageValidateUtil.checkCurrentPage(currentPage), 
+				PageValidateUtil.checkPageSize(pageSize));
+	}
 	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
 	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
 			String appId,

@@ -15,6 +15,7 @@ import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.ApiType;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.page.Page;
@@ -73,6 +74,10 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		if(!StringUtils.isBlank(entity.getApiChName())){
 			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
 		}
+		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
+			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
+		}
+		
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		
 		Page<ApiEntity> page = new Page<ApiEntity>(currentPage,0,pageSize);
@@ -100,6 +105,10 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		if(null != entity.getUserType()){
 			c.and(DBFieldsConstants.USER_USERTYPE).is(entity.getUserType());
 		}
+		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
+			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
+		}
+		
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		
 		Page<ApiEntity> page = new Page<ApiEntity>(currentPage,0,pageSize);
@@ -129,6 +138,16 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		Criteria c = new Criteria();
 		c.and(DBFieldsConstants.APIS_OPENAPPLY_ID).in(appIds);
 		c.and(DBFieldsConstants.APIS_CHECKSTATE).is(checkState);
+		Query query = new Query(c);
+		return super.find(query);
+	}
+	
+	@Override
+	public List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState, ApiType open) {
+		Criteria c = new Criteria();
+		c.and(DBFieldsConstants.APIS_OPENAPPLY_ID).in(openApplyIds);
+		c.and(DBFieldsConstants.APIS_CHECKSTATE).is(checkState);
+		c.and(DBFieldsConstants.APIS_API_TYPE).is(open);
 		Query query = new Query(c);
 		return super.find(query);
 	}

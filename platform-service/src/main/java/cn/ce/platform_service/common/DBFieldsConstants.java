@@ -22,6 +22,7 @@ public class DBFieldsConstants {
 	public static final String APIS_APP_CODE = "appCode";
 	public static final String APIS_APPID = "appId";
 	public static final String APIS_LISTEN_PATH = "listenPath";
+	public static final String APIS_API_TYPE = "apiType";
 	
 	/*************** user相关字段 **********************/
 	public static final String USER_USERTYPE = "userType";

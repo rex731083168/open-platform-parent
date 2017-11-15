@@ -81,6 +81,8 @@ public class ApiEntity implements Serializable {
 	/** api接口版本信息 */
 	@Field("apiVersion")
 	private ApiVersion apiVersion;
+	@Field("apiType")
+	private ApiType apiType;
 	
 	/** 接口描述 */
 	@Field("desc")
@@ -353,17 +355,27 @@ public class ApiEntity implements Serializable {
 	public void setListenPath(String listenPath) {
 		this.listenPath = listenPath;
 	}
+	
+	
+
+	public ApiType getApiType() {
+		return apiType;
+	}
+
+	public void setApiType(ApiType apiType) {
+		this.apiType = apiType;
+	}
 
 	@Override
 	public String toString() {
 		return "ApiEntity [id=" + id + ", openApplyId=" + openApplyId + ", userId=" + userId + ", userName=" + userName
 				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", appCode=" + appCode + ", testEndPoint="
-				+ testEndPoint + ", endPoint=" + endPoint + ", httpMethod=" + httpMethod + ", headers=" + headers
-				+ ", args=" + args + ", result=" + result + ", retExample=" + retExample + ", errCodes=" + errCodes
-				+ ", apiVersion=" + apiVersion + ", desc=" + desc + ", state=" + state + ", countByDay=" + countByDay
-				+ ", checkState=" + checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax
-				+ ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime="
-				+ createTime + ", openApplyEntity=" + openApplyEntity + "]";
+				+ testEndPoint + ", endPoint=" + endPoint + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod
+				+ ", headers=" + headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample
+				+ ", errCodes=" + errCodes + ", apiVersion=" + apiVersion + ", apiType=" + apiType + ", desc=" + desc
+				+ ", state=" + state + ", countByDay=" + countByDay + ", checkState=" + checkState + ", checkMem="
+				+ checkMem + ", quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate
+				+ ", per=" + per + ", createTime=" + createTime + ", openApplyEntity=" + openApplyEntity + "]";
 	}
 
 }

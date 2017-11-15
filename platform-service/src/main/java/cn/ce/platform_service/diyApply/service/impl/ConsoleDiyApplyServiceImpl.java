@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.ApiType;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
@@ -245,7 +246,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
 				List<String> apiIds = new ArrayList<String>();
 				for (ApiEntity apiEntity : apiList) {
-					apiIds.add(apiEntity.getId());
+					// version2.1改为只有api类型为开放的才绑定
+					if(apiEntity.getApiType() != null
+							&& apiEntity.getApiType() == ApiType.OPEN
+							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
+						apiIds.add(apiEntity.getId());
+					}
 				}
 				if (apiIds.size() > 0) {
 					map.put(appId, apiIds);
