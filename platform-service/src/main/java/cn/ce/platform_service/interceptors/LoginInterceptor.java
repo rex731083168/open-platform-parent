@@ -19,7 +19,12 @@ import cn.ce.platform_service.users.entity.User;
 
 /**
  * 
- * @author dingjia
+ * 
+ * @ClassName:  LoginInterceptor   
+ * @Description:用户登录拦截
+ * @author: makangwei 
+ * @date:   2017年11月21日 下午9:29:06   
+ * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  *
  */
 public class LoginInterceptor extends HandlerInterceptorAdapter {

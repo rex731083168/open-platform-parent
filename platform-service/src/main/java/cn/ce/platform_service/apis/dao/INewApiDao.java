@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.apis.entity.ApiType;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.page.Page;
 
@@ -31,7 +30,7 @@ public interface INewApiDao {
 	
 	List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState);
 	
-	List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState, ApiType open);
+	List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState, String apiType);
 
 	List<ApiEntity> findByField(String key, String value);
 

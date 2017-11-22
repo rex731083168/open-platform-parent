@@ -15,7 +15,6 @@ import com.mongodb.WriteResult;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.apis.entity.ApiType;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.page.Page;
@@ -72,7 +71,7 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(entity.getCheckState());
 		}
 		if(!StringUtils.isBlank(entity.getApiChName())){
-			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
+			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName(),"i");
 		}
 		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
 			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
@@ -97,7 +96,7 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 			c.and(DBFieldsConstants.APIS_USERID).is(entity.getUserId());
 		}
 		if(!StringUtils.isBlank(entity.getApiChName())){
-			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
+			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName(),"i");
 		}
 		if(null != entity.getCheckState()){
 			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(entity.getCheckState());
@@ -143,11 +142,11 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 	}
 	
 	@Override
-	public List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState, ApiType open) {
+	public List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState, String apiType) {
 		Criteria c = new Criteria();
 		c.and(DBFieldsConstants.APIS_OPENAPPLY_ID).in(openApplyIds);
 		c.and(DBFieldsConstants.APIS_CHECKSTATE).is(checkState);
-		c.and(DBFieldsConstants.APIS_API_TYPE).is(open);
+		c.and(DBFieldsConstants.APIS_API_TYPE).is(apiType);
 		Query query = new Query(c);
 		return super.find(query);
 	}

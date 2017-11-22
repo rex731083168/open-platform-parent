@@ -104,16 +104,16 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 			c.and(DBFieldsConstants.USER_STATE).is(Integer.valueOf(state));
 		}
 		if(StringUtils.isNotBlank(userName)){
-			c.and(DBFieldsConstants.USER_USERNAME).regex(userName);
+			c.and(DBFieldsConstants.USER_USERNAME).regex(userName,"i");
 		}
 		if(StringUtils.isNotBlank(email)){
-			c.and(DBFieldsConstants.USER_EMAIL).regex(email);
+			c.and(DBFieldsConstants.USER_EMAIL).regex(email,"i");
 		}
 		if(StringUtils.isNotBlank(telNumber)){
 			c.and(DBFieldsConstants.USER_TELNUMBER).regex(telNumber);
 		}
 		if(StringUtils.isNotBlank(enterpriseName)){
-			c.and(DBFieldsConstants.USER_ENTERPRISE_NAME).regex(enterpriseName);
+			c.and(DBFieldsConstants.USER_ENTERPRISE_NAME).regex(enterpriseName,"i");
 		}
         Query query = new Query(c).with(new Sort(new Order(Direction.DESC,DBFieldsConstants.USER_REGTIME)));
         

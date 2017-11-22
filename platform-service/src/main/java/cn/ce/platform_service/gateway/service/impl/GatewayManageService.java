@@ -340,6 +340,4 @@ public class GatewayManageService implements IGatewayManageService{
 		}
 		
 	}
-
-
 }

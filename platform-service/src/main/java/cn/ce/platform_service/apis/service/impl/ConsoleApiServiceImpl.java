@@ -21,7 +21,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.apis.entity.ApiType;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
@@ -341,7 +340,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		//获取versionId集合以及用逗号隔开的长数组
 //		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS);
-		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS, ApiType.OPEN);
+		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS, DBFieldsConstants.API_TYPE_OPEN);
 		_LOGGER.info("根据开放应用Id查询的即将绑定的api数量"+apiEntityList.size());
 		StringBuffer versionIdsBuf = new StringBuffer(); // versionId用逗号分隔的长字符串
 		Set<String> versionIdList = new HashSet<String>(); //versionId的集合

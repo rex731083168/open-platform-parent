@@ -82,7 +82,7 @@ public class ApiEntity implements Serializable {
 	@Field("apiVersion")
 	private ApiVersion apiVersion;
 	@Field("apiType")
-	private ApiType apiType;
+	private String apiType;
 	
 	/** 接口描述 */
 	@Field("desc")
@@ -91,6 +91,7 @@ public class ApiEntity implements Serializable {
 	@Field("state")
 	private int state;
 	/** 调用次数限制（次/每天），0为不可调用，-1为无限制 */
+	/** TODO 20171121 mkw 当前该参数没有用到*/
 	@Field("countByDay")
 	private int countByDay;
 	
@@ -358,11 +359,11 @@ public class ApiEntity implements Serializable {
 	
 	
 
-	public ApiType getApiType() {
+	public String getApiType() {
 		return apiType;
 	}
 
-	public void setApiType(ApiType apiType) {
+	public void setApiType(String apiType) {
 		this.apiType = apiType;
 	}
 

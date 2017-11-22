@@ -132,10 +132,10 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Criteria c = new Criteria();
 
 		if (StringUtils.isNotBlank(entity.getGuideName())) {
-			c.and(DBFieldsConstants.GUIDE_NAME).regex(entity.getGuideName());
+			c.and(DBFieldsConstants.GUIDE_NAME).regex(entity.getGuideName(),"i");
 		}
 		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
-			c.and(DBFieldsConstants.GUIDE_CREATE_USERNAME).regex(entity.getCreatUserName());
+			c.and(DBFieldsConstants.GUIDE_CREATE_USERNAME).regex(entity.getCreatUserName(),"i");
 		}
 		if (StringUtils.isNotBlank(entity.getApplyId())) {
 			c.and(DBFieldsConstants.GUIDE_APPLYID).is(entity.getApplyId());

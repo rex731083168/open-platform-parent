@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.apis.entity.ApiType;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
@@ -88,6 +88,9 @@ public class ApiController {
 //		if(!listenPath.endsWith("/")){
 //			listenPath = listenPath+"/";
 //		}
+		if(listenPath.endsWith("?")){
+			return Result.errorResult("listenPath不能以问号结尾",ErrorCodeNo.SYS005, null, Status.FAILED); 
+		}
 		return consoleApiService.checkListenPath(listenPath);
 	}
 	
@@ -152,7 +155,7 @@ public class ApiController {
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
 		if(apiEntity.getUserType() != null && 
-				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userIdd不能为空
+				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userId不能为空
 			
 			// 如果是提供者，从session中获取用户信息
 			Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
@@ -185,25 +188,10 @@ public class ApiController {
 			@RequestParam(required=false,defaultValue= "1") int currentPage, 
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
-		if(apiEntity.getUserType() != null && 
-				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userIdd不能为空
-			
-			// 如果是提供者，从session中获取用户信息
-			Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
-			if(null == userObj){
-				return Result.errorResult("当前用户位登录", ErrorCodeNo.SYS003, null, Status.FAILED);
-			}else{
-				User user = (User)userObj;
-				apiEntity.setUserId(user.getId());
-			}
-			// TODO 支持根据不同的checkState查询出不同的结果
-			
-		}else{//如果当前是开发者登录，只能查看审核成功的api
-			apiEntity.setUserId(null);
-			apiEntity.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
-		}
-		
-		apiEntity.setApiType(ApiType.OPEN);
+
+		apiEntity.setUserId(null);
+		apiEntity.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
+		apiEntity.setApiType(DBFieldsConstants.API_TYPE_OPEN);
 		
 		return consoleApiService.showApiList(apiEntity, PageValidateUtil.checkCurrentPage(currentPage), 
 				PageValidateUtil.checkPageSize(pageSize));

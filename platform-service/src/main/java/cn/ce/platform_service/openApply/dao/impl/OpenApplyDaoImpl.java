@@ -148,15 +148,15 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		Criteria c = new Criteria();
 
 		if (StringUtils.isNotBlank(entity.getAppName())) {
-			c.and(MongoFiledConstants.OPEN_APPLY_APPLYNAME).regex(entity.getAppName());
+			c.and(MongoFiledConstants.OPEN_APPLY_APPLYNAME).regex(entity.getAppName(),"i");
 		}
 
 		if (StringUtils.isNotBlank(entity.getUserName())) {
-			c.and(MongoFiledConstants.OPEN_APPLY_USERNAME).regex(entity.getUserName());
+			c.and(MongoFiledConstants.OPEN_APPLY_USERNAME).regex(entity.getUserName(),"i");
 		}
 
 		if (StringUtils.isNotBlank(entity.getEnterpriseName())) {
-			c.and(MongoFiledConstants.OPEN_APPLY_ENTERPRISENAME).regex(entity.getEnterpriseName());
+			c.and(MongoFiledConstants.OPEN_APPLY_ENTERPRISENAME).regex(entity.getEnterpriseName(),"i");
 		}
 
 		if (null != entity.getCheckState()) {
@@ -189,11 +189,11 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 		}
 
 		if (StringUtils.isAllLowerCase(entity.getUserName())) {
-			c.and("userName").regex(entity.getUserName());
+			c.and("userName").regex(entity.getUserName(),"i");
 		}
 
 		if (StringUtils.isAllLowerCase(entity.getEnterpriseName())) {
-			c.and("enterpriseName").regex(entity.getEnterpriseName());
+			c.and("enterpriseName").regex(entity.getEnterpriseName(),"i");
 		}
 
 		if (StringUtils.isNotBlank(entity.getApplyKey())) {
