@@ -11,23 +11,23 @@ package cn.ce.platform_service.diyApply.entity.appsEntity;
  */
 public class AppTypes {
 
-	private Integer appId;
-	private Integer appTypeId;
+	private String appId;
+	private String appTypeId;
 	private String appTypeName;
 
-	public Integer getAppId() {
+	public String getAppId() {
 		return appId;
 	}
 
-	public void setAppId(Integer appId) {
+	public void setAppId(String appId) {
 		this.appId = appId;
 	}
 
-	public Integer getAppTypeId() {
+	public String getAppTypeId() {
 		return appTypeId;
 	}
 
-	public void setAppTypeId(Integer appTypeId) {
+	public void setAppTypeId(String appTypeId) {
 		this.appTypeId = appTypeId;
 	}
 

@@ -16,12 +16,12 @@ public class Parent {
 	private Integer flag;
 	private String unittype;
 	private String tenantApp;
-	private Integer insertDate;
+	private String insertDate;
 	private String tenantCode;
 	private String appCodes;
 	private String parentId;
 	private String bossProductInstance;
-	private Integer producttype;
+	private String producttype;
 	private String cusId;
 	private String productionId;
 	private String tenantId;
@@ -69,11 +69,11 @@ public class Parent {
 		return tenantApp;
 	}
 
-	public void setInsertDate(Integer insertDate) {
+	public void setInsertDate(String insertDate) {
 		this.insertDate = insertDate;
 	}
 
-	public Integer getInsertDate() {
+	public String getInsertDate() {
 		return insertDate;
 	}
 
@@ -109,11 +109,11 @@ public class Parent {
 		return bossProductInstance;
 	}
 
-	public void setProducttype(Integer producttype) {
+	public void setProducttype(String producttype) {
 		this.producttype = producttype;
 	}
 
-	public Integer getProducttype() {
+	public String getProducttype() {
 		return producttype;
 	}
 

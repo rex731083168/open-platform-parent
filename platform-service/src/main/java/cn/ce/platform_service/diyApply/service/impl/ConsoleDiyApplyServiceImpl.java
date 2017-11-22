@@ -109,7 +109,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setCheckState(AuditConstants.DIY_APPLY_UNCHECKED);
 
 			String key = entity.getProductAuthCode();
-			String findTenantAppsByTenantKeyTenantId = null;
+//			String findTenantAppsByTenantKeyTenantId = null;
 			String findTenantAppsByTenantKeyTenanName = null;
 
 			// 产品信息
@@ -117,12 +117,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			try {
 				_LOGGER.info("get message from interface satar");
 				apps = plublicDiyApplyService.findTenantAppsByTenantKey(key).getData(); // 接入产品中心获取产品信息和开放应用信息
-				if(apps == null || apps.getStatus() != 200){
+				if(apps == null || !apps.getStatus().equals("200")){
 					return Result.errorResult("产品码错误", ErrorCodeNo.SYS024, null, Status.FAILED);
 				}
 				_LOGGER.info("get message from interface states " + apps.getStatus() + "");
 
-				if (apps.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_FAILE
+				if (apps.getStatus() == String.valueOf(AuditConstants.INTERFACE_RETURNSATAS_FAILE)
 						|| apps.getData().getTenant() == null) {
 					result.setErrorMessage("产品码不可用!", ErrorCodeNo.SYS024);
 					return result;
@@ -135,7 +135,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 					}
 				}
 
-				Integer findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
+				String findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
 				
 				if(null == findTenantAppsByTenantKeyTenantIdtemp){
 					result.setErrorMessage("网站实例tenantId不存在!");
@@ -143,15 +143,16 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 					return result;
 				}
 				
-				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
+//				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
 				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
 				
-				
+				entity.setProductInstanceId(findTenantAppsByTenantKeyTenantIdtemp);
+				entity.setProductName(findTenantAppsByTenantKeyTenanName);
 				
 				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantId:" + findTenantAppsByTenantKeyTenantIdtemp);
 				
 				//根据网站实例id查询是否配置资源IP
-				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantId,RequestMethod.GET.toString());
+				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,RequestMethod.GET.toString());
 				
 				if(StringUtils.isBlank(routeBySaasId)){
 					result.setErrorMessage("未配置定制应用资源池,请联系管理员!");
@@ -172,8 +173,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				return result;
 			}
 			
-			entity.setProductInstanceId(findTenantAppsByTenantKeyTenantId);
-			entity.setProductName(findTenantAppsByTenantKeyTenanName);
 
 			/***************************************************************
 			 * 
@@ -474,7 +473,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		try {
 			String sendPostByJson = HttpClientUtilsNew.getResponseString(registerMenuURL, body);
-
+			
+			_LOGGER.info("registerMenuURL return senPostByJson : " + sendPostByJson);
+			
 			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
 
 			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {

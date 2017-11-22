@@ -12,10 +12,10 @@ package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 public class Params {
 
     private String appName;
-    private boolean mobileRunning;
-    private boolean pcRunning;
-    private boolean useViewType;
-    private Integer tenaId;
+    private String mobileRunning;
+    private String pcRunning;
+    private String useViewType;
+    private String tenaId;
     public void setAppName(String appName) {
          this.appName = appName;
      }
@@ -23,31 +23,31 @@ public class Params {
          return appName;
      }
 
-    public void setMobileRunning(boolean mobileRunning) {
+    public void setMobileRunning(String mobileRunning) {
          this.mobileRunning = mobileRunning;
      }
-     public boolean getMobileRunning() {
+     public String getMobileRunning() {
          return mobileRunning;
      }
 
-    public void setPcRunning(boolean pcRunning) {
+    public void setPcRunning(String pcRunning) {
          this.pcRunning = pcRunning;
      }
-     public boolean getPcRunning() {
+     public String getPcRunning() {
          return pcRunning;
      }
 
-    public void setUseViewType(boolean useViewType) {
+    public void setUseViewType(String useViewType) {
          this.useViewType = useViewType;
      }
-     public boolean getUseViewType() {
+     public String getUseViewType() {
          return useViewType;
      }
 
-    public void setTenaId(Integer tenaId) {
+    public void setTenaId(String tenaId) {
          this.tenaId = tenaId;
      }
-     public Integer getTenaId() {
+     public String getTenaId() {
          return tenaId;
      }
 

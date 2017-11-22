@@ -11,14 +11,14 @@ package cn.ce.platform_service.diyApply.entity.tenantAppsEntity;
  */
 public class Attr {
 
-    private Integer id;
+    private String id;
     private String lang;
-    private Integer main;
-    private Integer siteType;
-    public void setId(Integer id) {
+    private String main;
+    private String siteType;
+    public void setId(String id) {
          this.id = id;
      }
-     public Integer getId() {
+     public String getId() {
          return id;
      }
 
@@ -29,17 +29,17 @@ public class Attr {
          return lang;
      }
 
-    public void setMain(Integer main) {
+    public void setMain(String main) {
          this.main = main;
      }
-     public Integer getMain() {
+     public String getMain() {
          return main;
      }
 
-    public void setSiteType(Integer siteType) {
+    public void setSiteType(String siteType) {
          this.siteType = siteType;
      }
-     public Integer getSiteType() {
+     public String getSiteType() {
          return siteType;
      }
 

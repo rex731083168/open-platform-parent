@@ -3,6 +3,8 @@
   */
 package cn.ce.platform_service.diyApply.entity.tenantAppPage;
 
+import java.util.List;
+
 /**
  * Auto-generated: 2017-10-20 11:35:58
  *
@@ -11,20 +13,23 @@ package cn.ce.platform_service.diyApply.entity.tenantAppPage;
  */
 public class Data {
 
-    private Tenant tenant;
-    private Pages pages;
-    public void setTenant(Tenant tenant) {
-         this.tenant = tenant;
-     }
-     public Tenant getTenant() {
-         return tenant;
-     }
+	private Tenant tenant;
+	private Pages pages;
 
-    public void setPages(Pages pages) {
-         this.pages = pages;
-     }
-     public Pages getPages() {
-         return pages;
-     }
+	public Tenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(Tenant tenant) {
+		this.tenant = tenant;
+	}
+
+	public Pages getPages() {
+		return pages;
+	}
+
+	public void setPages(Pages pages) {
+		this.pages = pages;
+	}
 
 }

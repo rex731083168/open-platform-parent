@@ -13,7 +13,7 @@ public class Apps {
 
     private Data data;
     private String msg;
-    private Integer status;
+    private String status;
     public void setData(Data data) {
          this.data = data;
      }
@@ -28,10 +28,10 @@ public class Apps {
          return msg;
      }
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 

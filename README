@@ -8,7 +8,6 @@ platform-manage(后台审核)  >> war - tomcat
 platform-oauth-tykcode(对接cas系统,生成tykcode服务)   >> war - tomcat
 platform-service(jar包服务 为console / manage / oauth-tykcode)提供服务 >> jar
 
-<<<<<<< HEAD
 项目开发手册及规范》》》
 具体项目规范常见wiki:http:${wiki.url}
 
@@ -23,12 +22,30 @@ mongo* = mongoDB相关配置
 base.log.dir 项目日志文件输出盘符目录
 error.report.mail 错误日志发送邮件地址 
 error.report.size 单位(k) 当错误日志文件达到${size}k时，发送邮件至${error.report.mail}邮箱中进行监控报警
-=======
 
-版本：v1.0.1
-描述：
-（***** paas-estatistics(统计应用日志) *****）此服务已过期，
-将paas-estatistics服务整合至platform-console应用中
-时间：2017年9月8日17:38:51
-操作人：lida@300.cn 
->>>>>>> refs/remotes/origin/master
+
+Git版本管理说明》》》
+分支定义：
+ devlop（开发分支）最全量的代码，与master分支保持同步
+ feature/*（目标分支）根据每期的业务目标，创建对应的分支 source:devlop  |  target:feature/*
+ release/*（预上线分支）
+	此分支在feature分支开发完成并测试通过后，合并代码至此分支，进行上线部署测试
+	线上测试出现bug,在此分支进行修改调整
+	线上测试通过后,合并至devlop分支，并删除分支
+ master（主干分支）
+  a. devlop分支代码发生变化时,发起merge请求,由项目管理员进行审批
+  b. master分支合并请求通过后，创建tag
+ hotfix（紧急修复分支）线上发现问题时,从master分支中创建hotfix分支，修复完成后会将代码合并至devlop分支，问题处理完成后 删除此分支
+
+
+versions:
+1.0.0
+实现开放平台1期需求
+1.0.1
+整合es服务至platform-console服务中
+1.0.2
+重构代码，优化接口入参出参格式，log4j日志规范等
+2.0.1
+支持门户定制化项目所需中台的能力开放
+2.0.2
+调整对接产品中心接口的service实现类，实体属性得数据类型以及转化JSON字符串的工具类
