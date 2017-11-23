@@ -38,6 +38,8 @@ public interface INewApiDao {
 
 	ApiEntity findByVersion(String versionId, String version);
 
+	Page<ApiEntity> findApiPageByIdsAndNameLike(List<String> apiIds, String apiName, Page<ApiEntity> page);
+
 
 
 

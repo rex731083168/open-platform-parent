@@ -172,4 +172,21 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		return super.findOne(query);
 	}
 
+	@Override
+	public Page<ApiEntity> findApiPageByIdsAndNameLike(List<String> apiIds, String apiName, Page<ApiEntity> page) {
+		Criteria c = new Criteria();
+		if(StringUtils.isNotBlank(apiName)){
+			Criteria c1 = Criteria.where(DBFieldsConstants.APIS_APICHNAME).regex(apiName,"i")
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+			Criteria c2 = Criteria.where(DBFieldsConstants.APIS_APIENNAME).regex(apiName,"i")
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+			c.orOperator(c1,c2);
+			return super.findPage(page, new Query(c));
+		}else{
+			Query query = new Query().addCriteria(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+			return super.findPage(page, query);
+		}
+
+	}
+
 }
