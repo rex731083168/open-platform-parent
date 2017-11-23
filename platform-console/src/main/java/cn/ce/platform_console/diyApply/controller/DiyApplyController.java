@@ -122,29 +122,10 @@ public class DiyApplyController {
 		return consoleDiyApplyService.updateApply(apply);
 	}
 
-	@ApiOperation("批量发布应用 更改checkState为1 ")
+	@ApiOperation("批量发布应用 更改checkState为1")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestParam String ids) {
 		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
-	}
-
-	@RequestMapping(value="/test",produces="application/json;charset=urf-8")
-	//@ResponseBody 如果是spring4 可以指定restcontroller 就不用这个参数了。如果没指定restcontroller则需要指定该参数
-	public Result<?> testPost(
-			//@RequestBody RequestParamBody requestBody
-			//RequestParamBody是接受参数的实体，如果你需要接受参数就用一个实体接收
-			){ 
-		//Result 是封装返回参数的实体 
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("userName", "zhangsan");
-		map.put("password", "12312321");
-		Result<Map<String,String>> result = new Result<Map<String,String>>();
-		result.setData(map);
-		result.setStatus(Status.SUCCESS);
-		result.setErrorCode(ErrorCodeNo.SYS000);
-
-		return result;
-		
 	}
 
 }
