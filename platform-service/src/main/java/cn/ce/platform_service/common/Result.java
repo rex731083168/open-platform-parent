@@ -44,7 +44,9 @@ public class Result <T> {
 	public void setErrorMessage(String message){
 		this.message = message;
 		this.status = Status.FAILED;
-		this.errorCode = ErrorCodeNo.SYS001;
+		if(this.errorCode == null ){
+			this.errorCode = ErrorCodeNo.SYS001;
+		}
 	}
 	
 	public void setErrorMessage(String message,ErrorCodeNo errorCodeNo){
