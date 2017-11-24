@@ -96,7 +96,8 @@
 		<repository>
 			<id>public</id>
 			<name>public-group</name>
-			<url>http://10.12.40.200:8081/nexus/content/groups/public/</url>
+			<!-- <url>http://10.12.40.200:8081/nexus/content/groups/public/</url> -->
+			<url>http://10.12.51.10:8081/nexus/content/groups/public/</url>
 		</repository>
 
 	</repositories>
@@ -105,12 +106,14 @@
 		<repository>
 			<id>platform-releases</id>
 			<name>Maven Release Repository</name>
-			<url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url>
+			<!-- <url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url> -->
+			<url>http://10.12.51.10:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>platform-snapshots</id>
 			<name>Maven Snapshot Repository</name>
-			<url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url>
+			<!-- <url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url> -->
+			<url>http://10.12.51.10:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 

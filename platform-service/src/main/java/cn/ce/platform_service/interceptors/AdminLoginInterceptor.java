@@ -69,8 +69,7 @@ public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
 			return true;
 		}
 		Result<String> result = new Result<>();
-		result.setErrorCode(ErrorCodeNo.SYS003);
-		result.setErrorMessage("用户未登录");
+		result.setErrorMessage("用户未登录",ErrorCodeNo.SYS003);
 		this.returnJson(response, JSON.toJSONString(result));
 		return false;
      

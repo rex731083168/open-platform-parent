@@ -50,10 +50,9 @@ public class ApiEntity implements Serializable {
 	/**/
 	@Field("appCode") 
 	private String appCode;
-	/** 接口地址 */
-	@Field("testEndPoint")
-	private String testEndPoint;
-	/** 接口地址 */
+
+	
+	/** 接口地址  创建api的时候定义该地址。当saas-id找不到真实地址的时候就会访问该地址 */
 	@Field("endPoint")
 	private String endPoint;
 	
@@ -173,14 +172,6 @@ public class ApiEntity implements Serializable {
 
 	public void setApiEnName(String apiEnName) {
 		this.apiEnName = apiEnName;
-	}
-
-	public String getTestEndPoint() {
-		return testEndPoint;
-	}
-
-	public void setTestEndPoint(String testEndPoint) {
-		this.testEndPoint = testEndPoint;
 	}
 
 	public String getEndPoint() {
@@ -370,8 +361,7 @@ public class ApiEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "ApiEntity [id=" + id + ", openApplyId=" + openApplyId + ", userId=" + userId + ", userName=" + userName
-				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", appCode=" + appCode + ", testEndPoint="
-				+ testEndPoint + ", endPoint=" + endPoint + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod
+				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", appCode=" + appCode + ", endPoint=" + endPoint + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod
 				+ ", headers=" + headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample
 				+ ", errCodes=" + errCodes + ", apiVersion=" + apiVersion + ", apiType=" + apiType + ", desc=" + desc
 				+ ", state=" + state + ", countByDay=" + countByDay + ", checkState=" + checkState + ", checkMem="
