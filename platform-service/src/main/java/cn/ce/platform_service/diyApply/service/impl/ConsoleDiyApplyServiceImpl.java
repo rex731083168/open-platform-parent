@@ -245,7 +245,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
 				List<String> apiIds = new ArrayList<String>();
 				for (ApiEntity apiEntity : apiList) {
-					apiIds.add(apiEntity.getId());
+					// version2.1改为只有api类型为开放的才绑定
+					if(apiEntity.getApiType() != null
+							&&  DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
+							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
+						apiIds.add(apiEntity.getId());
+					}
 				}
 				if (apiIds.size() > 0) {
 					map.put(appId, apiIds);

@@ -1,5 +1,8 @@
 package cn.ce.platform_console.diyApply.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -119,11 +122,10 @@ public class DiyApplyController {
 		return consoleDiyApplyService.updateApply(apply);
 	}
 
-	@ApiOperation("批量发布应用 更改checkState为1 ")
+	@ApiOperation("批量发布应用 更改checkState为1")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<String> batchUpdate(@RequestParam String ids) {
 		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
 	}
-
 
 }

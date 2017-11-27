@@ -28,13 +28,18 @@ public interface INewApiDao {
 
 	List<ApiEntity> findApiByIds(List<String> apiId);
 	
-	List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> appIds,Integer checkState);
+	List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState);
+	
+	List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState, String apiType);
 
 	List<ApiEntity> findByField(String key, String value);
 
 	Page<ApiEntity> findApiPageByIds(List<String> apiIds, Page<ApiEntity> page);
 
 	ApiEntity findByVersion(String versionId, String version);
+
+	Page<ApiEntity> findApiPageByIdsAndNameLike(List<String> apiIds, String apiName, Page<ApiEntity> page);
+
 
 
 

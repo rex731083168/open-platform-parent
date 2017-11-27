@@ -26,6 +26,8 @@ public class QueryApiEntity {
 	
 	/** apichName */
 	private String apiChName;
+	
+	private String apiType;
 
 	public String getOpenApplyId() {
 		return openApplyId;
@@ -65,6 +67,14 @@ public class QueryApiEntity {
 
 	public void setApiChName(String apiChName) {
 		this.apiChName = apiChName;
+	}
+
+	public String getApiType() {
+		return apiType;
+	}
+
+	public void setApiType(String apiType) {
+		this.apiType = apiType;
 	}
 
 }

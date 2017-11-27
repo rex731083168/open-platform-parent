@@ -20,6 +20,7 @@ import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
@@ -65,7 +66,13 @@ public class ApiController {
 			result.setErrorMessage("api审核状态不可用", ErrorCodeNo.SYS012);
 			return result;
 		}
+		
+		if(apiEntity.getApiType() == null || StringUtils.isBlank(apiEntity.getApiType().toString())){
+			return Result.errorResult("api类型必须指定", ErrorCodeNo.SYS008, null, Status.FAILED);
+		}
+		
 		return consoleApiService.publishApi(user, apiEntity);
+		
 	}
 	
 	@RequestMapping(value="/checkListenPath", method= RequestMethod.GET)
@@ -81,6 +88,9 @@ public class ApiController {
 //		if(!listenPath.endsWith("/")){
 //			listenPath = listenPath+"/";
 //		}
+		if(listenPath.endsWith("?")){
+			return Result.errorResult("listenPath不能以问号结尾",ErrorCodeNo.SYS005, null, Status.FAILED); 
+		}
 		return consoleApiService.checkListenPath(listenPath);
 	}
 	
@@ -145,7 +155,7 @@ public class ApiController {
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
 		if(apiEntity.getUserType() != null && 
-				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userIdd不能为空
+				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userId不能为空
 			
 			// 如果是提供者，从session中获取用户信息
 			Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
@@ -166,7 +176,26 @@ public class ApiController {
 				PageValidateUtil.checkPageSize(pageSize));
 	}
 	
-	
+	/**
+	 * @Description: 文档中心api列表
+	 * @author: makangwei
+	 * @date:   2017年11月14日 下午2:14:13  
+	 */
+	@RequestMapping(value="/showDocApiList",method=RequestMethod.POST)
+	public Result<?> showDocApiList(
+			HttpSession session,
+			@RequestBody QueryApiEntity apiEntity,
+			@RequestParam(required=false,defaultValue= "1") int currentPage, 
+			@RequestParam(required=false,defaultValue= "10")int pageSize){
+		
+
+		apiEntity.setUserId(null);
+		apiEntity.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
+		apiEntity.setApiType(DBFieldsConstants.API_TYPE_OPEN);
+		
+		return consoleApiService.showApiList(apiEntity, PageValidateUtil.checkCurrentPage(currentPage), 
+				PageValidateUtil.checkPageSize(pageSize));
+	}
 	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
 	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
 			String appId,

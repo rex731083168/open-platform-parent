@@ -106,8 +106,9 @@ public class ManageApiServiceImpl implements IManageApiService{
 //					apiEntity.setListenPath(apiEntity.getListenPath()+"/");
 //				}
 				String listenPath = apiEntity.getListenPath();
+				String endPoint  = apiEntity.getEndPoint(); //endPoint如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
 				/*** 添加api到网关接口 ***/
-				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), listenPath, listenPath, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), listenPath, listenPath, endPoint, map,AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 				
 				if(params == null){
 					_LOGGER.info("拼接网关api json发生错误");
@@ -207,7 +208,7 @@ public class ManageApiServiceImpl implements IManageApiService{
 		return result;
 	}
 	
-	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, Map<String, String> map,
+	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String endPoint, Map<String, String> map,
 
 			boolean gatewayApiVersionedTrue) {
 		

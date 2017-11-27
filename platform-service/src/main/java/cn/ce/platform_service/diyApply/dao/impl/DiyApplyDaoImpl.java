@@ -111,10 +111,10 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 		
 		c.and(DBFieldsConstants.APIS_USERID).is(userId);
 		if (StringUtils.isNotBlank(applyName)) {
-			c.and(DBFieldsConstants.DIY_APPLY_APPLYNAME).regex(applyName);
+			c.and(DBFieldsConstants.DIY_APPLY_APPLYNAME).regex(applyName,"i");
 		}
 		if (StringUtils.isNotBlank(productName)) {
-			c.and(DBFieldsConstants.DIY_APPLY_PRODUCTNAME).regex(productName);
+			c.and(DBFieldsConstants.DIY_APPLY_PRODUCTNAME).regex(productName,"i");
 		}
 		if (checkState != null) {
 			c.and(DBFieldsConstants.DIY_APPLY_CHECKSTATE).is(checkState);

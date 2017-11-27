@@ -31,7 +31,7 @@
     },
     "proxy": {
       "listen_path": "override",
-      "target_url": "http://www.300.cn",
+      "target_url": "",
       "strip_listen_path": false,
       "enable_router_table": true
     },

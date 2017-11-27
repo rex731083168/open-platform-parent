@@ -50,10 +50,9 @@ public class ApiEntity implements Serializable {
 	/**/
 	@Field("appCode") 
 	private String appCode;
-	/** 接口地址 */
-	@Field("testEndPoint")
-	private String testEndPoint;
-	/** 接口地址 */
+
+	
+	/** 接口地址  创建api的时候定义该地址。当saas-id找不到真实地址的时候就会访问该地址 */
 	@Field("endPoint")
 	private String endPoint;
 	
@@ -81,6 +80,8 @@ public class ApiEntity implements Serializable {
 	/** api接口版本信息 */
 	@Field("apiVersion")
 	private ApiVersion apiVersion;
+	@Field("apiType")
+	private String apiType;
 	
 	/** 接口描述 */
 	@Field("desc")
@@ -89,6 +90,7 @@ public class ApiEntity implements Serializable {
 	@Field("state")
 	private int state;
 	/** 调用次数限制（次/每天），0为不可调用，-1为无限制 */
+	/** TODO 20171121 mkw 当前该参数没有用到*/
 	@Field("countByDay")
 	private int countByDay;
 	
@@ -170,14 +172,6 @@ public class ApiEntity implements Serializable {
 
 	public void setApiEnName(String apiEnName) {
 		this.apiEnName = apiEnName;
-	}
-
-	public String getTestEndPoint() {
-		return testEndPoint;
-	}
-
-	public void setTestEndPoint(String testEndPoint) {
-		this.testEndPoint = testEndPoint;
 	}
 
 	public String getEndPoint() {
@@ -353,17 +347,26 @@ public class ApiEntity implements Serializable {
 	public void setListenPath(String listenPath) {
 		this.listenPath = listenPath;
 	}
+	
+	
+
+	public String getApiType() {
+		return apiType;
+	}
+
+	public void setApiType(String apiType) {
+		this.apiType = apiType;
+	}
 
 	@Override
 	public String toString() {
 		return "ApiEntity [id=" + id + ", openApplyId=" + openApplyId + ", userId=" + userId + ", userName=" + userName
-				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", appCode=" + appCode + ", testEndPoint="
-				+ testEndPoint + ", endPoint=" + endPoint + ", httpMethod=" + httpMethod + ", headers=" + headers
-				+ ", args=" + args + ", result=" + result + ", retExample=" + retExample + ", errCodes=" + errCodes
-				+ ", apiVersion=" + apiVersion + ", desc=" + desc + ", state=" + state + ", countByDay=" + countByDay
-				+ ", checkState=" + checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax
-				+ ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime="
-				+ createTime + ", openApplyEntity=" + openApplyEntity + "]";
+				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", appCode=" + appCode + ", endPoint=" + endPoint + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod
+				+ ", headers=" + headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample
+				+ ", errCodes=" + errCodes + ", apiVersion=" + apiVersion + ", apiType=" + apiType + ", desc=" + desc
+				+ ", state=" + state + ", countByDay=" + countByDay + ", checkState=" + checkState + ", checkMem="
+				+ checkMem + ", quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate
+				+ ", per=" + per + ", createTime=" + createTime + ", openApplyEntity=" + openApplyEntity + "]";
 	}
 
 }

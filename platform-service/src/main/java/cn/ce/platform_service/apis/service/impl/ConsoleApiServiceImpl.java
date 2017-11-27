@@ -339,8 +339,9 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			List<String> openApplyIds){
 		
 		//获取versionId集合以及用逗号隔开的长数组
-		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS);
-		_LOGGER.info("根据开放应用Id查询的api列表"+apiEntityList.size());
+//		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS);
+		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS, DBFieldsConstants.API_TYPE_OPEN);
+		_LOGGER.info("根据开放应用Id查询的即将绑定的api数量"+apiEntityList.size());
 		StringBuffer versionIdsBuf = new StringBuffer(); // versionId用逗号分隔的长字符串
 		Set<String> versionIdList = new HashSet<String>(); //versionId的集合
 		for (ApiEntity apiEntity : apiEntityList) { //装参数

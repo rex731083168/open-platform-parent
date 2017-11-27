@@ -12,6 +12,7 @@ import cn.ce.platform_service.admin.dao.IAdminDao;
 import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.admin.service.IAdminService;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 
 /**
@@ -36,7 +37,7 @@ public class AdminServiceImpl implements IAdminService {
 	   	Result<Map<String,Object>> result = new Result<Map<String,Object>>();
 		AdminEntity admin = adminDao.checkLogin(userName,password);
 		if (admin == null) {
-			result.setErrorMessage("用户名或密码错误，请重新输入");
+			result.setErrorMessage("用户名或密码错误，请重新输入",ErrorCodeNo.SYS022);
 			return result;
 		} else {
 			admin.setPassword("");

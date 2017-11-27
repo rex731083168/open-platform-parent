@@ -191,7 +191,7 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 		Set<String> openApplySet = limitMap.keySet();
 		if (openApplySet.contains(openApplyId)) {
 			List<String> apiIds = limitMap.get(openApplyId);
-			Page<ApiEntity> apiPage = newApiDao.findApiPageByIds(apiIds,new Page<ApiEntity>(currentPage,0,pageSize));
+			Page<ApiEntity> apiPage = newApiDao.findApiPageByIdsAndNameLike(apiIds,apiName,new Page<ApiEntity>(currentPage,0,pageSize));
 			result.setSuccessData(apiPage);
 		} else {
 			result.setErrorMessage("当前开放应用不可用", ErrorCodeNo.SYS017);

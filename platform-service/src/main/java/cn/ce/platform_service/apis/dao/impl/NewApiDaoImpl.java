@@ -71,8 +71,12 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(entity.getCheckState());
 		}
 		if(!StringUtils.isBlank(entity.getApiChName())){
-			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
+			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName(),"i");
 		}
+		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
+			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
+		}
+		
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		
 		Page<ApiEntity> page = new Page<ApiEntity>(currentPage,0,pageSize);
@@ -92,7 +96,7 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 			c.and(DBFieldsConstants.APIS_USERID).is(entity.getUserId());
 		}
 		if(!StringUtils.isBlank(entity.getApiChName())){
-			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName());
+			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName(),"i");
 		}
 		if(null != entity.getCheckState()){
 			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(entity.getCheckState());
@@ -100,6 +104,10 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		if(null != entity.getUserType()){
 			c.and(DBFieldsConstants.USER_USERTYPE).is(entity.getUserType());
 		}
+		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
+			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
+		}
+		
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		
 		Page<ApiEntity> page = new Page<ApiEntity>(currentPage,0,pageSize);
@@ -132,6 +140,16 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		Query query = new Query(c);
 		return super.find(query);
 	}
+	
+	@Override
+	public List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> openApplyIds, Integer checkState, String apiType) {
+		Criteria c = new Criteria();
+		c.and(DBFieldsConstants.APIS_OPENAPPLY_ID).in(openApplyIds);
+		c.and(DBFieldsConstants.APIS_CHECKSTATE).is(checkState);
+		c.and(DBFieldsConstants.APIS_API_TYPE).is(apiType);
+		Query query = new Query(c);
+		return super.find(query);
+	}
 
 	@Override
 	public List<ApiEntity> findByField(String key, String value) {
@@ -152,6 +170,23 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		c.and(DBFieldsConstants.APIS_APIVERSION_VERSION).is(version);
 		Query query = new Query(c);
 		return super.findOne(query);
+	}
+
+	@Override
+	public Page<ApiEntity> findApiPageByIdsAndNameLike(List<String> apiIds, String apiName, Page<ApiEntity> page) {
+		Criteria c = new Criteria();
+		if(StringUtils.isNotBlank(apiName)){
+			Criteria c1 = Criteria.where(DBFieldsConstants.APIS_APICHNAME).regex(apiName,"i")
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+			Criteria c2 = Criteria.where(DBFieldsConstants.APIS_APIENNAME).regex(apiName,"i")
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+			c.orOperator(c1,c2);
+			return super.findPage(page, new Query(c));
+		}else{
+			Query query = new Query().addCriteria(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+			return super.findPage(page, query);
+		}
+
 	}
 
 }

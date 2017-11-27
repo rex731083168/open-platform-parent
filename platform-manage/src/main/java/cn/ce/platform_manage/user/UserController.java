@@ -52,6 +52,13 @@ public class UserController {
 		return manageUserService.auditUsers(userIdArray, checkMem, checkState);
 	}
 
+	/**
+	 * 
+	 * @Title: activeOrForbidUsers
+	 * @Description: 启用或禁用用户
+	 * @author: makangwei 
+	 * @date:   2017年11月21日 下午6:15:51 
+	 */
 	@RequestMapping(value = "/activeOrForbidUsers", method = RequestMethod.POST)
 	public Result<String> activeOrForbidUsers(
 			@RequestParam String userId, 
