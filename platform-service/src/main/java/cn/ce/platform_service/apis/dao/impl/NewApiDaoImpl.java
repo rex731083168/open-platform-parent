@@ -16,6 +16,7 @@ import com.mongodb.WriteResult;
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
@@ -177,9 +178,11 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		Criteria c = new Criteria();
 		if(StringUtils.isNotBlank(apiName)){
 			Criteria c1 = Criteria.where(DBFieldsConstants.APIS_APICHNAME).regex(apiName,"i")
-					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds))
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
 			Criteria c2 = Criteria.where(DBFieldsConstants.APIS_APIENNAME).regex(apiName,"i")
-					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds));
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds))
+					.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
 			c.orOperator(c1,c2);
 			return super.findPage(page, new Query(c));
 		}else{

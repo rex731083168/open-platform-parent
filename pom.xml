@@ -76,6 +76,14 @@
 				<env>semi</env>
 			</properties>
 		</profile>
+		<!-- 预发布 -->
+		<profile>
+			<id>pre</id>
+			<properties>
+				<spring.profiles.active>pre</spring.profiles.active>
+				<env>pre</env>
+			</properties>
+		</profile>
 		<profile>
 			<id>prod</id>
 			<properties>

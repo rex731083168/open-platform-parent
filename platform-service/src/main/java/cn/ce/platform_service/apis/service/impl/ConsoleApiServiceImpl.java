@@ -363,7 +363,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			List<ApiEntity> apiList = newApiDao.findByField("apiVersion.versionId", versionId);
 			List<String> versionList = new ArrayList<String>();
 			for (ApiEntity apiEntity : apiList) {
-				versionList.add(apiEntity.getApiVersion().getVersion());
+				//只有审核通过的版本才能绑定关系
+				if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
+					versionList.add(apiEntity.getApiVersion().getVersion());
+				}
 			}
 			apiInfos.put(versionId, versionList);
 		}
