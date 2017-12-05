@@ -15,7 +15,9 @@
 	<context:property-placeholder location="classpath:conf/application.properties"/>
       
     <!-- 定义mongo对象，对应的是mongodb官方jar包中的Mongo，replica-set设置集群副本的ip地址和端口 -->  
-    <mongo:mongo-client id="mongo" replica-set="${mongodb.replica-set}">
+    <mongo:mongo-client id="mongo" replica-set="${mongodb.replica-set}" >
+     <!-- credentials="makangwei:123456@admin" -->
+     
         <mongo:client-options 
              connections-per-host="${mongo.connectionsPerHost}"  
              threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"  
@@ -26,7 +28,7 @@
     </mongo:mongo-client>   
   
     <!-- Specify the database to use -->
-    <mongo:db-factory dbname="${mongo.database.name}" mongo-ref="mongo"/>  
+    <mongo:db-factory dbname="${mongo.database.name}" mongo-ref="mongo" />
   
 
    <bean id="mappingContext"  
@@ -53,15 +55,13 @@
     </mongo:converter>
   </mongo:custom-converters>
 </mongo:mapping-converter> -->
-    
+
     <!-- mongodb的主要操作对象，所有对mongodb的增删改查的操作都是通过它完成 -->  
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
         <constructor-arg name="mongoConverter" ref="mappingMongoConverter"/>
     </bean>
     
-    
-
       
     <!-- 映射转换器，扫描back-package目录下的文件，根据注释，把它们作为mongodb的一个collection的映射 -->  
     <mongo:mapping-converter base-package="cn.ce" />  
