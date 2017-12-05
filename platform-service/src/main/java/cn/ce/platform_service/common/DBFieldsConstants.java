@@ -70,12 +70,14 @@ public class DBFieldsConstants {
 	public static final String DIY_APPLY_APPLYNAME = "applyName";
 	public static final String DIY_APPLY_PRODUCTNAME = "productName";
 	public static final String DIY_APPLY_CHECKSTATE = "checkState";
+	public static final String DIY_APPLY_CREATEDATE = "createDate";
 	
 	/*************** 指南相关字段 **********************/
 	public static final String GUIDE_NAME = "guideName";
 	public static final String GUIDE_CREATE_USERNAME= "creatUserName";
 	public static final String GUIDE_APPLYID = "applyId";
 	public static final String GUIDE_CHECKSTATE = "checkState";
+
 
 
 
