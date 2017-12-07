@@ -62,9 +62,7 @@ public class ApiController {
 		
 		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNAUDITED
 				|| apiEntity.getCheckState() < AuditConstants.API_CHECK_STATE_UNCOMMITED){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("api审核状态不可用", ErrorCodeNo.SYS012);
-			return result;
+			return Result.errorResult("api审核状态不可用", ErrorCodeNo.SYS012, null, Status.FAILED);
 		}
 		
 		if(apiEntity.getApiType() == null || StringUtils.isBlank(apiEntity.getApiType().toString())){
@@ -121,9 +119,7 @@ public class ApiController {
 	public Result<?> modifyApi(@RequestBody ApiEntity apiEntity){
 		
 		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNCOMMITED){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("当前状态不支持修改", ErrorCodeNo.SYS012);
-			return result;
+			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
 		}
 		
 		return consoleApiService.modifyApi(apiEntity);
@@ -157,14 +153,8 @@ public class ApiController {
 		if(apiEntity.getUserType() != null && 
 				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userId不能为空
 			
-			// 如果是提供者，从session中获取用户信息
-			Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
-			if(null == userObj){
-				return Result.errorResult("当前用户位登录", ErrorCodeNo.SYS003, null, Status.FAILED);
-			}else{
-				User user = (User)userObj;
-				apiEntity.setUserId(user.getId());
-			}
+			User user = (User)session.getAttribute(Constants.SES_LOGIN_USER);
+			apiEntity.setUserId(user.getId());
 			// TODO 支持根据不同的checkState查询出不同的结果
 			
 		}else{//如果当前是开发者登录，只能查看审核成功的api

@@ -2,6 +2,8 @@ package cn.ce.platform_service.interceptors;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,11 +13,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.users.entity.User;
+import io.netty.handler.codec.http.HttpMethod;
 
 /**
  * 
@@ -52,7 +57,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object object) throws Exception {
 		
-        
+		String ticket = request.getHeader("ticket");
+		String url = "http://10.12.40.161:8088/passport/checkTicket";
+		Map<String,String> headers = new HashMap<String,String>();
+		headers.put("ticket", ticket);
+		String responseStr = ApiCallUtils.getOrDelMethod(url, headers, HttpMethod.GET);
+		User user1 = (User)JSONObject.parse(responseStr);
+		request.getSession().setAttribute(Constants.SES_LOGIN_USER, user1);
+		
+		
         User user =  (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
         if(user != null){
         	return true;
