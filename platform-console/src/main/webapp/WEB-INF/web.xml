@@ -85,7 +85,7 @@
 			<param-name>cors.supportedHeaders</param-name>
 			<param-value>Accept, Origin,
 				X-Requested-With, Content-Type,
-				Last-Modified</param-value>
+				Last-Modified,ticket</param-value>
 		</init-param>
 		<init-param>
 			<param-name>cors.exposedHeaders</param-name>

@@ -40,6 +40,8 @@ public interface INewApiDao {
 
 	Page<ApiEntity> findApiPageByIdsAndNameLike(List<String> apiIds, String apiName, Page<ApiEntity> page);
 
+	List<ApiEntity> findApiByIds(List<String> apiIds, int checkState);
+
 
 
 

@@ -131,7 +131,15 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		Query query = new Query().addCriteria(Criteria.where(DBFieldsConstants.APIS_ID).in(apiId));
 		return super.find(query);
 	}
-
+	
+	@Override
+	public List<ApiEntity> findApiByIds(List<String> apiIds, int checkState) {
+		Criteria c = new Criteria();
+		c.and(DBFieldsConstants.APIS_ID).in(apiIds);
+		c.and(DBFieldsConstants.APIS_CHECKSTATE).is(checkState);
+		Query query = new Query(c);
+		return super.find(query);
+	}
 
 	@Override
 	public List<ApiEntity> findApiByApplyIdsAndCheckState(List<String> appIds,Integer checkState) {
@@ -191,5 +199,7 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		}
 
 	}
+
+
 
 }

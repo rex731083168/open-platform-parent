@@ -47,7 +47,7 @@ public class ApiEntity implements Serializable {
 	/** 接口中文名称 */
 	@Field("apiEnName")
 	private String apiEnName;
-	/**/
+	/*所属开放应用的code码*/
 	@Field("appCode") 
 	private String appCode;
 
@@ -86,7 +86,7 @@ public class ApiEntity implements Serializable {
 	/** 接口描述 */
 	@Field("desc")
 	private String desc;
-	/** 状态是否发布 */
+	/** 状态是否可用  默认为0,禁用为1*/
 	@Field("state")
 	private int state;
 	/** 调用次数限制（次/每天），0为不可调用，-1为无限制 */
@@ -121,7 +121,12 @@ public class ApiEntity implements Serializable {
     @Field("createTime")
     private Date createTime;
     
-    
+    /**
+     * api来源 0,null代表提供者录入
+     * 1代表文件导入
+     * */
+    @Field("apiSource")
+    private int apiSource;
     /** 服务分类信息 */
     @Transient
     private OpenApplyEntity openApplyEntity;

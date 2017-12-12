@@ -109,7 +109,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setCheckState(AuditConstants.DIY_APPLY_UNCHECKED);
 
 			String key = entity.getProductAuthCode();
-//			String findTenantAppsByTenantKeyTenantId = null;
 			String findTenantAppsByTenantKeyTenanName = null;
 
 			// 产品信息

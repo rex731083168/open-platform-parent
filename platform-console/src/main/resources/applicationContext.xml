@@ -5,7 +5,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
     xmlns:p="http://www.springframework.org/schema/p"  
     xmlns:context="http://www.springframework.org/schema/context" 
-    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:task="http://www.springframework.org/schema/task" 
     
     xsi:schemaLocation="
     	http://www.springframework.org/schema/mvc   
@@ -18,7 +19,10 @@
 		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
 	
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd"> 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        
+        http://www.springframework.org/schema/task 
+        http://www.springframework.org/schema/task/spring-task.xsd" > 
 
 
     <!-- Activates various annotations to be detected in bean classes -->  
@@ -105,4 +109,7 @@
         </property>
     </bean>
 	
+	<!-- 开启spring定时任务注解 -->	
+	<task:annotation-driven scheduler="qbScheduler" mode="proxy"/>  
+    <task:scheduler id="qbScheduler" pool-size="10"/>
 </beans>

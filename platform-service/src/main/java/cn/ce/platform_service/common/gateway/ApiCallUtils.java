@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -157,10 +156,10 @@ public class ApiCallUtils {
 			return null;
 		}
 		
-		headers = (headers == null ? new HashMap<>() : headers);
-		
-		for (String key : headers.keySet()) {
-			hrb.setHeader(key,headers.get(key));
+		if(headers != null){
+			for (String key : headers.keySet()) {
+				hrb.setHeader(key,headers.get(key));
+			}
 		}
 		
 		//添加请求体参数
@@ -232,8 +231,10 @@ public class ApiCallUtils {
 		}
 		
 		//添加头信息
-		for (String key : headers.keySet()) {
-			hrb.addHeader(key,headers.get(key));
+		if(headers != null){
+			for (String key : headers.keySet()) {
+				hrb.addHeader(key,headers.get(key));
+			}
 		}
 		
 		//调用，并取回返回结果，打印返回状态码
@@ -255,6 +256,8 @@ public class ApiCallUtils {
 			try{
 				HttpEntity entity = response.getEntity();
 				InputStream is = entity.getContent();
+				System.out.println(entity.getContentType());
+				System.out.println(entity.getContentEncoding());
 				String str = IOUtils.convertStreamToString(is);
 				_LOGGER.info("返回body："+str);
 				is.close();

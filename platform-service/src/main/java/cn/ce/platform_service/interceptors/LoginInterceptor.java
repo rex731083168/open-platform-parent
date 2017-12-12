@@ -46,7 +46,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	@Override
-	
 	public void postHandle(HttpServletRequest request, HttpServletResponse response,
 			Object object, ModelAndView view) throws Exception {
 		// TODO Auto-generated method stub
@@ -57,19 +56,37 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object object) throws Exception {
 		
+        User user = null;
+        try{
+        	user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
+        }catch(Exception e){
+        	//session中没有用户数据
+        }
+        
+        if(user != null){
+        	return true;
+        }
+        
+    	//用户数据拿不到。就到用户中心去拿
 		String ticket = request.getHeader("ticket");
 		String url = "http://10.12.40.161:8088/passport/checkTicket";
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("ticket", ticket);
 		String responseStr = ApiCallUtils.getOrDelMethod(url, headers, HttpMethod.GET);
-		User user1 = (User)JSONObject.parse(responseStr);
-		request.getSession().setAttribute(Constants.SES_LOGIN_USER, user1);
+		try{
+			User user1 = JSONObject.parseObject(responseStr)
+					.getJSONObject("data")
+					.toJavaObject(User.class);
+			request.getSession().setAttribute(Constants.SES_LOGIN_USER, user1);
+			user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
+		}catch(Exception e){
+			logger.info("用户中心session已经过期");
+		}
 		
-		
-        User user =  (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
-        if(user != null){
-        	return true;
-        }
+    	if(user != null){
+    		return true;
+    	}
+        
         Result<String> result = new Result<>();
         result.setErrorMessage("用户未登录",ErrorCodeNo.SYS003);
         this.returnJson(response, JSON.toJSONString(result));
@@ -92,5 +109,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 				writer.close();
 		}
 	}
+	
 
+	public boolean userNotLogged(HttpServletResponse response) throws Exception{
+        Result<String> result = new Result<>();
+        result.setErrorMessage("用户未登录",ErrorCodeNo.SYS003);
+        this.returnJson(response, JSON.toJSONString(result));
+		return false;
+	}
 }

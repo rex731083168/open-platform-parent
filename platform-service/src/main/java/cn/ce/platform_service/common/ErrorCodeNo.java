@@ -34,6 +34,8 @@ public enum ErrorCodeNo {
 	,SYS024("产品码不正确")
 	,SYS025("旧版产品码，不支持注册菜单。请申请新的产品码")
 	,SYS026("当前版本已经存在")
+	,DOWNLOAD001("部分id不存在")
+	,DOWNLOAD002("开放应用id不存在")
 	;
 	
 	

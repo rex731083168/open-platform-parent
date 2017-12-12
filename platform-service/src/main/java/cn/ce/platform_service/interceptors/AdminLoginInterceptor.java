@@ -2,6 +2,8 @@ package cn.ce.platform_service.interceptors;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,11 +14,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
-import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
+import cn.ce.platform_service.users.entity.User;
+import io.netty.handler.codec.http.HttpMethod;
 
 /**
  * @ClassName:  AdminLoginInterceptor   
@@ -60,35 +65,53 @@ public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
 		
 		
 		//TODO 后期修改
-		if(StringUtils.contains(request.getRequestURI(), "/route/")){
-			return true;
-		}
-     
-		AdminEntity admin = (AdminEntity) request.getSession().getAttribute(Constants.SES_LOGIN_USER);
-		if (admin != null) {
-			return true;
-		}
-		Result<String> result = new Result<>();
-		result.setErrorMessage("用户未登录",ErrorCodeNo.SYS003);
-		this.returnJson(response, JSON.toJSONString(result));
-		return false;
-     
+//		if(StringUtils.contains(request.getRequestURI(), "/route/")){
+//			return true;
+//		}
+//     
+//		
+//		String ticket = request.getHeader("ticket");
+//		String url = "http://10.12.40.161:8088/passport/checkTicket";
+//		Map<String,String> headers = new HashMap<String,String>();
+//		headers.put("ticket", ticket);
+//		String responseStr = ApiCallUtils.getOrDelMethod(url, headers, HttpMethod.GET);
+//		try{
+//			User user1 = (User)JSONObject.parse(responseStr);
+//			request.getSession().setAttribute(Constants.SES_LOGIN_USER, user1);
+//		}catch(Exception e){
+//			logger.info("session已经过期");
+//		}
+//		
+//		User admin = (User) request.getSession().getAttribute(Constants.SES_LOGIN_USER);
+//		if (admin != null && admin.getUserType() == 1) {
+//			return true;
+//		}else if(admin != null && admin.getUserType() != 1){
+//			Result<String> result = new Result<String>();
+//			result.setErrorMessage("当前用户身份不符合", ErrorCodeNo.SYS012);
+//			this.returnJson(response, JSON.toJSONString(result));
+//			return false;
+//		}
+//		
+//		Result<String> result = new Result<>();
+//		result.setErrorMessage("用户未登录",ErrorCodeNo.SYS003);
+//		this.returnJson(response, JSON.toJSONString(result));
+		//return false;
+		return true;
 	}
 
 	private void returnJson(HttpServletResponse response, String json)throws Exception {
-		PrintWriter writer = null;
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html; charset=utf-8");
-		try {
-			writer = response.getWriter();
-			writer.print(json);
-
-		} catch (IOException e) {
-			logger.error("response error", e);
-		} finally {
-			if (writer != null)
-				writer.close();
-		}
+//		PrintWriter writer = null;
+//		response.setCharacterEncoding("UTF-8");
+//		response.setContentType("text/html; charset=utf-8");
+//		try {
+//			writer = response.getWriter();
+//			writer.print(json);
+//
+//		} catch (IOException e) {
+//			logger.error("response error", e);
+//		} finally {
+//			if (writer != null)
+//				writer.close();
+//		}
 	}
-
 }

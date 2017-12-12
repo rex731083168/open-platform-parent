@@ -9,11 +9,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.admin.dao.IAdminDao;
-import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.admin.service.IAdminService;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.users.entity.User;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class AdminServiceImpl implements IAdminService {
 	public Result<Map<String, Object>> login(HttpSession session, String userName, String password) {
 		
 	   	Result<Map<String,Object>> result = new Result<Map<String,Object>>();
-		AdminEntity admin = adminDao.checkLogin(userName,password);
+		User admin = adminDao.checkLogin(userName,password);
 		if (admin == null) {
 			result.setErrorMessage("用户名或密码错误，请重新输入",ErrorCodeNo.SYS022);
 			return result;

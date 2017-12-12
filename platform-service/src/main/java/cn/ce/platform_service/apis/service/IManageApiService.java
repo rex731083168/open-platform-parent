@@ -2,7 +2,10 @@ package cn.ce.platform_service.apis.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.ApiExportParamEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
@@ -20,6 +23,8 @@ public interface IManageApiService {
 
 	Result<Page<ApiEntity>> apiList(QueryApiEntity entity, int currentPage, int pageSize);
 
-	
-	
+	String exportApis(List<String> apiIds, HttpServletResponse response);
+
+	Result<?> generalExportList(ApiExportParamEntity exportParam);
+
 }

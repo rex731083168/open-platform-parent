@@ -1,11 +1,17 @@
 package cn.ce.platform_service.apis.service.impl;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
@@ -17,19 +23,25 @@ import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.DApiBoundEntity;
+import cn.ce.platform_service.apis.entity.DApiBoundList;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
+import cn.ce.platform_service.apis.service.IDApiBoundService;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.util.LocalFileReadUtil;
+import cn.ce.platform_service.util.PropertiesUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
@@ -45,9 +57,8 @@ public class ManageApiServiceImpl implements IManageApiService{
 	private INewApiDao newApiDao;
 	@Resource
 	private IOpenApplyDao openApplyDao;	
-//	@Resource
-//	private IManageOpenApplyService manageOpenApplyService;
-	
+	@Resource
+	private IDApiBoundService dApiBoundService;
 	
 	/**
 	 * @Title: auditApi
@@ -240,4 +251,103 @@ public class ManageApiServiceImpl implements IManageApiService{
 		return job;
 	}
 
+	@Override
+	public String exportApis(List<String> apiIds, HttpServletResponse response) {
+		
+		if(apiIds == null || apiIds.size() < 1){
+			return returnErrorJson("apiId不能为空", ErrorCodeNo.SYS005, response);
+		}
+		List<DApiBoundList> successApiRecordList = new ArrayList<DApiBoundList>();//导出成功的api的列表
+		List<ApiEntity> successApiList = new ArrayList<ApiEntity>();
+		String url = PropertiesUtil.getInstance().getValue("findAppsByIds");
+		List<ApiEntity> apiList = newApiDao.findApiByIds(apiIds, AuditConstants.API_CHECK_STATE_SUCCESS);
+		
+		if(apiIds.size() != apiIds.size()){
+			return returnErrorJson("部分apiId不存在或状态错误", ErrorCodeNo.DOWNLOAD001, response);
+		}
+		
+		for (ApiEntity apiEntity : apiList) { 
+			//获取产品中心applist
+			String tempUrl = null;
+			try {
+				tempUrl = url+"?appIds="+URLEncoder.encode("["+apiEntity.getOpenApplyId()+"]","utf-8");
+			} catch (UnsupportedEncodingException e1) {
+			}
+			String resultStr = ApiCallUtils.getOrDelMethod(tempUrl, null, HttpMethod.GET);
+			
+			AppList appList = null;
+			try{
+				com.alibaba.fastjson.JSONArray  jsonArray = com.alibaba.fastjson.JSONArray.parseObject(resultStr).getJSONArray("data");
+				
+				appList = jsonArray		
+						.getJSONObject(0)
+						.toJavaObject(AppList.class);
+			}catch(Exception e){//如果从产品中心拿不到开放应用
+				_LOGGER.info("获取开放应用失败："+apiEntity.getOpenApplyId());
+				return returnErrorJson("开放应用(id:"+apiEntity.getOpenApplyId()+")不存在",ErrorCodeNo.DOWNLOAD002, response);
+			}
+			
+			//封装：文档参数和api记录列表
+			apiEntity.setAppCode(appList.getAppCode());
+			apiEntity.setId(null);
+			apiEntity.setUserId(null);
+			apiEntity.setUserName(null);
+			successApiList.add(apiEntity);
+			successApiRecordList.add(new DApiBoundList(
+					apiEntity.getId(), 
+					apiEntity.getApiChName(), 
+					apiEntity.getListenPath(), 
+					apiEntity.getApiType(), 
+					apiEntity.getOpenApplyId(), 
+					apiEntity.getAppCode(), 
+					appList.getAppName(), 
+					apiEntity.getApiVersion(),
+					true));
+		}
+		// TODO 20171211 mkw 这里的操作人是admin写死的。将来用户模块抽离出来的时候，这里再修改绑定用户id和用户名等
+		DApiBoundEntity boundEntity = new DApiBoundEntity(
+				successApiRecordList,
+				new Date(),
+				apiIds.size(),
+				successApiList.size(),
+				"admin");
+		
+		dApiBoundService.save(boundEntity);
+		
+		return returnSuccessFile(successApiList, response);
+	}
+
+	private String returnSuccessFile(List<ApiEntity> successApiList, HttpServletResponse response) {
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("multipart/form-data");
+		String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		String fileName = "copy_"+dateStr+".json";
+		response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+		try{
+			response.getOutputStream().write(
+					com.alibaba.fastjson.JSONObject.toJSONString(successApiList)
+					.getBytes("utf-8"));
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}catch(IOException e){
+			_LOGGER.info("返回下载文件时发生异常", e);
+		}
+		return null;
+	}
+
+	private String returnErrorJson(String errorMessage, ErrorCodeNo errorCode, HttpServletResponse response){
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/json");
+		try {
+			response.getOutputStream().write(
+					com.alibaba.fastjson.JSONObject.toJSONString(
+							Result.errorResult(errorMessage, errorCode, null, Status.FAILED))
+					.getBytes("utf-8"));
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		} catch (IOException e) {
+			_LOGGER.info("回显错误信息发生异常", e);
+		}
+		return null;
+	}
 }

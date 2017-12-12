@@ -1,6 +1,6 @@
 package cn.ce.platform_service.admin.dao;
 
-import cn.ce.platform_service.admin.entity.AdminEntity;
+import cn.ce.platform_service.users.entity.User;
 
 
 /**
@@ -15,11 +15,11 @@ import cn.ce.platform_service.admin.entity.AdminEntity;
  */
 public interface IAdminDao {
 	
-	AdminEntity checkLogin(String username, String password);
+	User checkLogin(String username, String password);
 	
-    AdminEntity findByUserName(String userName);
+    User findByUserName(String userName);
     
-    void update(AdminEntity admin);
+    void update(User admin);
     
     void createNewDefaultAdmin();
     
