@@ -248,4 +248,16 @@ public class AppList {
 		this.appCreateTime = appCreateTime;
 	}
 
+	@Override
+	public String toString() {
+		return "AppList [id=" + id + ", appId=" + appId + ", appName=" + appName + ", appAlias=" + appAlias
+				+ ", appTypes=" + appTypes + ", appUrl=" + appUrl + ", appDesc=" + appDesc + ", appCatogroyId="
+				+ appCatogroyId + ", appTag=" + appTag + ", appStatus=" + appStatus + ", isRelation=" + isRelation
+				+ ", resourcetype=" + resourcetype + ", offresourcetype=" + offresourcetype + ", isSearch=" + isSearch
+				+ ", isShow=" + isShow + ", appCode=" + appCode + ", unitType=" + unitType + ", appType=" + appType
+				+ ", owner=" + owner + ", templateCode=" + templateCode + ", productCode=" + productCode
+				+ ", parentAppId=" + parentAppId + ", isAppMenu=" + isAppMenu + ", isApp=" + isApp + ", appIcon="
+				+ appIcon + ", appCreateTime=" + appCreateTime + "]";
+	}
+
 }

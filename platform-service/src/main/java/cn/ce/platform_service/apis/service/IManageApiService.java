@@ -9,6 +9,7 @@ import cn.ce.platform_service.apis.entity.ApiExportParamEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.users.entity.User;
 
 /**
 * @Description : 说明
@@ -23,8 +24,5 @@ public interface IManageApiService {
 
 	Result<Page<ApiEntity>> apiList(QueryApiEntity entity, int currentPage, int pageSize);
 
-	String exportApis(List<String> apiIds, HttpServletResponse response);
-
-	Result<?> generalExportList(ApiExportParamEntity exportParam);
 
 }

@@ -23,7 +23,8 @@ public class GatewayNodeEntity {
 	private String nodeDesc;
 	@Field("colId")
 	private String colId; //所属集群的id
-
+	@Field("nodeStatus")
+	private Integer nodeStatus;
 
 	public String getColId() {
 		return colId;
@@ -64,14 +65,19 @@ public class GatewayNodeEntity {
 	public void setNodeDesc(String nodeDesc) {
 		this.nodeDesc = nodeDesc;
 	}
+	
+	public Integer getNodeStatus() {
+		return nodeStatus;
+	}
+
+	public void setNodeStatus(Integer nodeStatus) {
+		this.nodeStatus = nodeStatus;
+	}
 
 	@Override
 	public String toString() {
-		return "GatewayNodeEntity [nodeId=" + nodeId + ", nodeName=" + nodeName
-				+ ", nodeUrl=" + nodeUrl + ", nodeDesc=" + nodeDesc
-				+ ", colId=" + colId + "]";
+		return "GatewayNodeEntity [nodeId=" + nodeId + ", nodeName=" + nodeName + ", nodeUrl=" + nodeUrl + ", nodeDesc="
+				+ nodeDesc + ", colId=" + colId + ", nodeStatus=" + nodeStatus + "]";
 	}
-	
-	
 	
 }

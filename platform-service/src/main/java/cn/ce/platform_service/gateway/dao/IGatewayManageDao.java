@@ -25,4 +25,8 @@ public interface IGatewayManageDao {
 	GatewayColonyEntity findById(String id, Class<?> entityclass);
 
 	List<GatewayColonyEntity> getAll(Class<?> class1);
+
+	List<GatewayColonyEntity> checkUrl(String colUrl, String colId);
+
+	GatewayColonyEntity findById(String colId);
 }

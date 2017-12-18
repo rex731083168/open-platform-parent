@@ -77,6 +77,17 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
 			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
 		}
+		if(!StringUtils.isBlank(entity.getEnterpriseName())){
+			c.and(DBFieldsConstants.API_ENTERPRESE_NAME).is(entity.getEnterpriseName());
+		}
+		
+		if(AuditConstants.API_SOURCE_IMPORT.equals(entity.getApiSource())){
+			c.and(DBFieldsConstants.API_SOURCE).is(entity.getApiSource());
+		}else if(AuditConstants.API_SOURCE_TYPEIN.equals(entity.getApiSource())){ // DODO 20171214 将来将所有的api都加上source来源
+			c.and(DBFieldsConstants.API_SOURCE).ne(AuditConstants.API_SOURCE_IMPORT);
+		}else{
+			//查询所有来源
+		}
 		
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		
@@ -108,7 +119,16 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
 			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
 		}
-		
+		if(!StringUtils.isBlank(entity.getEnterpriseName())){
+			c.and(DBFieldsConstants.API_ENTERPRESE_NAME).is(entity.getEnterpriseName());
+		}
+		if(AuditConstants.API_SOURCE_IMPORT.equals(entity.getApiSource())){
+			c.and(DBFieldsConstants.API_SOURCE).is(entity.getApiSource());
+		}else if(AuditConstants.API_SOURCE_TYPEIN.equals(entity.getApiSource())){ // DODO 20171214 将来将所有的api都加上source来源
+			c.and(DBFieldsConstants.API_SOURCE).ne(AuditConstants.API_SOURCE_IMPORT);
+		}else{
+			//查询所有来源
+		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
 		
 		Page<ApiEntity> page = new Page<ApiEntity>(currentPage,0,pageSize);
@@ -200,6 +220,27 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 
 	}
 
+	@Override
+	public List<ApiEntity> findByIdsOrAppIds(List<String> apiIds, List<String> appIds) {
+		Criteria c = new Criteria();
+		Criteria c1 = Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds)
+		.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
+		Criteria c2 = Criteria.where(DBFieldsConstants.APIS_OPENAPPLY_ID).in(appIds)
+				.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
+		c.orOperator(c1,c2);
+		return super.find(new Query(c));
+	}
 
+	@Override
+	public void deleteApis(List<String> successApiIds) {
+		Query query = new Query().addCriteria(Criteria.where("id").in(successApiIds));
+		super.remove(query);
+	}
+
+	@Override
+	public List<ApiEntity> findApiByCheckState(int checkState) {
+		Query query = new Query().addCriteria(Criteria.where("checkState").is(checkState));
+		return super.find(query);
+	}
 
 }

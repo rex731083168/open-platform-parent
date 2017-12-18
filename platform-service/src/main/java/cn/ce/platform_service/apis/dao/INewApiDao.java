@@ -42,6 +42,12 @@ public interface INewApiDao {
 
 	List<ApiEntity> findApiByIds(List<String> apiIds, int checkState);
 
+	List<ApiEntity> findByIdsOrAppIds(List<String> apiIds, List<String> appIds);
+
+	void deleteApis(List<String> successApiIds);
+
+	List<ApiEntity> findApiByCheckState(int checkState);
+
 
 
 

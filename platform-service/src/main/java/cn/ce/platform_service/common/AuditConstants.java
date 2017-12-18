@@ -59,4 +59,12 @@ public class AuditConstants {
 	/********** 租户接口状态状态 **********/
 	public static final int INTERFACE_RETURNSATAS_SUCCESS=200;
 	public static final int INTERFACE_RETURNSATAS_FAILE=110;
+	
+	/********** api来源 **********/
+	public static final Integer API_SOURCE_IMPORT = 1;
+	public static final Integer API_SOURCE_TYPEIN = 0;
+	
+	/********** 文件大小控制 **********/
+	public static final long MAX_UPLOAD_SIZE= 2097152; // 2M=2097152bytes
+	
 }

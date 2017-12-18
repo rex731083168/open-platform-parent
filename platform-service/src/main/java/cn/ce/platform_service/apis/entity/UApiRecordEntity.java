@@ -12,13 +12,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 * @Author : makangwei
 * @Date : 2017年12月11日
 */
-@Document(collection="RECORD_DOWNAPI")
-public class DApiBoundEntity {
+@Document(collection="RECORD_UPLOADAPI")
+public class UApiRecordEntity {
 
 	@Id
 	private String id;
-	@Field("dApiBoundList")
-	List<DApiBoundList> dApiBoundList;//绑定列表
+	@Field("uApiRecordList")
+	List<UApiRecordList> uApiRecordList;//绑定列表
 	@Field("operaDate")
 	private Date operaDate; //操作时间
 	@Field("totalNum")
@@ -27,22 +27,25 @@ public class DApiBoundEntity {
 	private int successNum;
 	@Field("operaUserName")
 	private String operaUserName; //操作人的用户名
+	@Field("operaUserId")
+	private String operaUserId;
 	
-	
-	public DApiBoundEntity(List<DApiBoundList> dApiBoundList, Date operaDate, int totalNum, int successNum, String operaUserName){
-		this.dApiBoundList = dApiBoundList;
+	public UApiRecordEntity(List<UApiRecordList> uApiRecordList, Date operaDate
+			, int totalNum, int successNum, String operaUserName, String operaUserId){
+		this.uApiRecordList = uApiRecordList;
 		this.operaDate = operaDate;
 		this.totalNum = totalNum;
 		this.successNum = successNum;
 		this.operaUserName = operaUserName;
+		this.operaUserId = operaUserId;
 	}
 	
-	public List<DApiBoundList> getdApiBoundList() {
-		return dApiBoundList;
+	public List<UApiRecordList> getdApiBoundList() {
+		return uApiRecordList;
 	}
 
-	public void setdApiBoundList(List<DApiBoundList> dApiBoundList) {
-		this.dApiBoundList = dApiBoundList;
+	public void setdApiBoundList(List<UApiRecordList> dApiBoundList) {
+		this.uApiRecordList = dApiBoundList;
 	}
 
 	public Date getOperaDate() {
@@ -76,6 +79,29 @@ public class DApiBoundEntity {
 	public void setOperaUserName(String operaUserName) {
 		this.operaUserName = operaUserName;
 	}
-	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public List<UApiRecordList> getuApiRecordList() {
+		return uApiRecordList;
+	}
+
+	public void setuApiRecordList(List<UApiRecordList> uApiRecordList) {
+		this.uApiRecordList = uApiRecordList;
+	}
+
+	public String getOperaUserId() {
+		return operaUserId;
+	}
+
+	public void setOperaUserId(String operaUserId) {
+		this.operaUserId = operaUserId;
+	}
 	
 }

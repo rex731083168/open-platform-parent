@@ -1,9 +1,11 @@
 package cn.ce.platform_service.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 
 import org.json.JSONObject;
@@ -52,6 +54,80 @@ public class LocalFileReadUtil {
 		}catch(Exception e){
 			_LOGGER.error("error happens when execute local json read",e);
 			return null;
+		}
+		
+		return job;
+	}
+	
+	public static JSONObject readFile(File file){
+		
+		
+		if(file == null || !file.exists()){
+			_LOGGER.info("file does not exits when reading local json file");
+			return null;
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		JSONObject job = null;
+		Reader is = null;
+		BufferedReader bis = null;
+		
+		try{
+			is = new FileReader(file);
+			bis = new BufferedReader(is);
+			String temp = null;
+			while((temp = bis.readLine()) != null){
+				sb.append(temp);
+			}
+			_LOGGER.info("本地json文件内容"+sb);
+			job = new JSONObject(sb.toString());
+		}catch(Exception e){
+			_LOGGER.error("error happens when execute local json read",e);
+			return null;
+		}finally{
+			try{
+				if(is != null){
+					is.close();
+				}
+				if(bis != null){
+					bis.close();
+				}
+			}catch(Exception e){}
+
+		}
+		
+		return job;
+	}
+	
+	public static JSONObject readInputStream(InputStream is){
+		
+		StringBuffer sb = new StringBuffer();
+		JSONObject job = null;
+		BufferedInputStream bis = null;
+		String tempStr = null;
+		try{
+			bis = new BufferedInputStream(is);
+			int temp = 0;
+			byte[] b = new byte[1024];
+			while((temp = bis.read(b)) != -1){
+				tempStr = new String(b,0,temp);
+				sb.append(tempStr);
+			}
+			_LOGGER.info("本地json文件内容"+sb);
+			job = new JSONObject(sb.toString());
+		}catch(Exception e){
+			_LOGGER.error("error happens when execute local json read",e);
+			return null;
+		}finally{
+			try{
+				if(is != null){
+					is.close();
+				}
+				if(bis != null){
+					bis.close();
+				}
+			}catch(Exception e){}
+
 		}
 		
 		return job;

@@ -48,7 +48,6 @@ public class ApiController {
 
 	/**
 	 * 
-	 * @Title: publishApi
 	 * @Description: 提供者发布一个api，这时候还未审核
 	 * @author: makangwei
 	 * @date:   2017年10月10日 下午8:17:41  
@@ -94,7 +93,6 @@ public class ApiController {
 	
 	/**
 	 * 
-	 * @Title: submitApi
 	 * @Description: 提供者提交审核，修改api状态为待审核
 	 * @author: makangwei
 	 * @date:   2017年10月12日 上午11:23:58  
@@ -110,7 +108,6 @@ public class ApiController {
 	}
 	
 	/**
-	 * @Title: modifyApi
 	 * @Description: 修改api，由前端控制，未发布到网关才可修改
 	 * @author: makangwei
 	 * @date:   2017年10月10日 下午8:19:15  
@@ -126,7 +123,6 @@ public class ApiController {
 	}
 	
 	/**
-	 * @Title: showApi
 	 * @Description: 单个api的查询
 	 * @author: makangwei
 	 * @date:   2017年10月12日 下午1:17:55  
@@ -138,7 +134,6 @@ public class ApiController {
 	}
 
 	/**
-	 * @Title: showApiList
 	 * @Description: 提供者查看api列表
 	 * @author: makangwei
 	 * @date:   2017年10月12日 下午1:42:41  
@@ -151,11 +146,10 @@ public class ApiController {
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
 		if(apiEntity.getUserType() != null && 
-				apiEntity.getUserType() == AuditConstants.USER__CHECKED_SUCCESS){//如果当前是管理员查询，那么管理员的userId不能为空
-			
-			User user = (User)session.getAttribute(Constants.SES_LOGIN_USER);
-			apiEntity.setUserId(user.getId());
-			// TODO 支持根据不同的checkState查询出不同的结果
+				apiEntity.getUserType() == AuditConstants.USER_PROVIDER){
+			//20171214改为如果是提供者，那么提供者的组织不能为空。根据组织来查询api,而不是根据用户id来查询了
+			//User user = (User)session.getAttribute(Constants.SES_LOGIN_USER);
+			//apiEntity.setUserId(user.getId());
 			
 		}else{//如果当前是开发者登录，只能查看审核成功的api
 			apiEntity.setUserId(null);
@@ -186,6 +180,7 @@ public class ApiController {
 		return consoleApiService.showApiList(apiEntity, PageValidateUtil.checkCurrentPage(currentPage), 
 				PageValidateUtil.checkPageSize(pageSize));
 	}
+	
 	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
 	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
 			String appId,

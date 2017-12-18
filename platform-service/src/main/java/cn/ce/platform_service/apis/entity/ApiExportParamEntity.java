@@ -13,6 +13,8 @@ public class ApiExportParamEntity {
 	
 	private List<String> appIds;
 	
+	private Integer allFlag;
+
 	public List<String> getApiIds() {
 		return apiIds;
 	}
@@ -28,6 +30,13 @@ public class ApiExportParamEntity {
 	public void setAppIds(List<String> appIds) {
 		this.appIds = appIds;
 	}
-	
-	
+
+	public Integer getAllFlag() {
+		return allFlag;
+	}
+
+	public void setAllFlag(Integer allFlag) {
+		this.allFlag = allFlag;
+	}
+
 }

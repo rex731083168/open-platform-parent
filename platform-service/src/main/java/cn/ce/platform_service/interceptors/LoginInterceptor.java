@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -20,6 +21,7 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.PropertiesUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
@@ -36,7 +38,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 	
 	   /** 日志对象 */
-     private static Logger logger = Logger.getLogger(LoginInterceptor.class);
+     private static Logger _LOGGER = Logger.getLogger(LoginInterceptor.class);
  
 	@Override
 	public void afterCompletion(HttpServletRequest request,
@@ -55,10 +57,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object object) throws Exception {
+		_LOGGER.info("***************sessionId:"+request.getSession().getId());
 		
         User user = null;
         try{
-        	user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);  
+        	user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER); 
+        	_LOGGER.info("***************session中的user:"+user.toString());
         }catch(Exception e){
         	//session中没有用户数据
         }
@@ -69,18 +73,28 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         
     	//用户数据拿不到。就到用户中心去拿
 		String ticket = request.getHeader("ticket");
-		String url = "http://10.12.40.161:8088/passport/checkTicket";
+//		String url = "http://10.12.40.161:8088/passport/checkTicket";
+		String url = PropertiesUtil.getInstance().getValue("checkTicket");
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("ticket", ticket);
 		String responseStr = ApiCallUtils.getOrDelMethod(url, headers, HttpMethod.GET);
 		try{
-			User user1 = JSONObject.parseObject(responseStr)
-					.getJSONObject("data")
-					.toJavaObject(User.class);
+			JSONObject job = JSONObject.parseObject(responseStr).getJSONObject("data");
+			String uid = job.getString("uid");
+			if(StringUtils.isBlank(uid)){
+		        Result<String> result = new Result<>();
+		        result.setErrorMessage("用户登录数据异常",ErrorCodeNo.SYS003);
+		        this.returnJson(response, JSON.toJSONString(result));
+				return false;
+			}
+			job.put("id", uid);
+			User user1 = job.toJavaObject(User.class);
+			// 每次拿用户数据时候存的sessionid是否都是同一个
 			request.getSession().setAttribute(Constants.SES_LOGIN_USER, user1);
 			user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
+			_LOGGER.info("***************用户中心中的user:"+user.toString());
 		}catch(Exception e){
-			logger.info("用户中心session已经过期");
+			_LOGGER.info("用户中心session已经过期");
 		}
 		
     	if(user != null){
@@ -103,7 +117,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			writer.print(json);
 
 		} catch (IOException e) {
-			logger.error("response error", e);
+			_LOGGER.error("response error", e);
 		} finally {
 			if (writer != null)
 				writer.close();

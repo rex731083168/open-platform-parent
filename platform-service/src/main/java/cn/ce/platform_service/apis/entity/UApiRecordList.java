@@ -6,7 +6,7 @@ package cn.ce.platform_service.apis.entity;
 * @Date : 2017年12月11日
 */
 // download api bound entity
-public class DApiBoundList {
+public class UApiRecordList {
 
 	private String id;
 	
@@ -25,10 +25,11 @@ public class DApiBoundList {
 	private ApiVersion apiVersion;
 	
 	private boolean isDownLoadSuccess;
-
 	
-	public DApiBoundList(String id, String apiChName, String listenPath, String apiType, String openApplyId
-			, String appCode, String appName, ApiVersion apiVersion, boolean isDownLoadSuccess){
+	private String errorDesc;
+	
+	public UApiRecordList(String id, String apiChName, String listenPath, String apiType, String openApplyId
+			, String appCode, String appName, ApiVersion apiVersion, boolean isDownLoadSuccess, String errorDesc){
 		this.id = id;
 		this.apiChName = apiChName;
 		this.listenPath = listenPath;
@@ -38,6 +39,7 @@ public class DApiBoundList {
 		this.appName = appName;
 		this.apiVersion = apiVersion;
 		this.isDownLoadSuccess = isDownLoadSuccess;
+		this.errorDesc = errorDesc;
 	}
 	
 	public String getId() {
@@ -111,6 +113,13 @@ public class DApiBoundList {
 	public void setDownLoadSuccess(boolean isDownLoadSuccess) {
 		this.isDownLoadSuccess = isDownLoadSuccess;
 	}
-	
+
+	public String getErrorDesc() {
+		return errorDesc;
+	}
+
+	public void setErrorDesc(String errorDesc) {
+		this.errorDesc = errorDesc;
+	}
 	
 }

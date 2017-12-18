@@ -24,7 +24,7 @@
 	<context:property-placeholder location="classpath:application.properties"/>    
     
     <!-- 定义mongo对象，对应的是mongodb官方jar包中的Mongo，replica-set设置集群副本的ip地址和端口 -->  
-    <mongo:mongo-client id="mongo" replica-set="${mongodb.replica-set}" credentials="makangwei:123456@admin" >
+    <mongo:mongo-client id="mongo" replica-set="${mongodb.replica-set}" credentials="openplatform:q1w2e3r4ys@admin" >
     	 <!-- credentials="makangwei:123456@admin" -->
  
         <mongo:client-options 

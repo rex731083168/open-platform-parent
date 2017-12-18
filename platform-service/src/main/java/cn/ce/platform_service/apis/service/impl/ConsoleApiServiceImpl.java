@@ -119,8 +119,16 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 //		} else {
 			
 			// 开启版本控制
+			if(StringUtils.isBlank(user.getId())
+					|| StringUtils.isBlank(user.getUserName())
+					|| StringUtils.isBlank(user.getEnterpriseName())){
+				_LOGGER.info("用户信息不完整："+user.toString());
+				return Result.errorResult("用户信息错误", ErrorCodeNo.SYS028, null, Status.FAILED);
+			}
 			apiEntity.setUserId(user.getId());
 			apiEntity.setUserName(user.getUserName());
+			apiEntity.setEnterpriseName(user.getEnterpriseName());
+			apiEntity.setApiSource(AuditConstants.API_SOURCE_TYPEIN);
 			apiEntity.setCreateTime(new Date());
 			
 			int num = newApiDao.updApiVersionByApiId(apiEntity.getApiVersion().getVersionId(),false);
@@ -143,10 +151,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 	
-	
-
-
-
 	/**
 	 * @Title: apiVerify
 	 * @Description: 从未审核状态改为待审核状态,批量提交审核
@@ -323,7 +327,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	}
 	
 	/**
-	 * @Title: boundDiyApplyWithApi
 	 * @Description: 将定制应用和api发生绑定，将绑定关系推送到网关 。
 	 * @author: makangwei 
 	 * @date:   2017年10月17日 下午5:55:34 
@@ -388,7 +391,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		return true;
 	}
-
 
 	@Override
 	public Result<?> checkListenPath(String listenPath) {
