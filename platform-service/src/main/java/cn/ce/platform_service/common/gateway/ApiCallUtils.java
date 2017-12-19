@@ -50,6 +50,16 @@ public class ApiCallUtils {
 
 	public static final Logger _LOGGER = LoggerFactory.getLogger(ApiCallUtils.class);
 
+	private static HttpClient httpClient;
+	
+	static{
+		httpClient = null;
+		try{
+			httpClient = getHttpClient();
+		}catch(Exception e){
+			_LOGGER.info("get httpClient error");
+		}
+	}
 	/**
 	 * 获取 HttpClient,解决跨域问
 	 * @return HttpClient
@@ -91,14 +101,14 @@ public class ApiCallUtils {
 		_LOGGER.info("url:"+url);
 		_LOGGER.info("params:"+params.toString());
 		
-		HttpClient httpClient = null;
-		
-		try{
-			httpClient = getHttpClient();
-		}catch(Exception  e){
-			_LOGGER.info("create httpClient error");
-			return false;
-		}
+//		HttpClient httpClient = null;
+//		
+//		try{
+//			httpClient = getHttpClient();
+//		}catch(Exception  e){
+//			_LOGGER.info("create httpClient error");
+//			return false;
+//		}
 		
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setHeader(HTTP.CONTENT_TYPE,"application/json");
@@ -126,7 +136,6 @@ public class ApiCallUtils {
 		if(status.getStatusCode() == 200){
 			return true;	
 		}
-		
 		return false;
 	}
 	
@@ -136,14 +145,14 @@ public class ApiCallUtils {
 		_LOGGER.info("url:"+url);
 		_LOGGER.info("params:"+params.toString());
 		
-		//创建http client
-		HttpClient httpClient = null;
-		try{
-			httpClient = getHttpClient();
-		}catch(Exception  e){
-			_LOGGER.info("create httpClient error");
-			return null;
-		}
+//		//创建http client
+//		HttpClient httpClient = null;
+//		try{
+//			httpClient = getHttpClient();
+//		}catch(Exception  e){
+//			_LOGGER.info("create httpClient error");
+//			return null;
+//		}
 		
 		//添加头信息
 		HttpEntityEnclosingRequestBase hrb;
@@ -216,13 +225,7 @@ public class ApiCallUtils {
 		_LOGGER.info("***********在代码中调用http/ get or delete /json请求***********");
 		_LOGGER.info("url:"+url);
 		
-		HttpClient httpClient = null;
-		try{
-			httpClient = getHttpClient();
-		}catch(Exception e){
-			_LOGGER.info("get httpClient error");
-			return null;
-		}
+
 
 		//创建请求对象
 		HttpRequestBase hrb;
@@ -258,16 +261,25 @@ public class ApiCallUtils {
 		_LOGGER.info("************resposne success************");
 		_LOGGER.info("response status:"+status.getStatusCode());
 		if(status.getStatusCode() == 200){ //只有状态为200才能够返回结果
+			InputStream is = null;
 			try{
 				HttpEntity entity = response.getEntity();
-				InputStream is = entity.getContent();
+				is = entity.getContent();
 				String str = IOUtils.convertStreamToString(is);
 				_LOGGER.info("返回body："+str);
-				is.close();
+
 				return str;
 			}catch(Exception e){
 				_LOGGER.error("200状态下拉取body数据失败");
 				return null;
+			}finally{
+				if(is != null){
+					try {
+						is.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}else{
 			_LOGGER.error("返回状态不正确，请检查是否正确调用");
@@ -288,14 +300,14 @@ public class ApiCallUtils {
 		_LOGGER.info("url:"+url);
 		_LOGGER.info("params:"+params.toString());
 		
-		HttpClient httpClient = null;
-		
-		try{
-			httpClient = getHttpClient();
-		}catch(Exception e){
-			_LOGGER.info("create httpClient error");
-			return false;
-		}
+//		HttpClient httpClient = null;
+//		
+//		try{
+//			httpClient = getHttpClient();
+//		}catch(Exception e){
+//			_LOGGER.info("create httpClient error");
+//			return false;
+//		}
 		
 		HttpPut httpPut = new HttpPut(url);
 		httpPut.setHeader(HTTP.CONTENT_TYPE,"application/json");
@@ -319,10 +331,11 @@ public class ApiCallUtils {
 		StatusLine status = response.getStatusLine();
 		
 		//解析返回实体
+		InputStream is = null;
 		try {
 			StringBuffer sb = new StringBuffer();
 			HttpEntity entity = response.getEntity();
-			InputStream is = entity.getContent();
+			is = entity.getContent();
 			BufferedInputStream bis = new BufferedInputStream(is);
 			byte[] bt = new byte[100];
 			while(bis.read(bt) != -1){
@@ -336,6 +349,14 @@ public class ApiCallUtils {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		_LOGGER.info("************resposne success************");
@@ -343,7 +364,6 @@ public class ApiCallUtils {
 		if(status.getStatusCode() == 200){
 			return true;	
 		}
-		
 		return false;
 		
 	}
@@ -354,13 +374,13 @@ public class ApiCallUtils {
 	 * @Date : 2017年8月28日
 	 */
 	public static boolean getGwReload(String basicUrl){
-		HttpClient httpClient = null;
-		try{
-			httpClient = getHttpClient();
-		}catch(Exception e){
-			_LOGGER.info("create httpClient error");
-			return false;
-		}
+//		HttpClient httpClient = null;
+//		try{
+//			httpClient = getHttpClient();
+//		}catch(Exception e){
+//			_LOGGER.info("create httpClient error");
+//			return false;
+//		}
 		
 		_LOGGER.info("reload path:"+basicUrl);
 		HttpGet httpGet = new HttpGet(basicUrl);
@@ -495,18 +515,15 @@ public class ApiCallUtils {
 		
 		_LOGGER.info("get status:"+statusLine.getStatusCode());
 		
+		InputStream is = null;
 		if(statusLine.getStatusCode() == 200){
-			
 			_LOGGER.info("get api success ");
 			HttpEntity entity = response.getEntity();
-			InputStream is = entity.getContent();
+			is = entity.getContent();
 			String str = IOUtils.convertStreamToString(is);
+			is.close();
 			return str;
 		}
 		return null;
 	}
-	
-	
-
-
 }

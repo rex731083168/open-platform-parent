@@ -34,12 +34,12 @@ public class ZookeeperController implements Watcher {
 		System.out.println(zookeeper.getState());
 		
 
-		getAllChildren(zookeeper, "/", "    ");
-		byte[] b = zookeeper.getData("/dubbo-debug/cn.ce.goods.product.service.PrProductunitService/providers", true, new Stat());
+		//getAllChildren(zookeeper, "/dubbo", "    ");
+		byte[] b = zookeeper.getData("/dubbo/cn.ce.yun.zmail.service.YunZmailAppService/providers", true, new Stat());
 		if(b != null && b.length > 1){
-			System.out.println(new String(b));
+			System.out.println("data:"+new String(b));
 		}
-		System.out.println(zookeeper.getChildren("/dubbo-debug/cn.ce.goods.product.service.PrProductunitService/providers", true));
+		System.out.println("children:"+zookeeper.getChildren("/dubbo/cn.ce.yun.zmail.service.YunZmailAppService/providers", true));
 	}
 	
 	private static void getAllChildren(ZooKeeper zk, String root,String space) throws Exception{

@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.util.PropertiesUtil;
@@ -57,22 +58,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object object) throws Exception {
-		_LOGGER.info("***************sessionId:"+request.getSession().getId());
-		
-        User user = null;
-        try{
-        	user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER); 
-        	_LOGGER.info("***************session中的user:"+user.toString());
-        }catch(Exception e){
-        	//session中没有用户数据
-        }
-        
-        if(user != null){
-        	return true;
-        }
         
     	//用户数据拿不到。就到用户中心去拿
 		String ticket = request.getHeader("ticket");
+		if(StringUtils.isBlank(ticket)){
+	       return userNotLogged(response);
+		}
 //		String url = "http://10.12.40.161:8088/passport/checkTicket";
 		String url = PropertiesUtil.getInstance().getValue("checkTicket");
 		Map<String,String> headers = new HashMap<String,String>();
@@ -82,30 +73,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			JSONObject job = JSONObject.parseObject(responseStr).getJSONObject("data");
 			String uid = job.getString("uid");
 			if(StringUtils.isBlank(uid)){
-		        Result<String> result = new Result<>();
-		        result.setErrorMessage("用户登录数据异常",ErrorCodeNo.SYS003);
-		        this.returnJson(response, JSON.toJSONString(result));
-				return false;
+				return userNotLogged(response);
+			}
+			if(StringUtils.isBlank(job.getString("enterpriseName"))){
+				return userInfoError(response, ErrorCodeNo.SYS028, "用户信息错误");
 			}
 			job.put("id", uid);
-			User user1 = job.toJavaObject(User.class);
-			// 每次拿用户数据时候存的sessionid是否都是同一个
-			request.getSession().setAttribute(Constants.SES_LOGIN_USER, user1);
-			user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
-			_LOGGER.info("***************用户中心中的user:"+user.toString());
+			request.getSession().setAttribute(Constants.SES_LOGIN_USER, 
+					job.toJavaObject(User.class));
+			return true;
 		}catch(Exception e){
 			_LOGGER.info("用户中心session已经过期");
+			return false;
 		}
-		
-    	if(user != null){
-    		return true;
-    	}
-        
-        Result<String> result = new Result<>();
-        result.setErrorMessage("用户未登录",ErrorCodeNo.SYS003);
-        this.returnJson(response, JSON.toJSONString(result));
-		return false;
-        
 	}
 
 	private void returnJson(HttpServletResponse response, String json)throws Exception {
@@ -126,9 +106,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	
 
 	public boolean userNotLogged(HttpServletResponse response) throws Exception{
-        Result<String> result = new Result<>();
-        result.setErrorMessage("用户未登录",ErrorCodeNo.SYS003);
-        this.returnJson(response, JSON.toJSONString(result));
+        this.returnJson(response, 
+        		JSON.toJSONString(Result.errorResult("用户未登录", ErrorCodeNo.SYS003, null, Status.FAILED)));
+        return false;
+	}
+	
+	public boolean userInfoError(HttpServletResponse response, ErrorCodeNo errorCodeNo, String message) throws Exception{
+        this.returnJson(response, 
+        		JSON.toJSONString(Result.errorResult(message, errorCodeNo, null, Status.FAILED)));
 		return false;
 	}
+	
 }
