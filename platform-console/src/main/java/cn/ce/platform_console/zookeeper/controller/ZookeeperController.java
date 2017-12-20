@@ -2,7 +2,6 @@ package cn.ce.platform_console.zookeeper.controller;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
