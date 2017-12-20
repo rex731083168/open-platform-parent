@@ -7,7 +7,6 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.data.Stat;
 
 /**
 * @Description : 说明
@@ -28,18 +27,18 @@ public class ZookeeperController implements Watcher {
     }
 
 	public static void main(String[] args) throws Exception {
-		ZooKeeper zookeeper = new ZooKeeper("10.12.40.234:2181", 
+		ZooKeeper zookeeper = new ZooKeeper("172.20.1.18:2181", 
 				5000, new ZookeeperController());
 		Thread.sleep(1000);
 		System.out.println(zookeeper.getState());
 		
 
 		//getAllChildren(zookeeper, "/dubbo", "    ");
-		byte[] b = zookeeper.getData("/dubbo/cn.ce.yun.zmail.service.YunZmailAppService/providers", true, new Stat());
-		if(b != null && b.length > 1){
-			System.out.println("data:"+new String(b));
-		}
-		System.out.println("children:"+zookeeper.getChildren("/dubbo/cn.ce.yun.zmail.service.YunZmailAppService/providers", true));
+//		byte[] b = zookeeper.getData("/dubbo/cn.ce.yun.zmail.service.YunZmailAppService/providers", true, new Stat());
+//		if(b != null && b.length > 1){
+//			System.out.println("data:"+new String(b));
+//		}
+		System.out.println("children:"+zookeeper.getChildren("/", true));
 	}
 	
 	private static void getAllChildren(ZooKeeper zk, String root,String space) throws Exception{

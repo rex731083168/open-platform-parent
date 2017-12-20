@@ -139,6 +139,7 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 		try{
 			apiEntityList = com.alibaba.fastjson.JSONArray.parseArray(upStr, ApiEntity.class);// 将文档中的api集合导出
 		}catch(Exception e){
+			_LOGGER.info("文件导入时json数据解析错误。");
 			return Result.errorResult("文件内容读取错误", ErrorCodeNo.UPLOAD001, null, Status.FAILED);
 		}
 		List<String> successApiIds = new ArrayList<String>(); // 用于发生错误时回滚数据

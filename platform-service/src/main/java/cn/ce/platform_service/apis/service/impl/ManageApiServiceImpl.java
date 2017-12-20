@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -105,10 +106,10 @@ public class ManageApiServiceImpl implements IManageApiService {
 				// apiEntity.setListenPath(apiEntity.getListenPath()+"/");
 				// }
 				String listenPath = apiEntity.getListenPath();
-				String endPoint = apiEntity.getEndPoint(); // endPoint如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
+				String targetUrl = apiEntity.getDefaultTargetUrl(); // endPoint如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
 				/*** 添加api到网关接口 ***/
 				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), listenPath, listenPath,
-						endPoint, map, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+						targetUrl, map, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 
 				if (params == null) {
 					_LOGGER.info("拼接网关api json发生错误");
@@ -213,7 +214,7 @@ public class ManageApiServiceImpl implements IManageApiService {
 		return result;
 	}
 
-	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String endPoint,
+	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String targetUrl,
 			Map<String, String> map,
 
 			boolean gatewayApiVersionedTrue) {
@@ -241,7 +242,9 @@ public class ManageApiServiceImpl implements IManageApiService {
 
 		JSONObject proxy = (JSONObject) job.get(DBFieldsConstants.GW_API_PROXY);
 		proxy.put(DBFieldsConstants.GW_API_PROXY_LISTENPATH, listenPath);
-
+		if(StringUtils.isNotBlank(targetUrl)){
+			proxy.put(DBFieldsConstants.GW_API_PROXY_TARGETURL, targetUrl);
+		}
 		return job;
 	}
 

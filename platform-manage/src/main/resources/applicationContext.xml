@@ -32,13 +32,13 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 		    <mvc:mapping path="/**"/> 
-		    <mvc:exclude-mapping path="/admin/*"/>
-		    <mvc:exclude-mapping path="/test/*"/>
+		    <mvc:exclude-mapping path="/admin/**"/>
+		    <mvc:exclude-mapping path="/test/**"/>
    			<!-- swagger api json -->
 			<mvc:exclude-mapping path="/v2/api-docs"/> 
 			<!-- swagger ui page -->
 			<mvc:exclude-mapping path="/swagger/index.html"/>
-			<mvc:exclude-mapping path="/route/*"/> 
+			<mvc:exclude-mapping path="/route/**"/> 
 			<mvc:exclude-mapping path="/apiBulk/exportApis"/>
 			<bean class="cn.ce.platform_service.interceptors.AdminLoginInterceptor" />
 		</mvc:interceptor>
@@ -92,6 +92,5 @@
             <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
         </property>
     </bean>
-	   
  
 </beans>
