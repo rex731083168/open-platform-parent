@@ -1,17 +1,13 @@
 package cn.ce.platform_console.zookeeper.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,11 +17,7 @@ import cn.ce.platform_service.common.cachelocal.CacheManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-/**
- * @Description : 说明
- * @Author : makangwei
- * @Date : 2017年12月15日
- */
+
 @Component
 @RestController
 @RequestMapping("/dubboInfo")

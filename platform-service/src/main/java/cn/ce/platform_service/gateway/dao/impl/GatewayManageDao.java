@@ -105,6 +105,7 @@ public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> 
 		return super.find(new Query(c), GatewayColonyEntity.class);
 	}
 
+	
 	public GatewayColonyEntity findById(String colId){
 		
 		return super.findOneByField("_id", colId, GatewayColonyEntity.class);
