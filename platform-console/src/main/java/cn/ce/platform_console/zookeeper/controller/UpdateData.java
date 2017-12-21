@@ -56,7 +56,6 @@ public class UpdateData {
 					zkt = new ZkClientUtil().getAllChildren(zk, arry[i]);
 					JSONObject json = JSONObject.fromBean(zkt);
 					cacheManager.putCache(arry[i], json);
-					System.out.println(cacheManager.getCache(arry[i]));
 					_LOGGER.info("Add cach zkTree key=" + arry[i] + "+value=+" + json + "");
 				} catch (Exception e) {
 					// TODO: handle exception

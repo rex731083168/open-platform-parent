@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.cachelocal.CacheManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 
 @Component
 @RestController
@@ -40,13 +40,18 @@ public class ZookeeperController {
 		Map<String, String> result = new HashMap<String, String>();
 		Result rs = new Result<>();
 		String[] arry = datakey.split(",");
-		for (int i = 0; i < arry.length; i++) {
-			if (!cacheManager.hasCache(arry[i])) {
-				updateData.UpdateData(zkconnectioninfo, datakey);
+		try {
+			for (int i = 0; i < arry.length; i++) {
+				if (!cacheManager.hasCache(arry[i])) {
+					updateData.UpdateData(zkconnectioninfo, datakey);
+				}
+				result.put(arry[i], cacheManager.getCache(arry[i]).toString());
 			}
-			result.put(arry[i], cacheManager.getCache(arry[i]).toString());
+			rs.setSuccessData(result);
+		} catch (Exception e) {
+			rs.setErrorCode(ErrorCodeNo.SYS001);
+			rs.setErrorMessage("系统错误，接口请求失败");
 		}
-		rs.setData(result);
 		return rs;
 	}
 

@@ -23,29 +23,14 @@ public class ZkClientUtil implements Watcher {
 	}
 
 	public static ZKNodeTreeEntity getAllChildren(ZooKeeper zk, String root) throws Exception {
-
 		ZKNodeTreeEntity zkt = new ZKNodeTreeEntity();
 		zkt.setNodeName(root);
 		List<String> children = zk.getChildren(root, true);
-		System.out.println("节点" + root + "（" + children.size() + "）下面有：");
 		for (String child : children) {
 			ZKNodeTreeEntity zktn = getAllChildren(zk, root.endsWith("/") ? root + child : root + "/" + child);
 			zkt.getChildrednList().add(zktn);
 		}
 		return zkt;
-	}
-
-	public static void main(String[] args) {
-		try {
-			String rootPath = "/dubbo";
-			ZooKeeper zk = new ZooKeeper("127.0.0.1:2181", 5000, new ZkClientUtil());
-			ZKNodeTreeEntity zkt = new ZkClientUtil().getAllChildren(zk, rootPath);
-			System.out.println(new ZkClientUtil().getAllChildren(zk, rootPath));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 }
