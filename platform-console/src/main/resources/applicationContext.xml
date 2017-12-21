@@ -35,36 +35,7 @@
     <mvc:annotation-driven />
     
 
-    <!-- filter -->  
-    <mvc:interceptors>  
-        <mvc:interceptor>
-			<mvc:mapping path="/**"/> 
-			<mvc:exclude-mapping path="/user/**"/>
-			<!-- test api -->
-			<mvc:exclude-mapping path="/test/**"/> 
-			<!-- swagger api json -->
-			<mvc:exclude-mapping path="/v2/api-docs"/> 
-			<!-- swagger ui page -->
-			<mvc:exclude-mapping path="/swagger/index.html"/> 
-			<!-- 文档中心接口 -->
-			<mvc:exclude-mapping path="/diyapplyProduct/findPagedApps"/>
-			<mvc:exclude-mapping path="/guideConsole/guideList"/>
-			<mvc:exclude-mapping path="/guideConsole/guideList"/>
-			<mvc:exclude-mapping path="/api/showApiList"/>
-			<mvc:exclude-mapping path="/api/showApi"/>
-			<mvc:exclude-mapping path="/api/showDocApiList"/>
-			<mvc:exclude-mapping path="/monitor/**"/>
-            <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
-        </mvc:interceptor>
-        <mvc:interceptor>
-        	<mvc:mapping path="/**"/>
-        	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
-        </mvc:interceptor>
-        <mvc:interceptor>
-       	<mvc:mapping path="/**"/>
-        	<bean class="cn.ce.platform_service.interceptors.ExceptionInterceptor" />
-        </mvc:interceptor>
-    </mvc:interceptors>
+    
     
 
     <!-- Loads MongoDB configuraton -->  
