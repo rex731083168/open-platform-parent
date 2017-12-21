@@ -22,6 +22,7 @@ public class ZkClientUtil implements Watcher {
 		}
 	}
 
+	/* 递归获取目录 */
 	public static ZKNodeTreeEntity getAllChildren(ZooKeeper zk, String root) throws Exception {
 		ZKNodeTreeEntity zkt = new ZKNodeTreeEntity();
 		zkt.setNodeName(root);
