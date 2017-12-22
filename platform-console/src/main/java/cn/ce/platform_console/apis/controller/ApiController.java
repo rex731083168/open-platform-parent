@@ -68,6 +68,14 @@ public class ApiController {
 			return Result.errorResult("api类型必须指定", ErrorCodeNo.SYS008, null, Status.FAILED);
 		}
 		
+		if(StringUtils.isBlank(apiEntity.getResourceType())){
+			return Result.errorResult("api资源类型必须指定", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
+		
+		if(StringUtils.isBlank(apiEntity.getResourceTypeName())){
+			return Result.errorResult("api资源类型名称必须指定", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}		
+		
 		return consoleApiService.publishApi(user, apiEntity);
 		
 	}
@@ -208,5 +216,10 @@ public class ApiController {
 		
 		return consoleApiService.checkVersion(versionId,version);
 	}
-		
+	
+	@RequestMapping(value="/getResourceType",method=RequestMethod.GET,produces="application/json;charset=utf-8")
+	public Result<?> checkVersion(){
+		return consoleApiService.getResourceType();
+	}
+	
 }

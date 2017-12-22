@@ -47,7 +47,7 @@ public class GatewayRouteUtils {
 		utils.gatewayColonyManageDao = this.gatewayColonyManageDao;
 	}
 
-	public static String getRouteBySaasId(String saasId,String method){
+	public static String getRouteBySaasId(String saasId,String resourceType,String method){
 		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
 		Result<String> result = new Result<>();
 		if(null == colonySingle){
@@ -58,7 +58,8 @@ public class GatewayRouteUtils {
 		
 		String jsonStr = null;
 		try {
-			jsonStr = getOrDelGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId,method);
+			jsonStr = getOrDelGwJsonApi(colonySingle.getColUrl() + 
+					Constants.NETWORK_ROUTE_URL+"/"+saasId + "/" + resourceType,method);
 		}catch(Exception e){
 			LOGGER.error("调用网关时出现错误,信息为:" + jsonStr + ",异常:" + e.toString());
 			result.setErrorMessage("服务异常!");
@@ -95,7 +96,7 @@ public class GatewayRouteUtils {
 		return gwJsonApi;
 	}
 	
-	public static String saveRoute(String saasId,String targetUrl,String method){
+	public static String saveRoute(String saasId,String targetUrl,String resourceType,String method){
 		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
 		Result<String> result = new Result<>();
 		String gwJsonApi = "";
@@ -108,6 +109,7 @@ public class GatewayRouteUtils {
 		try {
 			JSONObject params = new JSONObject();
 			params.put("target_url", targetUrl);
+			params.put("resource_type",resourceType);
 			gwJsonApi = putOrPostGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params,method);
 		}catch(Exception e){
 			LOGGER.error("调用网关时出现错误,信息为:" + gwJsonApi + ",异常:" + e.toString());
@@ -117,7 +119,7 @@ public class GatewayRouteUtils {
 		return gwJsonApi;
 	}
 	
-	public static String deleteRoute(String saasId,String method){
+	public static String deleteRoute(String saasId,String resourceType,String method){
 		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
 		Result<String> result = new Result<>();
 		String gwJsonApi = "";
@@ -128,7 +130,8 @@ public class GatewayRouteUtils {
 		}
 		
 		try {
-			gwJsonApi = getOrDelGwJsonApi(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId,method);
+			gwJsonApi = getOrDelGwJsonApi(colonySingle.getColUrl()+
+					Constants.NETWORK_ROUTE_URL+"/"+saasId + "/" + resourceType,method);
 		}catch(Exception e){
 			LOGGER.error("调用网关时出现错误,信息为:" + gwJsonApi + ",异常:" + e.toString());
 			result.setErrorMessage("服务异常!");

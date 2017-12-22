@@ -135,9 +135,43 @@ public class ApiEntity implements Serializable {
     
     @Field("enterpriseName")
     private String enterpriseName;
+    
+    
+    /***
+     * 资源类型
+     */
+    @Field("resourceType")
+    private String resourceType;
+    
+    /***
+     * 资源类型名称
+     */
+    @Field("resourceTypeName")
+    private String resourceTypeName;
+    
     /** 服务分类信息 */
     @Transient
     private OpenApplyEntity openApplyEntity;
+
+    
+    
+	public String getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
+	}
+	
+	
+
+	public String getResourceTypeName() {
+		return resourceTypeName;
+	}
+
+	public void setResourceTypeName(String resourceTypeName) {
+		this.resourceTypeName = resourceTypeName;
+	}
 
 	public String getId() {
 		return id;

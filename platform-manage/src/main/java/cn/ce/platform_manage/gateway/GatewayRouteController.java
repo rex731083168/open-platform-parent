@@ -40,14 +40,15 @@ public class GatewayRouteController {
 	 * @return: Result<String>
 	 * @throws
 	 */
-	@RequestMapping(value="/saas/{saasId}", method=RequestMethod.GET)
-	public String getRouteBySaasId(HttpServletRequest request,@PathVariable("saasId") String saasId){
+	@RequestMapping(value="/saas/{saasId}/{resourceType}", method=RequestMethod.GET)
+	public String getRouteBySaasId(HttpServletRequest request,@PathVariable("saasId") String saasId,
+			@PathVariable("resourceType") String resourceType){
 		Result<String> result = new Result<>();
 		if(StringUtils.isBlank(saasId)){
 			result.setErrorMessage("saasId不能为空!");
 			return result.toString();
 		}
-		String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(saasId,request.getMethod());
+		String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(saasId,resourceType,request.getMethod());
 		return routeBySaasId;
 	}
 	
@@ -60,21 +61,10 @@ public class GatewayRouteController {
 	 * @return: Result<String>
 	 * @throws
 	 */
-	@RequestMapping(value="/saas/{saasId}", method = { RequestMethod.POST, RequestMethod.PUT }, consumes="application/json",produces="application/json;charset=utf-8")
-	public String saveRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@RequestParam("target_url") String targetUrl){
-		Result<String> result = new Result<>();
-		
-		if(StringUtils.isBlank(targetUrl)){
-			result.setErrorMessage("targetUrl不能为空!");
-			return result.toString();
-		}
-		
-		if(StringUtils.isBlank(saasId)){
-			result.setErrorMessage("saasId不能为空!");
-			return result.toString();
-		}
-		
-		String routeBySaasId = GatewayRouteUtils.saveRoute(saasId, targetUrl,request.getMethod());
+	@RequestMapping(value="/saas/{saasId}/{resourceType}", method = { RequestMethod.POST, RequestMethod.PUT },produces="application/json;charset=utf-8")
+	public String saveRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType,
+			@RequestParam(value = "target_url",required = true) String targetUrl){
+		String routeBySaasId = GatewayRouteUtils.saveRoute(saasId, targetUrl, resourceType,request.getMethod());
 		return routeBySaasId;
 	}
 	
@@ -89,14 +79,9 @@ public class GatewayRouteController {
 	 * @return: Result<String>
 	 * @throws
 	 */
-	@RequestMapping(value="/saas/{saasId}", method=RequestMethod.DELETE)
-	public String deleteRoute(HttpServletRequest request,@PathVariable("saasId") String saasId){
-		Result<String> result = new Result<>();
-		if(StringUtils.isBlank(saasId)){
-			result.setErrorMessage("saasId不能为空!");
-			return result.toString();
-		}
-		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,request.getMethod());
+	@RequestMapping(value="/saas/{saasId}/{resourceType}", method=RequestMethod.DELETE)
+	public String deleteRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType){
+		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,resourceType,request.getMethod());
 		return routeBySaasId;
 	}
 	
