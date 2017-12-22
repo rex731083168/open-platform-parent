@@ -34,6 +34,7 @@ public class UpdateData {
 	// @Scheduled(fixedRate=1000*2)
 	@Scheduled(cron = "0 0 1 * * *")
 	public void updataZkCache() {
+		cacheManager.clearAll();
 		this.UpdateData(zkconnectioninfo, datakey);
 	}
 
