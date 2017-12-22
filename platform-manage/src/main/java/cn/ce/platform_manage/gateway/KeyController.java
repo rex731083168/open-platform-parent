@@ -27,6 +27,7 @@ public class KeyController {
 	
 	@RequestMapping(value="/allowKey",method=RequestMethod.GET,produces="application/json;charset=utf-8")
 	@ResponseBody
+	@Deprecated //"这种授权方式已经不再使用了"
 	public Result<String> allowKey(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(required=true)String secretKey){
 	

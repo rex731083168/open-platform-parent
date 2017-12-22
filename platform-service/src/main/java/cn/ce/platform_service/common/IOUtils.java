@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,11 @@ public class IOUtils {
 			 return null;
 		 }
 		  
-		 BufferedReader reader = new BufferedReader(new InputStreamReader(is));      
+		 BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(is,"utf-8"));
+		} catch (UnsupportedEncodingException e1) {
+		}      
 	   
 		 StringBuilder sb = new StringBuilder();      
 	

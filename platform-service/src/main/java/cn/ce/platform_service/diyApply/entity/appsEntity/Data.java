@@ -68,4 +68,12 @@ public class Data {
 		return params;
 	}
 
+	@Override
+	public String toString() {
+		return "Data [pageSize=" + pageSize + ", currentPage=" + currentPage + ", totalPages=" + totalPages
+				+ ", totalCount=" + totalCount + ", list=" + list + ", params=" + params + "]";
+	}
+	
+	
+
 }

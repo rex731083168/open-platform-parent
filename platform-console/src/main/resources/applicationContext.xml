@@ -5,7 +5,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
     xmlns:p="http://www.springframework.org/schema/p"  
     xmlns:context="http://www.springframework.org/schema/context" 
-    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:task="http://www.springframework.org/schema/task" 
     
     xsi:schemaLocation="
     	http://www.springframework.org/schema/mvc   
@@ -18,7 +19,10 @@
 		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
 	
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd"> 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        
+        http://www.springframework.org/schema/task 
+        http://www.springframework.org/schema/task/spring-task.xsd" > 
 
 
     <!-- Activates various annotations to be detected in bean classes -->  
@@ -49,6 +53,8 @@
 			<mvc:exclude-mapping path="/api/showApiList"/>
 			<mvc:exclude-mapping path="/api/showApi"/>
 			<mvc:exclude-mapping path="/api/showDocApiList"/>
+			<mvc:exclude-mapping path="/monitor/**"/>
+			<mvc:exclude-mapping path="/dubboInfo/**"/>
             <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
@@ -61,6 +67,7 @@
         </mvc:interceptor>
     </mvc:interceptors>
     
+   <!--  <context:property-placeholder location="classpath:conf/init_data.properties"/> -->
 
     <!-- Loads MongoDB configuraton -->  
     <import resource="mongo-config.xml"/>   
@@ -86,8 +93,14 @@
 		<constructor-arg value="${sms.provider.id}"></constructor-arg>
 	</bean>	-->	
 	
+	<!-- 文件上传 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-    	<property name="maxUploadSize" value="100000"/>	
+		<!--文件大小 2M  -->
+    	<property name="maxUploadSize" value="2097152"/>
+		<!--文件编码（默认是iso-8859-1）  -->
+    	<property name="defaultEncoding" value="UTF-8"/>
+		<!--文件上传临时路径  -->
+    	<property name="uploadTempDir" value="fileUpload/temp"/>	
 	</bean>
 	<!-- spring thread pool executor -->           
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -105,4 +118,7 @@
         </property>
     </bean>
 	
+	<!-- 开启spring定时任务注解 -->	
+	<task:annotation-driven scheduler="qbScheduler" mode="proxy"/>  
+    <task:scheduler id="qbScheduler" pool-size="10"/>
 </beans>

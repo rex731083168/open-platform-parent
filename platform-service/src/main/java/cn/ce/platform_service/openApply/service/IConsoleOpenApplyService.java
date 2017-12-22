@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.users.entity.User;
 
 /***
  * 
@@ -28,7 +29,7 @@ public interface IConsoleOpenApplyService {
 	 * @return: Result<?>
 	 * @throws
 	 */
-	public Result<?> addApply(HttpSession session, OpenApplyEntity apply);
+	public Result<?> addApply(User user, OpenApplyEntity apply);
 	
 	/***
 	 * 

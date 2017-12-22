@@ -14,7 +14,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -29,6 +28,7 @@ import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
+import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.util.PropertiesUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -206,7 +206,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 			Result<OpenApplyEntity> checkAppIsHave = checkAppIsHave(app);
 
 			if (Status.SUCCESS == checkAppIsHave.getStatus()) {
-				AdminEntity user = (AdminEntity) session.getAttribute(Constants.SES_LOGIN_USER);
+				User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 				String uuid = UUID.randomUUID().toString().replace("-", "");
 				app.setId(uuid);
 				app.setCreateDate(new Date());

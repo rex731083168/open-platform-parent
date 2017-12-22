@@ -55,7 +55,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	private IPlublicDiyApplyService plublicDiyApplyService;
 
 	@Override
-	public Result<?> addApply(HttpSession session, OpenApplyEntity apply) {
+	public Result<?> addApply(User user, OpenApplyEntity apply) {
 
 		_LOGGER.info("addConsoleApply begin apply:" + JSON.toJSONString(apply));
 
@@ -94,7 +94,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 				return result;
 			}
 
-			User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 			if (user.getUserType() == AuditConstants.USER_ADMINISTRATOR) {
 				apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS); // 后台系统添加服务分类默认审核通过
 			} else {

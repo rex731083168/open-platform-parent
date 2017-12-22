@@ -45,16 +45,21 @@ public class ApiEntity implements Serializable {
 	@Field("apiChName")
 	private String apiChName;
 	/** 接口中文名称 */
-	@Field("apiEnName")
-	private String apiEnName;
-	/**/
+//	@Field("apiEnName")
+//	private String apiEnName;
+	/*所属开放应用的code码*/
 	@Field("appCode") 
 	private String appCode;
 
 	
-	/** 接口地址  创建api的时候定义该地址。当saas-id找不到真实地址的时候就会访问该地址 */
+	/** 接口地址  创建api的时候定义该地址。当saas-id找不到真实地址的时候就会访问该地址 
+	 * 	目前该字段没有用到
+	 * */
 	@Field("endPoint")
 	private String endPoint;
+	
+	@Field("defaultTargetUrl")
+	private String defaultTargetUrl;
 	
 	@Field("listenPath")
 	private String listenPath;
@@ -86,7 +91,7 @@ public class ApiEntity implements Serializable {
 	/** 接口描述 */
 	@Field("desc")
 	private String desc;
-	/** 状态是否发布 */
+	/** 状态是否可用  默认为0,禁用为1*/
 	@Field("state")
 	private int state;
 	/** 调用次数限制（次/每天），0为不可调用，-1为无限制 */
@@ -121,7 +126,15 @@ public class ApiEntity implements Serializable {
     @Field("createTime")
     private Date createTime;
     
+    /**
+     * api来源 0,null代表提供者录入
+     * 1代表文件导入
+     * */
+    @Field("apiSource")
+    private Integer apiSource; 
     
+    @Field("enterpriseName")
+    private String enterpriseName;
     /** 服务分类信息 */
     @Transient
     private OpenApplyEntity openApplyEntity;
@@ -164,14 +177,6 @@ public class ApiEntity implements Serializable {
 
 	public void setApiChName(String apiChName) {
 		this.apiChName = apiChName;
-	}
-
-	public String getApiEnName() {
-		return apiEnName;
-	}
-
-	public void setApiEnName(String apiEnName) {
-		this.apiEnName = apiEnName;
 	}
 
 	public String getEndPoint() {
@@ -358,15 +363,41 @@ public class ApiEntity implements Serializable {
 		this.apiType = apiType;
 	}
 
+	public Integer getApiSource() {
+		return apiSource;
+	}
+
+	public void setApiSource(Integer apiSource) {
+		this.apiSource = apiSource;
+	}
+
+	public String getEnterpriseName() {
+		return enterpriseName;
+	}
+
+	public void setEnterpriseName(String enterpriseName) {
+		this.enterpriseName = enterpriseName;
+	}
+	
+	public String getDefaultTargetUrl() {
+		return defaultTargetUrl;
+	}
+
+	public void setDefaultTargetUrl(String defaultTargetUrl) {
+		this.defaultTargetUrl = defaultTargetUrl;
+	}
+
 	@Override
 	public String toString() {
 		return "ApiEntity [id=" + id + ", openApplyId=" + openApplyId + ", userId=" + userId + ", userName=" + userName
-				+ ", apiChName=" + apiChName + ", apiEnName=" + apiEnName + ", appCode=" + appCode + ", endPoint=" + endPoint + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod
-				+ ", headers=" + headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample
-				+ ", errCodes=" + errCodes + ", apiVersion=" + apiVersion + ", apiType=" + apiType + ", desc=" + desc
-				+ ", state=" + state + ", countByDay=" + countByDay + ", checkState=" + checkState + ", checkMem="
-				+ checkMem + ", quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate
-				+ ", per=" + per + ", createTime=" + createTime + ", openApplyEntity=" + openApplyEntity + "]";
+				+ ", apiChName=" + apiChName + ", appCode=" + appCode + ", endPoint=" + endPoint + ", defaultTargetUrl="
+				+ defaultTargetUrl + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod + ", headers="
+				+ headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample + ", errCodes="
+				+ errCodes + ", apiVersion=" + apiVersion + ", apiType=" + apiType + ", desc=" + desc + ", state="
+				+ state + ", countByDay=" + countByDay + ", checkState=" + checkState + ", checkMem=" + checkMem
+				+ ", quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per="
+				+ per + ", createTime=" + createTime + ", apiSource=" + apiSource + ", enterpriseName=" + enterpriseName
+				+ ", openApplyEntity=" + openApplyEntity + "]";
 	}
-
+	
 }

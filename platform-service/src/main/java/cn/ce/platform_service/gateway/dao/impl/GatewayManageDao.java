@@ -3,6 +3,8 @@ package cn.ce.platform_service.gateway.dao.impl;
 
 
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.WriteResult;
 
+import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
@@ -21,6 +24,7 @@ import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
  * @author makangwei
  * 2017-8-4
  */
+@SuppressWarnings("unchecked")
 @Repository(value="gatewayManageDao")
 public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> implements IGatewayManageDao {
 
@@ -91,6 +95,20 @@ public class GatewayManageDao extends AbstractBaseMongoDao<GatewayColonyEntity> 
 		
 	}
 
+	@Override
+	public List<GatewayColonyEntity> checkUrl(String colUrl, String colId) {
+		
+		Criteria c = new Criteria();
+		c.and(DBFieldsConstants.GW_COL_URL).is(colUrl);
+		c.and(DBFieldsConstants.GW_COL_ID).ne(colId);
+		
+		return super.find(new Query(c), GatewayColonyEntity.class);
+	}
+
 	
+	public GatewayColonyEntity findById(String colId){
+		
+		return super.findOneByField("_id", colId, GatewayColonyEntity.class);
+	}
 	
 }

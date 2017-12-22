@@ -25,6 +25,8 @@ public class DBFieldsConstants {
 	public static final String APIS_API_TYPE = "apiType";
 	public static final String API_TYPE_OPEN = "OPEN";
 	public static final String API_TYPE_RATAIN = "RETAIN";
+	public static final String API_ENTERPRESE_NAME = "enterpriseName";
+	public static final String API_SOURCE="apiSource";
 	
 	/*************** user相关字段 **********************/
 	public static final String USER_USERTYPE = "userType";
@@ -38,7 +40,6 @@ public class DBFieldsConstants {
 	public static final String USER_ID_CARD = "idCard";
 	public static final String USER_ID = "id";
 	
-	
 	/*************** 网关相关字段 **********************/
 	public static final String GW_API_NAME = "name";
 	public static final String GW_API_ID = "api_id";
@@ -47,6 +48,7 @@ public class DBFieldsConstants {
 	public static final String GW_API_VERSIONS_EXPIRES = "expires";
 	public static final String GW_API_VERSIONS_OVERRIDE_TARGET = "override_target";
 	public static final String GW_API_PROXY_LISTENPATH = "listen_path";
+	public static final String GW_API_PROXY_TARGETURL = "target_url";
 	public static final String GW_API_PROXY = "proxy";
 	public static final String GW_API_VERSION_DATA = "version_data";
 	
@@ -65,11 +67,18 @@ public class DBFieldsConstants {
 	public static final String GW_CLIENT_ID = "client_id";
 	public static final String GW_SECRET= "secret";
 	public static final String GW_REDIRECT_URI = "redirect_uri";
+	
+	public static final String GW_COL_ID = "colId";
+	public static final String GW_COL_URL = "colUrl";
+	
+	public static final String GW_NODE_ID = "nodeId";
+	public static final String GW_NODE_URL = "nodeUrl";
 
 	/*************** 定制应用相关字段 **********************/
 	public static final String DIY_APPLY_APPLYNAME = "applyName";
 	public static final String DIY_APPLY_PRODUCTNAME = "productName";
 	public static final String DIY_APPLY_CHECKSTATE = "checkState";
+	public static final String DIY_APPLY_CREATEDATE = "createDate";
 	
 	/*************** 指南相关字段 **********************/
 	public static final String GUIDE_NAME = "guideName";
@@ -77,8 +86,4 @@ public class DBFieldsConstants {
 	public static final String GUIDE_APPLYID = "applyId";
 	public static final String GUIDE_CHECKSTATE = "checkState";
 
-
-
-
-	
 }

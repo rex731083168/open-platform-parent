@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -157,10 +156,10 @@ public class ApiCallUtils {
 			return null;
 		}
 		
-		headers = (headers == null ? new HashMap<>() : headers);
-		
-		for (String key : headers.keySet()) {
-			hrb.setHeader(key,headers.get(key));
+		if(headers != null){
+			for (String key : headers.keySet()) {
+				hrb.setHeader(key,headers.get(key));
+			}
 		}
 		
 		//添加请求体参数
@@ -184,9 +183,10 @@ public class ApiCallUtils {
 		_LOGGER.info("************resposne success************");
 		_LOGGER.info("response status:"+status.getStatusCode());
 		if(status.getStatusCode() == 200){ //只有状态为200才能够返回结果
+			InputStream is = null;;
 			try{
 				HttpEntity entity = response.getEntity();
-				InputStream is = entity.getContent();
+				is = entity.getContent();
 				String str = IOUtils.convertStreamToString(is);
 				_LOGGER.info("返回body："+str);
 				is.close();
@@ -194,6 +194,10 @@ public class ApiCallUtils {
 			}catch(Exception e){
 				_LOGGER.error("200状态下拉取body数据失败");
 				return null;
+			}finally{
+				if(is != null){
+					try {is.close();} catch (IOException e) {}
+				}
 			}
 		}else{
 			try{
@@ -232,8 +236,10 @@ public class ApiCallUtils {
 		}
 		
 		//添加头信息
-		for (String key : headers.keySet()) {
-			hrb.addHeader(key,headers.get(key));
+		if(headers != null){
+			for (String key : headers.keySet()) {
+				hrb.addHeader(key,headers.get(key));
+			}
 		}
 		
 		//调用，并取回返回结果，打印返回状态码
@@ -252,9 +258,10 @@ public class ApiCallUtils {
 		_LOGGER.info("************resposne success************");
 		_LOGGER.info("response status:"+status.getStatusCode());
 		if(status.getStatusCode() == 200){ //只有状态为200才能够返回结果
+			InputStream is = null;
 			try{
 				HttpEntity entity = response.getEntity();
-				InputStream is = entity.getContent();
+				is = entity.getContent();
 				String str = IOUtils.convertStreamToString(is);
 				_LOGGER.info("返回body："+str);
 				is.close();
@@ -262,6 +269,12 @@ public class ApiCallUtils {
 			}catch(Exception e){
 				_LOGGER.error("200状态下拉取body数据失败");
 				return null;
+			}finally{
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}else{
 			_LOGGER.error("返回状态不正确，请检查是否正确调用");
@@ -313,10 +326,11 @@ public class ApiCallUtils {
 		StatusLine status = response.getStatusLine();
 		
 		//解析返回实体
+		InputStream is = null;
 		try {
 			StringBuffer sb = new StringBuffer();
 			HttpEntity entity = response.getEntity();
-			InputStream is = entity.getContent();
+			is = entity.getContent();
 			BufferedInputStream bis = new BufferedInputStream(is);
 			byte[] bt = new byte[100];
 			while(bis.read(bt) != -1){
@@ -330,6 +344,14 @@ public class ApiCallUtils {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		_LOGGER.info("************resposne success************");
@@ -495,6 +517,7 @@ public class ApiCallUtils {
 			HttpEntity entity = response.getEntity();
 			InputStream is = entity.getContent();
 			String str = IOUtils.convertStreamToString(is);
+			is.close();
 			return str;
 		}
 		return null;

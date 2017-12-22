@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -119,7 +121,7 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 		if (checkState != null) {
 			c.and(DBFieldsConstants.DIY_APPLY_CHECKSTATE).is(checkState);
 		}
-		Query query = new Query(c);
+		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.DIY_APPLY_CREATEDATE));
 		return super.findPage(page, query);
 	}
 }

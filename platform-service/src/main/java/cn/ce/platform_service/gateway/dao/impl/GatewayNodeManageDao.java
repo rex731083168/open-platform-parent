@@ -1,5 +1,7 @@
 package cn.ce.platform_service.gateway.dao.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -8,9 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.WriteResult;
 
+import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
+import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 
 /**
@@ -70,5 +74,14 @@ public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<GatewayNodeEntity> checkNodeUrl(String nodeUrl, String nodeId) {
+		Criteria c = new Criteria();
+		c.and(DBFieldsConstants.GW_COL_URL).is(nodeUrl);
+		c.and(DBFieldsConstants.GW_COL_ID).ne(nodeId);
+		
+		return super.find(new Query(c), GatewayNodeEntity.class);
 	}
 }

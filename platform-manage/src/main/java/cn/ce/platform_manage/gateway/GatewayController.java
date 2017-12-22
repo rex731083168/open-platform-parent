@@ -71,7 +71,7 @@ public class GatewayController {
 		return gatewayManageService.getAllGatewayCol(currentPage,pageSize);
 	}
 	
-	//删除网关
+	//删除集群
 	@RequestMapping(value="/deleteGatewayColonyById/{colId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Result<String> deleteGatewayColonyById(HttpServletRequest request,HttpServletResponse response,
@@ -82,15 +82,15 @@ public class GatewayController {
 		return gatewayManageService.deleteGatewayColonyById(colId);
 	}
 
-	
 	//添加网关节点
-	@RequestMapping(value="/addGatewayNode",method=RequestMethod.POST,produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/addGatewayNode",method=RequestMethod.POST)
 	@ResponseBody
-	public Result<String> addGatewayNote(HttpServletRequest request,HttpServletResponse response,GatewayNodeEntity nodeEntity){
+	public Result<String> addGatewayNode(HttpServletRequest request,HttpServletResponse response,
+			@RequestBody GatewayNodeEntity nodeEntity){
 		
 		LOGGER.info("---------------------new gateway colony params----------------------------");
 		LOGGER.info(nodeEntity.toString());
-		
+		nodeEntity.setNodeId(null);
 		return gatewayManageService.addGatewayNode(nodeEntity);
 	}
 	
@@ -118,7 +118,8 @@ public class GatewayController {
 	//修改网关节点
 	@RequestMapping(value="/modifyGatewayNodeById",method=RequestMethod.POST)
 	@ResponseBody
-	public Result<String> modifyGatewayNodeById(HttpServletRequest request,HttpServletResponse response, GatewayNodeEntity nodeEntity ){
+	public Result<String> modifyGatewayNodeById(HttpServletRequest request,HttpServletResponse response, 
+			@RequestBody GatewayNodeEntity nodeEntity ){
 		
 		
 		LOGGER.info("----------------根据id修改集群节点--------------------");

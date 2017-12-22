@@ -255,10 +255,10 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
-				+ ", telNumber=" + telNumber + ", state=" + state + ", appId=" + appId + ", userType=" + userType
-				+ ", regTime=" + regTime + ", checkCode=" + checkCode + ", checkState=" + checkState + ", checkMem="
-				+ checkMem + ", enterpriseName=" + enterpriseName + ", IDCard=" + idCard + ", userRealName="
-				+ userRealName + ", orgId=" + orgId + ", orgName=" + orgName + ", appSecret=" + appSecret + "]";
+				+ ", telNumber=" + telNumber + ", enterpriseName=" + enterpriseName + ", idCard=" + idCard
+				+ ", userRealName=" + userRealName + ", orgId=" + orgId + ", orgName=" + orgName + ", appSecret="
+				+ appSecret + ", state=" + state + ", appId=" + appId + ", userType=" + userType + ", regTime="
+				+ regTime + ", checkCode=" + checkCode + ", checkState=" + checkState + ", checkMem=" + checkMem + "]";
 	}
 
 }

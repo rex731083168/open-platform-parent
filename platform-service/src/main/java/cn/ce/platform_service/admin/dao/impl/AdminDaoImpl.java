@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import com.mongodb.DBCollection;
 
 import cn.ce.platform_service.admin.dao.IAdminDao;
-import cn.ce.platform_service.admin.entity.AdminEntity;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
+import cn.ce.platform_service.users.entity.User;
 
 
 
@@ -25,17 +25,17 @@ import cn.ce.platform_service.core.AbstractBaseMongoDao;
  *
  */	
 @Repository(value = "adminDao")
-public class AdminDaoImpl extends AbstractBaseMongoDao<AdminEntity> implements IAdminDao {
+public class AdminDaoImpl extends AbstractBaseMongoDao<User> implements IAdminDao {
 
-    public AdminEntity findByUserName(String userName) {
-        return findOneByField("userName", userName, AdminEntity.class);
+    public User findByUserName(String userName) {
+        return findOneByField("userName", userName, User.class);
     }
 
     public DBCollection getCol() {
         return mongoTemplate.getCollection(Constants.COL_APIMG_ADMIN);
     }
 
-    public void update(AdminEntity admin) {
+    public void update(User admin) {
         super.updateById(admin.getId(), admin);
     }
 
@@ -56,10 +56,10 @@ public class AdminDaoImpl extends AbstractBaseMongoDao<AdminEntity> implements I
     
     @PostConstruct
     public void init() {
-        boolean ext = mongoTemplate.collectionExists(AdminEntity.class);
+        boolean ext = mongoTemplate.collectionExists(User.class);
         if (!ext) {
             System.out.println("=========>> Init Create Collection : OPC_ADMIN ....");
-            mongoTemplate.createCollection(AdminEntity.class);
+            mongoTemplate.createCollection(User.class);
             /** 配置分片 */
             /* super.shardCollection("OPC_ADMIN", "_id"); */
 
@@ -73,21 +73,21 @@ public class AdminDaoImpl extends AbstractBaseMongoDao<AdminEntity> implements I
 //            io.ensureIndex(index);
 
             /** 插入默认的一条记录 */
-            AdminEntity admin = new AdminEntity();
-            admin.setMem("管理员");
-            admin.setUserName("admin");
-            admin.setPassword("e10adc3949ba59abbe56e057f20f883e");//123456加密后的值
-            mongoTemplate.save(admin);
+//            User admin = new User();
+//            admin.setUserName("admin");
+//            admin.setPassword("e10adc3949ba59abbe56e057f20f883e");//123456加密后的值
+//            admin.setCheckState(2);
+//            mongoTemplate.save(admin);
         }
     }
 
 	@Override
-	public AdminEntity checkLogin(String username, String password) {
+	public User checkLogin(String username, String password) {
 		
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("username", username);
 		map.put("password", password);
-		List<AdminEntity> list = super.findByFields(map, AdminEntity.class);
+		List<User> list = super.findByFields(map, User.class);
 		
 		if(list == null || list.size() < 1){
 			return null;

@@ -8,7 +8,7 @@
             ">
 
 	<util:properties id="redis"
-		location="classpath:application.properties"></util:properties>
+		location="classpath:conf/application.properties"></util:properties>
 
 	<!-- RedisHttpSessionConfiguration -->
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">

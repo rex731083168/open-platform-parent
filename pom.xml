@@ -40,6 +40,7 @@
 		<org.json.version>20170516</org.json.version>
 		<javax.mail.version>1.4.5</javax.mail.version>
 		<dom4j.version>1.6.1</dom4j.version>
+		<org.apache.zookeeper>3.4.10</org.apache.zookeeper>
 
 	</properties>
 
@@ -74,6 +75,14 @@
 			<properties>
 				<spring.profiles.active>semi</spring.profiles.active>
 				<env>semi</env>
+			</properties>
+		</profile>
+		<!-- 预发布 -->
+		<profile>
+			<id>pre</id>
+			<properties>
+				<spring.profiles.active>pre</spring.profiles.active>
+				<env>pre</env>
 			</properties>
 		</profile>
 		<profile>
@@ -209,6 +218,11 @@
 
 	<dependencies>
 
+	<dependency>
+		<groupId>org.apache.zookeeper</groupId>
+		<artifactId>zookeeper</artifactId>
+		<version>${org.apache.zookeeper}</version>
+	</dependency>
 		<!-- springmvc 文件上传 -->
 		<dependency>
 			<groupId>commons-io</groupId>

@@ -34,6 +34,10 @@ public class Apps {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	@Override
+	public String toString() {
+		return "Apps [data=" + data + ", msg=" + msg + ", status=" + status + "]";
+	}
 
   
 

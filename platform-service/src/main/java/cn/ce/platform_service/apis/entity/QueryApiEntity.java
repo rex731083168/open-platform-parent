@@ -28,6 +28,10 @@ public class QueryApiEntity {
 	private String apiChName;
 	
 	private String apiType;
+	
+	private String enterpriseName;
+	
+	private Integer apiSource;
 
 	public String getOpenApplyId() {
 		return openApplyId;
@@ -75,6 +79,22 @@ public class QueryApiEntity {
 
 	public void setApiType(String apiType) {
 		this.apiType = apiType;
+	}
+
+	public String getEnterpriseName() {
+		return enterpriseName;
+	}
+
+	public void setEnterpriseName(String enterpriseName) {
+		this.enterpriseName = enterpriseName;
+	}
+
+	public Integer getApiSource() {
+		return apiSource;
+	}
+
+	public void setApiSource(Integer apiSource) {
+		this.apiSource = apiSource;
 	}
 
 }

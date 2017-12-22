@@ -22,10 +22,10 @@
     "version_data": {
       "not_versioned": false,
       "versions": {
-          "override1": {
-          "name": "override1",
+          "v1": {
+          "name": "v1",
           "expires": "-1",
-          "override_target": "override1"
+          "override_target": "www.test.com"
         }
       }
     },

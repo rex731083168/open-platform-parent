@@ -109,7 +109,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setCheckState(AuditConstants.DIY_APPLY_UNCHECKED);
 
 			String key = entity.getProductAuthCode();
-//			String findTenantAppsByTenantKeyTenantId = null;
 			String findTenantAppsByTenantKeyTenanName = null;
 
 			// 产品信息
@@ -246,8 +245,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				List<String> apiIds = new ArrayList<String>();
 				for (ApiEntity apiEntity : apiList) {
 					// version2.1改为只有api类型为开放的才绑定
-					if(apiEntity.getApiType() != null
-							&&  DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
+					if(DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
 							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
 						apiIds.add(apiEntity.getId());
 					}
@@ -532,5 +530,4 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		}
 	}
-
 }

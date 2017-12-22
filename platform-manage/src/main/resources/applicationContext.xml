@@ -32,13 +32,14 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 		    <mvc:mapping path="/**"/> 
-		    <mvc:exclude-mapping path="/admin/*"/>
-		    <mvc:exclude-mapping path="/test/*"/>
+		    <mvc:exclude-mapping path="/admin/**"/>
+		    <mvc:exclude-mapping path="/test/**"/>
    			<!-- swagger api json -->
 			<mvc:exclude-mapping path="/v2/api-docs"/> 
 			<!-- swagger ui page -->
 			<mvc:exclude-mapping path="/swagger/index.html"/>
-			<mvc:exclude-mapping path="/route/*"/> 
+			<mvc:exclude-mapping path="/route/**"/> 
+			<mvc:exclude-mapping path="/apiBulk/exportApis"/>
 			<bean class="cn.ce.platform_service.interceptors.AdminLoginInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
@@ -53,8 +54,14 @@
 	
 	<bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
 	
+	<!-- 文件上传 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-    	<property name="maxUploadSize" value="100000"/>	
+		<!--文件大小 2M  -->
+    	<property name="maxUploadSize" value="2097152"/>
+		<!--文件编码（默认是iso-8859-1）  -->
+    	<property name="defaultEncoding" value="UTF-8"/>
+		<!--文件上传临时路径  -->
+    	<property name="uploadTempDir" value="fileUpload/temp"/>	
 	</bean>
 
 	<!-- sms
@@ -85,6 +92,5 @@
             <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
         </property>
     </bean>
-	   
  
 </beans>
