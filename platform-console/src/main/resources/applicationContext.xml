@@ -67,6 +67,7 @@
         </mvc:interceptor>
     </mvc:interceptors>
     
+   <!--  <context:property-placeholder location="classpath:conf/init_data.properties"/> -->
 
     <!-- Loads MongoDB configuraton -->  
     <import resource="mongo-config.xml"/>   

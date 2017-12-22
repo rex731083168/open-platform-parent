@@ -40,6 +40,7 @@ public class GatewayManageService implements IGatewayManageService{
 	private IGatewayColonyManageDao gatewayColonyManageDao; 
 	
 	Logger _LOGGER = LoggerFactory.getLogger(GatewayManageService.class);
+	
 	/**
 	 * 添加网关集群
 	 * @param colEntity
@@ -50,11 +51,11 @@ public class GatewayManageService implements IGatewayManageService{
 		Result<GatewayColonyEntity> result = new Result<GatewayColonyEntity>();
 		
 		//判断参数是否可用
-		if(colEntity.getColUrl() == null || colEntity.getColUrl().trim() == ""){
-			result.setMessage("代理域名不能为空！");
+		if(StringUtils.isBlank(colEntity.getColUrl())){
+			result.setErrorMessage("代理域名不能为空！",ErrorCodeNo.SYS005);
 			return result;
 		}
-		if(colEntity.getColName() == null || colEntity.getColName().trim() == ""){
+		if(StringUtils.isBlank(colEntity.getColName())){
 			result.setMessage("集群名称不能为空");
 			return result;
 		}
@@ -68,10 +69,8 @@ public class GatewayManageService implements IGatewayManageService{
 			return result;
 		}
 		
-		//查询当前网关id是否存在
-		
 		//对集群的测试
-		boolean reloadBool = ApiCallUtils.getGwReload(colEntity.getColUrl()+Constants.NETWORK_RELOAD_PATH);
+		boolean reloadBool = ApiCallUtils.getGwReload(colEntity.getColUrl()+Constants.NEWWORK_RELOAD_GROUP);
 		
 		if(!reloadBool){
 			result.setMessage("该集群无法在网络中查找到，请填写正确的ip和端口号码");
@@ -81,9 +80,7 @@ public class GatewayManageService implements IGatewayManageService{
 		boolean bool = gatewayManageDao.addGatewayCol(colEntity);
 		
 		if(bool){
-			result.setMessage("集群添加成功");
-			result.setData(colEntity);
-			result.setStatus(Status.SUCCESS);
+			result.setSuccessData(colEntity);
 		}
 		
 		return result;
@@ -103,21 +100,20 @@ public class GatewayManageService implements IGatewayManageService{
 		
 		//判断参数是否可用
 		if(StringUtils.isBlank(colEntity.getColId())){
-			result.setMessage("当前集群id不能为空");
+			result.setErrorMessage("当前集群id不能为空", ErrorCodeNo.SYS005);
 			return result;
 		}
-		if(colEntity.getColUrl() == null || colEntity.getColUrl().trim() == ""){
-			result.setMessage("代理域名不能为空");
+		if(StringUtils.isBlank(colEntity.getColUrl())){
+			result.setErrorMessage("代理域名不能为空", ErrorCodeNo.SYS005);
 			return result;
 		}
-		if(colEntity.getColName() == null || colEntity.getColName().trim() == ""){
-			result.setMessage("集群名称不能为空");
+		if(StringUtils.isBlank(colEntity.getColName())){
+			result.setErrorMessage("集群名称不能为空", ErrorCodeNo.SYS005);
 			return result;
 		}
 		if(colEntity.getColStatus() == null ){
 			colEntity.setColStatus(0); //默认集群是关闭的
 		}
-		//List<GatewayColonyEntity> urlList = gatewayManageDao.findByField("colUrl", colEntity.getColUrl(), GatewayColonyEntity.class);
 		List<GatewayColonyEntity> urlList = gatewayManageDao.checkUrl(colEntity.getColUrl(),colEntity.getColId());
 		if(urlList.size()>0){
 			result.setMessage("当前集群url已经存在，无需重复添加");
@@ -135,7 +131,7 @@ public class GatewayManageService implements IGatewayManageService{
 		boolean reloadBool = ApiCallUtils.getGwReload(colEntity.getColUrl()+Constants.NEWWORK_RELOAD_GROUP);
 		
 		if(!reloadBool){
-			result.setMessage("该集群无法在网络中查找到，请填写正确的ip和端口号码");
+			result.setErrorMessage("该集群无法在网络中查找到，请填写正确的ip和端口号码", ErrorCodeNo.SYS027);
 			return result;
 		}
 		

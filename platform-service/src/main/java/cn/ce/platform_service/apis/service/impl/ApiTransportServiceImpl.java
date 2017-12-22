@@ -155,7 +155,7 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 				_LOGGER.info("导入失败。文档格式不正确，回滚数据");
 				newApiDao.deleteApis(successApiIds);
 				_LOGGER.info("回滚数据成功");
-				return Result.errorResult("", ErrorCodeNo.UPLOAD001, null, Status.FAILED);
+				return Result.errorResult("线上应用不一致，请联系管理员", ErrorCodeNo.UPLOAD001, null, Status.FAILED);
 			}
 			
 			/**校验listenPath*/

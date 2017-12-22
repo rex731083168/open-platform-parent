@@ -71,7 +71,7 @@ public class GatewayController {
 		return gatewayManageService.getAllGatewayCol(currentPage,pageSize);
 	}
 	
-	//删除网关
+	//删除集群
 	@RequestMapping(value="/deleteGatewayColonyById/{colId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Result<String> deleteGatewayColonyById(HttpServletRequest request,HttpServletResponse response,
@@ -82,7 +82,6 @@ public class GatewayController {
 		return gatewayManageService.deleteGatewayColonyById(colId);
 	}
 
-	
 	//添加网关节点
 	@RequestMapping(value="/addGatewayNode",method=RequestMethod.POST)
 	@ResponseBody
