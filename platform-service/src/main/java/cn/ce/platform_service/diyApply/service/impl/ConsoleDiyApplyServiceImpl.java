@@ -151,7 +151,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantId:" + findTenantAppsByTenantKeyTenantIdtemp);
 				
 				//根据网站实例id查询是否配置资源IP
-				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,RequestMethod.GET.toString());
+				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,entity.getResourceType(),RequestMethod.GET.toString());
 				
 				if(StringUtils.isBlank(routeBySaasId)){
 					result.setErrorMessage("未配置定制应用资源池,请联系管理员!");
