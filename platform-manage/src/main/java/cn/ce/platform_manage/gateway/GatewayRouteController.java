@@ -29,7 +29,7 @@ import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 public class GatewayRouteController {
 	
 	Logger LOGGER = LoggerFactory.getLogger(GatewayRouteController.class);
-	
+	private static final String DEFAULT_RESTYPE_CODE = "XGW_SERVICE";//官网部门服务 默认值
 	
 	/***
 	 * 
@@ -51,6 +51,7 @@ public class GatewayRouteController {
 		String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(saasId,resourceType,request.getMethod());
 		return routeBySaasId;
 	}
+	
 	
 	/***
 	 * 
@@ -82,6 +83,56 @@ public class GatewayRouteController {
 	@RequestMapping(value="/saas/{saasId}/{resourceType}", method=RequestMethod.DELETE)
 	public String deleteRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType){
 		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,resourceType,request.getMethod());
+		return routeBySaasId;
+	}
+	
+	
+	
+//=======================分割线，下列方法为兼容ResourceType不传递时默认兼容接口=======================
+	
+	
+	
+	/***
+	 * 
+	 * @Title: getRouteBySaasId
+	 * @Description: 根据saasId获取路由信息
+	 * @param : @param saasId
+	 * @param : @return
+	 * @return: Result<String>
+	 * @throws
+	 */
+	@RequestMapping(value="/saas/{saasId}", method=RequestMethod.GET)
+	public String getRouteBySaasId(HttpServletRequest request,@PathVariable("saasId") String saasId){
+		return this.getRouteBySaasId(request,saasId,DEFAULT_RESTYPE_CODE);
+	}
+	
+	/***
+	 * 
+	 * @Title: getRouteBySaasId
+	 * @Description: 新增路由信息
+	 * @param : @param saasId
+	 * @param : @return
+	 * @return: Result<String>
+	 * @throws
+	 */
+	@RequestMapping(value="/saas/{saasId}", method = { RequestMethod.POST, RequestMethod.PUT },produces="application/json;charset=utf-8")
+	public String saveRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@RequestParam(value = "target_url",required = true) String targetUrl){
+		return this.saveRoute(request, saasId, DEFAULT_RESTYPE_CODE, targetUrl);
+	}
+	
+	/***
+	 * 
+	 * @Title: deleteRoute
+	 * @Description: 根据saasId删除路由信息
+	 * @param : @param request
+	 * @param : @param saasId
+	 * @param : @return
+	 * @return: Result<String>
+	 * @throws
+	 */
+	@RequestMapping(value="/saas/{saasId}", method=RequestMethod.DELETE)
+	public String deleteRoute(HttpServletRequest request,@PathVariable("saasId") String saasId){
+		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,DEFAULT_RESTYPE_CODE,request.getMethod());
 		return routeBySaasId;
 	}
 	
