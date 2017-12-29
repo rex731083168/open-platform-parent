@@ -1,6 +1,7 @@
   {
     "name": "override",
     "api_id": "override",
+    "resource_type":"override",
     "org_id": "default",
     "use_oauth2": true,
     "oauth_meta": {

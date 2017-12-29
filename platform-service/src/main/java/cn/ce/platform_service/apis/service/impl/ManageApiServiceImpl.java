@@ -107,9 +107,10 @@ public class ManageApiServiceImpl implements IManageApiService {
 				// }
 				String listenPath = apiEntity.getListenPath();
 				String targetUrl = apiEntity.getDefaultTargetUrl(); // endPoint如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
+				String resourceType = apiEntity.getResourceType();
 				/*** 添加api到网关接口 ***/
 				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), listenPath, listenPath,
-						targetUrl, map, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+						resourceType, targetUrl, map, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 
 				if (params == null) {
 					_LOGGER.info("拼接网关api json发生错误");
@@ -214,8 +215,8 @@ public class ManageApiServiceImpl implements IManageApiService {
 		return result;
 	}
 
-	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String targetUrl,
-			Map<String, String> map,
+	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String resourceType,
+			String targetUrl, Map<String, String> map,
 
 			boolean gatewayApiVersionedTrue) {
 
@@ -229,6 +230,7 @@ public class ManageApiServiceImpl implements IManageApiService {
 		// 拼装新的json
 		job.put(DBFieldsConstants.GW_API_NAME, apiEnName);
 		job.put(DBFieldsConstants.GW_API_ID, versionId);
+		job.put(DBFieldsConstants.GW_API_RESOURCE_TYPE, resourceType);
 		JSONObject versions = new JSONObject();
 		for (String key : map.keySet()) {
 			JSONObject version = new JSONObject();
@@ -242,13 +244,10 @@ public class ManageApiServiceImpl implements IManageApiService {
 
 		JSONObject proxy = (JSONObject) job.get(DBFieldsConstants.GW_API_PROXY);
 		proxy.put(DBFieldsConstants.GW_API_PROXY_LISTENPATH, listenPath);
-		if(StringUtils.isNotBlank(targetUrl)){
+		if (StringUtils.isNotBlank(targetUrl)) {
 			proxy.put(DBFieldsConstants.GW_API_PROXY_TARGETURL, targetUrl);
 		}
 		return job;
 	}
-
-
-
 
 }

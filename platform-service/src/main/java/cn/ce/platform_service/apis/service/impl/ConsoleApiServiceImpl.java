@@ -62,6 +62,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Override
 	public Result<?> publishApi(User user, ApiEntity apiEntity) {
 		
+		try{ //资源类型校验
+			if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
+				return Result.errorResult("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
+			}
+		}catch(Exception e ){
+		}
+		
 		Result<String> result = new Result<String>();
 		
 		

@@ -49,7 +49,7 @@
 			<!-- 文档中心接口 -->
 			<mvc:exclude-mapping path="/diyapplyProduct/findPagedApps"/>
 			<mvc:exclude-mapping path="/guideConsole/guideList"/>
-			<mvc:exclude-mapping path="/guideConsole/guideList"/>
+			<mvc:exclude-mapping path="/guideConsole/guide/**"/>
 			<mvc:exclude-mapping path="/api/showApiList"/>
 			<mvc:exclude-mapping path="/api/showApi"/>
 			<mvc:exclude-mapping path="/api/showDocApiList"/>
