@@ -39,7 +39,7 @@ import cn.ce.platform_service.util.SplitUtil;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
-
+ 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ApiController.class);
 
@@ -123,7 +123,7 @@ public class ApiController {
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
 	public Result<?> modifyApi(@RequestBody ApiEntity apiEntity){
 		
-		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNCOMMITED){
+		if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){	
 			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
 		}
 		

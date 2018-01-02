@@ -206,11 +206,15 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		Criteria c = new Criteria();
 		if(StringUtils.isNotBlank(apiName)){
 			Criteria c1 = Criteria.where(DBFieldsConstants.APIS_APICHNAME).regex(apiName,"i")
-					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds))
-					.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
+					.and(DBFieldsConstants.APIS_ID).in(apiIds)
+					.and(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS);
+					//.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds))
+					//.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
 			Criteria c2 = Criteria.where(DBFieldsConstants.APIS_APIENNAME).regex(apiName,"i")
-					.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds))
-					.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
+					.and(DBFieldsConstants.APIS_ID).in(apiIds)
+					.and(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS);
+					//.andOperator(Criteria.where(DBFieldsConstants.APIS_ID).in(apiIds))
+					//.andOperator(Criteria.where(DBFieldsConstants.APIS_CHECKSTATE).is(AuditConstants.API_CHECK_STATE_SUCCESS));
 			c.orOperator(c1,c2);
 			return super.findPage(page, new Query(c));
 		}else{
