@@ -432,12 +432,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 					break;
 				case "201":
+					result.setErrorCode(ErrorCodeNo.SYS029);
 					result.setStatus(Status.FAILED);
 					break;
 				case "301":
+					result.setErrorCode(ErrorCodeNo.SYS029);
 					result.setStatus(Status.FAILED);
 					break;
 				default:
+					result.setErrorCode(ErrorCodeNo.SYS029);
 					result.setStatus(Status.SYSTEMERROR);
 					break;
 				}

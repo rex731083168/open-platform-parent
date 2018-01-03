@@ -131,8 +131,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				result.setSuccessMessage("审核成功:" + message + "条");
 				return result;
 			} else {
-				result.setErrorCode(ErrorCodeNo.SYS001);
-				result.setErrorMessage("审核失败");
+				result.setErrorMessage("审核失败", ErrorCodeNo.SYS030);
 				_LOGGER.info("bachUpdate diyApply message faile");
 				return result;
 			}
