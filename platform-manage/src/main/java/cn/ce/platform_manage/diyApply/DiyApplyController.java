@@ -2,15 +2,18 @@ package cn.ce.platform_manage.diyApply;
 
 import javax.annotation.Resource;
 
+import org.apache.http.entity.ContentType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.service.IManageDiyApplyService;
 import cn.ce.platform_service.util.SplitUtil;
+import io.netty.handler.codec.http.HttpMethod;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -49,6 +52,19 @@ public class DiyApplyController {
 	public Result<String> batchUpdate(@RequestParam(value = "ids", required = true) String ids,
 			@RequestParam(value = "checkState",required = true) Integer checkState, @RequestParam(value = "checkMem", required = false) String checkMem) {
 		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+	}
+	
+	@RequestMapping(value="/test",method=RequestMethod.POST)
+	public String test(@RequestParam String param){
+		
+		String url = "http://10.12.40.51:9000/app/registerBathApp?tenantId=1600003169";
+		
+		param="app="+param;
+		
+		String result = ApiCallUtils.putOrPostMethod(url, param, null, HttpMethod.POST, ContentType.APPLICATION_FORM_URLENCODED);
+		
+		return result;
+		
 	}
 
 }

@@ -200,5 +200,5 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		// TODO Auto-generated method stub
 		return result;
 	}
-
+	
 }
