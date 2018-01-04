@@ -32,7 +32,7 @@ public class UpdateData {
 	 * 每天夜里1点定时执行任务获取数据
 	 */
 	// @Scheduled(fixedRate=1000*2)
-	@Scheduled(cron = "0 0 1 * * *")
+	@Scheduled(cron = "0 0 19 * * *")
 	public void updataZkCache() {
 		cacheManager.clearAll();
 		this.UpdateData(zkconnectioninfo, datakey);
