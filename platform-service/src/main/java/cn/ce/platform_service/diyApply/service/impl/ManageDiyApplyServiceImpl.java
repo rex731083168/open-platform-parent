@@ -23,6 +23,7 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
@@ -110,6 +111,8 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			_LOGGER.info("registerBathApp to interface satar");
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
 					.registerBathApp(diyApply.get(0).getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
+					//
+					//new org.json.JSONArray(queryVO)
 					.getData();
 			_LOGGER.info("registerBathApp to interface states" + interfaMessageInfoJasonObjectResult.getStatus() + "");
 			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
@@ -145,20 +148,21 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	}
 
 	@Override
-	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps) {
+	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String app) {
 		
 		Result<InterfaMessageInfoString> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("registerBathApp");
 		String tId$ = Pattern.quote("${tId}");
 		String appList$ = Pattern.quote("${appList}");
-		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
+		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, app);
+		//String replacedurl = url.replaceAll(tId$, tenantId);
 
 		try {
 			/* get请求方法 */
 			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
 
 			JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
-
+				//ApiCallUtils.putOrPostMethod(replacedurl, params, headers, method);
 			messageInfo.setData(jsonObject.getString("data"));
 			messageInfo.setMsg(jsonObject.getString("msg"));
 			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
