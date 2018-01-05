@@ -211,7 +211,7 @@ public class ApiCallUtils {
 		}
 	}
 
-	public static String putOrPostMethod(String url, JSONObject params, Map<String, String> headers, HttpMethod method, ContentType contentType){
+	public static String putOrPostMethod(String url, String params, Map<String, String> headers, HttpMethod method, ContentType contentType){
 		_LOGGER.info("***********在代码中调用http/post or put /json请求***********");
 		_LOGGER.info("url:"+url);
 		_LOGGER.info("params:"+params.toString());
@@ -245,11 +245,11 @@ public class ApiCallUtils {
 		//添加请求体参数
 		StringEntity strEntity = null;
 		if(ContentType.APPLICATION_FORM_URLENCODED.toString().equals(contentType.toString())){
-			strEntity = new StringEntity(params.toString(),ContentType.APPLICATION_FORM_URLENCODED);
+			strEntity = new StringEntity(params,ContentType.APPLICATION_FORM_URLENCODED);
 			hrb.setHeader("Content-Type", "application/json");
 		}else if(ContentType.APPLICATION_JSON.toString().equals(contentType.toString())){
 			hrb.setHeader("Content-Type","application/x-www-form-urlencoded");
-			strEntity =  new StringEntity(params.toString(),ContentType.APPLICATION_JSON);
+			strEntity =  new StringEntity(params,ContentType.APPLICATION_JSON);
 		}
 		strEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_ENCODING,"utf-8"));
 		hrb.setEntity(strEntity);
