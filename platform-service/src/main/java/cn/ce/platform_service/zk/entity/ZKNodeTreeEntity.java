@@ -9,6 +9,16 @@ public class ZKNodeTreeEntity {
 
 	private List<ZKNodeTreeEntity> childrednList = new ArrayList<ZKNodeTreeEntity>();
 
+	private boolean leafnode;
+
+	public boolean isLeafnode() {
+		return leafnode;
+	}
+
+	public void setLeafnode(boolean leafnode) {
+		this.leafnode = leafnode;
+	}
+
 	public List<ZKNodeTreeEntity> getChildrednList() {
 		return childrednList;
 	}
