@@ -1,5 +1,7 @@
 package cn.ce.platform_service.users.dao.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -89,6 +91,15 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 	}
 
 	@Override
+	@Deprecated
+	/**
+	 * 
+	 * @Title: getUserList
+	 * @Description: 迁移完mysql，该方法将被弃用
+	 * @author: makangwei 
+	 * @date:   2018年1月8日 下午3:15:18 
+	 * @throws
+	 */
 	public Page<User> getUserList(Integer userType, String userName, String email, String telNumber,
 			String enterpriseName, Integer checkState, Integer state, int currentPage, int pageSize) {
 		//构建查询对象
@@ -121,6 +132,47 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 	}
 
 	@Override
+	public Page<User> getUserList1(User user, int currentPage, int pageSize) {
+		//构建查询对象
+		Criteria c = new Criteria();
+		
+		if(null != user.getUserType()){
+			c.and(DBFieldsConstants.USER_USERTYPE).is(user.getUserType());
+		}
+		if(null != user.getCheckState()){
+			c.and(DBFieldsConstants.USER_CHECKSTATE).is(user.getCheckState());
+		}
+		if(null != user.getState()){
+			c.and(DBFieldsConstants.USER_STATE).is(user.getState());
+		}
+		if(StringUtils.isNotBlank(user.getUserName())){
+			c.and(DBFieldsConstants.USER_USERNAME).regex(user.getUserName(),"i");
+		}
+		if(StringUtils.isNotBlank(user.getEmail())){
+			c.and(DBFieldsConstants.USER_EMAIL).regex(user.getEmail(),"i");
+		}
+		if(StringUtils.isNotBlank(user.getTelNumber())){
+			c.and(DBFieldsConstants.USER_TELNUMBER).regex(user.getTelNumber());
+		}
+		if(StringUtils.isNotBlank(user.getEnterpriseName())){
+			c.and(DBFieldsConstants.USER_ENTERPRISE_NAME).regex(user.getEnterpriseName(),"i");
+		}
+        Query query = new Query(c).with(new Sort(new Order(Direction.DESC,DBFieldsConstants.USER_REGTIME)));
+        
+		query = query == null ? new Query(Criteria.where("_id").exists(true)) : query;
+		
+		Page<User> page = new Page<User>(currentPage, 0, pageSize);
+		long count = super.count(query);
+		// 总数
+		page.setTotalNumber((int) count);
+		query.skip((currentPage - 1) * pageSize).limit(pageSize);
+		List<User> rows = super.find(query);
+		page.build(rows);
+		return page;
+        
+	}
+	
+	@Override
 	public User findUserByIdCard(String idCard, Integer checkState) {
 		Criteria c = new Criteria();
 		c.and(DBFieldsConstants.USER_ID_CARD).is(idCard);
@@ -128,4 +180,5 @@ public class NewUserDaoImpl extends BaseMongoDaoImpl<User> implements INewUserDa
 		Query query = new Query(c);
 		return super.findOne(query);
 	}
+
 }

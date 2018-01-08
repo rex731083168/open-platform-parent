@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,14 +38,43 @@ public class ManageUserServiceImpl implements IManageUserService{
 	@Override
 	public Result<Page<User>> userList(Integer userType, String userName, String email, String telNumber,
 			String enterpriseName, Integer checkState, Integer state, int currentPage, int pageSize) {
-
+		
+		// TODO 20180108 mkw 修改User实体类的设置参数的方式，然后简化创建User的创建过程
 		Result<Page<User>> result = new Result<Page<User>>();
-		Page<User> userList = newUserDao.getUserList(userType, userName, email,telNumber,enterpriseName, checkState,state,currentPage, pageSize);
-		List<User> items = (List<User>) userList.getItems();
+		//Page<User> userList = newUserDao.getUserList(userType, userName, email,telNumber,enterpriseName, checkState,state,currentPage, pageSize);
+		//List<User> items = (List<User>) userList.getItems();
+		
+		User paramUser = new User();
+		if(null != userType){
+			paramUser.setUserType(userType);
+		}
+		if(StringUtils.isNotBlank(userName)){
+			paramUser.setUserName(userName);
+		}
+		if(StringUtils.isNotBlank(email)){
+			paramUser.setEmail(email);
+		}
+		if(StringUtils.isNotBlank(telNumber)){
+			paramUser.setTelNumber(telNumber);
+		}
+		if(StringUtils.isNotBlank(enterpriseName)){
+			paramUser.setEnterpriseName(enterpriseName);
+		}
+		if(null != checkState){
+			paramUser.setCheckState(checkState);
+		}
+		if(null != state){
+			paramUser.setState(state);
+		}
+		Page<User> page = newUserDao.getUserList1(paramUser,currentPage,pageSize);
+		
+		List<User> items = page.getItems();
+		
 		for (User user : items) {
 			user.setPassword("");
 		}
-		result.setSuccessData(userList);
+		
+		result.setSuccessData(page);
 		return result;
 	}
 

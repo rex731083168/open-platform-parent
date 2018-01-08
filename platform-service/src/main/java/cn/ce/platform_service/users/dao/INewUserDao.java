@@ -1,5 +1,7 @@
 package cn.ce.platform_service.users.dao;
 
+import java.util.List;
+
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.users.entity.User;
 
@@ -28,10 +30,22 @@ public interface INewUserDao{
 	User findUserById(String userId);
 
 	User findUserByName(String name);
+	
+	@Deprecated
+	/**
+	 *  
+	 * @Title: getUserList
+	 * @Description: mongodb 迁移到mysql会完全弃用该方法 推荐getUserList1
+	 * @author: makangwei 
+	 * @date:   2018年1月8日 下午3:13:47 
+	 */
 	Page<User> getUserList(Integer userType, String userName, String email, String telNumber, String enterpriseName,
 			Integer checkState, Integer state, int currentPage, int pageSize);
+	
+	Page<User> getUserList1(User user, int currentPage, int pageSize);
 
 	User findUserByIdCard(String idCard, Integer checkState);
+
 	
 
 }
