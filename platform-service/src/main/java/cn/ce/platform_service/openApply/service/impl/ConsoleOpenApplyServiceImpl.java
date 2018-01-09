@@ -317,16 +317,25 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 		Result<Apps> result = this.plublicDiyApplyService.findPagedApps("", applyName, 1, 50);
 
-		List list = result.getData().getData().getList();
-		AppList applist = new AppList();
-		while (list.iterator().hasNext()) {
-			applist = (AppList) list.iterator().next();
-			if (applist.getAppName().equals(applyName)) {
+		List<AppList> list = result.getData().getData().getList();
+		//AppList applist = new AppList();
+		for (AppList app1 : list) {
+			if(app1.getAppName().equals(applyName)){
 				falult = true;
 				return falult;
 			}
 		}
 		return falult;
+		
+		//执行后是死循环
+//		while (list.iterator().hasNext()) {
+//			applist = (AppList) list.iterator().next();
+//			if (applist.getAppName().equals(applyName)) {
+//				falult = true;
+//				return falult;
+//			}
+//		}
+//		return falult;
 
 	}
 }

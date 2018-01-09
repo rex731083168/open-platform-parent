@@ -46,6 +46,7 @@
 		</constructor-arg>
 		
 		<property name="password" value="${redis.password}"></property>
+		<property name="timeout" value="10000"/>
 		
 	</bean>
 
