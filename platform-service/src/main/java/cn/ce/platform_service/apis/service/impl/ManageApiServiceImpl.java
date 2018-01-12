@@ -215,6 +215,21 @@ public class ManageApiServiceImpl implements IManageApiService {
 		return result;
 	}
 
+	@Override
+	public Result<Page<ApiEntity>> apiList(QueryApiEntity apiEntity) {
+		
+		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
+
+		Page<ApiEntity> page = newApiDao.findManagerListWithoutPage(apiEntity);
+
+		if (page != null) {
+			result.setSuccessData(page);
+		} else {
+			result.setErrorMessage("查询不到结果", ErrorCodeNo.SYS006);
+		}
+		return result;
+	}
+	
 	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String resourceType,
 			String targetUrl, Map<String, String> map,
 
@@ -249,5 +264,7 @@ public class ManageApiServiceImpl implements IManageApiService {
 		}
 		return job;
 	}
+
+
 
 }

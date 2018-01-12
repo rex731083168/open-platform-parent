@@ -53,18 +53,5 @@ public class DiyApplyController {
 			@RequestParam(value = "checkState",required = true) Integer checkState, @RequestParam(value = "checkMem", required = false) String checkMem) {
 		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 	}
-	
-	@RequestMapping(value="/test",method=RequestMethod.POST)
-	public String test(@RequestParam String param){
-		
-		String url = "http://10.12.40.51:9000/app/registerBathApp?tenantId=1600003169";
-		
-		param="app="+param;
-		
-		String result = ApiCallUtils.putOrPostMethod(url, param, null, HttpMethod.POST, ContentType.APPLICATION_FORM_URLENCODED);
-		
-		return result;
-		
-	}
 
 }

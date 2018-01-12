@@ -276,7 +276,9 @@ public class ApiCallUtils {
 				is = entity.getContent();
 				String str = IOUtils.convertStreamToString(is);
 				_LOGGER.info("返回body："+str);
-				is.close();
+				if(null != is){
+					is.close();
+				}
 				return str;
 			}catch(Exception e){
 				_LOGGER.error("200状态下拉取body数据失败");
@@ -344,7 +346,7 @@ public class ApiCallUtils {
 
 		_LOGGER.info("************resposne success************");
 		_LOGGER.info("response status:"+status.getStatusCode());
-		if(status.getStatusCode() == 200){ //只有状态为200才能够返回结果
+		if(200 == status.getStatusCode()){ //只有状态为200才能够返回结果
 			InputStream is = null;
 			try{
 				HttpEntity entity = response.getEntity();

@@ -67,6 +67,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 				return Result.errorResult("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
 			}
 		}catch(Exception e ){
+			_LOGGER.error("network error, cannot get resource type from zhong tai", e);
 		}
 		
 		Result<String> result = new Result<String>();
@@ -227,7 +228,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		List<String> gatewayUrlList = new ArrayList<String>();
 		List<String> wGatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
-//			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
 			gatewayUrlList.add(gatewayColonyEntity.getColUrl()+api.getListenPath());
 			wGatewayUrlList.add(gatewayColonyEntity.getwColUrl()+api.getListenPath());//外网访问地址
 		}

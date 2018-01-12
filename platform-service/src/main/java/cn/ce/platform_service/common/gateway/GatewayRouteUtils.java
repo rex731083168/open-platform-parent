@@ -130,8 +130,9 @@ public class GatewayRouteUtils {
 		}
 		
 		try {
-			gwJsonApi = getOrDelGwJsonApi(colonySingle.getColUrl()+
-					Constants.NETWORK_ROUTE_URL+"/"+saasId + "/" + resourceType,method);
+			gwJsonApi = getOrDelGwJsonApi(new StringBuilder().append(colonySingle.getColUrl())
+					.append(Constants.NETWORK_ROUTE_URL).append("/")
+					.append(saasId).append("/").append(resourceType).toString(),method);
 		}catch(Exception e){
 			LOGGER.error("调用网关时出现错误,信息为:" + gwJsonApi + ",异常:" + e.toString());
 			result.setErrorMessage("服务异常!");

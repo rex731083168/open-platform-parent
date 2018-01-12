@@ -135,6 +135,45 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		
 		return super.findPage(page, query);
 	}
+
+	@Override
+	public Page<ApiEntity> findManagerListWithoutPage(QueryApiEntity entity) {
+		Criteria c = new Criteria();
+		
+		if(StringUtils.isNotBlank(entity.getOpenApplyId())){
+			c.and(DBFieldsConstants.APIS_OPENAPPLY_ID).is(entity.getOpenApplyId());
+		}
+		if(StringUtils.isNotBlank(entity.getUserId())){
+			c.and(DBFieldsConstants.APIS_USERID).is(entity.getUserId());
+		}
+		if(!StringUtils.isBlank(entity.getApiChName())){
+			c.and(DBFieldsConstants.APIS_APICHNAME).regex(entity.getApiChName(),"i");
+		}
+		if(null != entity.getCheckState()){
+			c.and(DBFieldsConstants.APIS_CHECKSTATE).is(entity.getCheckState());
+		}
+		if(null != entity.getUserType()){
+			c.and(DBFieldsConstants.USER_USERTYPE).is(entity.getUserType());
+		}
+		if(entity.getApiType() != null && StringUtils.isNotBlank(entity.getApiType().toString())){
+			c.and(DBFieldsConstants.APIS_API_TYPE).is(entity.getApiType());
+		}
+		if(!StringUtils.isBlank(entity.getEnterpriseName())){
+			c.and(DBFieldsConstants.API_ENTERPRESE_NAME).is(entity.getEnterpriseName());
+		}
+		if(AuditConstants.API_SOURCE_IMPORT.equals(entity.getApiSource())){
+			c.and(DBFieldsConstants.API_SOURCE).is(entity.getApiSource());
+		}else if(AuditConstants.API_SOURCE_TYPEIN.equals(entity.getApiSource())){ // DODO 20171214 将来将所有的api都加上source来源
+			c.and(DBFieldsConstants.API_SOURCE).ne(AuditConstants.API_SOURCE_IMPORT);
+		}else{
+			//查询所有来源
+		}
+		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.APIS_CREATE_TIME));
+		
+		Page<ApiEntity> page = new Page<ApiEntity>(1,0,(int)super.count(query));
+		
+		return super.findPage(page, query);
+	}
 	
 	@Override
 	public ApiEntity findOneByFields(Map<String, Object> map) {
@@ -246,5 +285,7 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 		Query query = new Query().addCriteria(Criteria.where("checkState").is(checkState));
 		return super.find(query);
 	}
+
+
 
 }

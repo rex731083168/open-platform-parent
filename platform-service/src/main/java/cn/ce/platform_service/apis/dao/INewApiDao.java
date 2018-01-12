@@ -24,6 +24,8 @@ public interface INewApiDao {
 	
 	Page<ApiEntity> findManagerList(QueryApiEntity entity,int currentPage, int pageSize);
 
+	Page<ApiEntity> findManagerListWithoutPage(QueryApiEntity apiEntity);
+	
 	ApiEntity findOneByFields(Map<String, Object> map);
 
 	List<ApiEntity> findApiByIds(List<String> apiId);
@@ -47,6 +49,8 @@ public interface INewApiDao {
 	void deleteApis(List<String> successApiIds);
 
 	List<ApiEntity> findApiByCheckState(int checkState);
+
+
 
 
 

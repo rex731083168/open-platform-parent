@@ -55,6 +55,7 @@
 			<mvc:exclude-mapping path="/api/showDocApiList"/>
 			<mvc:exclude-mapping path="/monitor/**"/>
 			<mvc:exclude-mapping path="/dubboInfo/**"/>
+			<mvc:exclude-mapping path="/dubboDateController/manualUpdataData" />
             <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
