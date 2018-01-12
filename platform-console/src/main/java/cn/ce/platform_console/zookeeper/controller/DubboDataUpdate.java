@@ -12,7 +12,6 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.util.PageValidateUtil;
-import cn.ce.platform_service.util.PropertiesUtil;
 import cn.ce.platform_service.zk.service.IZkDubboService;
 
 /**
@@ -153,11 +152,5 @@ public class DubboDataUpdate {
 		
 		return zkDubboService.findConfiguratorById(id);
 	}
-	
-	public static void main(String[] args) {
-		String url = "http://10.12.40.99:8000/task/request?"
-				+ "url=172.23.150.46:8080/platform-console/dubboDateController/manualUpdataData"
-				+ "&cron=60second";
-	}
-
+		
 }
