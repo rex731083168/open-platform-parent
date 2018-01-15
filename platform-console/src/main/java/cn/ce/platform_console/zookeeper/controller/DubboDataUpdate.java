@@ -58,7 +58,7 @@ public class DubboDataUpdate {
 //		
 //	}
 		
-	@RequestMapping(value="/manualUpdataData", method=RequestMethod.GET)
+	@RequestMapping(value="/	", method=RequestMethod.GET)
 	public Result<?> manualUpdataData(){
 		boolean flag1 = zkDubboService.clearAll();
 		boolean flag2 = zkDubboService.updateData(zkconnectioninfo, datakey);
