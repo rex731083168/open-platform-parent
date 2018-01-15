@@ -8,12 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -21,9 +16,7 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
-import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
@@ -50,23 +43,25 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			String applyName, int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<DiyApplyEntity>> result = new Result<>();
-		Page<DiyApplyEntity> page = new Page<>(currentPage, 0, pageSize);
-
-		Criteria c = new Criteria();
-		if (StringUtils.isNotBlank(productName)) {
-			c.and("productName").regex(productName);
-		}
-		if (StringUtils.isNotBlank(userName)) {
-			c.and("userName").regex(userName);
-		}
-		if (null != checkState) {
-			c.and("checkState").is(checkState);
-		}
-		if (StringUtils.isNotBlank(applyName)) {
-			c.and("applyName").regex(applyName);
-		}
-		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
-		page = diyApplyDao.findPageByEntity(query, page);
+//		Page<DiyApplyEntity> page = new Page<>(currentPage, 0, pageSize);
+//
+//		Criteria c = new Criteria();
+//		if (StringUtils.isNotBlank(productName)) {
+//			c.and("productName").regex(productName);
+//		}
+//		if (StringUtils.isNotBlank(userName)) {
+//			c.and("userName").regex(userName);
+//		}
+//		if (null != checkState) {
+//			c.and("checkState").is(checkState);
+//		}
+//		if (StringUtils.isNotBlank(applyName)) {
+//			c.and("applyName").regex(applyName);
+//		}
+//		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
+//		page = diyApplyDao.findPageByQuery(query, page);
+		Page<DiyApplyEntity> page = diyApplyDao.findPageByParam(productName, userName, checkState, applyName,  currentPage, pageSize);
+		
 		result.setSuccessData(page);
 		// result.setData(page);
 
@@ -86,8 +81,8 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				return result;
 			}
 
-			Query query = new Query(Criteria.where("id").in(ids));
-			List<DiyApplyEntity> diyApply = diyApplyDao.findListByEntity(query);
+			//Query query = new Query(Criteria.where("id").in(ids));
+			List<DiyApplyEntity> diyApply = diyApplyDao.findListByIds(ids);
 			if(null == diyApply || diyApply.size() == 0){
 				_LOGGER.info("diyApply List is Null,ids:" + JSON.toJSONString(ids));
 				result.setMessage("应用不存在!");
@@ -197,7 +192,6 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		} else {
 			result.setSuccessData(findById);
 		}
-		// TODO Auto-generated method stub
 		return result;
 	}
 	

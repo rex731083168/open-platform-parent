@@ -35,14 +35,16 @@ public interface IDiyApplyDao {
 	 * @param pageSize
 	 * @return
 	 */
-	Page<DiyApplyEntity> findPageByEntity(Query query,Page<DiyApplyEntity> page);
+	@Deprecated
+	Page<DiyApplyEntity> findPageByQuery(Query query,Page<DiyApplyEntity> page);
 	
 	/***
 	 * 根据条件查询应用列表
 	 * @param query
 	 * @return
 	 */
-	List<DiyApplyEntity> findListByEntity(Query query);
+	@Deprecated
+	List<DiyApplyEntity> findListByQuery(Query query);
 	
 	/**
 	 * 根据id加载应用信息
@@ -75,4 +77,12 @@ public interface IDiyApplyDao {
 	 */
 	Page<DiyApplyEntity> findApplyList(String applyName, String productName, Integer checkState,
 			String userId, Page<DiyApplyEntity> page);
+	
+
+	List<DiyApplyEntity> findListByEntity(DiyApplyEntity entity);
+
+	Page<DiyApplyEntity> findPageByParam(String productName, String userName, Integer checkState, String applyName,
+			int currentPage, int pageSize);
+	
+	List<DiyApplyEntity> findListByIds(List<String> ids);
 }
