@@ -1,5 +1,6 @@
 package cn.ce.platform_console.zookeeper.controller;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -32,33 +33,17 @@ public class DubboDataUpdate {
 	@Resource
 	private IZkDubboService zkDubboService;
 
-	/**
-	 * 
-	 * @Description: 定时更新dubbo数据
-	 * @author: makangwei
-	 * @date:   2018年1月9日 下午3:58:24  
-	 */
-//	@Scheduled(cron = "0 0 1 * * *")
-//	public void updataDubboData() {
-//		if(zkDubboService.clearAll()){ //先清除数据成功
-//			zkDubboService.updateData(zkconnectioninfo, datakey); //然后执行更新数据
-//		}
-//	}
+
 	
-	//@PostConstruct
+	@PostConstruct
 	//每次容器一启动就会调用该方法。注册到陈金龙的调度中心,但是调度中心没有删除操作。所以每次上线前需要陈金龙手动删除原来的调度动作
-//	public void scheduled(){
-//		
-//		manualUpdataData();	// 往数据库中添加初始数据
-//		invokeScheduled();
-//	}
+	public void potConstruct(){
+		manualUpdataData();
+	}
 	
-//	private void invokeScheduled() {
-//		String scheduledUrl = PropertiesUtil.getInstance().getValue("scheduled.task");
-//		
-//	}
+
 		
-	@RequestMapping(value="/	", method=RequestMethod.GET)
+	@RequestMapping(value="/manualUpdataData", method=RequestMethod.GET)
 	public Result<?> manualUpdataData(){
 		boolean flag1 = zkDubboService.clearAll();
 		boolean flag2 = zkDubboService.updateData(zkconnectioninfo, datakey);
@@ -114,7 +99,8 @@ public class DubboDataUpdate {
 			@RequestParam(defaultValue="10") int pageSize,
 			@RequestParam(required=false) String nodeId){
 		
-		return zkDubboService.findConsumerPage(currentPage,pageSize,nodeId);
+		return zkDubboService.findConsumerPage(PageValidateUtil.checkCurrentPage(currentPage),
+				PageValidateUtil.checkPageSize(pageSize),nodeId);
 	}
 	
 	@RequestMapping(value="/findConsumerById", method=RequestMethod.GET)
@@ -129,7 +115,8 @@ public class DubboDataUpdate {
 			@RequestParam(defaultValue="10") int pageSize,
 			@RequestParam(required=false) String nodeId){
 		
-		return zkDubboService.findRouterPage(currentPage,pageSize,nodeId);
+		return zkDubboService.findRouterPage(PageValidateUtil.checkCurrentPage(currentPage),
+				PageValidateUtil.checkPageSize(pageSize),nodeId);
 	}
 	
 	@RequestMapping(value="/findRouterById", method=RequestMethod.GET)
@@ -144,7 +131,8 @@ public class DubboDataUpdate {
 			@RequestParam(defaultValue="10") int pageSize,
 			@RequestParam(required=false)String nodeId){
 		
-		return zkDubboService.findConfiguratorPage(currentPage,pageSize,nodeId);
+		return zkDubboService.findConfiguratorPage(PageValidateUtil.checkCurrentPage(currentPage),
+				PageValidateUtil.checkPageSize(pageSize),nodeId);
 	}
 	
 	@RequestMapping(value="/findConfiguratorById", method=RequestMethod.GET)
