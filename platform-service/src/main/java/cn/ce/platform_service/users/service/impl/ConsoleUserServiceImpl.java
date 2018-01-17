@@ -1,6 +1,7 @@
 package cn.ce.platform_service.users.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -19,6 +20,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.mail.MailInfo;
 import cn.ce.platform_service.common.mail.MailUtil;
+import cn.ce.platform_service.users.dao.IMysqlUserDao;
 import cn.ce.platform_service.users.dao.INewUserDao;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
@@ -37,6 +39,9 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	
     @Resource
     private INewUserDao newUserDao;
+    @Resource
+    private IMysqlUserDao mysqlUserDao;
+    
     
 	@Override
 	public Result<String> userRegister(User user) {
@@ -310,6 +315,21 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			return Result.errorResult("当前身份证号码已经被注册", ErrorCodeNo.SYS009, null, Status.FAILED);
 		}
 		return Result.errorResult("当前身份证号可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+	}
+	
+	
+
+
+	@Override
+	public Result<String> migraUser() {
+		int i = 0;
+		List<User> userList = newUserDao.findAll();
+		for (User user : userList) {
+			i+=mysqlUserDao.save(user);
+		}
+		Result<String> result = new Result<String>();
+		result.setSuccessMessage("一共"+userList.size()+"条数据，成功插入mysql数据库"+i+"条");
+		return result;
 	}
 	
 }

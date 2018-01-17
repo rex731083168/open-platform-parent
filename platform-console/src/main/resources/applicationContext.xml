@@ -76,6 +76,8 @@
 	<!-- redis -->
 	<import resource="spring-session.xml" />
 	
+	<import resource=""/>
+	
 	<!-- Swagger Configue -->
     <bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
     

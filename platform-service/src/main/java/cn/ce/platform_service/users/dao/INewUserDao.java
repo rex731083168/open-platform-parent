@@ -46,6 +46,8 @@ public interface INewUserDao{
 
 	User findUserByIdCard(String idCard, Integer checkState);
 
+	List<User> findAll();
+
 	
 
 }
