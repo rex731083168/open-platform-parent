@@ -56,6 +56,7 @@
 			<mvc:exclude-mapping path="/monitor/**"/>
 			<mvc:exclude-mapping path="/dubboInfo/**"/>
 			<mvc:exclude-mapping path="/dubboDateController/manualUpdataData" />
+			<mvc:exclude-mapping path="/data/migra/**" />
             <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
@@ -76,7 +77,8 @@
 	<!-- redis -->
 	<import resource="spring-session.xml" />
 	
-	<import resource=""/>
+	<!-- mybatis -->
+	<import resource="mybatis-config.xml"/>
 	
 	<!-- Swagger Configue -->
     <bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
