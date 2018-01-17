@@ -64,7 +64,7 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 		boolean flag4 = dubboRouterDao.clearAll();
 		boolean flag5 = dubboConfiguratorDao.clearAll();
 		boolean flag6 = dubboRootDao.clearAll();
-		if (flag1 && flag2 && flag3 && flag4 && flag5) {
+		if (flag1 && flag2 && flag3 && flag4 && flag5 && flag6) {
 			return true;
 		}
 		return false;

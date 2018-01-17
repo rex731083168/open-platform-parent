@@ -24,12 +24,12 @@
   	</resultMap>
   
   	<insert id="save" parameterType="cn.ce.platform_service.users.entity.User" >
-  		INSERT into api_detail
-  			(user_id, password, email, app_secret, state, user_type, reg_time, check_code
-  			,check_state, enterprise_name, id_card, user_real_name, check_mem)
+  		INSERT into user
+	  		(user_id,user_name,password,email,app_secret,state,user_type,reg_time,check_code,check_state
+	  			,enterprise_name,id_card,user_real_name,check_mem)
   		VALUES
-  			(#{id},#{password},#{email},#{appSecret},#{state},#{userType},#{regTime},#{checkCode}
-  			,#{checkState},#{enterpriseName},#{idCard},#{userRealName},#{checkMem})
+  			(#{id},#{userName},	#{password},#{email},#{appSecret},#{state},#{userType},
+  				#{regTime},#{checkCode},#{checkState},#{enterpriseName},#{idCard},#{userRealName},#{checkMem})
   	</insert>
   
   </mapper>
