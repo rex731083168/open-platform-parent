@@ -19,9 +19,24 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.ce.platform_service.apis.dao.IMysqlApiArgDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiCodeDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiHeaderDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiResultDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiRexampleDao;
 import cn.ce.platform_service.apis.dao.INewApiDao;
+import cn.ce.platform_service.apis.entity.ApiArgEntity;
+import cn.ce.platform_service.apis.entity.ApiCodeEntity;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.ApiHeaderEntity;
+import cn.ce.platform_service.apis.entity.ApiResultEntity;
+import cn.ce.platform_service.apis.entity.ApiResultExampleEntity;
+import cn.ce.platform_service.apis.entity.ErrorCodeEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
+import cn.ce.platform_service.apis.entity.RetEntity;
+import cn.ce.platform_service.apis.entity.RetExamEntity;
+import cn.ce.platform_service.apis.entity.SubArgEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
@@ -35,6 +50,7 @@ import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.util.PropertiesUtil;
+import cn.ce.platform_service.util.RandomUtil;
 
 /**
 * @Description : 说明
@@ -48,6 +64,18 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	
 	@Resource
 	private INewApiDao newApiDao;
+	@Resource
+	private IMysqlApiDao mysqlApiDao;
+	@Resource
+	private IMysqlApiHeaderDao apiHeaderDao;
+	@Resource
+	private IMysqlApiArgDao apiArgDao;
+	@Resource
+	private IMysqlApiResultDao apiResultDao;
+	@Resource
+	private IMysqlApiRexampleDao apiRexampleDao;
+	@Resource 
+	private IMysqlApiCodeDao apiCodeDao;
 	@Resource
 	private IGatewayApiService gatewayApiService;
 	
@@ -468,5 +496,90 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		// TODO Auto-generated method stub
 		return result;
+	}
+
+	@Override
+	public Result<String> migraApi() {
+		
+		List<ApiEntity> apiList = newApiDao.findAll();
+		int i = 0;
+		for (ApiEntity apiEntity : apiList) {
+			List<SubArgEntity> headers = apiEntity.getHeaders(); //Header参数
+			saveHeaders(headers,apiEntity.getId());
+			List<SubArgEntity> args = apiEntity.getArgs(); //应用参数
+			saveArgs(args,apiEntity.getId());
+			List<RetEntity> results = apiEntity.getResult(); //返回参数
+			saveResults(results, apiEntity.getId());
+			RetExamEntity retExampleEntity = apiEntity.getRetExample(); //返回示例
+			saveRexample(retExampleEntity, apiEntity.getId());
+			List<ErrorCodeEntity> errorCodes =  apiEntity.getErrCodes(); //错误码
+			saveErrorCodes(errorCodes,apiEntity.getId());
+			i+=mysqlApiDao.save(apiEntity);
+		}
+		Result<String> result = new Result<String>();
+		result.setSuccessMessage("一共迁移了"+apiList.size()+"条数据，成功了"+i+"条");
+		return result;
+	}
+
+	private void saveErrorCodes(List<ErrorCodeEntity> errorCodes, String apiId) {
+		for (ErrorCodeEntity errorCodeEntity : errorCodes) {
+			ApiCodeEntity code = new ApiCodeEntity();
+			code.setId(RandomUtil.random32UUID());
+			code.setApiId(apiId);
+			code.setCodeName(errorCodeEntity.getErrname());
+			code.setCodeDesc(errorCodeEntity.getDesc());
+			apiCodeDao.save(code);
+		}
+	}
+
+	private void saveRexample(RetExamEntity retExampleEntity, String apiId) {
+		ApiResultExampleEntity re = new ApiResultExampleEntity();
+		re.setApiId(apiId);
+		re.setId(RandomUtil.random32UUID());
+		re.setRexName(retExampleEntity.getExName());
+		re.setRexType(retExampleEntity.getExType());
+		re.setRexValue(retExampleEntity.getExValue());
+		re.setStateCode(retExampleEntity.getStateCode());
+		apiRexampleDao.save(re);
+		
+	}
+
+	private void saveResults(List<RetEntity> results, String apiId) {
+		for (RetEntity retEntity : results) {
+			ApiResultEntity result = new ApiResultEntity();
+			result.setApiId(apiId);
+			result.setId(RandomUtil.random32UUID());
+			result.setRetName(retEntity.getRetName());
+			result.setRetType(retEntity.getRetType());
+			apiResultDao.save(result);
+		}
+		
+	}
+
+	private void saveArgs(List<SubArgEntity> args,String apiId) {
+		for (SubArgEntity subArgEntity : args) {
+			ApiArgEntity arg = new ApiArgEntity();
+			arg.setApiId(apiId);
+			arg.setId(RandomUtil.random32UUID());
+			arg.setArgName(subArgEntity.getArgName());
+			arg.setArgType(subArgEntity.getArgType());
+			arg.setExample(subArgEntity.getExample());
+			arg.setRequired(subArgEntity.isRequired());
+			apiArgDao.save(arg);
+		}
+		
+	}
+
+	private void saveHeaders(List<SubArgEntity> headers,String apiId) {
+		for (SubArgEntity subArgEntity : headers) {
+			ApiHeaderEntity header = new ApiHeaderEntity();
+			header.setApiId(apiId);
+			header.setId(RandomUtil.random32UUID());
+			header.setRequired(subArgEntity.isRequired());
+			header.setHeaderName(subArgEntity.getArgName());
+			header.setHeaderType(subArgEntity.getArgType());
+			header.setExample(subArgEntity.getDesc());
+			apiHeaderDao.save(header);
+		}
 	}
 }

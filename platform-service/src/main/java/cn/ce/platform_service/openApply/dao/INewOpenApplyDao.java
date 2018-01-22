@@ -29,4 +29,6 @@ public interface INewOpenApplyDao {
 	
 	List<OpenApplyEntity> findOpenApplyByNeqId(OpenApplyEntity apply);
 
+	List<OpenApplyEntity> findAll();
+
 }

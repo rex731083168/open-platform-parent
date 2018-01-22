@@ -85,4 +85,6 @@ public interface IDiyApplyDao {
 			int currentPage, int pageSize);
 	
 	List<DiyApplyEntity> findListByIds(List<String> ids);
+
+	List<DiyApplyEntity> findAll();
 }

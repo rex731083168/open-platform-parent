@@ -43,5 +43,7 @@ public interface IConsoleApiService {
 	Result<?> checkListenPath(String listenPath);
 
 	Result<?> getResourceType();
+
+	Result<String> migraApi();
 	
 }

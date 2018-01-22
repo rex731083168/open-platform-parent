@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao">
+	<resultMap type="cn.ce.platform_service.diyApply.entity.DiyApplyEntity"
+		id="diyApplyMap">
+		<id column="apply_id" property="id" />
+		<result column="app_id" property="appId" /> <!-- 对应接口返回应用id -->
+		<result column="apply_name" property="applyName" />
+		<result column="product_auth_code" property="productAuthCode" /> <!-- 产品授权码 -->
+		<result column="product_instance_id" property="productInstanceId" /> <!-- 产品实例ID -->
+		<result column="boss_product_instance" property="bossProductInstance" /> <!-- bossProductInstance -->
+		<result column="product_name" property="productName" /> <!-- 产品名称 -->
+		<result column="domain_url" property="domainUrl" /> <!-- 访问域名 -->
+		<result column="frequenct_type" property="frequencyType" /> <!-- 访问频次类型 1:标准，2:定制，3:高定制 -->
+		<result column="quota_max" property="quotaMax" />
+		<result column="quota_renew_rate" property="quotaRenewRate" />
+		<result column="rate" property="rate" />
+		<result column="per" property="per" />
+		<result column="policy_id" property="policyId" />
+		<result column="client_id" property="clientId" />
+		<result column="secret" property="secret" />
+		<!-- <result column="" property="logoImage" /> -->
+		<result column="apply_desc" property="applyDesc" />
+		<result column="create_time" property="createDate" />
+		<result column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<!-- <result column="" property="enterpriseId" /> -->
+		<result column="enterprise_name" property="enterpriseName" />
+		<result column="check_state" property="checkState" />
+		<result column="check_mem" property="checkMem" />
+		<result column="resource_type" property="resourceType" />
+	</resultMap>
+
+	<insert id="save" parameterType="cn.ce.platform_service.diyApply.entity.DiyApplyEntity">
+		INSERT INTO diy_apply 
+			(apply_id,app_id,apply_name,product_auth_code,product_instance_id,boss_product_instance,product_name
+			,domain_url,frequenct_type,quota_max,quota_renew_rate,rate,per,policy_id,client_id,secret
+			,apply_desc,create_time,user_id,user_name,enterprise_name,check_state,check_mem,resource_type)
+		VALUES
+			(#{id},#{appId},#{applyName},#{productAuthCode},#{productInstanceId},#{bossProductInstance}
+			,#{productName},#{domainUrl},#{frequencyType},#{quotaMax},#{quotaRenewRate},#{rate},#{per}
+			,#{policyId},#{clientId},#{secret},#{applyDesc},#{createDate},#{userId},#{userName}
+			,#{enterpriseName},#{checkState},#{checkMem},#{resourceType})
+	</insert>
+	
+	<insert id="saveBoundOpenApply">
+		INSERT INTO diy_bound_open
+			(bound_id,diy_apply_id,open_apply_id)
+		VALUES
+			(#{boundId},#{diyApplyId},#{openApplyId})
+	</insert>
+	
+	<insert id="saveBoundApi">
+		INSERT INTO diy_bound_api
+			(bound_id,diy_apply_id,open_apply_id,api_id)
+		VALUES
+			(#{boundId},#{diyApplyId},#{openApplyId},#{apiId})
+	</insert>
+</mapper>

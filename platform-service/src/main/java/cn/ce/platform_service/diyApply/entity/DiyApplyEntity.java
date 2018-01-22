@@ -9,7 +9,6 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import cn.ce.platform_service.apis.entity.ApiAuditEntity;
 import cn.ce.platform_service.users.entity.User;
 
 /***
@@ -104,8 +103,8 @@ public class DiyApplyEntity {
 	@Field("checkMem")
 	private String checkMem;
 
-	@Field("authIds")
-	private List<String> authIds;
+//	@Field("authIds")
+//	private List<String> authIds;
 	
 	/***
 	 * 所属资源池类型
@@ -113,8 +112,8 @@ public class DiyApplyEntity {
 	@Field("resourceType")
 	private String resourceType;
 
-	@Transient
-	private List<ApiAuditEntity> auditList;// api集合
+//	@Transient
+//	private List<ApiAuditEntity> auditList;// api集合
 
 	@Transient
 	private User user; // user对象
@@ -175,21 +174,21 @@ public class DiyApplyEntity {
 		this.userName = userName;
 	}
 
-	public List<String> getAuthIds() {
-		return authIds;
-	}
+//	public List<String> getAuthIds() {
+//		return authIds;
+//	}
+//
+//	public void setAuthIds(List<String> authIds) {
+//		this.authIds = authIds;
+//	}
 
-	public void setAuthIds(List<String> authIds) {
-		this.authIds = authIds;
-	}
-
-	public List<ApiAuditEntity> getAuditList() {
-		return auditList;
-	}
-
-	public void setAuditList(List<ApiAuditEntity> auditList) {
-		this.auditList = auditList;
-	}
+//	public List<ApiAuditEntity> getAuditList() {
+//		return auditList;
+//	}
+//
+//	public void setAuditList(List<ApiAuditEntity> auditList) {
+//		this.auditList = auditList;
+//	}
 
 	public String getProductAuthCode() {
 		return productAuthCode;

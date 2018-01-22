@@ -85,6 +85,8 @@ public class ApiEntity implements Serializable {
 	/** api接口版本信息 */
 	@Field("apiVersion")
 	private ApiVersion apiVersion;
+	
+	/** 开放OPEN，保留RETAIN*/
 	@Field("apiType")
 	private String apiType;
 	

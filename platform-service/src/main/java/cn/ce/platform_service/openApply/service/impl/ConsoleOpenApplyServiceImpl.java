@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.common.AuditConstants;
-import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
@@ -27,6 +25,7 @@ import cn.ce.platform_service.core.bean.MongoDBWhereEntity;
 import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
+import cn.ce.platform_service.openApply.dao.IMysqlOpenApplyDao;
 import cn.ce.platform_service.openApply.dao.INewOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
@@ -50,7 +49,9 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 	@Resource
 	private INewOpenApplyDao newOpenApplyDao;
-
+	@Resource
+	private IMysqlOpenApplyDao mysqlOpenApplyDao;	
+	
 	@Resource
 	private IPlublicDiyApplyService plublicDiyApplyService;
 
@@ -337,5 +338,17 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 //		}
 //		return falult;
 
+	}
+
+	@Override
+	public Result<?> migraOpenApply() {
+		List<OpenApplyEntity> openApplyList = newOpenApplyDao.findAll();
+		int i = 0;
+		for (OpenApplyEntity openApplyEntity : openApplyList) {
+			i+=mysqlOpenApplyDao.save(openApplyEntity);
+		}
+		Result<String> result = new Result<String>();
+		result.setSuccessMessage("一共"+openApplyList.size()+"条数据，成功插入mysql数据库"+i+"条");
+		return result;
 	}
 }

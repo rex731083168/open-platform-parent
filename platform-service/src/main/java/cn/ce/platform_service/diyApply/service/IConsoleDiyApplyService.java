@@ -79,5 +79,7 @@ public interface IConsoleDiyApplyService {
 
 	Result<?> updateApply(DiyApplyEntity apply);
 
+	Result<?> migraDiyApply();
+
 	
 }

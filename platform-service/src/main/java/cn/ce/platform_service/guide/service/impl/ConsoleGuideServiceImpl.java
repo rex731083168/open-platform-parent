@@ -15,6 +15,7 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.dao.IGuideDao;
+import cn.ce.platform_service.guide.dao.IMysqlGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
 import cn.ce.platform_service.users.entity.User;
@@ -35,6 +36,8 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	private static Logger _LOGGER = Logger.getLogger(ConsoleGuideServiceImpl.class);
 	@Resource
 	private IGuideDao guideDaoImpl;
+	@Resource
+	private IMysqlGuideDao mysqlGuideDao;
 
 	@Override
 	public Result<String> add(HttpSession session, GuideEntity g) {
@@ -216,6 +219,19 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 			result.setErrorMessage("审核失败");
 			return result;
 		}
+	}
+
+	@Override
+	public Result<String> migraGuide() {
+		
+		List<GuideEntity> list = guideDaoImpl.findAll();
+		int i = 0;
+		for (GuideEntity guideEntity : list) {
+			i+= mysqlGuideDao.save(guideEntity);
+		}
+		Result<String> result = new Result<String>(); 
+		result.setSuccessMessage("一共迁移了"+list.size()+"条数据，成功了"+i+"条");
+		return result;
 	}
 
 }

@@ -32,6 +32,7 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
+import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
@@ -39,6 +40,7 @@ import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
+import cn.ce.platform_service.util.RandomUtil;
 import cn.ce.platform_service.util.SplitUtil;
 import io.netty.handler.codec.http.HttpMethod;
 import net.sf.json.JSONObject;
@@ -56,11 +58,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
-
+	
 	@Resource
 	private INewApiDao newApiDao;
 	@Resource
 	private IDiyApplyDao diyApplyDao;
+	@Resource
+	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
 	private IConsoleApiService consoleApiService;
 	@Resource
@@ -335,9 +339,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		if (null == apply) {
 			result.setErrorMessage("请求删除的应用不存在!");
 			return result;
-		} else if (apply.getAuthIds() != null && apply.getAuthIds().size() > 0) {
-			result.setErrorMessage("应用下存在api,删除失败!");
-			return result;
 		} else if (apply.getCheckState().equals(AuditConstants.DIY_APPLY_CHECKED_SUCCESS)
 				|| apply.getCheckState().equals(AuditConstants.DIY_APPLY_CHECKED_COMMITED)) {
 			result.setErrorMessage("该应用已审核,无法删除!");
@@ -534,5 +535,28 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			result.setErrorMessage("审核失败");
 			return result;
 		}
+	}
+
+	@Override
+	public Result<?> migraDiyApply() {
+		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
+		int i = 0;
+		for (DiyApplyEntity diyApplyEntity : diyList) {
+			Map<String,List<String>> map = diyApplyEntity.getLimitList();
+			for (String openId : map.keySet()) {
+				mysqlDiyApplyDao.saveBoundOpenApply(RandomUtil.random32UUID()
+						,diyApplyEntity.getId(),openId);
+				List<String> apiIds = map.get(openId);
+				for (String apiId : apiIds) {
+					mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID()
+							, diyApplyEntity.getId(), openId, apiId);
+				}
+			}
+			i+=mysqlDiyApplyDao.save(diyApplyEntity);
+			
+		}
+		Result<String> result = new Result<String>();
+		result.setSuccessMessage("一共"+diyList.size()+"条数据，成功插入mysql数据库"+i+"条");
+		return result;
 	}
 }

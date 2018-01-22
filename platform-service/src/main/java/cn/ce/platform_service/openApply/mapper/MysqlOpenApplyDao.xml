@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cn.ce.platform_service.openApply.dao.IMysqlOpenApplyDao">
+ 	
+ 	<resultMap type="cn.ce.platform_service.openApply.entity.OpenApplyEntity" id="openApplyMap">
+ 		<id column="apply_id" property="id"/>
+ 		<result column="app_id" property="appId" />
+ 		<result column="user_id" property="userId" />
+ 		<result column="user_name" property="userName" />
+ 		<!-- <result column="" property="enterpriseId" /> -->
+ 		<result column="enterprise_name" property="enterpriseName" />
+ 		<result column="apply_key" property="applyKey" />
+ 		<result column="apply_name" property="applyName" />
+ 		<result column="apply_desc" property="applyDesc" />
+ 		<result column="create_time" property="createDate" />
+ 		<result column="check_state" property="checkState" />
+ 		<result column="check_mem" property="checkMem" />
+ 	</resultMap> 
+ 
+  	<insert id="save" parameterType="cn.ce.platform_service.openApply.entity.OpenApplyEntity">
+		INSERT INTO open_apply 
+			(apply_id,app_id,user_id,user_name,enterprise_name,apply_key,apply_name
+			,apply_desc,create_time,check_state,check_mem)
+		VALUES  	
+  			(#{id},#{appId},#{userId},#{userName},#{enterpriseName}
+  			,#{applyKey},#{applyName},#{applyDesc},#{createDate},#{checkState},#{checkMem})
+  	</insert>
+  
+  </mapper>

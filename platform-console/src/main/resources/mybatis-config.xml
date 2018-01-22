@@ -39,7 +39,7 @@
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="cn.ce.platform_service.users.dao" />
+		<property name="basePackage" value="cn.ce.platform_service.**.dao" />
 	</bean>
 
 </beans>

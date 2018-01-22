@@ -6,6 +6,7 @@ import java.util.Map;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.users.entity.User;
 
 /**
 * @Description : 说明
@@ -50,9 +51,6 @@ public interface INewApiDao {
 
 	List<ApiEntity> findApiByCheckState(int checkState);
 
-
-
-
-
+	List<ApiEntity> findAll();
 
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cn.ce.platform_service.apis.dao.IMysqlApiDao">
+  	<resultMap type="cn.ce.platform_service.apis.entity.ApiEntity" id="apiMap">
+  		<id column="api_id" property="id"/>
+  		<result column="open_apply_id" property="openApplyId"/>
+  		<result column="user_id" property="userId"/>
+  		<result column="user_name" property="userName"/>
+  		<result column="api_ch_name" property="apiChName"/>
+  		<result column="app_code" property="appCode"/> <!-- 所属开放应用的code码 -->
+  		<result column="default_target_url" property="defaultTargetUrl"/>
+  		<result column="listen_path" property="listenPath"/>
+  		<result column="http_method" property="httpMethod"/>
+  		<result column="version_id" property="versionId"/> <!-- 一组不同版本的api拥有相同的id -->
+  		<result column="version" property="version"/>	<!-- 版本号 -->
+  		<result column="version_remark" property="versionRemark"/> <!-- 版本说明 -->
+  		<result column="new_version" property="newVersion"/> <!-- 是否是新版本 boolean类型 -->
+  		<result column="api_type" property="apiType"/> <!-- 开放还是保留 -->
+  		<result column="api_desc" property="desc"/> 
+  		<result column="state" property="state"/> <!-- 状态是否可用  默认为0,禁用为1 -->
+  		<result column="check_state" property="checkState"/> 
+  		<result column="check_mem" property="checkMem"/> <!-- 审核备注 -->
+  		<result column="quota_max" property="quotaMax"/> <!-- 最大配额 -->
+  		<result column="quota_renew_ms" property="quotaRenewalRate"/> <!-- 最大配额 重置周期 -->
+  		<result column="rate" property="rate"/> <!-- 频次 -->
+  		<result column="per" property="per"/> <!-- 访问频次计数周期 -->
+  		<result column="api_source" property="apiSource"/> <!-- api来源 0,null代表提供者录入1代表文件导入 -->
+  		<!-- <result column="enterprise_id" property="enterpriseId"/>  -->
+  		<result column="enterprise_name" property="enterpriseName"/>
+  		<result column="resource_type" property="resourceType"/> <!-- 资源类型 -->
+  		<result column="resource_type_name" property="resourceTypeName"/> 
+  		<result column="create_time" property="createTime"/>
+  	</resultMap>
+  	
+  	
+  	<insert id="save" parameterType="cn.ce.platform_service.apis.entity.ApiEntity">
+  		INSERT INTO api_detail
+  			(api_id,open_apply_id,user_id,user_name,api_ch_name,app_code,default_target_url
+  			,listen_path,http_method,version_id,version,version_remark,new_version,api_type
+  			,api_desc,state,check_state,check_mem,quota_max,quota_renew_ms,rate,per,api_source
+  			,enterprise_name,resource_type,resource_type_name,create_time) 
+  		VALUES
+  			(#{id},#{openApplyId},#{userId},#{userName},#{apiChName},#{appCode},#{defaultTargetUrl}
+  			,#{listenPath},#{httpMethod}
+  			,#{apiVersion.versionId},#{apiVersion.version},#{apiVersion.versionRemark},#{apiVersion.newVersion}
+  			,#{apiType},#{desc},#{state},#{checkState},#{checkMem},#{quotaMax},#{quotaRenewalRate}
+  			,#{rate},#{per},#{apiSource},#{enterpriseName},#{resourceType},#{resourceTypeName}
+  			,#{createTime})
+  	</insert>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </mapper>

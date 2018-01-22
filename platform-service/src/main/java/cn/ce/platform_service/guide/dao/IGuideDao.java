@@ -41,5 +41,7 @@ public interface IGuideDao {
 
 	public Page<GuideEntity> listPage2(GuideEntity entity, int currentPage, int pageSize);
 
+	public List<GuideEntity> findAll();
+
 
 }

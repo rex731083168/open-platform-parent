@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cn.ce.platform_service.apis.dao.IMysqlApiCodeDao">
+  	<resultMap type="cn.ce.platform_service.apis.entity.ApiCodeEntity" 
+  		id="apiPartMap">
+  		<id column="code_id" property="id"/>
+  		<result column="api_id" property="apiId"/>
+  		<result column="code_name" property="codeName"/>
+  		<result column="code_desc" property="codeDesc"/>
+  	</resultMap>
+  
+  	<insert id="save" parameterType="cn.ce.platform_service.apis.entity.ApiCodeEntity">
+  		INSERT INTO api_code
+  			(code_id,api_id,code_name,code_desc)
+  		VALUES
+  			(#{id},#{apiId},#{codeName},#{codeDesc})
+  	</insert>
+  
+  
+  </mapper>

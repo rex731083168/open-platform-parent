@@ -16,7 +16,7 @@ import cn.ce.platform_service.zk.entity.DubboConsumer;
 * @Author : makangwei
 * @Date : 2018年1月10日
 */
-@Repository("dubboComsumerDao")
+@Repository("dubboConsumerDao")
 public class DubboConsumerDaoImpl extends BaseMongoDaoImpl<DubboConsumer> implements IDubboConsumerDao{
 
 	@Override
