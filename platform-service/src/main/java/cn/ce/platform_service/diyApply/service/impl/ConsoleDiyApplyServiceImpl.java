@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
@@ -34,6 +35,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.DiyApplyQueryEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
@@ -61,6 +63,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	
 	@Resource
 	private INewApiDao newApiDao;
+	@Resource
+	private IMysqlApiDao mysqlApiDao;
 	@Resource
 	private IDiyApplyDao diyApplyDao;
 	@Resource
@@ -95,9 +99,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		// List<DiyApplyEntity> findPageByList =
 		// diyApplyDao.findListByQuery(query);
-		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(entity);
-
-		if (null != findPageByList && findPageByList.size() > 0) {
+		
+		//List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(entity);
+		int applyNum = mysqlDiyApplyDao.checkApplyName(entity.getUser().getId(),entity.getApplyName());
+		
+//		if (null != findPageByList && findPageByList.size() > 0) {
+		if(applyNum > 0){
 			result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
 			return result;
 		}
@@ -242,30 +249,34 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setPolicyId(policyId);
 			entity.setClientId(clientId);
 			entity.setSecret(secret);
-
-			_LOGGER.info("****************将绑定关系保存到实体中****************");
-			Map<String, List<String>> map = new HashMap<String, List<String>>();
+			entity.setId(RandomUtil.random32UUID());
+			mysqlDiyApplyDao.save(entity);
+			_LOGGER.info("****************将绑定关系保存到mysql其它表中****************");
+			//Map<String, List<String>> map = new HashMap<String, List<String>>();
 			int i = 1;
 			for (String appId : appIdList) {
-				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
+//				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
+				List<ApiEntity> apiList = mysqlApiDao.findByOpenApply(appId);
 				List<String> apiIds = new ArrayList<String>();
 				for (ApiEntity apiEntity : apiList) {
 					// version2.1改为只有api类型为开放的才绑定
 					if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
 							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
 						apiIds.add(apiEntity.getId());
+						mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID(), entity.getId(), appId, apiEntity.getId());
 					}
 				}
 				if (apiIds.size() > 0) {
-					map.put(appId, apiIds);
-					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api：" + apiIds);
+//					map.put(appId, apiIds);
+					mysqlDiyApplyDao.saveBoundOpenApply(RandomUtil.random32UUID(), entity.getId(), appId);
+					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api是：" + apiIds);
 				}
 			}
-			entity.setLimitList(map);
+			//entity.setLimitList(map);
 			_LOGGER.info("****************绑定关系实体保存完成****************");
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
-			diyApplyDao.saveOrUpdate(entity);
+//			diyApplyDao.saveOrUpdate(entity);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("新增成功!");
 
@@ -292,7 +303,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			}
 
 			_LOGGER.info("update apply begin : " + JSON.toJSONString(applyById));
-
+			mysqlDiyApplyDao.update(applyById);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("修改成功!");
 
@@ -335,7 +346,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<String> deleteApplyByid(String id) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<>();
-		DiyApplyEntity apply = diyApplyDao.findById(id);
+//		DiyApplyEntity apply = diyApplyDao.findById(id);
+		DiyApplyEntity apply = mysqlDiyApplyDao.findById(id);
 		if (null == apply) {
 			result.setErrorMessage("请求删除的应用不存在!");
 			return result;
@@ -345,7 +357,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		} else {
 			_LOGGER.info("delete apply begin applyId:" + id);
-			diyApplyDao.delete(id);
+			mysqlDiyApplyDao.deleteById(id);
 			_LOGGER.info("delete apply end");
 			result.setSuccessMessage("删除成功!");
 			return result;
@@ -354,18 +366,24 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page) {
-		Result<Page<DiyApplyEntity>> result = new Result<>();
-		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(), entity.getProductName(),
-				entity.getCheckState(), entity.getUserId(), page);
-
-		result.setSuccessData(diyApplyPage);
+	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyQueryEntity queryApply) {
+		
+		Result<Page<DiyApplyEntity>> result = new Result<Page<DiyApplyEntity>>();
+		
+		int totalNum = mysqlDiyApplyDao.findListSize(queryApply);
+		List<DiyApplyEntity> diyList = mysqlDiyApplyDao.getPagedList(queryApply);
+//		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(), entity.getProductName(),
+//				entity.getCheckState(), entity.getUserId(), page);
+		Page<DiyApplyEntity> page = new Page<DiyApplyEntity>(queryApply.getCurrentPage(), totalNum, queryApply.getPageSize());
+		page.setItems(diyList);
+		result.setSuccessData(page);
 		return result;
 	}
 
 	@Override
 	public DiyApplyEntity findById(String applyId) {
-		return diyApplyDao.findById(applyId);
+//		return diyApplyDao.findById(applyId);
+		return mysqlDiyApplyDao.findById(applyId);
 	}
 
 	@Override
@@ -489,7 +507,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {
 
-				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+				String status = null == jsonObject.get("status") ? "" : jsonObject.get("status").toString();
 
 				switch (status) {
 				case "101":

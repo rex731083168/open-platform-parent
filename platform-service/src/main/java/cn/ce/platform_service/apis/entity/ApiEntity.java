@@ -67,18 +67,24 @@ public class ApiEntity implements Serializable {
 	/** http方法GET或POST */
 	@Field("httpMethod")
 	private String httpMethod;
+	
+	@Deprecated
 	/** http header参数 */
 	@Field("headers")
 	private List<SubArgEntity> headers;
 	/** 应用参数 */
 	@Field("args")
+	@Deprecated
 	private List<SubArgEntity> args;
+	@Deprecated
 	/** 返回结果描述 */
 	@Field("result")
 	private List<RetEntity> result;
+	@Deprecated
 	/** 返回结果示例 */
 	@Field("retExample")
 	private RetExamEntity retExample;
+	@Deprecated
 	/** 错误代码描述 */
 	@Field("errCodes")
 	private List<ErrorCodeEntity> errCodes;

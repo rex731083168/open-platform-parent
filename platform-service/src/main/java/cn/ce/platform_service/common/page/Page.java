@@ -85,5 +85,11 @@ public class Page<T> implements Serializable {
         int remainder = count % this.getPageSize();  
         this.setTotalPage(remainder == 0 ? divisor == 0 ? 1 : divisor : divisor + 1);  
     }
+
+	public Page<T> buildPage(Integer currentPage, Integer pageSize, Integer totalNum, List<T> items) {
+		
+		// TODO 
+		return null;
+	}
     
 }

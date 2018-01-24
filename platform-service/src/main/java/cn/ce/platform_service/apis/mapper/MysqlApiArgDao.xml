@@ -2,23 +2,30 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
-  <mapper namespace="cn.ce.platform_service.apis.dao.IMysqlApiArgDao">
-  	<resultMap type="cn.ce.platform_service.apis.entity.ApiArgEntity" id="apiArgMap">
-  		<id column="arg_id" property="id"/>
-  		<result column="api_id" property="apiId"/>
-  		<result column="arg_name" property="argName"/>
-  		<result column="arg_type" property="argType"/>
-  		<result column="required" property="required"/>
-  		<result column="example" property="example"/>
-  	</resultMap>
-  
-  	<insert id="save" parameterType="cn.ce.platform_service.apis.entity.ApiArgEntity">
-  		INSERT INTO api_arg
-  			(arg_id,api_id,arg_name,arg_type,required,example)
-  		VALUES
-  			(#{id},#{apiId},#{argName},#{argType},#{required},#{example})
-  	</insert>
-  
-  
-  </mapper>
+
+<mapper namespace="cn.ce.platform_service.apis.dao.IMysqlApiArgDao">
+	<resultMap type="cn.ce.platform_service.apis.entity.ApiArgEntity"
+		id="apiArgMap">
+		<id column="arg_id" property="id" />
+		<result column="api_id" property="apiId" />
+		<result column="arg_name" property="argName" />
+		<result column="arg_type" property="argType" />
+		<result column="required" property="required" />
+		<result column="example" property="example" />
+	</resultMap>
+
+	<insert id="save" parameterType="cn.ce.platform_service.apis.entity.ApiArgEntity">
+		INSERT INTO api_arg
+		(arg_id,api_id,arg_name,arg_type,required,example)
+		VALUES
+		(#{id},#{apiId},#{argName},#{argType},#{required},#{example})
+	</insert>
+
+	<select id="findByApiId" resultMap="apiArgMap">
+		select * from api_arg where api_id = #{apiId}
+	</select>
+	
+	<delete id="deleteByApiId">
+		delete from api_arg where api_id=#{apiId}
+	</delete>
+</mapper>

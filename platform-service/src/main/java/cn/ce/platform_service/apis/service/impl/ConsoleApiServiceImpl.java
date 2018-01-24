@@ -15,6 +15,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -33,6 +35,7 @@ import cn.ce.platform_service.apis.entity.ApiHeaderEntity;
 import cn.ce.platform_service.apis.entity.ApiResultEntity;
 import cn.ce.platform_service.apis.entity.ApiResultExampleEntity;
 import cn.ce.platform_service.apis.entity.ErrorCodeEntity;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.entity.RetEntity;
 import cn.ce.platform_service.apis.entity.RetExamEntity;
@@ -58,6 +61,7 @@ import cn.ce.platform_service.util.RandomUtil;
 * @Date : 2017年10月12日
 */
 @Service(value="consoleApiService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(ConsoleApiServiceImpl.class);
@@ -88,7 +92,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 上午10:58:11 
 	 */
 	@Override
-	public Result<?> publishApi(User user, ApiEntity apiEntity) {
+	public Result<?> publishApi(User user, NewApiEntity apiEntity) {
 		
 		try{ //资源类型校验
 			if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
@@ -117,20 +121,23 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		//如果apiId存在，则修改api
 		if(apiEntity.getId() != null ){
-			newApiDao.save(apiEntity);
+			updateMysqlEntity(apiEntity);
+//			mysqlApiDao.save1(apiEntity);
+			//newApiDao.save(apiEntity);
 			result.setSuccessMessage("修改成功");
 			return result;
 		}
 		
 		
-		if(StringUtils.isBlank(apiEntity.getApiVersion().getVersion())){
+		if(StringUtils.isBlank(apiEntity.getVersion())){
 			result.setErrorMessage("版本名称不能为空", ErrorCodeNo.SYS005);
 			return result;
 		}
 		
-		ApiEntity vEntity = newApiDao.findByVersion(apiEntity.getApiVersion().getVersionId(),apiEntity.getApiVersion().getVersion());
+		//ApiEntity vEntity = newApiDao.findByVersion(apiEntity.getVersionId(),apiEntity.getVersion());
+		int versionNum = mysqlApiDao.findVersionNum(apiEntity.getVersionId(),apiEntity.getVersion());
 		
-		if(vEntity != null){
+		if(versionNum > 0){
 			return Result.errorResult("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
 		}
 		// 第一次添加接口,并且选择未开启版本控制
@@ -169,19 +176,24 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			apiEntity.setApiSource(AuditConstants.API_SOURCE_TYPEIN);
 			apiEntity.setCreateTime(new Date());
 			
-			int num = newApiDao.updApiVersionByApiId(apiEntity.getApiVersion().getVersionId(),false);
+			//int num = newApiDao.updApiVersionByApiId(apiEntity.getVersionId(),false);
+			int num = mysqlApiDao.updateVersionByVersionId(apiEntity.getVersionId(),false);
 			_LOGGER.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");
 			
 			// TODO 前端传入版本号和newVersion字段吗？
-			apiEntity.getApiVersion().setNewVersion(true);
+			apiEntity.setNewVersion(true);
 			//如果前端没有传入版本的版本的apiId则重新生成版本versionId
-			if(StringUtils.isBlank(apiEntity.getApiVersion().getVersionId())){
+			if(StringUtils.isBlank(apiEntity.getVersionId())){
 				_LOGGER.info("当前添加的api是新的api不存在旧的版本，生成新的versionId");
 				String versionId = UUID.randomUUID().toString().replace("-", "");
-				apiEntity.getApiVersion().setVersionId(versionId);
+				apiEntity.setVersionId(versionId);
 			}
 			
-			newApiDao.save(apiEntity);
+			//newApiDao.save(apiEntity);
+//			mysqlApiDao.save1(apiEntity);
+			apiEntity.setId(RandomUtil.random32UUID());
+			saveMysqlEntity(apiEntity);
+			
 			
 			_LOGGER.info("------新添加的数据为："+apiEntity.toString());
 //		}
@@ -189,6 +201,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 	
+
+
 	/**
 	 * @Title: apiVerify
 	 * @Description: 从未审核状态改为待审核状态,批量提交审核
@@ -200,15 +214,18 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		Result<String> result = new Result<String>();
 		for (String apiId : apiIds) {
-			ApiEntity api = newApiDao.findApiById(apiId);
+			//ApiEntity api = newApiDao.findApiById(apiId);
+			NewApiEntity api = mysqlApiDao.findById(apiId);
 			if(null == api){
 				_LOGGER.info("当前api:"+apiId+"在数据库中不存在");
 				continue;
 			}
 			api.setCheckState(AuditConstants.API_CHECK_STATE_UNAUDITED);
-			newApiDao.save(api);
+			//newApiDao.save(api);
+			//int temp = mysqlApiDao.saveOrUpdateEntity(api);
+			mysqlApiDao.updateCheckState(api.getId(),AuditConstants.API_CHECK_STATE_UNAUDITED);
 		}
-		result.setSuccessMessage("修改成功");
+		result.setSuccessMessage("提交成功");
 		return result;
 	}
 
@@ -221,19 +238,25 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 上午11:18:39 
 	 */
 	@Override
-	public Result<?> modifyApi(ApiEntity apiEntity) {
+	public Result<?> modifyApi(NewApiEntity apiEntity) {
 		
 		Result<String> result = new Result<String>();
-		if(null == newApiDao.findApiById(apiEntity.getId())){
+//		if(null == newApiDao.findApiById(apiEntity.getId())){
+		if(null == mysqlApiDao.findById(apiEntity.getId())){
 			result.setErrorMessage("当前id不可用", ErrorCodeNo.SYS006);
 			return result;
 		}
-		newApiDao.save(apiEntity);
+		//newApiDao.save(apiEntity);
+		updateMysqlEntity(apiEntity);
 		result.setSuccessData("");
 		return result;
 	}
 
 	
+
+
+
+
 	/**
 	 * @Title: showApi
 	 * @Description: 单个api信息显示
@@ -245,8 +268,9 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		Result<JSONObject> result = new Result<JSONObject>();
 		
-		ApiEntity api = newApiDao.findApiById(apiId);
-		if (api == null) {
+		//NewApiEntity api = findOneById(apiId);
+		NewApiEntity api = mysqlApiDao.findTotalOneById(apiId);
+		if (null == api) {
 			result.setErrorMessage("当前id不存在",ErrorCodeNo.SYS006);
 			return result;
 		}
@@ -268,6 +292,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	}
 
 	
+
+
+
+
 	/**
 	 * @Title: showApiList
 	 * @Description: 提供者查看api列表
@@ -275,45 +303,49 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 下午2:10:36 
 	 */
 	@Override
-	public Result<?> showApiList(QueryApiEntity entity, int currentPage,
-			int pageSize) {
+	public Result<?> showApiList(QueryApiEntity entity) {
 		
 		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
 
 		//提供者查看api列表
-		Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
-			
+		//Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
+		
+		int totalNum =  mysqlApiDao.findListSize(entity);
+		List<ApiEntity> apiList = mysqlApiDao.getPagedList(entity);
+		Page<ApiEntity> page = new Page<ApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
+		page.setItems(apiList);
+		
 		result.setSuccessData(page);
 		return result;
 	}
 
 
-	/**
-	 * @Title: checkApiEnName
-	 * @Description: 校验当前开放应用中是否存在这个英文名称
-	 * @author: makangwei 
-	 * @date:   2017年10月12日 下午2:49:22 
-	 */
-	@Override
-	public Result<String> checkApiEnName(String apiEnName, String openApplyId) {
-		
-		Result<String> result = new Result<String>();
-		if(StringUtils.isBlank(apiEnName)){
-			result.setErrorMessage("apiEnName不能为空",ErrorCodeNo.SYS005);
-			return result;
-		}
-		Map<String,Object> map =new HashMap<String,Object>();
-		map.put(DBFieldsConstants.APIS_OPENAPPLY_ID, openApplyId);
-		map.put(DBFieldsConstants.APIS_APIENNAME, apiEnName);
-		ApiEntity entity = newApiDao.findOneByFields(map);
-		
-		if(entity == null){
-			result.setSuccessMessage("当前名称可以使用");
-		}else{
-			result.setErrorMessage("当前名称已经被占用", ErrorCodeNo.SYS010);
-		}
-		return result;
-	}
+//	/**
+//	 * @Title: checkApiEnName
+//	 * @Description: 校验当前开放应用中是否存在这个英文名称
+//	 * @author: makangwei 
+//	 * @date:   2017年10月12日 下午2:49:22 
+//	 */
+//	@Override
+//	public Result<String> checkApiEnName(String apiEnName, String openApplyId) {
+//		
+//		Result<String> result = new Result<String>();
+//		if(StringUtils.isBlank(apiEnName)){
+//			result.setErrorMessage("apiEnName不能为空",ErrorCodeNo.SYS005);
+//			return result;
+//		}
+//		Map<String,Object> map =new HashMap<String,Object>();
+//		map.put(DBFieldsConstants.APIS_OPENAPPLY_ID, openApplyId);
+//		map.put(DBFieldsConstants.APIS_APIENNAME, apiEnName);
+//		ApiEntity entity = newApiDao.findOneByFields(map);
+//		
+//		if(enNum > 1){
+//			result.setErrorMessage("当前名称已经被占用", ErrorCodeNo.SYS010);
+//		}else{
+//			result.setSuccessMessage("当前名称可以使用");
+//		}
+//		return result;
+//	}
 
 
 	/**
@@ -330,15 +362,16 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			result.setErrorMessage("apiEnName不能为空",ErrorCodeNo.SYS005);
 			return result;
 		}
-		Map<String,Object> map =new HashMap<String,Object>();
-		map.put(DBFieldsConstants.APIS_OPENAPPLY_ID, openApplyId);
-		map.put(DBFieldsConstants.APIS_APICHNAME, apiChName);
-		ApiEntity entity = newApiDao.findOneByFields(map);
+//		Map<String,Object> map =new HashMap<String,Object>();
+//		map.put(DBFieldsConstants.APIS_OPENAPPLY_ID, openApplyId);
+//		map.put(DBFieldsConstants.APIS_APICHNAME, apiChName);
+//		ApiEntity entity = newApiDao.findOneByFields(map);
+		int chNum = mysqlApiDao.checkApiChName(apiChName, openApplyId);
 		
-		if(entity == null){
-			result.setSuccessMessage("当前名称可用");
-		}else{
+		if(chNum > 0){
 			result.setErrorMessage("当前名称已经被占用",ErrorCodeNo.SYS010);
+		}else{
+			result.setSuccessMessage("当前名称可用");
 		}
 		return result;
 	}
@@ -353,12 +386,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	public Result<String> checkVersion(String versionId, String version) {
 		Result<String> result = new Result<String>();
 		
-		ApiEntity entity = newApiDao.findByVersion(versionId, version);
+//		ApiEntity entity = newApiDao.findByVersion(versionId, version);
+		int verNum = mysqlApiDao.checkVersion(versionId, version);
 
-		if(entity == null){
-			result.setSuccessMessage("当前version不存在，可以使用");
-		}else{
+		if(verNum > 0){
 			result.setErrorMessage("当前version已经存在",ErrorCodeNo.SYS010);
+		}else{
+			result.setSuccessMessage("当前version不存在，可以使用");
 		}
 		return result;
 	}
@@ -432,9 +466,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Override
 	public Result<?> checkListenPath(String listenPath) {
 		
-		List<ApiEntity> list = newApiDao.findByField(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
+		//List<ApiEntity> list = newApiDao.findByField(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
+		int tempNum = mysqlApiDao.findCountByListenPath(listenPath);
 		Result<String> result = new Result<String>();
-		if(list == null || list.size() < 1){
+		if(tempNum == 0){
 			result.setSuccessMessage("当前监听路径可用");
 		}else{
 			result.setErrorMessage("当前监听路径不可用",ErrorCodeNo.SYS009);
@@ -582,4 +617,132 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			apiHeaderDao.save(header);
 		}
 	}
+	
+	private boolean saveMysqlEntity(NewApiEntity apiEntity) {
+		
+		mysqlApiDao.save1(apiEntity);
+		
+		List<ApiHeaderEntity> headers = apiEntity.getHeaders();
+		for (ApiHeaderEntity header : headers) {
+			header.setApiId(apiEntity.getId());
+			header.setId(RandomUtil.random32UUID());
+			apiHeaderDao.save(header);
+		}
+		
+		List<ApiArgEntity> args = apiEntity.getArgs();
+		for (ApiArgEntity arg : args) {
+			arg.setApiId(apiEntity.getId());
+			arg.setId(RandomUtil.random32UUID());
+			apiArgDao.save(arg);
+		}
+		
+		List<ApiResultEntity> results = apiEntity.getResult();
+		for (ApiResultEntity result : results) {
+			result.setApiId(apiEntity.getId());
+			result.setId(RandomUtil.random32UUID());
+			apiResultDao.save(result);
+		}
+		
+		ApiResultExampleEntity rExample = apiEntity.getRetExample();
+		if(null != rExample){
+			rExample.setApiId(apiEntity.getId());
+			rExample.setId(RandomUtil.random32UUID());
+			apiRexampleDao.save(rExample);
+		}
+		
+		List<ApiCodeEntity> codes = apiEntity.getErrCodes();
+		for (ApiCodeEntity code : codes) {
+			code.setApiId(apiEntity.getId());
+			code.setId(RandomUtil.random32UUID());
+			apiCodeDao.save(code);
+		}
+
+		return true;
+	}
+	
+	private NewApiEntity findOneById(String apiId) {
+		
+		NewApiEntity api = mysqlApiDao.findById(apiId);
+		if(null  == api){
+			return null;
+		}
+		
+		List<ApiHeaderEntity> headers = apiHeaderDao.findByApiId(apiId);
+		if(null != headers && headers.size() > 0 ){
+			api.setHeaders(headers);
+		}
+		
+		List<ApiArgEntity> args = apiArgDao.findByApiId(apiId);
+		if(null != args && args.size() > 0){
+			api.setArgs(args);
+		}
+		
+		List<ApiResultEntity> results = apiResultDao.findByApiId(apiId);
+		if(null != results && results.size() > 0){
+			api.setResult(results);
+		}
+		
+		ApiResultExampleEntity rExampleEntity = apiRexampleDao.findOneByApiId(apiId);
+		if(null != rExampleEntity){
+			api.setRetExample(apiRexampleDao.findOneByApiId(apiId));
+		}
+		
+		
+		List<ApiCodeEntity> codes = apiCodeDao.findByApiId(apiId);
+		if(null != codes && codes.size() > 0){
+			api.setErrCodes(apiCodeDao.findByApiId(apiId));
+		}
+		return api;
+	}
+	
+	private boolean updateMysqlEntity(NewApiEntity apiEntity) {
+		
+		mysqlApiDao.saveOrUpdateEntity(apiEntity);
+		
+		apiHeaderDao.deleteByApiId(apiEntity.getId());
+		apiArgDao.deleteByApiId(apiEntity.getId());
+		apiResultDao.deleteByApiId(apiEntity.getId());
+		apiRexampleDao.deleteByApiId(apiEntity.getId());
+		apiCodeDao.deleteByApiId(apiEntity.getId());
+		
+		List<ApiHeaderEntity> headers = apiEntity.getHeaders();
+		for (ApiHeaderEntity header : headers) {
+			header.setId(RandomUtil.random32UUID());
+			header.setApiId(apiEntity.getId());
+			apiHeaderDao.save(header);
+		}
+		
+		List<ApiArgEntity> args = apiEntity.getArgs();
+		for (ApiArgEntity arg : args) {
+			arg.setId(RandomUtil.random32UUID());
+			arg.setApiId(apiEntity.getId());
+			apiArgDao.save(arg);
+		}
+		
+		List<ApiResultEntity> results = apiEntity.getResult();
+		for (ApiResultEntity result : results) {
+			result.setId(RandomUtil.random32UUID());
+			result.setApiId(apiEntity.getId());
+			apiResultDao.save(result);
+		}
+		
+		ApiResultExampleEntity rExample = apiEntity.getRetExample();
+		if(null != rExample){
+			rExample.setId(RandomUtil.random32UUID());
+			rExample.setApiId(apiEntity.getId());
+			apiRexampleDao.save(rExample);
+		}
+		
+		List<ApiCodeEntity> codes = apiEntity.getErrCodes();
+		for (ApiCodeEntity code : codes) {
+			code.setId(RandomUtil.random32UUID());
+			code.setApiId(apiEntity.getId());
+			apiCodeDao.save(code);
+		}
+
+		return true;
+	}
+
+
+
 }

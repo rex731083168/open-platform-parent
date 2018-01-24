@@ -20,6 +20,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.DiyApplyQueryEntity;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.users.entity.User;
 import io.swagger.annotations.Api;
@@ -46,12 +47,10 @@ public class DiyApplyController {
 	private IConsoleDiyApplyService consoleDiyApplyService;
 
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
-	@ApiOperation(value = "根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
-	public Result<?> findApplyList(HttpSession session, @RequestBody DiyApplyEntity apply,
-			@RequestParam(required = false, defaultValue = "10") int pageSize,
-			@RequestParam(required = false, defaultValue = "1") int currentPage) {
+	@ApiOperation(value = "###根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
+	public Result<?> findApplyList(HttpSession session,
+			@RequestBody DiyApplyQueryEntity queryApply) {
 
-		Page<DiyApplyEntity> page = new Page<>(currentPage, 0, pageSize);
 		
 		//只获取当前登录的用户数据,如果获取数据失败就会报异常
 		User user = null;
@@ -62,8 +61,8 @@ public class DiyApplyController {
 			return Result.errorResult("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
 		}
 		
-		apply.setUserId(user.getId());
-		Result<Page<DiyApplyEntity>> result = consoleDiyApplyService.findApplyList(apply, page);
+		queryApply.setUserId(user.getId());
+		Result<Page<DiyApplyEntity>> result = consoleDiyApplyService.findApplyList(queryApply);
 		
 		return result;
 	}
@@ -81,7 +80,7 @@ public class DiyApplyController {
 	}
 
 	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
-	@ApiOperation("根据应用标识查询应用")
+	@ApiOperation("###根据应用标识查询应用")
 	public Result<DiyApplyEntity> getApplyById(@RequestParam(value = "applyId", required = true) String applyId) {
 		Result<DiyApplyEntity> result = new Result<>();
 		DiyApplyEntity findById = consoleDiyApplyService.findById(applyId);

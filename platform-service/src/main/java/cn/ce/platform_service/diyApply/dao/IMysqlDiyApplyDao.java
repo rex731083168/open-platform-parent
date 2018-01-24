@@ -1,9 +1,12 @@
 package cn.ce.platform_service.diyApply.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.DiyApplyQueryEntity;
 
 /**
 * @Description : 说明
@@ -20,5 +23,17 @@ public interface IMysqlDiyApplyDao {
 
 	int saveBoundApi(@Param("boundId")String boundId, @Param("diyApplyId")String diyApplyId,
 			@Param("openApplyId")String openApplyId,@Param("apiId") String apiId);
+
+	int findListSize(DiyApplyQueryEntity queryApply);
+
+	List<DiyApplyEntity> getPagedList(DiyApplyQueryEntity queryApply);
+
+	DiyApplyEntity findById(String applyId);
+
+	int deleteById(String applyId);
+
+	int checkApplyName(@Param("userId")String userId, @Param("applyName")String applyName);
+
+	int update(DiyApplyEntity diyApplyEntity);
 	
 }

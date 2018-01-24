@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
@@ -25,8 +25,8 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.users.entity.User;
-import cn.ce.platform_service.util.PageValidateUtil;
 import cn.ce.platform_service.util.SplitUtil;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @ClassName:  ApisController   
@@ -53,7 +53,8 @@ public class ApiController {
 	 * @date:   2017年10月10日 下午8:17:41  
 	 */
 	@RequestMapping(value = "/publishApi", method = RequestMethod.POST)
-	public Result<?> publishApi(HttpSession session, @RequestBody ApiEntity apiEntity) {
+	@ApiOperation("###发布api")
+	public Result<?> publishApi(HttpSession session, @RequestBody NewApiEntity apiEntity) {
 			
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		
@@ -81,6 +82,7 @@ public class ApiController {
 	}
 	
 	@RequestMapping(value="/checkListenPath", method= RequestMethod.GET)
+	@ApiOperation("校验listenPath")
 	public Result<?> checkListenPath(String listenPath){
 		
 		if(StringUtils.isBlank(listenPath)){
@@ -90,9 +92,6 @@ public class ApiController {
 		if(!listenPath.startsWith("/")){
 			listenPath = "/"+listenPath;
 		}
-//		if(!listenPath.endsWith("/")){
-//			listenPath = listenPath+"/";
-//		}
 		if(listenPath.endsWith("?")){
 			return Result.errorResult("listenPath不能以问号结尾",ErrorCodeNo.SYS005, null, Status.FAILED); 
 		}
@@ -121,7 +120,8 @@ public class ApiController {
 	 * @date:   2017年10月10日 下午8:19:15  
 	 */
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
-	public Result<?> modifyApi(@RequestBody ApiEntity apiEntity){
+	@ApiOperation("###api更新")
+	public Result<?> modifyApi(@RequestBody NewApiEntity apiEntity){
 		
 		if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){	
 			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
@@ -136,6 +136,7 @@ public class ApiController {
 	 * @date:   2017年10月12日 下午1:17:55  
 	 */
 	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
+	@ApiOperation("###显示完整的api详情")
 	public Result<?> showApi(String apiId) {
 		_LOGGER.info("显示当前api："+apiId);
 		return consoleApiService.showApi(apiId);
@@ -147,11 +148,10 @@ public class ApiController {
 	 * @date:   2017年10月12日 下午1:42:41  
 	 */
 	@RequestMapping(value="/showApiList",method=RequestMethod.POST)
+	@ApiOperation("###api列表")
 	public Result<?> showApiList(
 			HttpSession session,
-			@RequestBody QueryApiEntity apiEntity,
-			@RequestParam(required=false,defaultValue= "1") int currentPage, 
-			@RequestParam(required=false,defaultValue= "10")int pageSize){
+			@RequestBody QueryApiEntity apiEntity){
 		
 		if(apiEntity.getUserType() != null && 
 				apiEntity.getUserType() == AuditConstants.USER_PROVIDER){
@@ -164,8 +164,10 @@ public class ApiController {
 			apiEntity.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
 		}
 		
-		return consoleApiService.showApiList(apiEntity, PageValidateUtil.checkCurrentPage(currentPage), 
-				PageValidateUtil.checkPageSize(pageSize));
+//		apiEntity.setCurrentPage(PageValidateUtil.checkCurrentPage(apiEntity.getCurrentPage()));
+//		apiEntity.setPageSize(PageValidateUtil.checkPageSize(apiEntity.getPageSize()));
+//		apiEntity.setStartNum((apiEntity.getCurrentPage()-1)*apiEntity.getPageSize());
+		return consoleApiService.showApiList(apiEntity);
 	}
 	
 	/**
@@ -174,28 +176,36 @@ public class ApiController {
 	 * @date:   2017年11月14日 下午2:14:13  
 	 */
 	@RequestMapping(value="/showDocApiList",method=RequestMethod.POST)
+	@ApiOperation("###api文档中心列表")
 	public Result<?> showDocApiList(
 			HttpSession session,
-			@RequestBody QueryApiEntity apiEntity,
-			@RequestParam(required=false,defaultValue= "1") int currentPage, 
-			@RequestParam(required=false,defaultValue= "10")int pageSize){
+			@RequestBody QueryApiEntity apiEntity){
 		
 
 		apiEntity.setUserId(null);
 		apiEntity.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
 		apiEntity.setApiType(DBFieldsConstants.API_TYPE_OPEN);
 		
-		return consoleApiService.showApiList(apiEntity, PageValidateUtil.checkCurrentPage(currentPage), 
-				PageValidateUtil.checkPageSize(pageSize));
+//		apiEntity.setCurrentPage(PageValidateUtil.checkCurrentPage(apiEntity.getCurrentPage()));
+//		apiEntity.setPageSize(PageValidateUtil.checkPageSize(apiEntity.getPageSize()));
+//		apiEntity.setStartNum((apiEntity.getCurrentPage()-1)*apiEntity.getPageSize());
+		return consoleApiService.showApiList(apiEntity);
 	}
 	
-	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
-	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
-			String appId,
-			String apiEnName){
-		
-		return consoleApiService.checkApiEnName(apiEnName,appId);
-	}
+	/**
+	 * 
+	 * @Title: checkApiEnName
+	 * @Description: apiEnName在当前开放应用不能重复
+	 * @author: makangwei
+	 * @date:   2018年1月24日 上午11:19:01  
+	 */
+//	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
+//	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
+//			String appId,
+//			String apiEnName){
+//		
+//		return consoleApiService.checkApiEnName(apiEnName,appId);
+//	}
 	
 	@RequestMapping(value="/checkApiChName",method=RequestMethod.POST)
 	public Result<?> checkApiChName(HttpServletRequest request,HttpServletResponse response,
@@ -218,7 +228,7 @@ public class ApiController {
 	}
 	
 	@RequestMapping(value="/getResourceType",method=RequestMethod.GET,produces="application/json;charset=utf-8")
-	public Result<?> checkVersion(){
+	public Result<?> getResourceType(){
 		return consoleApiService.getResourceType();
 	}
 	

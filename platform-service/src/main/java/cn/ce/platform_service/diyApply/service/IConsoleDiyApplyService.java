@@ -3,6 +3,7 @@ package cn.ce.platform_service.diyApply.service;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.DiyApplyQueryEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 
 /***
@@ -37,8 +38,8 @@ public interface IConsoleDiyApplyService {
 	 * @param pageSize
 	 * @return
 	 */
-	Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page);
-
+	//Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page);
+	Result<Page<DiyApplyEntity>> findApplyList(DiyApplyQueryEntity queryApply);
 
 	/**
 	 * 根据id加载应用信息
@@ -80,6 +81,7 @@ public interface IConsoleDiyApplyService {
 	Result<?> updateApply(DiyApplyEntity apply);
 
 	Result<?> migraDiyApply();
+
 
 	
 }

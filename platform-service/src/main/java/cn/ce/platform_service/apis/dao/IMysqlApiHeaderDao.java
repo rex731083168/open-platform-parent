@@ -1,5 +1,10 @@
 package cn.ce.platform_service.apis.dao;
 
+import java.util.List;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import cn.ce.platform_service.apis.entity.ApiHeaderEntity;
 
 /**
@@ -7,8 +12,13 @@ import cn.ce.platform_service.apis.entity.ApiHeaderEntity;
 * @Author : makangwei
 * @Date : 2018年1月19日
 */
+@Transactional(propagation=Propagation.REQUIRED)
 public interface IMysqlApiHeaderDao {
 
 	int save(ApiHeaderEntity header);
+
+	List<ApiHeaderEntity> findByApiId(String apiId);
+
+	int deleteByApiId(String apiId);
 
 }
