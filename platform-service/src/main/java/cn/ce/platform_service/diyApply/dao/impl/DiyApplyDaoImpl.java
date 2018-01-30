@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import cn.ce.platform_service.common.DBFieldsConstants;
+import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.BathUpdateOptions;
 import cn.ce.platform_service.core.mongo.BaseMongoDaoImpl;
@@ -50,12 +51,12 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 	}
 
 	@Override
-	public Page<DiyApplyEntity> findPageByEntity(Query query, Page<DiyApplyEntity> page) {
+	public Page<DiyApplyEntity> findPageByQuery(Query query, Page<DiyApplyEntity> page) {
 		return super.findPage(page, query);
 	}
 
 	@Override
-	public List<DiyApplyEntity> findListByEntity(Query query) {
+	public List<DiyApplyEntity> findListByQuery(Query query) {
 		return super.find(query);
 	}
 
@@ -123,5 +124,59 @@ public class DiyApplyDaoImpl extends BaseMongoDaoImpl<DiyApplyEntity> implements
 		}
 		Query query = new Query(c).with(new Sort(Direction.DESC, DBFieldsConstants.DIY_APPLY_CREATEDATE));
 		return super.findPage(page, query);
+	}
+
+	@Override
+	public List<DiyApplyEntity> findListByEntity(DiyApplyEntity entity) {
+		Criteria c = new Criteria();
+
+		if (StringUtils.isNotBlank(entity.getUser().getId())) {
+			c.and(MongoFiledConstants.BASIC_USERID).is(entity.getUser().getId());
+		}
+
+		if (StringUtils.isNotBlank(entity.getApplyName())) {
+			c.and(MongoFiledConstants.DIY_APPLY_APPLYNAME).is(entity.getApplyName());
+		}
+
+		// 修改时排除当前修改应用
+		if (StringUtils.isNotBlank(entity.getId())) {
+			c.and(MongoFiledConstants.BASIC_ID).ne(entity.getId());
+		}
+
+		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
+
+		return super.find(query);
+		
+	}
+
+	@Override
+	public Page<DiyApplyEntity> findPageByParam(String productName, String userName, Integer checkState,
+			String applyName, int currentPage, int pageSize) {
+		Page<DiyApplyEntity> page = new Page<>(currentPage, 0, pageSize);
+
+		Criteria c = new Criteria();
+		if (StringUtils.isNotBlank(productName)) {
+			c.and("productName").regex(productName);
+		}
+		if (StringUtils.isNotBlank(userName)) {
+			c.and("userName").regex(userName);
+		}
+		if (null != checkState) {
+			c.and("checkState").is(checkState);
+		}
+		if (StringUtils.isNotBlank(applyName)) {
+			c.and("applyName").regex(applyName);
+		}
+		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
+		
+		return super.findPage(page, query);
+	}
+
+	@Override
+	public List<DiyApplyEntity> findListByIds(List<String> ids) {
+		
+		Query query = new Query(Criteria.where("id").in(ids));
+		
+		return 	super.find(query);
 	}
 }

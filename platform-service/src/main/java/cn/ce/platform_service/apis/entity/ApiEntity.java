@@ -131,13 +131,47 @@ public class ApiEntity implements Serializable {
      * 1代表文件导入
      * */
     @Field("apiSource")
-    private Integer apiSource; 
+    private Integer apiSource;
     
     @Field("enterpriseName")
     private String enterpriseName;
+    
+    
+    /***
+     * 资源类型
+     */
+    @Field("resourceType")
+    private String resourceType;
+    
+    /***
+     * 资源类型名称
+     */
+    @Field("resourceTypeName")
+    private String resourceTypeName;
+    
     /** 服务分类信息 */
     @Transient
     private OpenApplyEntity openApplyEntity;
+
+    
+    
+	public String getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
+	}
+	
+	
+
+	public String getResourceTypeName() {
+		return resourceTypeName;
+	}
+
+	public void setResourceTypeName(String resourceTypeName) {
+		this.resourceTypeName = resourceTypeName;
+	}
 
 	public String getId() {
 		return id;
@@ -397,7 +431,8 @@ public class ApiEntity implements Serializable {
 				+ state + ", countByDay=" + countByDay + ", checkState=" + checkState + ", checkMem=" + checkMem
 				+ ", quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per="
 				+ per + ", createTime=" + createTime + ", apiSource=" + apiSource + ", enterpriseName=" + enterpriseName
-				+ ", openApplyEntity=" + openApplyEntity + "]";
+				+ ", resourceType=" + resourceType + ", resourceTypeName=" + resourceTypeName + ", openApplyEntity="
+				+ openApplyEntity + "]";
 	}
 	
 }

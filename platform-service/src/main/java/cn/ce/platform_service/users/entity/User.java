@@ -59,13 +59,13 @@ public class User implements Serializable {
 
 	/** 状态  0:禁用，1:启用*/
 	@Field("state") 
-	private int state;
+	private Integer state;
 	/** 所属服务分类 */
 	@Field("appId")
 	private String appId;
 	/** 用户类型 0:管理员，1:普通用户，2:提供者 */
 	@Field("userType")
-	private int userType;
+	private Integer userType;
 	/** 注册时间 */
 	@Field("regTime")
 	private Date regTime;
@@ -74,18 +74,23 @@ public class User implements Serializable {
 
 	/** 审核状态0:初始，1:提交审核，2:通过，3:未通过 */
 	@Field("checkState")
-	private int checkState;
+	private Integer checkState;
 
 	/** 审核备注 */
 	@Field("checkMem")
 	private String checkMem;
 
+	/**
+	 * mysql分页查询做聚合处理
+	 */
+	private Integer totalNumber;
+	
 	public User() {
 		super();
 	}
 
-	public User(String id, String userName, String password, String email, String telNumber, int state, String appId,
-			int userType, Date regTime, int checkState, String checkMem, String orgId, String appSecret) {
+	public User(String id, String userName, String password, String email, String telNumber, Integer state, String appId,
+			Integer userType, Date regTime, Integer checkState, String checkMem, String orgId, String appSecret) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -102,13 +107,7 @@ public class User implements Serializable {
 		this.appSecret = appSecret;
 	}
 
-	public String getOrgId() {
-		return orgId;
-	}
 
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
-	}
 
 	public String getId() {
 		return id;
@@ -150,11 +149,59 @@ public class User implements Serializable {
 		this.telNumber = telNumber;
 	}
 
-	public int getState() {
+	public String getEnterpriseName() {
+		return enterpriseName;
+	}
+
+	public void setEnterpriseName(String enterpriseName) {
+		this.enterpriseName = enterpriseName;
+	}
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
+	public String getUserRealName() {
+		return userRealName;
+	}
+
+	public void setUserRealName(String userRealName) {
+		this.userRealName = userRealName;
+	}
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getAppSecret() {
+		return appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		this.appSecret = appSecret;
+	}
+
+	public Integer getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 
@@ -166,11 +213,11 @@ public class User implements Serializable {
 		this.appId = appId;
 	}
 
-	public int getUserType() {
+	public Integer getUserType() {
 		return userType;
 	}
 
-	public void setUserType(int userType) {
+	public void setUserType(Integer userType) {
 		this.userType = userType;
 	}
 
@@ -182,11 +229,19 @@ public class User implements Serializable {
 		this.regTime = regTime;
 	}
 
-	public int getCheckState() {
+	public Integer getCheckCode() {
+		return checkCode;
+	}
+
+	public void setCheckCode(Integer checkCode) {
+		this.checkCode = checkCode;
+	}
+
+	public Integer getCheckState() {
 		return checkState;
 	}
 
-	public void setCheckState(int checkState) {
+	public void setCheckState(Integer checkState) {
 		this.checkState = checkState;
 	}
 
@@ -197,59 +252,13 @@ public class User implements Serializable {
 	public void setCheckMem(String checkMem) {
 		this.checkMem = checkMem;
 	}
-
-	public String getAppSecret() {
-		return appSecret;
+	
+	public Integer getTotalNumber() {
+		return totalNumber;
 	}
 
-	public void setAppSecret(String appSecret) {
-		this.appSecret = appSecret;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-
-
-	public Integer getCheckCode() {
-		return checkCode;
-	}
-
-	public void setCheckCode(Integer checkCode) {
-		this.checkCode = checkCode;
-	}
-
-	public String getOrgName() {
-		return orgName;
-	}
-
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
-
-	public String getEnterpriseName() {
-		return enterpriseName;
-	}
-
-	public void setEnterpriseName(String enterpriseName) {
-		this.enterpriseName = enterpriseName;
-	}
-
-	public String getUserRealName() {
-		return userRealName;
-	}
-
-	public void setUserRealName(String userRealName) {
-		this.userRealName = userRealName;
-	}
-
-	public String getIdCard() {
-		return idCard;
-	}
-
-	public void setIdCard(String idCard) {
-		this.idCard = idCard;
+	public void setTotalNumber(Integer totalNumber) {
+		this.totalNumber = totalNumber;
 	}
 
 	@Override
@@ -260,5 +269,5 @@ public class User implements Serializable {
 				+ appSecret + ", state=" + state + ", appId=" + appId + ", userType=" + userType + ", regTime="
 				+ regTime + ", checkCode=" + checkCode + ", checkState=" + checkState + ", checkMem=" + checkMem + "]";
 	}
-
+	
 }

@@ -8,12 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -21,7 +16,6 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
-import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
@@ -49,23 +43,25 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			String applyName, int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<DiyApplyEntity>> result = new Result<>();
-		Page<DiyApplyEntity> page = new Page<>(currentPage, 0, pageSize);
-
-		Criteria c = new Criteria();
-		if (StringUtils.isNotBlank(productName)) {
-			c.and("productName").regex(productName);
-		}
-		if (StringUtils.isNotBlank(userName)) {
-			c.and("userName").regex(userName);
-		}
-		if (null != checkState) {
-			c.and("checkState").is(checkState);
-		}
-		if (StringUtils.isNotBlank(applyName)) {
-			c.and("applyName").regex(applyName);
-		}
-		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
-		page = diyApplyDao.findPageByEntity(query, page);
+//		Page<DiyApplyEntity> page = new Page<>(currentPage, 0, pageSize);
+//
+//		Criteria c = new Criteria();
+//		if (StringUtils.isNotBlank(productName)) {
+//			c.and("productName").regex(productName);
+//		}
+//		if (StringUtils.isNotBlank(userName)) {
+//			c.and("userName").regex(userName);
+//		}
+//		if (null != checkState) {
+//			c.and("checkState").is(checkState);
+//		}
+//		if (StringUtils.isNotBlank(applyName)) {
+//			c.and("applyName").regex(applyName);
+//		}
+//		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
+//		page = diyApplyDao.findPageByQuery(query, page);
+		Page<DiyApplyEntity> page = diyApplyDao.findPageByParam(productName, userName, checkState, applyName,  currentPage, pageSize);
+		
 		result.setSuccessData(page);
 		// result.setData(page);
 
@@ -85,8 +81,8 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				return result;
 			}
 
-			Query query = new Query(Criteria.where("id").in(ids));
-			List<DiyApplyEntity> diyApply = diyApplyDao.findListByEntity(query);
+			//Query query = new Query(Criteria.where("id").in(ids));
+			List<DiyApplyEntity> diyApply = diyApplyDao.findListByIds(ids);
 			if(null == diyApply || diyApply.size() == 0){
 				_LOGGER.info("diyApply List is Null,ids:" + JSON.toJSONString(ids));
 				result.setMessage("应用不存在!");
@@ -110,6 +106,8 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			_LOGGER.info("registerBathApp to interface satar");
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
 					.registerBathApp(diyApply.get(0).getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
+					//
+					//new org.json.JSONArray(queryVO)
 					.getData();
 			_LOGGER.info("registerBathApp to interface states" + interfaMessageInfoJasonObjectResult.getStatus() + "");
 			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
@@ -131,8 +129,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				result.setSuccessMessage("审核成功:" + message + "条");
 				return result;
 			} else {
-				result.setErrorCode(ErrorCodeNo.SYS001);
-				result.setErrorMessage("审核失败");
+				result.setErrorMessage("审核失败", ErrorCodeNo.SYS030);
 				_LOGGER.info("bachUpdate diyApply message faile");
 				return result;
 			}
@@ -146,20 +143,21 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	}
 
 	@Override
-	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps) {
+	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String app) {
 		
 		Result<InterfaMessageInfoString> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("registerBathApp");
 		String tId$ = Pattern.quote("${tId}");
 		String appList$ = Pattern.quote("${appList}");
-		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, apps);
+		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, app);
+		//String replacedurl = url.replaceAll(tId$, tenantId);
 
 		try {
 			/* get请求方法 */
 			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
 
 			JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
-
+				//ApiCallUtils.putOrPostMethod(replacedurl, params, headers, method);
 			messageInfo.setData(jsonObject.getString("data"));
 			messageInfo.setMsg(jsonObject.getString("msg"));
 			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
@@ -194,8 +192,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		} else {
 			result.setSuccessData(findById);
 		}
-		// TODO Auto-generated method stub
 		return result;
 	}
-
+	
 }

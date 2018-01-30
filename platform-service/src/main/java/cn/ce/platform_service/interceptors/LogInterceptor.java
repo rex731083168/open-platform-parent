@@ -35,7 +35,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter{
 		_LOGGER.debug("_____________>request method:"+request.getMethod());
 		
 		// TODO 如何从request中多次读取流信息
-		//_LOGGER.debug("_____________>request body:"+IOUtils.convertStreamToString(IOUtils.deepCopyInputStream(request.getInputStream())));
 		_LOGGER.debug("_____________>request parameters:");
 		Enumeration<String> enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  

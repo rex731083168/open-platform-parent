@@ -91,8 +91,10 @@ public class HttpClientUtil {
 		try {
 
 			URL url = new URL(reqURL);
-			URI uri = new URI(url.getProtocol(), url.getHost() + ":" + url.getPort(), url.getPath(), url.getQuery(),
+			URI uri = new URI(url.getProtocol(), url.getHost() + ":" + url.getPort(), url.getPath(), 
+					url.getQuery(),
 					null);
+			
 			HttpGet httpGet = new HttpGet(uri); // 创建org.apache.http.client.methods.HttpGet
 			HttpResponse response = httpClient.execute(httpGet); // 执行GET请求
 			HttpEntity entity = response.getEntity(); // 获取响应实体

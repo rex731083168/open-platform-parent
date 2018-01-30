@@ -4,12 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -40,24 +35,10 @@ public class ManageGuideServiceImpl implements IManageGuideService {
 			int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
-		Criteria c = new Criteria();
-		
-		if(null != checkState){
-			c.and("checkState").is(checkState);
-		}
 
-		if (StringUtils.isNotBlank(applyId)) {
-			c.and("applyId").is(applyId);
-		}
-		if (StringUtils.isNotBlank(guideName)) {
-			c.and("guideName").regex(guideName);
-		}
-		if (StringUtils.isNotBlank(creatUserName)) {
-			c.and("creatUserName").regex(creatUserName);
-		}
-		Query query = new Query(c).with(new Sort(Direction.DESC, "creatTime"));
-		result.setSuccessData(guideDaoImpl.listByPage(page, query));
+		result.setSuccessData(guideDaoImpl.listPage(guideName, creatUserName, applyId, checkState, currentPage,
+				pageSize));
+		
 		return result;
 	}
 

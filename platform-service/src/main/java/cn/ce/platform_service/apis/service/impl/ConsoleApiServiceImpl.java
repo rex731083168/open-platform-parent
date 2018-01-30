@@ -26,6 +26,7 @@ import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
+import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
@@ -33,6 +34,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.PropertiesUtil;
 
 /**
 * @Description : 说明
@@ -59,6 +61,14 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 */
 	@Override
 	public Result<?> publishApi(User user, ApiEntity apiEntity) {
+		
+		try{ //资源类型校验
+			if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
+				return Result.errorResult("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
+			}
+		}catch(Exception e ){
+			_LOGGER.error("network error, cannot get resource type from zhong tai", e);
+		}
 		
 		Result<String> result = new Result<String>();
 		
@@ -218,7 +228,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		List<String> gatewayUrlList = new ArrayList<String>();
 		List<String> wGatewayUrlList = new ArrayList<String>();
 		for (GatewayColonyEntity gatewayColonyEntity : colList) {
-//			gatewayUrlList.add(gatewayColonyEntity.getColUrl() +api.getListenPath()+api.getApiVersion().getVersion()+"/");
 			gatewayUrlList.add(gatewayColonyEntity.getColUrl()+api.getListenPath());
 			wGatewayUrlList.add(gatewayColonyEntity.getwColUrl()+api.getListenPath());//外网访问地址
 		}
@@ -413,5 +422,51 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 //			listenPath = listenPath+"/";
 //		}
 		return listenPath;
+	}
+
+	@Override
+	public Result<?> getResourceType() {
+		// TODO Auto-generated method stub
+		String getProvidersUrl = PropertiesUtil.getInstance().getValue("getProviders");
+		
+		Result<String> result = new Result<>();
+		
+		try {
+
+			StringBuffer sendGetRequest = HttpClientUtil.sendGetRequest(getProvidersUrl, "UTF-8");
+
+			_LOGGER.debug("getProviders return json:" + sendGetRequest);
+
+			net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(sendGetRequest.toString());
+
+			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg") && jsonObject.has("data")) {
+
+				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+
+				switch (status) {
+					case "200":
+						result.setStatus(Status.SUCCESS);
+						result.setSuccessData(jsonObject.get("data").toString());
+						break;
+					default:
+						result.setStatus(Status.SYSTEMERROR);
+						break;
+				}
+
+				result.setMessage(jsonObject.get("msg").toString());
+
+			} else {
+				_LOGGER.error("获取资源池类型时,缺失返回值:" + jsonObject);
+
+				result.setErrorMessage("获取资源池类型错误!");
+			}
+
+		} catch (Exception e) {
+			_LOGGER.error("send productMenuList error e:" + e.toString());
+			result.setErrorMessage("获取资源池类型错误!");
+		}
+		
+		// TODO Auto-generated method stub
+		return result;
 	}
 }

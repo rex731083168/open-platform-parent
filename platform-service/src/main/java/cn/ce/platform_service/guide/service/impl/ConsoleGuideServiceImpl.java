@@ -6,19 +6,12 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
-import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
-import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.dao.IGuideDao;
@@ -49,9 +42,10 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Result<String> result = new Result<String>();
 		try {
 
-			Query query = new Query(Criteria.where("guideName").is(g.getGuideName()).and("applyId").is(g.getApplyId()));
-
-			List<GuideEntity> list = guideDaoImpl.list(query);
+//			Query query = new Query(Criteria.where("guideName").is(g.getGuideName()).and("applyId").is(g.getApplyId()));
+//
+//			List<GuideEntity> list = guideDaoImpl.list(query);
+			List<GuideEntity> list = guideDaoImpl.getListByNameAndApply(g.getGuideName(), g.getApplyId());
 
 			if (list != null && list.size() > 0) {
 				result.setErrorCode(ErrorCodeNo.SYS009);
@@ -94,10 +88,10 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 				return result;
 			}
 
-			Query query = new Query(
-					Criteria.where("guideName").is(g.getGuideName()).and(MongoFiledConstants.BASIC_ID).ne(g.getId()));
+//			Query query = new Query(
+//					Criteria.where("guideName").is(g.getGuideName()).and(MongoFiledConstants.BASIC_ID).ne(g.getId()));
 
-			List<GuideEntity> list = guideDaoImpl.list(query);
+			List<GuideEntity> list = guideDaoImpl.findListByNameNeId(g.getGuideName(), g.getId());
 
 			if (list != null && list.size() > 0) {
 				result.setMessage("指南名称重复!");
@@ -128,24 +122,24 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	public Result<Page<GuideEntity>> guideList(GuideEntity entity, int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
-		Criteria c = new Criteria();
-
-		if (StringUtils.isNotBlank(entity.getGuideName())) {
-			c.and(DBFieldsConstants.GUIDE_NAME).regex(entity.getGuideName(),"i");
-		}
-		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
-			c.and(DBFieldsConstants.GUIDE_CREATE_USERNAME).regex(entity.getCreatUserName(),"i");
-		}
-		if (StringUtils.isNotBlank(entity.getApplyId())) {
-			c.and(DBFieldsConstants.GUIDE_APPLYID).is(entity.getApplyId());
-		}
-		if(entity.getCheckState() != null){
-			c.and(DBFieldsConstants.GUIDE_CHECKSTATE).is(entity.getCheckState());
-		}
-
-		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
-		result.setSuccessData(guideDaoImpl.listByPage(page, query));
+//		Page<GuideEntity> page = new Page<GuideEntity>(currentPage, 0, pageSize);
+//		Criteria c = new Criteria();
+//
+//		if (StringUtils.isNotBlank(entity.getGuideName())) {
+//			c.and(DBFieldsConstants.GUIDE_NAME).regex(entity.getGuideName(),"i");
+//		}
+//		if (StringUtils.isNotBlank(entity.getCreatUserName())) {
+//			c.and(DBFieldsConstants.GUIDE_CREATE_USERNAME).regex(entity.getCreatUserName(),"i");
+//		}
+//		if (StringUtils.isNotBlank(entity.getApplyId())) {
+//			c.and(DBFieldsConstants.GUIDE_APPLYID).is(entity.getApplyId());
+//		}
+//		if(entity.getCheckState() != null){
+//			c.and(DBFieldsConstants.GUIDE_CHECKSTATE).is(entity.getCheckState());
+//		}
+//
+//		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
+		result.setSuccessData(guideDaoImpl.listPage2(entity, currentPage, pageSize));
 		return result;
 	}
 

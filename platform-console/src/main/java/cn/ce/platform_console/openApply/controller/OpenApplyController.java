@@ -34,7 +34,7 @@ import cn.ce.platform_service.users.entity.User;
  *
  */
 @RestController
-@RequestMapping("/openApply")
+@RequestMapping("/openApply") 
 public class OpenApplyController {
 
 	/** 日志对象 */

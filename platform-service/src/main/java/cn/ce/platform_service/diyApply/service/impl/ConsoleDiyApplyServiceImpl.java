@@ -12,10 +12,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -29,7 +25,6 @@ import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.HttpClientUtilsNew;
-import cn.ce.platform_service.common.MongoFiledConstants;
 import cn.ce.platform_service.common.RateConstants;
 import cn.ce.platform_service.common.RateEnum;
 import cn.ce.platform_service.common.Result;
@@ -76,24 +71,27 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		Result<String> result = new Result<>();
 
 		// 构建查询对象
-		Criteria c = new Criteria();
+		// Criteria c = new Criteria();
+		//
+		// if (StringUtils.isNotBlank(entity.getUser().getId())) {
+		// c.and(MongoFiledConstants.BASIC_USERID).is(entity.getUser().getId());
+		// }
+		//
+		// if (StringUtils.isNotBlank(entity.getApplyName())) {
+		// c.and(MongoFiledConstants.DIY_APPLY_APPLYNAME).is(entity.getApplyName());
+		// }
+		//
+		// // 修改时排除当前修改应用
+		// if (StringUtils.isNotBlank(entity.getId())) {
+		// c.and(MongoFiledConstants.BASIC_ID).ne(entity.getId());
+		// }
+		//
+		// Query query = new Query(c).with(new Sort(Direction.DESC,
+		// MongoFiledConstants.BASIC_CREATEDATE));
 
-		if (StringUtils.isNotBlank(entity.getUser().getId())) {
-			c.and(MongoFiledConstants.BASIC_USERID).is(entity.getUser().getId());
-		}
-
-		if (StringUtils.isNotBlank(entity.getApplyName())) {
-			c.and(MongoFiledConstants.DIY_APPLY_APPLYNAME).is(entity.getApplyName());
-		}
-
-		// 修改时排除当前修改应用
-		if (StringUtils.isNotBlank(entity.getId())) {
-			c.and(MongoFiledConstants.BASIC_ID).ne(entity.getId());
-		}
-
-		Query query = new Query(c).with(new Sort(Direction.DESC, MongoFiledConstants.BASIC_CREATEDATE));
-
-		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(query);
+		// List<DiyApplyEntity> findPageByList =
+		// diyApplyDao.findListByQuery(query);
+		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(entity);
 
 		if (null != findPageByList && findPageByList.size() > 0) {
 			result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
@@ -116,7 +114,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			try {
 				_LOGGER.info("get message from interface satar");
 				apps = plublicDiyApplyService.findTenantAppsByTenantKey(key).getData(); // 接入产品中心获取产品信息和开放应用信息
-				if(apps == null || !apps.getStatus().equals("200")){
+				if (apps == null || !apps.getStatus().equals("200")) {
 					return Result.errorResult("产品码错误", ErrorCodeNo.SYS024, null, Status.FAILED);
 				}
 				_LOGGER.info("get message from interface states " + apps.getStatus() + "");
@@ -135,47 +133,49 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				}
 
 				String findTenantAppsByTenantKeyTenantIdtemp = apps.getData().getTenant().getId();
-				
-				if(null == findTenantAppsByTenantKeyTenantIdtemp){
+
+				if (null == findTenantAppsByTenantKeyTenantIdtemp) {
 					result.setErrorMessage("网站实例tenantId不存在!");
 					result.setErrorCode(ErrorCodeNo.SYS015);
 					return result;
 				}
-				
-//				findTenantAppsByTenantKeyTenantId = String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
+
+				// findTenantAppsByTenantKeyTenantId =
+				// String.valueOf(findTenantAppsByTenantKeyTenantIdtemp);
 				findTenantAppsByTenantKeyTenanName = apps.getData().getTenant().getName();
-				
+
 				entity.setProductInstanceId(findTenantAppsByTenantKeyTenantIdtemp);
 				entity.setProductName(findTenantAppsByTenantKeyTenanName);
-				
+
 				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantId:" + findTenantAppsByTenantKeyTenantIdtemp);
-				
-				//根据网站实例id查询是否配置资源IP
-				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,RequestMethod.GET.toString());
-				
-				if(StringUtils.isBlank(routeBySaasId)){
+
+				// 根据网站实例id查询是否配置资源IP
+				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,
+						entity.getResourceType(), RequestMethod.GET.toString());
+
+				if (StringUtils.isBlank(routeBySaasId)) {
 					result.setErrorMessage("未配置定制应用资源池,请联系管理员!");
 					result.setErrorCode(ErrorCodeNo.SYS015);
 					return result;
 				}
-				
+
 				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantIdBindIp:" + routeBySaasId);
-				
+
 			} catch (Exception e) {
 				_LOGGER.error("get messaget from url faile resaon " + e.getMessage() + "");
 			}
-			
+
 			if (StringUtils.isNotBlank(apps.getData().getTenant().getProductInstance().getBossProductInstance())) {
 				entity.setBossProductInstance(apps.getData().getTenant().getProductInstance().getBossProductInstance());
 			} else {
-				result.setErrorMessage("该产品为旧版产品,无法发布菜单",ErrorCodeNo.SYS025);
+				result.setErrorMessage("该产品为旧版产品,无法发布菜单", ErrorCodeNo.SYS025);
 				return result;
 			}
-			
 
 			/***************************************************************
 			 * 
-			 * TODO 定制应用和api以及频次绑定操作 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
+			 * TODO 定制应用和api以及频次绑定操作
+			 * 将当前定制应用绑定的开放应用下的所有api推送到网关，并且给当前定制应用绑定频次限制设定
 			 * 只在当前位置做了绑定关系，如果将来绑定关系和绑定位置发生变化需要修改这段代码
 			 *************************************************************/
 
@@ -183,15 +183,17 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			String policyId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String clientId = UUID.randomUUID().toString().replaceAll("\\-", "");
 			String secret = UUID.randomUUID().toString().replaceAll("\\-", "");
-			
-			_LOGGER.info("**********调用保存appkey与tenantId开始********* appkey:" + clientId + ";tenantId:" + entity.getProductInstanceId());
-			String saveAppkeyResult = GatewayRouteUtils.saveAppkey(clientId,entity.getProductInstanceId(),HttpMethod.POST.toString());
+
+			_LOGGER.info("**********调用保存appkey与tenantId开始********* appkey:" + clientId + ";tenantId:"
+					+ entity.getProductInstanceId());
+			String saveAppkeyResult = GatewayRouteUtils.saveAppkey(clientId, entity.getProductInstanceId(),
+					HttpMethod.POST.toString());
 			_LOGGER.info("**********调用保存appkey与tenantId结束 返回值:*********" + saveAppkeyResult);
-			
-			
+
 			List<String> appIdList = new ArrayList<String>();
 			for (AppList appList : apps.getData().getAppList()) {
-				appIdList.add(appList.getAppId() + ""); // TODO 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
+				appIdList.add(appList.getAppId() + ""); // TODO
+														// 这里绑定的是appId这个属性，添加api的时候绑定的开放应用的id也应该为appId
 			}
 
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
@@ -245,8 +247,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				List<String> apiIds = new ArrayList<String>();
 				for (ApiEntity apiEntity : apiList) {
 					// version2.1改为只有api类型为开放的才绑定
-					if(DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
-							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
+					if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
+							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
 						apiIds.add(apiEntity.getId());
 					}
 				}
@@ -355,7 +357,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		Result<Page<DiyApplyEntity>> result = new Result<>();
 		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(), entity.getProductName(),
 				entity.getCheckState(), entity.getUserId(), page);
-		
+
 		result.setSuccessData(diyApplyPage);
 		return result;
 	}
@@ -432,12 +434,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 					break;
 				case "201":
+					result.setErrorCode(ErrorCodeNo.SYS029);
 					result.setStatus(Status.FAILED);
 					break;
 				case "301":
+					result.setErrorCode(ErrorCodeNo.SYS029);
 					result.setStatus(Status.FAILED);
 					break;
 				default:
+					result.setErrorCode(ErrorCodeNo.SYS029);
 					result.setStatus(Status.SYSTEMERROR);
 					break;
 				}
@@ -476,9 +481,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		try {
 			String sendPostByJson = HttpClientUtilsNew.getResponseString(registerMenuURL, body);
-			
+
 			_LOGGER.info("registerMenuURL return senPostByJson : " + sendPostByJson);
-			
+
 			JSONObject jsonObject = JSONObject.fromObject(sendPostByJson);
 
 			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {

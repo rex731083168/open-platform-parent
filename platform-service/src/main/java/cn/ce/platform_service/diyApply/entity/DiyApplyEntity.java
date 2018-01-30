@@ -106,6 +106,12 @@ public class DiyApplyEntity {
 
 	@Field("authIds")
 	private List<String> authIds;
+	
+	/***
+	 * 所属资源池类型
+	 */
+	@Field("resourceType")
+	private String resourceType;
 
 	@Transient
 	private List<ApiAuditEntity> auditList;// api集合
@@ -336,5 +342,15 @@ public class DiyApplyEntity {
 	public void setBossProductInstance(String bossProductInstance) {
 		this.bossProductInstance = bossProductInstance;
 	}
+
+	public String getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
+	}
+	
+	
 
 }

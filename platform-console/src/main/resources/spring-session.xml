@@ -11,8 +11,10 @@
 		location="classpath:conf/application.properties"></util:properties>
 
 	<!-- RedisHttpSessionConfiguration -->
-	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
-		<property name="maxInactiveIntervalInSeconds" value="${redis.session.maxInactiveIntervalInSeconds}" />
+	<bean
+		class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+		<property name="maxInactiveIntervalInSeconds"
+			value="${redis.session.maxInactiveIntervalInSeconds}" />
 	</bean>
 
 	<!--JedisConnectionFactory -->
@@ -31,7 +33,8 @@
 				<!-- 用于 redis.clients.jedis.JedisCluster.JedisCluster(Set<HostAndPort>, 
 					int, int, GenericObjectPoolConfig) 第三个参数 maxRedirections 默认值是5 一般当此值设置过大时，容易报：Too 
 					many Cluster redirections -->
-				<property name="maxRedirects" value="#{redis['redis.redisClusterConfiguration.maxRedirects']}" />
+				<property name="maxRedirects"
+					value="#{redis['redis.redisClusterConfiguration.maxRedirects']}" />
 			</bean>
 		</constructor-arg>
 
@@ -44,9 +47,9 @@
 					value="#{redis['redis.jedisPoolConfig.testOnReturn']}" />
 			</bean>
 		</constructor-arg>
-		
+
 		<property name="password" value="${redis.password}"></property>
-		
+		<property name="timeout" value="10000" />
 	</bean>
 
 </beans>

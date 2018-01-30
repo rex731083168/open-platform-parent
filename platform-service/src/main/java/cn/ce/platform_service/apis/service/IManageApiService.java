@@ -24,5 +24,7 @@ public interface IManageApiService {
 
 	Result<Page<ApiEntity>> apiList(QueryApiEntity entity, int currentPage, int pageSize);
 
+	Result<Page<ApiEntity>> apiList(QueryApiEntity apiEntity);
+
 
 }

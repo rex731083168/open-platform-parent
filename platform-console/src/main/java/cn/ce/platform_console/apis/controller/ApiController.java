@@ -39,7 +39,7 @@ import cn.ce.platform_service.util.SplitUtil;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
-
+ 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ApiController.class);
 
@@ -67,6 +67,14 @@ public class ApiController {
 		if(apiEntity.getApiType() == null || StringUtils.isBlank(apiEntity.getApiType().toString())){
 			return Result.errorResult("api类型必须指定", ErrorCodeNo.SYS008, null, Status.FAILED);
 		}
+		
+		if(StringUtils.isBlank(apiEntity.getResourceType())){
+			return Result.errorResult("api资源类型必须指定", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
+		
+		if(StringUtils.isBlank(apiEntity.getResourceTypeName())){
+			return Result.errorResult("api资源类型名称必须指定", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}		
 		
 		return consoleApiService.publishApi(user, apiEntity);
 		
@@ -115,7 +123,7 @@ public class ApiController {
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
 	public Result<?> modifyApi(@RequestBody ApiEntity apiEntity){
 		
-		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNCOMMITED){
+		if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){	
 			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
 		}
 		
@@ -208,5 +216,10 @@ public class ApiController {
 		
 		return consoleApiService.checkVersion(versionId,version);
 	}
-		
+	
+	@RequestMapping(value="/getResourceType",method=RequestMethod.GET,produces="application/json;charset=utf-8")
+	public Result<?> checkVersion(){
+		return consoleApiService.getResourceType();
+	}
+	
 }

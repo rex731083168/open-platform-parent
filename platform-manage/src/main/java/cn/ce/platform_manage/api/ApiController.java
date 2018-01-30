@@ -102,9 +102,14 @@ public class ApiController {
 	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, 
 			@RequestBody QueryApiEntity apiEntity,
 			@RequestParam(required=false,defaultValue= "1") int currentPage, 
-			@RequestParam(required=false,defaultValue= "10")int pageSize){
+			@RequestParam(required=false,defaultValue= "10")int pageSize,
+			@RequestParam(required=false,defaultValue="true")boolean enablePaged){
 
-		return manageApiService.apiList(apiEntity,currentPage,pageSize);
+		if(true == enablePaged){
+			return manageApiService.apiList(apiEntity,currentPage,pageSize);
+		}else{
+			return manageApiService.apiList(apiEntity);
+		}
 	}
 
 

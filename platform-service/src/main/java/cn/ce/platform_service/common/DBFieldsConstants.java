@@ -51,6 +51,8 @@ public class DBFieldsConstants {
 	public static final String GW_API_PROXY_TARGETURL = "target_url";
 	public static final String GW_API_PROXY = "proxy";
 	public static final String GW_API_VERSION_DATA = "version_data";
+	public static final String GW_API_RESOURCE_TYPE = "resource_type";
+
 	
 	public static final String GW_POLICY_ID = "id";
 	public static final String GW_POLICY_ID_FULL = "policy_id";
@@ -85,5 +87,10 @@ public class DBFieldsConstants {
 	public static final String GUIDE_CREATE_USERNAME= "creatUserName";
 	public static final String GUIDE_APPLYID = "applyId";
 	public static final String GUIDE_CHECKSTATE = "checkState";
+	
+	
+	/*************** dubbo **********************/
+	public static final String DUBBO_NODE_ID = "nodeId";
+	public static final String DUBBO_ROOT_ID = "rootId";
 
 }
