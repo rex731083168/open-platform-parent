@@ -26,6 +26,11 @@ public class DubboNode {
 		this.rootId = rootId;
 	}
 	
+	public DubboNode(String nodeName, String rootId, String id) {
+		this.nodeName = nodeName;
+		this.rootId = rootId;
+		this.id = id;
+	}
 	public String getId() {
 		return id;
 	}

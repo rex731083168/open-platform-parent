@@ -42,7 +42,14 @@ public class UserController {
 
 	@Resource
 	private IConsoleUserService consoleUserService;
-
+	
+	/**
+	 * 
+	 * 用户中心迁移后，该类已经不再使用。
+	 * 新的迁移mysql未经过联调测试，如果重新使用该模块，需要重新联调测试
+	 * @date:   2018年01月29日 上午11:10:18 
+	 */
+	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	@ApiOperation("用户注册")
 	public Result<?> userRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session,
@@ -86,7 +93,7 @@ public class UserController {
 	
 	@RequestMapping(value="/checkIdCard",method=RequestMethod.GET)
 	@ApiOperation("校验身份证唯一性")
-	public Result<?> checkIdCard(String idCard){
+	public Result<?> checkIdCard(@RequestParam(required=true) String idCard){
 		
 		if(StringUtils.isBlank(idCard)){
 			return Result.errorResult("idCard不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);

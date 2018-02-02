@@ -2,9 +2,12 @@ package cn.ce.platform_service.guide.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
+import cn.ce.platform_service.guide.entity.QueryGuideEntity;
 
 /**
  *
@@ -17,10 +20,11 @@ import cn.ce.platform_service.guide.entity.GuideEntity;
  **/
 public interface IManageGuideService {
 
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName,String applyId,Integer checkState, int currentPage,
-			int pageSize);
+	public Result<Page<GuideEntity>> guideList(QueryGuideEntity guideEntity);
 
 	public Result<GuideEntity> getByid(String id);
 
-	Result<String> batchUpdate(List<String> ids, Integer state, String checkMem);
+	Result<String> batchUpdateCheckState(@Param("guideIds")List<String> guideIds, @Param("checkState")Integer checkState, @Param("checkMem")String checkMem);
+
+
 }

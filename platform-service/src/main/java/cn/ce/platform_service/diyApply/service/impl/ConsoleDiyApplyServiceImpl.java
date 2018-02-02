@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.dao.INewApiDao;
-import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
@@ -35,7 +35,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.DiyApplyQueryEntity;
+import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
@@ -256,9 +256,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			int i = 1;
 			for (String appId : appIdList) {
 //				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
-				List<ApiEntity> apiList = mysqlApiDao.findByOpenApply(appId);
+				List<NewApiEntity> apiList = mysqlApiDao.findByOpenApply(appId);
 				List<String> apiIds = new ArrayList<String>();
-				for (ApiEntity apiEntity : apiList) {
+				for (NewApiEntity apiEntity : apiList) {
 					// version2.1改为只有api类型为开放的才绑定
 					if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
 							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
@@ -319,8 +319,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.info("updateApply");
 			if (StringUtils.isBlank(apply.getId())) {
 				result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
+				return result;
 			}
-			DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+			//DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+			DiyApplyEntity apply1 = mysqlDiyApplyDao.findById(apply.getId());
 			if (null == apply1) {
 				result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
 				return result;
@@ -329,7 +331,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
 				return result;
 			}
-			diyApplyDao.saveOrUpdate(apply);
+//			diyApplyDao.saveOrUpdate(apply);
+			mysqlDiyApplyDao.update(apply);
 			_LOGGER.info("updateApply success");
 			result.setSuccessMessage("修改成功");
 			return result;
@@ -366,7 +369,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyQueryEntity queryApply) {
+	public Result<Page<DiyApplyEntity>> findApplyList(QueryDiyApplyEntity queryApply) {
 		
 		Result<Page<DiyApplyEntity>> result = new Result<Page<DiyApplyEntity>>();
 		
@@ -542,9 +545,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<>();
 		try {
-			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
-			_LOGGER.info("bachUpdate diyApply message " + message + " count");
-			result.setSuccessMessage("审核成功:" + message + "条");
+//			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+			int changeNum = mysqlDiyApplyDao.bathUpdateCheckState(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+			_LOGGER.info("bachUpdate diyApply message " + changeNum + " count");
+			result.setSuccessMessage("审核成功:" + changeNum + "条");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception

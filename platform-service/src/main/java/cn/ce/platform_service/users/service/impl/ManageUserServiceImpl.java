@@ -17,7 +17,8 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.mail.MailInfo;
 import cn.ce.platform_service.common.mail.MailUtil;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.users.dao.INewUserDao;
+import cn.ce.platform_service.users.dao.IMysqlUserDao;
+import cn.ce.platform_service.users.entity.QueryUserEntity;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IManageUserService;
 
@@ -31,49 +32,30 @@ public class ManageUserServiceImpl implements IManageUserService{
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ManageUserServiceImpl.class);
 	
-	@Resource 
-	private INewUserDao newUserDao;
+//	@Resource 
+//	private INewUserDao newUserDao;
+	@Resource
+	private IMysqlUserDao mysqlUserDao;
 	
 	
 	@Override
-	public Result<Page<User>> userList(Integer userType, String userName, String email, String telNumber,
-			String enterpriseName, Integer checkState, Integer state, int currentPage, int pageSize) {
+	public Result<Page<User>> userList(QueryUserEntity userEntity) {
 		
 		// TODO 20180108 mkw 修改User实体类的设置参数的方式，然后简化创建User的创建过程
 		Result<Page<User>> result = new Result<Page<User>>();
 		//Page<User> userList = newUserDao.getUserList(userType, userName, email,telNumber,enterpriseName, checkState,state,currentPage, pageSize);
 		//List<User> items = (List<User>) userList.getItems();
 		
-		User paramUser = new User();
-		if(null != userType){
-			paramUser.setUserType(userType);
-		}
-		if(StringUtils.isNotBlank(userName)){
-			paramUser.setUserName(userName);
-		}
-		if(StringUtils.isNotBlank(email)){
-			paramUser.setEmail(email);
-		}
-		if(StringUtils.isNotBlank(telNumber)){
-			paramUser.setTelNumber(telNumber);
-		}
-		if(StringUtils.isNotBlank(enterpriseName)){
-			paramUser.setEnterpriseName(enterpriseName);
-		}
-		if(null != checkState){
-			paramUser.setCheckState(checkState);
-		}
-		if(null != state){
-			paramUser.setState(state);
-		}
-		Page<User> page = newUserDao.getUserList1(paramUser,currentPage,pageSize);
-		
-		List<User> items = page.getItems();
-		
-		for (User user : items) {
-			user.setPassword("");
-		}
-		
+//		Page<User> page = newUserDao.getUserList1(paramUser,currentPage,pageSize);
+//		
+//		List<User> items = page.getItems();
+//		
+//		for (User user : items) {
+//			user.setPassword("");
+//		}
+		int totalNum = mysqlUserDao.findListSize(userEntity);
+		List<User> list = mysqlUserDao.getPagedList(userEntity);
+		Page<User> page = new Page<User>(userEntity.getCurrentPage(),totalNum,userEntity.getPageSize(),list);
 		result.setSuccessData(page);
 		return result;
 	}
@@ -88,13 +70,16 @@ public class ManageUserServiceImpl implements IManageUserService{
 	
 		for (String userId : userIdArray) {
 			
-			User user = newUserDao.findUserById(userId);
+			//User user = newUserDao.findUserById(userId);
+			User user = mysqlUserDao.findById(userId);
 			
 			user.setCheckState(checkState);
+			if(StringUtils.isNotBlank(checkMem)){
+				user.setCheckMem(checkMem);
+			}
 			
-			user.setCheckMem(checkMem);
-			
-			newUserDao.save(user);
+			//newUserDao.save(user);
+			mysqlUserDao.update(user);
 			
 			_LOGGER.info("------->邮件通知用户，帐号审核结果");
 			
@@ -114,44 +99,28 @@ public class ManageUserServiceImpl implements IManageUserService{
 		} 
 		
 		_LOGGER.info("manageAuditUsers success!");
-		
 		result.setSuccessMessage("审核成功!");
-		
 		return result;
 	}
 
 	
 	@Override
 	public Result<String> activeOrForbidUsers(String userId, Integer state) {
-		
+
 		_LOGGER.info("manageActiveOrForbidUsers start:userId" + userId + ",state" + state);
-		
+
 		Result<String> result = new Result<String>();
-		
-		try {
-			User user = newUserDao.findUserById(userId);
-			
-			if(null == user){
-				result.setMessage("用户不存在!");
-				result.setErrorCode(ErrorCodeNo.SYS015);
-				return result;
-				
-			}
-			if(AuditConstants.USER_STATE_OFF != state && AuditConstants.USER_STATE_ON != state){
-				result.setErrorMessage("状态不可用", ErrorCodeNo.SYS012);
-				return result;
-			}
-			
-			user.setState(state);
-			
-			newUserDao.save(user);
-			
-			result.setSuccessMessage("保存成功!");
-		} catch (Exception e) {
-			_LOGGER.error("manageActiveOrForbidUsers error,e:" + e.toString());
-			result.setErrorMessage("保存失败!");
+
+		// User user = newUserDao.findUserById(userId);
+		User user = mysqlUserDao.findById(userId);
+
+		if (null == user) {
+			result.setErrorMessage("用户不存在!",ErrorCodeNo.SYS015);
+			return result;
 		}
-		
+		user.setState(state);
+		mysqlUserDao.update(user);
+		result.setSuccessMessage("保存成功!");
 		return result;
 	}
 

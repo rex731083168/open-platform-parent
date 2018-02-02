@@ -104,8 +104,7 @@ public interface IManageOpenApplyService {
 	// userName, String enterpriseName,
 	// String checkState, int currentPage, int pageSize);
 
-	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity queryEntity, int currentPage,
-			int pageSize);
+	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity queryEntity);
 
 	public Result<String> batchUpdate(List<String> ids, Integer checkState, String batchUpdate);
 	// public Result<String> modifyGroup1(OpenApplyEntity app);

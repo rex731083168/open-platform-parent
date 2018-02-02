@@ -15,8 +15,23 @@
  		<result column="check_state" property="checkState" />
  		<result column="check_mem" property="checkMem" />
   	</resultMap>
-  	
-  	
+
+	<sql id="listCondition">
+		<where>
+			<if test="guideName != null">
+				guide_name like concat(concat("%",#{guideName}),"%")
+			</if>
+			<if test="userName != null">
+				AND user_name = #{userName}
+			</if>
+			<if test="openApplyId != null">
+				AND open_apply_id = #{openApplyId}
+			</if>
+			<if test="checkState != null">
+				AND check_state = #{checkState}
+			</if>
+		</where>
+	</sql>
   	
   	<insert id="save" parameterType="cn.ce.platform_service.guide.entity.GuideEntity">
   		INSERT INTO api_guide
@@ -26,11 +41,61 @@
   	
   	</insert>
   	
+  	<select id="checkGuideName" resultType="int">
+  		select count(guide_id) from api_guide where guide_name=#{guideName} and open_apply_id=#{openApplyId}
+  	</select>
   	
+  	<select id="findById" resultMap="guideMap">
+  		select * from api_guide where guide_id=#{guideId}
+  	</select>
   	
+  	<update id="updateGuide">
+  		update api_guide
+  		<set>
+  			<if test="guideName != null">guide_name=#{guideName},</if>
+  			<if test="guideDesc != null">guide_desc=#{guideDesc},</if>
+  			<if test="checkState != null">check_state=#{checkState}</if>
+  		</set>
+  		where guide_id=#{id}
+  	</update>
   	
-  	
-  	
-  	
-  	
+  	<select id="findTotalNum" resultType="int">
+  		select count(guide_id) from api_guide 
+		<include refid="listCondition" />
+  	</select>
+
+	<select id="getList" resultMap="guideMap">
+		select * from api_guide 
+		<include refid="listCondition" />
+		limit #{startIndex},#{pageSize}
+	</select>
+	
+	<delete id="deleteById">
+		delete from api_guide where guide_id =#{guideId}
+	</delete>
+	
+<!-- 	<update id="batchSubmit">
+		update api_guide 
+		set check_state=#{checkState}
+		where guide_id in 
+		<foreach collection="guideIds" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update> -->
+	
+	<update id="bathUpdateCheckState">
+		update api_guide 
+		<set>
+			<if test="checkState !=null">
+				check_state=#{checkState},
+			</if>
+			<if test="checkMem !=null">
+				check_mem=#{checkMem}
+			</if>
+		</set>
+		where guide_id in 
+		<foreach collection="guideIds" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
   </mapper>

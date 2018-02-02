@@ -20,6 +20,14 @@
  		<result column="check_mem" property="checkMem" />
  	</resultMap> 
  
+ 	<sql id="openCondition">
+ 		<where>
+ 			<if test="appName != null">apply_name like concat(concat("%",#{appName}),"%")</if>
+ 			<if test="userName != null"> AND user_name like concat(concat("%",#{userName}),"%")</if>
+ 			<if test="enterpriseName != null"> AND enterprise_name = #{enterpriseName}</if>
+ 			<if test="checkState != null"> AND check_state = #{checkState}</if>
+ 		</where>
+ 	</sql>
   	<insert id="save" parameterType="cn.ce.platform_service.openApply.entity.OpenApplyEntity">
 		INSERT INTO open_apply 
 			(apply_id,app_id,user_id,user_name,enterprise_name,apply_key,apply_name
@@ -29,4 +37,72 @@
   			,#{applyKey},#{applyName},#{applyDesc},#{createDate},#{checkState},#{checkMem})
   	</insert>
   
+  	<update id="batchUpdateCheckState">
+  		update open_apply
+  		<set>
+  			check_state=#{checkState},
+  			<if test="checkMem != null">
+  				check_mem=#{checkMem}
+  			</if>
+  		</set>
+  		where apply_id in
+  		<foreach collection="ids" index="index" item="item"
+  			open="(" close=")" separator=",">
+  			#{item}	
+  		</foreach>
+  	</update>
+  	
+  	<select id="getListByids" resultMap="openApplyMap">
+  		select * from open_apply where apply_id in
+  		<foreach collection="ids" index="index" item="item"
+  			open="(" close=")" separator=",">
+  			#{item}
+  		</foreach>
+  	</select>
+  	
+  	<select id="findById" resultMap = "openApplyMap">
+  		select * from open_apply where apply_id = #{id}
+  	</select>
+  	
+  	<select id="findListSize" parameterType="cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity"
+  		resultType="int">
+  		select count(apply_id) from open_apply
+  		<include refid="openCondition" />
+  	</select>
+  	
+  	<select id="getPagedList" parameterType="cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity"
+  		resultMap="openApplyMap">
+  		select * from open_apply
+  		<include refid="openCondition" />
+  		limit #{startIndex}, #{pageSize}
+  	</select>
+  	
+  	<select id="checkApplyName" resultType="int">
+  		select count(*) from open_apply where apply_name=#{applyName}
+  	</select>
+  	
+  	<select id="checkApplyKey" resultType="int">
+  		select count(*) from open_apply where apply_key=#{applyKey}
+  	</select>
+  	
+  	<select id="checkApplyNameById" resultType="int">
+  		select count(*) from open_apply where apply_name=#{applyName} 
+  		AND apply_id != #{applyId}
+  	</select>
+  	
+  	<select id="checkApplyKeyById" resultType="int">
+  		select count(*) from open_apply where apply_key=#{applyKey}
+  		AND apply_id != #{applyId}
+  	</select>
+  		
+  	<update id="update" parameterType="cn.ce.platform_service.openApply.entity.OpenApplyEntity">
+  		update open_apply 
+  		<set>
+  			<if test="applyName != null">apply_name = #{applyName},</if>
+  			<if test="applyKey != null">apply_key = #{applyKey},</if>
+  			<if test="applyDesc != null">apply_desc = #{applyDesc},</if>
+  			<if test="checkState != null"> check_state = #{checkState}</if>
+  		</set>
+  		where apply_id=#{id}
+  	</update>
   </mapper>

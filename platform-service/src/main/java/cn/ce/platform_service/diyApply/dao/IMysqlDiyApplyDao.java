@@ -6,7 +6,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.DiyApplyQueryEntity;
+import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.DiyBoundApi;
 
 /**
 * @Description : 说明
@@ -24,9 +25,9 @@ public interface IMysqlDiyApplyDao {
 	int saveBoundApi(@Param("boundId")String boundId, @Param("diyApplyId")String diyApplyId,
 			@Param("openApplyId")String openApplyId,@Param("apiId") String apiId);
 
-	int findListSize(DiyApplyQueryEntity queryApply);
+	int findListSize(QueryDiyApplyEntity queryApply);
 
-	List<DiyApplyEntity> getPagedList(DiyApplyQueryEntity queryApply);
+	List<DiyApplyEntity> getPagedList(QueryDiyApplyEntity queryApply);
 
 	DiyApplyEntity findById(String applyId);
 
@@ -35,5 +36,11 @@ public interface IMysqlDiyApplyDao {
 	int checkApplyName(@Param("userId")String userId, @Param("applyName")String applyName);
 
 	int update(DiyApplyEntity diyApplyEntity);
+
+	int bathUpdateCheckState(@Param("diyIds")List<String> diyIds, @Param("checkState")int checkState, @Param("checkMem")String checkMem);
+
+	List<DiyBoundApi> findBoundApi(@Param("diyApplyId")String diyApplyId, @Param("openApplyId")String openApplyId);
+
+	List<DiyApplyEntity> findByIds(@Param("diyIds")List<String> diyIds);
 	
 }

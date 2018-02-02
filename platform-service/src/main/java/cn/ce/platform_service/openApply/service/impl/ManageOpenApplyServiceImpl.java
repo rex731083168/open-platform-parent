@@ -24,6 +24,7 @@ import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.common.page.PageContext;
 import cn.ce.platform_service.diyApply.entity.inparameter.SaveOrUpdateAppsInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
+import cn.ce.platform_service.openApply.dao.IMysqlOpenApplyDao;
 import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
@@ -49,6 +50,8 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	/** 功能分组数据库操作对象 */
 	@Resource
 	private IOpenApplyDao openApplyDao;
+	@Resource
+	private IMysqlOpenApplyDao mysqlOpenApplyDao;
 
 	public void addApp(OpenApplyEntity app) {
 		openApplyDao.addApp(app);
@@ -62,10 +65,10 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	@Override
 	public Result<OpenApplyEntity> findById(String id) {
 		Result<OpenApplyEntity> result = new Result<>();
-		OpenApplyEntity findById = openApplyDao.findById(id);
+		//OpenApplyEntity findById = openApplyDao.findById(id);
+		OpenApplyEntity findById = mysqlOpenApplyDao.findById(id);
 		if (null == findById) {
-			result.setErrorCode(ErrorCodeNo.SYS009);
-			result.setMessage("应用不存在!");
+			result.setErrorMessage("应用不存在!",ErrorCodeNo.SYS009);
 			return result;
 		}
 		result.setSuccessData(findById);
@@ -280,18 +283,25 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	}
 
 	@Override
-	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity entity, int currentPage, int pageSize) {
+	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity entity) {
+		
 		Result<Page<OpenApplyEntity>> result = new Result<Page<OpenApplyEntity>>();
 
-		try {
-
-			Page<OpenApplyEntity> ds = openApplyDao.findOpenApplyByEntity(entity, currentPage, pageSize);
-
-			result.setSuccessData(ds);
-		} catch (Exception e) {
-			_LOGGER.info("error happens when execute findOpenApplyList", e);
-			result.setErrorMessage("");
-		}
+//		try {
+//
+//			Page<OpenApplyEntity> ds = openApplyDao.findOpenApplyByEntity(entity, currentPage, pageSize);
+//
+//			result.setSuccessData(ds);
+//		} catch (Exception e) {
+//			_LOGGER.info("error happens when execute findOpenApplyList", e);
+//			result.setErrorMessage("");
+//		}
+		int totalNum = mysqlOpenApplyDao.findListSize(entity);
+		List<OpenApplyEntity> openList = mysqlOpenApplyDao.getPagedList(entity);
+		Page<OpenApplyEntity> page = new Page<OpenApplyEntity>(entity.getCurrentPage(),
+				totalNum, entity.getPageSize());
+		page.setItems(openList);
+		result.setData(page);
 		return result;
 	}
 
@@ -299,48 +309,44 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
-		try {
-			/* 审核失败返回 */
-			if (checkState == AuditConstants.OPEN_APPLY_CHECKED_FAILED) {
-				String message = openApplyDao.bathUpdateByid(ids, checkState, checkMem);
-				_LOGGER.info("bachUpdate message " + message + " count");
-				result.setSuccessMessage("审核:" + message + "条");
-				return result;
-			}
-			List<OpenApplyEntity> list = openApplyDao.getListByids(ids);
-			SaveOrUpdateAppsInParameterEntity[] queryVO = new SaveOrUpdateAppsInParameterEntity[list.size()];
-			for (int i = 0; i < list.size(); i++) {
-				SaveOrUpdateAppsInParameterEntity sue = new SaveOrUpdateAppsInParameterEntity();
-				sue.setAppName(list.get(i).getApplyName());
-				sue.setAppDesc(list.get(i).getApplyDesc());
-				sue.setAppCode(list.get(i).getApplyKey());
-				sue.setAppType("1");
-				sue.setOwner(list.get(i).getEnterpriseName());
-				queryVO[i] = sue;
-			}
-			/* 调用接口推送信息 */
-			_LOGGER.info("saveOrUpdateApps to interface satar");
-			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
-					.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
-			_LOGGER.info(
-					"saveOrUpdateApps to interface states " + interfaMessageInfoJasonObjectResult.getStatus() + "");
-			/* 审核成功提交 */
-			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
-				String message = openApplyDao.bathUpdateByid(ids, checkState, checkMem);
-				_LOGGER.info("bachUpdate message " + message + " count");
-				result.setSuccessMessage("成功审核:" + message + "条");
-			} else {
-				result.setErrorMessage("审核失败");
-				result.setErrorCode(ErrorCodeNo.SYS001);
-			}
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			_LOGGER.error("bachUpdate openapply message faile ", e);
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("");
+		/* 审核失败返回 */
+		if (checkState == AuditConstants.OPEN_APPLY_CHECKED_FAILED) {
+			// String message = openApplyDao.bathUpdateByid(ids, checkState,
+			// checkMem);
+			int uNum = mysqlOpenApplyDao.batchUpdateCheckState(ids, checkState, checkMem);
+			_LOGGER.info("bachUpdate message " + uNum + " count");
+			result.setSuccessMessage("审核成功:" + uNum + "条");
 			return result;
 		}
+
+		// List<OpenApplyEntity> list = openApplyDao.getListByids(ids);
+		List<OpenApplyEntity> list = mysqlOpenApplyDao.getListByids(ids);
+		SaveOrUpdateAppsInParameterEntity[] queryVO = new SaveOrUpdateAppsInParameterEntity[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			SaveOrUpdateAppsInParameterEntity sue = new SaveOrUpdateAppsInParameterEntity();
+			sue.setAppName(list.get(i).getApplyName());
+			sue.setAppDesc(list.get(i).getApplyDesc());
+			sue.setAppCode(list.get(i).getApplyKey());
+			sue.setAppType("1");
+			sue.setOwner(list.get(i).getEnterpriseName());
+			queryVO[i] = sue;
+		}
+		/* 调用接口推送信息 */
+		_LOGGER.info("saveOrUpdateApps to interface satar");
+		InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
+				.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
+		_LOGGER.info("saveOrUpdateApps to interface states " + interfaMessageInfoJasonObjectResult.getStatus() + "");
+		/* 审核成功提交 */
+		if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
+			// String message = openApplyDao.bathUpdateByid(ids, checkState,
+			// checkMem);
+			int uNum = mysqlOpenApplyDao.batchUpdateCheckState(ids, checkState, checkMem);
+			_LOGGER.info("bachUpdate message " + uNum + " count");
+			result.setSuccessMessage("成功审核:" + uNum + "条");
+		} else {
+			result.setErrorMessage("审核失败", ErrorCodeNo.SYS001);
+		}
+		return result;
 	}
 
 	@Override

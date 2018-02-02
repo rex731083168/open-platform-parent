@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import cn.ce.platform_service.common.AuditConstants;
@@ -14,7 +12,6 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
-import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
 import io.netty.handler.codec.http.HttpMethod;
 
@@ -26,8 +23,8 @@ import io.netty.handler.codec.http.HttpMethod;
 @Service("gatewayApiService")
 public class GatewayApiServiceImpl implements IGatewayApiService{
 
-	@Autowired @Qualifier("diyApplyDao")
-	private IDiyApplyDao diyApplyDao;
+//	@Autowired @Qualifier("diyApplyDao")
+//	private IDiyApplyDao diyApplyDao;
 	
 	//private static Logger logger = LoggerFactory.getLogger(GatewayApiServiceImpl.class);
 

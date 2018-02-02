@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
+import cn.ce.platform_service.guide.entity.QueryGuideEntity;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
+import cn.ce.platform_service.users.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -38,7 +40,7 @@ import io.swagger.annotations.ApiOperation;
 public class GuideConsoleController {
 
 	@Resource
-	private IConsoleGuideService iConsoleGuideService;
+	private IConsoleGuideService consoleGuideService;
 
 	@RequestMapping(value = "/guide", method = RequestMethod.POST)
 	@ApiOperation("添加指南")
@@ -49,39 +51,35 @@ public class GuideConsoleController {
 			result.setMessage("指南名称不能为空!");
 			return result;
 		}
-		return iConsoleGuideService.add(session, g);
+		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+		return consoleGuideService.add(user, g);
 	}
 
 	@RequestMapping(value = "/updateGuide", method = RequestMethod.PUT)
 	@ApiOperation("修改指南")
 	public Result<?> guideUpdate(@RequestBody GuideEntity guideEntity) {
 		
-		Result<String> result = new Result<>();
-		
 		if(StringUtils.isBlank(guideEntity.getId())){
-			result.setMessage("指南不存在!");
-			result.setErrorCode(ErrorCodeNo.SYS015);
+			Result<String> result = new Result<>();
+			result.setErrorMessage("指南不存在!", ErrorCodeNo.SYS015);
 			return result;
 		}
-		
-		return iConsoleGuideService.update(guideEntity);
+		 
+		return consoleGuideService.update(guideEntity);
 	}
 
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
-	@ApiOperation("查询指南列表")
-	public Result<?> guideList(@RequestBody GuideEntity entity,
-			@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false, defaultValue = "10") int pageSize) {
-		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		result = iConsoleGuideService.guideList(entity, currentPage, pageSize);
-		return result;
+	@ApiOperation("###查询指南列表")
+	public Result<?> guideList(@RequestBody QueryGuideEntity entity) {
+		
+		return consoleGuideService.guideList(entity);
 	}
 
 	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.DELETE)
-	@ApiOperation("删除指南")
+	@ApiOperation("##删除指南")
 	public Result<?> guideDelete(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 			@PathVariable("gid") String id) {
-		return iConsoleGuideService.delete(id);
+		return consoleGuideService.delete(id);
 	}
 
 	@RequestMapping(value = "/guide/{gid}", method = RequestMethod.GET)
@@ -89,11 +87,7 @@ public class GuideConsoleController {
 	public Result<GuideEntity> getGuideByid(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("gid") String id) {
 
-		Result<GuideEntity> result = new Result<>();
-		result = iConsoleGuideService.getByid(id);
-
-		return result;
-
+		return consoleGuideService.getByid(id);
 	}
 
 	/***
@@ -105,7 +99,7 @@ public class GuideConsoleController {
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
 	@ResponseBody
 	public Result<?> submitVerify(@RequestParam String ids) {
-		return iConsoleGuideService.submitVerify(ids);
+		return consoleGuideService.submitVerify(ids);
 	}
 
 }

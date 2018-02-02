@@ -19,8 +19,8 @@ public class DApiRecordEntity {
 	private String id;
 	@Field("apiIds")
 	List<String> apiIds;//绑定列表
-	@Field("operaDate")
-	private Date operaDate; //操作时间
+	@Field("operaTime")
+	private Date operaTime; //操作时间
 	@Field("totalNum")
 	private int totalNum;
 	@Field("operaUserName")
@@ -28,12 +28,23 @@ public class DApiRecordEntity {
 	@Field("userId")
 	private String userId;
 	
-	public DApiRecordEntity(List<String> apiIds, Date operaDate, int totalNum, String operaUserName, String userId){
+	public DApiRecordEntity(List<String> apiIds, Date operaTime, int totalNum, String operaUserName, String userId){
 		this.apiIds = apiIds;
-		this.operaDate = operaDate;
+		this.operaTime = operaTime;
 		this.totalNum = totalNum;
 		this.operaUserName = operaUserName;
 		this.userId = userId;
+	}
+	
+	public DApiRecordEntity(Date operaTime, int totalNum, String operaUserName, String userId){
+		this.operaTime = operaTime;
+		this.totalNum = totalNum;
+		this.operaUserName = operaUserName;
+		this.userId = userId;
+	}
+	
+	public DApiRecordEntity(){
+		super();
 	}
 	
 	public String getId() {
@@ -48,11 +59,12 @@ public class DApiRecordEntity {
 	public void setApiIds(List<String> apiIds) {
 		this.apiIds = apiIds;
 	}
-	public Date getOperaDate() {
-		return operaDate;
+	public Date getOperaTime() {
+		return operaTime;
 	}
-	public void setOperaDate(Date operaDate) {
-		this.operaDate = operaDate;
+
+	public void setOperaTime(Date operaTime) {
+		this.operaTime = operaTime;
 	}
 	public int getTotalNum() {
 		return totalNum;

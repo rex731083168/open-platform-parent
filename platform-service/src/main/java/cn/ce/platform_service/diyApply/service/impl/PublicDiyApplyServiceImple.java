@@ -1,9 +1,9 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
@@ -12,15 +12,20 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
+import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.DiyBoundApi;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.tenantAppPage.TenantAppPage;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
@@ -43,7 +48,11 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	@Resource
 	private INewApiDao newApiDao;
 	@Resource
+	private IMysqlApiDao mysqlApiDao;
+	@Resource
 	private IDiyApplyDao diyApplyDao;
+	@Resource
+	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
 	private IConsoleApiService consoleApiService;
 	
@@ -176,26 +185,42 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	@Override
 	public Result<?> limitScope(String diyApplyId, String openApplyId, String apiName, Integer currentPage, Integer pageSize ) {
 
-		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
-		DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
+		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
+		//DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
+		DiyApplyEntity diyEntity = mysqlDiyApplyDao.findById(diyApplyId);
 		if (null == diyEntity) {
 			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS015);
 			return result;
 		}
-		Map<String, List<String>> limitMap = diyEntity.getLimitList();
-		if (limitMap == null || limitMap.size() == 0) {
+//		Map<String, List<String>> limitMap = diyEntity.getLimitList();
+		
+		List<DiyBoundApi> boundApis = mysqlDiyApplyDao.findBoundApi(diyApplyId, openApplyId);
+//		if (limitMap == null || limitMap.size() == 0) {
+//			result.setErrorMessage("当前定制应用暂时未绑定该开放应用", ErrorCodeNo.SYS017);
+//			return result;
+//		}
+		if(boundApis.size() < 1){
 			result.setErrorMessage("当前定制应用暂时未绑定该开放应用", ErrorCodeNo.SYS017);
 			return result;
 		}
-
-		Set<String> openApplySet = limitMap.keySet();
-		if (openApplySet.contains(openApplyId)) {
-			List<String> apiIds = limitMap.get(openApplyId);
-			Page<ApiEntity> apiPage = newApiDao.findApiPageByIdsAndNameLike(apiIds,apiName,new Page<ApiEntity>(currentPage,0,pageSize));
-			result.setSuccessData(apiPage);
-		} else {
-			result.setErrorMessage("当前开放应用不可用", ErrorCodeNo.SYS017);
+//		Set<String> openApplySet = limitMap.keySet();
+//		if (openApplySet.contains(openApplyId)) {
+//			List<String> apiIds = limitMap.get(openApplyId);
+//			Page<ApiEntity> apiPage = newApiDao.findApiPageByIdsAndNameLike(apiIds,apiName,new Page<ApiEntity>(currentPage,0,pageSize));
+//			result.setSuccessData(apiPage);
+//		} else {
+//			result.setErrorMessage("当前开放应用不可用", ErrorCodeNo.SYS017);
+//		}
+		List<String> apiIds = new ArrayList<String>();
+		for (DiyBoundApi diyBoundApi : boundApis) {
+			apiIds.add(diyBoundApi.getApiId());
 		}
+		
+		int num = mysqlApiDao.findByIdsAndNameLikeNum(apiIds,apiName,AuditConstants.API_CHECK_STATE_SUCCESS,(currentPage-1)*pageSize,pageSize);
+		List<NewApiEntity> apiList = mysqlApiDao.findByIdsAndNameLike(apiIds, apiName, AuditConstants.API_CHECK_STATE_SUCCESS, (currentPage-1)*pageSize, pageSize);
+		Page<NewApiEntity> page = new Page<NewApiEntity>(currentPage,num,pageSize);
+		page.setItems(apiList);
+		result.setSuccessData(page);
 		return result;
 	}
 }

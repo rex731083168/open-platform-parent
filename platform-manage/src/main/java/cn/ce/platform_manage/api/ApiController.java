@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.service.IManageOpenApplyService;
 import cn.ce.platform_service.util.SplitUtil;
+import io.swagger.annotations.ApiOperation;
 
 /**
 * @Description : 后台api管理
@@ -60,7 +59,7 @@ public class ApiController {
 		List<String> apiId = SplitUtil.splitStringWithComma(apiIds);
 		_LOGGER.info("----------apiId:" + apiId);
 		_LOGGER.info("----------checkState:" + checkState);
-		_LOGGER.info("----------checkMem" + checkMem);
+		_LOGGER.info("----------checkMem:" + checkMem);
 
 		if (apiIds == null || apiIds.trim() == "") {
 			Result<String> result = new Result<String>();
@@ -85,7 +84,8 @@ public class ApiController {
 	 * @date:   2017年10月16日 下午3:41:04
 	 */
 	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
-	public Result<?> showApi(HttpServletRequest request, HttpServletResponse response, String apiId) {
+	public Result<?> showApi(HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam(required=true)String apiId) {
 
 		_LOGGER.info("当前后台管理系统查询的apiId为："+apiId);
 		
@@ -99,16 +99,15 @@ public class ApiController {
 	 * @date:   2017年11月14日 下午2:15:32 
 	 */
 	@RequestMapping(value = "/apiList", method = RequestMethod.POST)
-	public Result<Page<ApiEntity>> showAPIs(HttpServletRequest request, HttpServletResponse response, 
+	@ApiOperation("###api列表，这个好好测试")
+	public Result<?> showAPIs(HttpServletRequest request, HttpServletResponse response, 
 			@RequestBody QueryApiEntity apiEntity,
-			@RequestParam(required=false,defaultValue= "1") int currentPage, 
-			@RequestParam(required=false,defaultValue= "10")int pageSize,
 			@RequestParam(required=false,defaultValue="true")boolean enablePaged){
 
 		if(true == enablePaged){
-			return manageApiService.apiList(apiEntity,currentPage,pageSize);
-		}else{
 			return manageApiService.apiList(apiEntity);
+		}else{
+			return manageApiService.apiAllList(apiEntity);
 		}
 	}
 

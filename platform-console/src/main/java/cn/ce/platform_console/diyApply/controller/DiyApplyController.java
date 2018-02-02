@@ -20,7 +20,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
-import cn.ce.platform_service.diyApply.entity.DiyApplyQueryEntity;
+import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.users.entity.User;
 import io.swagger.annotations.Api;
@@ -49,7 +49,7 @@ public class DiyApplyController {
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
 	@ApiOperation(value = "###根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
 	public Result<?> findApplyList(HttpSession session,
-			@RequestBody DiyApplyQueryEntity queryApply) {
+			@RequestBody QueryDiyApplyEntity queryApply) {
 
 		
 		//只获取当前登录的用户数据,如果获取数据失败就会报异常
@@ -93,7 +93,7 @@ public class DiyApplyController {
 	}
 
 	@RequestMapping(value = "/saveApply", method = RequestMethod.POST)
-	@ApiOperation("新增应用")
+	@ApiOperation("@@@新增应用")
 	public Result<?> saveApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
 		Result<String> result = new Result<>();
@@ -112,7 +112,7 @@ public class DiyApplyController {
 	}
 
 	@RequestMapping(value = "/updateApply", method = RequestMethod.POST)
-	@ApiOperation("修改应用，不能修改产品密钥")
+	@ApiOperation("###修改应用，不能修改产品密钥")
 	public Result<?> updateApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
 		return consoleDiyApplyService.updateApply(apply);

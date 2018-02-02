@@ -113,6 +113,11 @@ public class QueryApiEntity {
 		this.currentPage =PageValidateUtil.checkCurrentPage(currentPage);
 		buildStartNum();
 	}
+	
+	public void setOrgCurrentPage(Integer currentPage) {
+		this.currentPage = currentPage;
+		buildStartNum();
+	}
 
 	public Integer getPageSize() {
 		return pageSize;
@@ -120,6 +125,11 @@ public class QueryApiEntity {
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = PageValidateUtil.checkPageSize(pageSize);
+		buildStartNum();
+	}
+	
+	public void setOrgPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 		buildStartNum();
 	}
 

@@ -1,9 +1,10 @@
 package cn.ce.platform_service.guide.service;
 
-import javax.servlet.http.HttpSession;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
+import cn.ce.platform_service.guide.entity.QueryGuideEntity;
+import cn.ce.platform_service.users.entity.User;
 
 /**
  *
@@ -16,7 +17,7 @@ import cn.ce.platform_service.guide.entity.GuideEntity;
  **/
 public interface IConsoleGuideService {
 
-	public Result<String> add(HttpSession session, GuideEntity g);
+	public Result<String> add(User user, GuideEntity g);
 
 	public Result<String> update(GuideEntity g);
 	
@@ -24,10 +25,11 @@ public interface IConsoleGuideService {
 	
 	public Result<GuideEntity> getByid(String id);
 
-	public Result<Page<GuideEntity>> guideList(GuideEntity entity, int currentPage, int pageSize);
+	public Result<Page<GuideEntity>> guideList(QueryGuideEntity entity);
 
 	Result<String> submitVerify(String id);
 
 	public Result<String> migraGuide();
+
 
 }

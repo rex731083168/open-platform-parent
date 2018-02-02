@@ -135,29 +135,7 @@
 		ac.code_name as ac_code_name,
 		ac.code_desc as ac_code_desc
 	</sql>
-	
-	<sql id="apiDetailPaged">
-		select * from api_detail ad
-		<include refid="apiDetailCondition" />
-		limit
-		<choose>
-			<when test="startNum == null or startNum == '0'">
-				0,
-			</when>
-			<otherwise>
-				#{startNum},
-			</otherwise>
-		</choose>
-		<choose>
-			<when test="pageSize == null or pageSize == '0' ">
-				10
-			</when>
-			<otherwise>
-				#{pageSize}
-			</otherwise>
-		</choose>
-		
-	</sql>
+
 
 	<sql id="apiDetailCondition">
 		<where>
@@ -188,15 +166,46 @@
 	<sql id="basicPagedConn">
 		<include refid="basicSelect" /> 
 		FROM 
-		(<include refid="apiDetailPaged" />)
-		ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
+		(
+			select * from api_detail ad
+			<include refid="apiDetailCondition" />
+			limit
+			<choose>
+				<when test="startNum == null or startNum == '0'">
+					0,
+				</when>
+				<otherwise>
+					#{startNum},
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="pageSize == null or pageSize == '0' ">
+					10
+				</when>
+				<otherwise>
+					#{pageSize}
+				</otherwise>
+			</choose>
+		) ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
 		LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
 		LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
 		LEFT JOIN api_result_example re ON ad.api_id = re.api_id
 		LEFT JOIN api_code ac ON ad.api_id = ac.api_id
 	</sql>
 
-
+	<sql id="findByIdsAndNameLike">
+		select * from api_detail where api_id in
+		<foreach collection="apiIds" item="item" index="index" 
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="apiName != null">
+			and api_ch_name like concat(concat("%",#{apiName}),"%")
+		</if>
+		<if test="checkState != null">
+			and check_state = #{checkState}
+		</if>
+	</sql>
 	
 	<insert id="save" parameterType="cn.ce.platform_service.apis.entity.ApiEntity">
 		INSERT INTO api_detail
@@ -244,8 +253,41 @@
 	</select>
 
 	<select id="findTotalOneById" resultMap="apiMap">
-		<include refid="basicSelect" />
-			AND ad.api_id = #{apiId}
+		SELECT ad.*,
+			hd.header_id as hd_header_id,
+			hd.api_id as hd_api_id,
+			hd.header_name as hd_header_name,
+			hd.header_type as hd_header_type,
+			hd.required as hd_required,
+			hd.example as hd_example,
+			ag.arg_id as ag_arg_id,
+			ag.api_id as ag_api_id,
+			ag.arg_name as ag_arg_name,
+			ag.arg_type as ag_arg_type,
+			ag.required as ag_required,
+			ag.example as ag_example,
+			ru.result_id as ru_result_id,
+			ru.api_id as ru_api_id,
+			ru.ret_name as ru_ret_name,
+			ru.ret_type as ru_ret_type,
+			ru.example as ru_example,
+			re.rex_id as re_rex_id,
+			re.api_id as re_api_id,
+			re.rex_name as re_rex_name,
+			re.rex_type as re_rex_type,
+			re.state_code as re_state_code,
+			re.rex_value as re_rex_value,
+			ac.code_id as ac_code_id,
+			ac.api_id as ac_api_id,
+			ac.code_name as ac_code_name,
+			ac.code_desc as ac_code_desc
+		FROM
+			api_detail ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
+			LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
+			LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
+			LEFT JOIN api_result_example re ON ad.api_id = re.api_id
+			LEFT JOIN api_code ac ON ad.api_id = ac.api_id
+			WHERE ad.api_id = #{apiId}
 	</select>
 
 	<insert id="saveOrUpdateEntity" parameterType="cn.ce.platform_service.apis.entity.NewApiEntity">
@@ -325,4 +367,110 @@
 		select * from api_detail where open_apply_id=#{openApplyId}
 	</select>
 	
+	<select id="findByIdsAndNameLikeNum" resultType="int">
+		select count(*) from (<include refid="findByIdsAndNameLike" />) table1
+	</select>
+	
+	<select id="findByIdsAndNameLike" resultMap="apiMap">
+		<include refid="findByIdsAndNameLike" />
+		limit #{startIndex},#{pageSize}
+	</select>
+	
+	<select id="findByIds" resultMap="apiMap">
+		select * from api_detail where api_id in
+		<foreach collection="apiIds" item="item" index="index" 
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="findByVersionId" resultMap="apiMap">
+		select * from api_detail where version_id = #{versionId}
+	</select>
+	
+	<select id="findByVersionIdExp" resultMap="apiMap">
+		select * from api_detail where version_id = #{versionId} AND api_id != #{id}
+	</select>
+	
+	<select id="findIdByCheckState" resultType="string">
+		select api_id from api_detail where check_state = #{checkState}
+	</select>
+	
+	<select id="findIdByIdsOrOpenApplys" resultType="string">
+		select api_id from api_detail 
+		<where>
+			(
+				<trim prefixOverrides="AND |OR">
+					<if test="null != apiIds and apiIds.size > 0">
+						AND api_id in
+							<foreach collection="apiIds" index="index" item="item" open="(" close=")" separator=",">
+								#{item}
+							</foreach>
+					</if>
+					<if test="null != appIds and appIds.size > 0">
+						OR open_apply_id in
+						<foreach collection="appIds" index="index" item="item" open="(" close=")" separator=",">
+							#{item}
+						</foreach>
+					</if>
+				</trim>
+			)
+			AND check_state = #{checkState}
+		</where>
+	</select>
+	
+	<select id="findTotalOnesByIdsAndCheckState" resultMap="apiMap">
+		SELECT ad.*,
+			hd.header_id as hd_header_id,
+			hd.api_id as hd_api_id,
+			hd.header_name as hd_header_name,
+			hd.header_type as hd_header_type,
+			hd.required as hd_required,
+			hd.example as hd_example,
+			ag.arg_id as ag_arg_id,
+			ag.api_id as ag_api_id,
+			ag.arg_name as ag_arg_name,
+			ag.arg_type as ag_arg_type,
+			ag.required as ag_required,
+			ag.example as ag_example,
+			ru.result_id as ru_result_id,
+			ru.api_id as ru_api_id,
+			ru.ret_name as ru_ret_name,
+			ru.ret_type as ru_ret_type,
+			ru.example as ru_example,
+			re.rex_id as re_rex_id,
+			re.api_id as re_api_id,
+			re.rex_name as re_rex_name,
+			re.rex_type as re_rex_type,
+			re.state_code as re_state_code,
+			re.rex_value as re_rex_value,
+			ac.code_id as ac_code_id,
+			ac.api_id as ac_api_id,
+			ac.code_name as ac_code_name,
+			ac.code_desc as ac_code_desc
+		FROM
+			api_detail ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
+			LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
+			LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
+			LEFT JOIN api_result_example re ON ad.api_id = re.api_id
+			LEFT JOIN api_code ac ON ad.api_id = ac.api_id
+			WHERE ad.check_state = #{checkState} AND
+			ad.api_id in 
+			<foreach collection="apiIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+	</select>
+	
+	<delete id="deleteTotalOnesByIds">
+		delete ad.*,ag.*,ru.*,re.* ac.* from 			
+			api_detail ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
+			LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
+			LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
+			LEFT JOIN api_result_example re ON ad.api_id = re.api_id
+			LEFT JOIN api_code ac ON ad.api_id = ac.api_id
+			where ad.api_id in 
+			<foreach collection="apiIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+	</delete>
 </mapper>

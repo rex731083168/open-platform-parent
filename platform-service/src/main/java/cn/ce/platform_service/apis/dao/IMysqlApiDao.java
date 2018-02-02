@@ -46,11 +46,32 @@ public interface IMysqlApiDao {
 	 */
 	public int findListSize(QueryApiEntity entity);
 
-	public List<ApiEntity> getPagedList(QueryApiEntity entity);
+	public List<NewApiEntity> getPagedList(QueryApiEntity entity);
 
 	public int checkApiChName(@Param("apiChName")String apiChName, @Param("openApplyId")String openApplyId);
 	
 	public int checkVersion(@Param("versionId")String versionId, @Param("version")String version);
 
-	public List<ApiEntity> findByOpenApply(String openApplyId);
+	public List<NewApiEntity> findByOpenApply(String openApplyId);
+
+	public int findByIdsAndNameLikeNum(@Param("apiIds")List<String> apiIds, @Param("apiName")String apiName, 
+			@Param("checkState")Integer checkState, @Param("startIndex")int startIndex, @Param("pageSize")Integer pageSize);
+
+	public List<NewApiEntity> findByIdsAndNameLike(@Param("apiIds")List<String> apiIds, @Param("apiName")String apiName, 
+			@Param("checkState")Integer checkState, @Param("startIndex")int startIndex, @Param("pageSize")Integer pageSize);
+
+	public List<NewApiEntity> findByIds(@Param("apiIds")List<String> apiIds);
+
+	public List<NewApiEntity> findByVersionId(String versionId);
+
+	public List<NewApiEntity> findByVersionIdExp(@Param("versionId")String versionId, @Param("id")String id);
+
+	public List<String> findIdByCheckState(Integer checkState);
+
+	public List<String> findIdByIdsOrOpenApplys(@Param("apiIds")List<String> apiIds, @Param("appIds")List<String> appIds, @Param("checkState")Integer checkState);
+
+	public List<NewApiEntity> findTotalOnesByIdsAndCheckState(@Param("apiIds")List<String> apiIds, @Param("checkState")Integer checkState);
+
+	public int deleteTotalOnesByIds(List<String> apiIds);
+
 }

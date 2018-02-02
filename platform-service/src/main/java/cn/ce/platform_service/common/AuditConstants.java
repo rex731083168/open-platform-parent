@@ -8,10 +8,10 @@ package cn.ce.platform_service.common;
 public class AuditConstants {
 
 	/********** 提供者 提供的开发应用审核状态 **********/
-	public static final int OPEN_APPLY_UNCHECKED = 0; // 未审核
-	public static final int OPEN_APPLY_CHECKED_COMMITED = 1; // 待审核
-	public static final int OPEN_APPLY_CHECKED_SUCCESS = 2; // 审核成功
-	public static final int OPEN_APPLY_CHECKED_FAILED = 3; // 审核失败
+	public static final Integer OPEN_APPLY_UNCHECKED = 0; // 未审核
+	public static final Integer OPEN_APPLY_CHECKED_COMMITED = 1; // 待审核
+	public static final Integer OPEN_APPLY_CHECKED_SUCCESS = 2; // 审核成功
+	public static final Integer OPEN_APPLY_CHECKED_FAILED = 3; // 审核失败
 
 	/********** 用户状态 **********/
 	public static final int USER__UNCHECKED = 0; // 未审核

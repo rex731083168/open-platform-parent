@@ -136,5 +136,4 @@ public class GatewayRouteController {
 		return routeBySaasId;
 	}
 	
-	
 }

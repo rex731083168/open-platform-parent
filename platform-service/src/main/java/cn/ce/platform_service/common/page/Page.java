@@ -35,6 +35,18 @@ public class Page<T> implements Serializable {
         this.setCurrentPage(currentPaget);
         this.setTotalNumber(totalNumbert);
         this.setPageSize(pageSizet);
+        this.totalPage=this.totalNumber%this.pageSize == 0 ? 
+        		this.totalNumber/this.pageSize : this.totalNumber/this.pageSize+1;
+    }
+    
+    public Page(int currentPaget, int totalNumbert, int pageSizet, List<T> items) {
+        
+        this.setCurrentPage(currentPaget);
+        this.setTotalNumber(totalNumbert);
+        this.setPageSize(pageSizet);
+        this.items = items;
+        this.totalPage=this.totalNumber%this.pageSize == 0 ? 
+        		this.totalNumber/this.pageSize : this.totalNumber/this.pageSize+1;
     }
 
     public Integer getPageSize() {  
@@ -91,5 +103,5 @@ public class Page<T> implements Serializable {
 		// TODO 
 		return null;
 	}
-    
+	
 }

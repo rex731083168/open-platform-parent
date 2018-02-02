@@ -2,6 +2,7 @@ package cn.ce.platform_manage.guide;
 
 import javax.annotation.Resource;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
+import cn.ce.platform_service.guide.entity.QueryGuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
 import cn.ce.platform_service.util.SplitUtil;
 import io.swagger.annotations.Api;
@@ -33,30 +35,28 @@ public class GuideManageController {
 	/** 日志对象 */
 //	private static Logger _LOGGER = Logger.getLogger(GuideManageController.class);
 	@Resource
-	private IManageGuideService iManageGuideService;
+	private IManageGuideService manageGuideService;
 
-	@ApiOperation("指南列表")
+	@ApiOperation("###指南列表")
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
-	public Result<?> guideList(String guideName, String creatUserName, String applyId,Integer checkState,
-			@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false, defaultValue = "10") int pageSize) {
-		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-		result = iManageGuideService.guideList(guideName, creatUserName, applyId, checkState, currentPage, pageSize);
-		return result;
+	public Result<?> guideList(@RequestBody QueryGuideEntity guideEntity) {
+		
+		return manageGuideService.guideList(guideEntity);
 	}
 
-	@ApiOperation("指南详情")
-	@RequestMapping(value = "/getGuideByid", method = RequestMethod.GET)
+	@ApiOperation("###指南详情")
+	@RequestMapping(value = "/getGuideById", method = RequestMethod.GET)
 	public Result<GuideEntity> getGuideByid(@RequestParam(value = "id", required = true) String id) {
-		return iManageGuideService.getByid(id);
+		return manageGuideService.getByid(id);
 
 	}
 
 	@ApiOperation("批量审核")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestParam String ids, @RequestParam Integer checkState,
-			@RequestParam String checkMem) {
-		return iManageGuideService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+	public Result<String> batchUpdate(@RequestParam(required=true) String ids, 
+			@RequestParam(required=true) Integer checkState,
+			@RequestParam(required=false) String checkMem) {
+		return manageGuideService.batchUpdateCheckState(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 	}
 
 }

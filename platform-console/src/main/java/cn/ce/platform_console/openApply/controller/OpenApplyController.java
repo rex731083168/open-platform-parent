@@ -1,8 +1,6 @@
 package cn.ce.platform_console.openApply.controller;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -10,18 +8,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
-import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
+import io.swagger.annotations.ApiOperation;
 
 /***
  * 
@@ -55,11 +51,9 @@ public class OpenApplyController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/applyList", method = RequestMethod.POST)
-	public Result<?> applyList(@RequestBody OpenApplyEntity entity,
-			@RequestParam(required = false , defaultValue = "1") int currentPage,
-			@RequestParam(required = false , defaultValue = "10") int pageSize) {
-		Page<OpenApplyEntity> page = new Page<>(currentPage, 0, pageSize);
-		return consoleOpenApplyService.applyList(entity,page);
+	public Result<?> applyList(@RequestBody QueryOpenApplyEntity entity) {
+		
+		return consoleOpenApplyService.applyList(entity);
 	}
 	
 	/***
@@ -73,9 +67,9 @@ public class OpenApplyController {
 	 * @return: Result<?>
 	 * @throws
 	 */
-	@RequestMapping(value = "/getApplyByid", method = RequestMethod.GET)
-	public Result<?> getApplyByid(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "id", required = true) String id) {
+	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
+	@ApiOperation("###根据id查询应用")
+	public Result<?> getApplyByid(@RequestParam(value = "id", required = true) String id) {
 		return consoleOpenApplyService.getApplyById(id);
 	}
 	
@@ -90,7 +84,7 @@ public class OpenApplyController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/addApply", method = RequestMethod.POST)
-	@ResponseBody
+	@ApiOperation("###添加开放应用")
 	public Result<?> addApply(HttpSession session,
 			@RequestBody OpenApplyEntity apply) {
 		Result<?> result = new Result<>();
@@ -110,12 +104,9 @@ public class OpenApplyController {
 	}
 	
 	@RequestMapping(value="/checkApplyName",method=RequestMethod.GET)
+	@ApiOperation("###校验应用名称")
 	public Result<?> checkApplyName(
-			@RequestParam String applyName){
-		
-		if(StringUtils.isBlank(applyName)){
-			return Result.errorResult("参数不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
-		}
+			@RequestParam(required=true) String applyName){
 		
 		return consoleOpenApplyService.checkApplyName(applyName);
 	}
@@ -130,8 +121,9 @@ public class OpenApplyController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/modifyApply", method = RequestMethod.PUT)
-	@ResponseBody
+	@ApiOperation("修改api")
 	public Result<?> modifyApply(@RequestBody OpenApplyEntity openApply) {
+		
 		return consoleOpenApplyService.modifyApply(openApply);
 	}
 
@@ -139,16 +131,11 @@ public class OpenApplyController {
 	 * 
 	 * @Title: submitVerify
 	 * @Description: 提交审核
-	 * @param : @param request
-	 * @param : @param response
-	 * @param : @param id
-	 * @param : @return
-	 * @return: Result<?>
-	 * @throws
 	 */
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
-	@ResponseBody
-	public Result<?> submitVerify(@RequestParam(value = "id", required = true) String id) {
-		return consoleOpenApplyService.submitVerify(id,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
+	@ApiOperation("批量提交")
+	public Result<?> submitVerify(@RequestParam(value = "ids", required = true) String ids) {
+		return consoleOpenApplyService.submitVerify(ids,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
 	}
+	
 }

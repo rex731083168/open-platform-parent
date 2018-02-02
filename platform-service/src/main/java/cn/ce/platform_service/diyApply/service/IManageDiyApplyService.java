@@ -5,6 +5,7 @@ import java.util.List;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 
 /**
@@ -14,9 +15,11 @@ import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessag
  */
 public interface IManageDiyApplyService {
 
-	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, Integer checkState,
-			String applyName, int currentPage, int pageSize);
+//	public Result<Page<DiyApplyEntity>> findPagedApps(String productName, String userName, Integer checkState,
+//			String applyName, int currentPage, int pageSize);
 
+	Result<Page<DiyApplyEntity>> findPagedApps(QueryDiyApplyEntity queryApply);
+	
 	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem);
 
 
@@ -28,6 +31,7 @@ public interface IManageDiyApplyService {
 	 *         : @return @return: ApplyEntity @throws
 	 */
 	public Result<DiyApplyEntity> findById(String applyId);
+
 	
 	
 

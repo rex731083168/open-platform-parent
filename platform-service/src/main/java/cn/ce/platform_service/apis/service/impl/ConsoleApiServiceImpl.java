@@ -305,14 +305,14 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Override
 	public Result<?> showApiList(QueryApiEntity entity) {
 		
-		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
+		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
 
 		//提供者查看api列表
 		//Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
 		
 		int totalNum =  mysqlApiDao.findListSize(entity);
-		List<ApiEntity> apiList = mysqlApiDao.getPagedList(entity);
-		Page<ApiEntity> page = new Page<ApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
+		List<NewApiEntity> apiList = mysqlApiDao.getPagedList(entity);
+		Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
 		page.setItems(apiList);
 		
 		result.setSuccessData(page);

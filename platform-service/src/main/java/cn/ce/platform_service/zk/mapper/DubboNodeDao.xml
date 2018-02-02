@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cn.ce.platform_service.zk.dao.IDubboNodeDao1">
+  	<resultMap type="cn.ce.platform_service.zk.entity.DubboNode" id="nodeMap">
+  		<id column="id" property="id"/>
+  		<result column="node_name" property="nodeName"/>
+  		<result column="root_id" property="rootId"/>
+  	</resultMap>
+  
+  	
+  	<delete id="clearAll">
+  		delete from dubbo_node
+  	</delete>
+  	
+  	<insert id="save" parameterType="cn.ce.platform_service.zk.entity.DubboNode">
+  		insert into dubbo_node 
+  			(id,node_name,root_id)
+  		values
+  			(#{id},#{nodeName},#{rootId})
+  	</insert>
+  	
+  	<select id="findTotalPage" resultType="int">
+  		select count(id) from dubbo_node
+  		<if test="rootId != null">
+  			where root_id=#{rootId}
+  		</if>
+  	</select>
+  	
+  	<select id="findPage" resultMap="nodeMap">
+  		select * from dubbo_node 
+  		<if test="rootId != null">
+  			where root_id=#{rootId}
+  		</if>
+  		limit #{startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="findById" resultMap="nodeMap">
+  		select * from dubbo_node where id=#{id}
+  	</select>
+  	
+  </mapper>

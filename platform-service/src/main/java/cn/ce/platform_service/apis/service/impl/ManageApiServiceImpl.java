@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.platform_service.apis.dao.INewApiDao;
-import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.dao.IMysqlApiDao;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.common.AuditConstants;
@@ -29,7 +29,6 @@ import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
-import cn.ce.platform_service.openApply.dao.IOpenApplyDao;
 import cn.ce.platform_service.util.LocalFileReadUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
@@ -42,10 +41,12 @@ import io.netty.handler.codec.http.HttpMethod;
 public class ManageApiServiceImpl implements IManageApiService {
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ManageApiServiceImpl.class);
+	// @Resource
+	// private INewApiDao newApiDao;
+	// @Resource
+	// private IOpenApplyDao openApplyDao;
 	@Resource
-	private INewApiDao newApiDao;
-	@Resource
-	private IOpenApplyDao openApplyDao;
+	private IMysqlApiDao mysqlApiDao;
 
 	/**
 	 * @Title: auditApi
@@ -54,17 +55,19 @@ public class ManageApiServiceImpl implements IManageApiService {
 	 * @date: 2017年10月13日 下午8:08:38
 	 */
 	@Override
-	public Result<?> auditApi(List<String> apiId, Integer checkState, String checkMem) {
+	public Result<?> auditApi(List<String> apiIds, Integer checkState, String checkMem) {
 		Result<String> result = new Result<String>();
 
-		List<ApiEntity> apiList = newApiDao.findApiByIds(apiId);
+		// List<ApiEntity> apiList = newApiDao.findApiByIds(apiId);
+		List<NewApiEntity> apiList = mysqlApiDao.findByIds(apiIds);
 
 		if (checkState == AuditConstants.USER__CHECKED_FAILED) { // 批量审核不通过
 			// 修改数据库状态
-			for (ApiEntity apiEntity : apiList) {
+			for (NewApiEntity apiEntity : apiList) {
 				apiEntity.setCheckState(AuditConstants.USER__CHECKED_FAILED);
 				apiEntity.setCheckMem(checkMem);// 审核失败，添加审核失败原因
-				newApiDao.save(apiEntity);
+				// newApiDao.save(apiEntity);
+				mysqlApiDao.saveOrUpdateEntity(apiEntity);
 			}
 			result.setSuccessMessage("修改成功");
 
@@ -73,12 +76,15 @@ public class ManageApiServiceImpl implements IManageApiService {
 			List<String> rollBackApis = new ArrayList<String>(); // 回滚集合
 
 			// 循环添加api到网关
-			for (ApiEntity apiEntity : apiList) {
+			for (NewApiEntity apiEntity : apiList) {
 
 				// 根据versionId查询只有版本信息不同的其他相同的多个api
 				// 添加新的版本需要将旧的版本信息和新的版本信息一同推送到网关
-				List<ApiEntity> apiVersionList = newApiDao.findByField(DBFieldsConstants.APIS_APIVERSION_VERSIONID,
-						apiEntity.getApiVersion().getVersionId());
+				// List<ApiEntity> apiVersionList =
+				// newApiDao.findByField(DBFieldsConstants.APIS_APIVERSION_VERSIONID,
+				// apiEntity.getVersionId());
+				List<NewApiEntity> apiVersionList = mysqlApiDao.findByVersionIdExp(apiEntity.getVersionId(),
+						apiEntity.getId());
 
 				/**
 				 * 这里有一个问题是如果不同版本但是其他相同api同时提交审核会往网关推送两次，但是我们的业务是每次只能是最新的版本进行提交
@@ -86,13 +92,13 @@ public class ManageApiServiceImpl implements IManageApiService {
 				 */
 
 				Map<String, String> map = new HashMap<String, String>(); // map中放着不同的版本和版本对应的endPoint.
-				for (ApiEntity entity : apiVersionList) { // 查询旧的版本信息和Url
+				for (NewApiEntity entity : apiVersionList) { // 查询旧的版本信息和Url
 					if (entity.getCheckState() == 2) {
 						// TODO 这里将来会往两个网关里推，测试网关推送测试Url，正式网关推送正式Url
-						map.put(entity.getApiVersion().getVersion() + "", entity.getEndPoint()); // 这里只往正式网关里面推送
+						map.put(entity.getVersion() + "", entity.getListenPath()); // 这里只往正式网关里面推送
 					}
 				}
-				map.put(apiEntity.getApiVersion().getVersion() + "", apiEntity.getEndPoint());// 最后加上新添加的版本信息和Url
+				map.put(apiEntity.getVersion() + "", apiEntity.getListenPath());// 最后加上新添加的版本信息和Url
 
 				// 打印最终所有的版本信息和每个版本的请求路径
 				for (String key : map.keySet()) {
@@ -109,8 +115,8 @@ public class ManageApiServiceImpl implements IManageApiService {
 				String targetUrl = apiEntity.getDefaultTargetUrl(); // endPoint如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
 				String resourceType = apiEntity.getResourceType();
 				/*** 添加api到网关接口 ***/
-				JSONObject params = generateGwApiJson(apiEntity.getApiVersion().getVersionId(), listenPath, listenPath,
-						resourceType, targetUrl, map, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+				JSONObject params = generateGwApiJson(apiEntity.getVersionId(), listenPath, listenPath, resourceType,
+						targetUrl, map, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 
 				if (params == null) {
 					_LOGGER.info("拼接网关api json发生错误");
@@ -126,9 +132,9 @@ public class ManageApiServiceImpl implements IManageApiService {
 
 				// TODO 这里如果将来有多个网关集群，需要修改
 				GatewayColonyEntity gatewayColonyEntity = gwCols.get(0);
-				String resultStr = ApiCallUtils.putOrPostMethod(gatewayColonyEntity.getColUrl()
-						+ Constants.NETWORK_ADD_PATH + "/" + apiEntity.getApiVersion().getVersionId(), params, headers,
-						HttpMethod.POST);
+				String resultStr = ApiCallUtils.putOrPostMethod(
+						gatewayColonyEntity.getColUrl() + Constants.NETWORK_ADD_PATH + "/" + apiEntity.getVersionId(),
+						params, headers, HttpMethod.POST);
 
 				if (resultStr == null) {
 
@@ -156,9 +162,10 @@ public class ManageApiServiceImpl implements IManageApiService {
 					HttpMethod.GET);
 
 			// 批量修改数据库
-			for (ApiEntity apiEntity2 : apiList) {
+			for (NewApiEntity apiEntity2 : apiList) {
 				apiEntity2.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
-				newApiDao.save(apiEntity2);
+				// newApiDao.save(apiEntity2);
+				mysqlApiDao.saveOrUpdateEntity(apiEntity2);
 			}
 			result.setSuccessMessage("修改成功");
 
@@ -174,7 +181,8 @@ public class ManageApiServiceImpl implements IManageApiService {
 
 		Result<com.alibaba.fastjson.JSONObject> result = new Result<com.alibaba.fastjson.JSONObject>();
 
-		ApiEntity api = newApiDao.findApiById(apiId);
+		// ApiEntity api = newApiDao.findApiById(apiId);
+		NewApiEntity api = mysqlApiDao.findTotalOneById(apiId);
 		if (api == null) {
 			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS006);
 			return result;
@@ -201,13 +209,20 @@ public class ManageApiServiceImpl implements IManageApiService {
 	}
 
 	@Override
-	public Result<Page<ApiEntity>> apiList(QueryApiEntity entity, int currentPage, int pageSize) {
+	public Result<Page<NewApiEntity>> apiAllList(QueryApiEntity entity) {
 
-		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
+		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
 
-		Page<ApiEntity> page = newApiDao.findManagerList(entity, currentPage, pageSize);
+		// Page<ApiEntity> page = newApiDao.findManagerList(entity, currentPage,
+		// pageSize);
+		int totalNum = mysqlApiDao.findListSize(entity);
+		entity.setOrgCurrentPage(1);
+		entity.setOrgPageSize(totalNum);
+		List<NewApiEntity> list = mysqlApiDao.getPagedList(entity);
 
-		if (page != null) {
+		if (list != null) {
+			Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(), totalNum, entity.getPageSize(),
+					list);
 			result.setSuccessData(page);
 		} else {
 			result.setErrorMessage("查询不到结果", ErrorCodeNo.SYS006);
@@ -216,20 +231,25 @@ public class ManageApiServiceImpl implements IManageApiService {
 	}
 
 	@Override
-	public Result<Page<ApiEntity>> apiList(QueryApiEntity apiEntity) {
-		
-		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
+	public Result<Page<NewApiEntity>> apiList(QueryApiEntity entity) {
 
-		Page<ApiEntity> page = newApiDao.findManagerListWithoutPage(apiEntity);
+		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
 
-		if (page != null) {
+		// Page<ApiEntity> page =
+		// newApiDao.findManagerListWithoutPage(apiEntity);
+		int totalNum = mysqlApiDao.findListSize(entity);
+		List<NewApiEntity> list = mysqlApiDao.getPagedList(entity);
+
+		if (list != null) {
+			Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(), totalNum, entity.getPageSize(),
+					list);
 			result.setSuccessData(page);
 		} else {
 			result.setErrorMessage("查询不到结果", ErrorCodeNo.SYS006);
 		}
 		return result;
 	}
-	
+
 	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String resourceType,
 			String targetUrl, Map<String, String> map,
 
@@ -264,7 +284,5 @@ public class ManageApiServiceImpl implements IManageApiService {
 		}
 		return job;
 	}
-
-
 
 }

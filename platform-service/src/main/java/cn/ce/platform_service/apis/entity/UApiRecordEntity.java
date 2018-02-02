@@ -19,8 +19,8 @@ public class UApiRecordEntity {
 	private String id;
 	@Field("uApiRecordList")
 	List<UApiRecordList> uApiRecordList;//绑定列表
-	@Field("operaDate")
-	private Date operaDate; //操作时间
+	@Field("operaTime")
+	private Date operaTime; //操作时间
 	@Field("totalNum")
 	private int totalNum;
 	@Field("successNum")
@@ -30,10 +30,10 @@ public class UApiRecordEntity {
 	@Field("operaUserId")
 	private String operaUserId;
 	
-	public UApiRecordEntity(List<UApiRecordList> uApiRecordList, Date operaDate
+	public UApiRecordEntity(List<UApiRecordList> uApiRecordList, Date operaTime
 			, int totalNum, int successNum, String operaUserName, String operaUserId){
 		this.uApiRecordList = uApiRecordList;
-		this.operaDate = operaDate;
+		this.operaTime = operaTime;
 		this.totalNum = totalNum;
 		this.successNum = successNum;
 		this.operaUserName = operaUserName;
@@ -48,12 +48,12 @@ public class UApiRecordEntity {
 		this.uApiRecordList = dApiBoundList;
 	}
 
-	public Date getOperaDate() {
-		return operaDate;
+	public Date getOperaTime() {
+		return operaTime;
 	}
 
-	public void setOperaDate(Date operaDate) {
-		this.operaDate = operaDate;
+	public void setOperaTime(Date operaTime) {
+		this.operaTime = operaTime;
 	}
 
 	public int getTotalNum() {

@@ -67,16 +67,17 @@ public class ApiBulkExportAndImport {
 		
 		if(exportParam.getApiIds() == null){
 			exportParam.setApiIds(new ArrayList<String>());
-		}if(exportParam.getAppIds() == null){
+		}
+		if(exportParam.getAppIds() == null){
 			exportParam.setAppIds(new ArrayList<String>());
 		}
 		
-		User user = null;
-		try{
-			user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
-		}catch(Exception e){
-			Result.errorResult("", ErrorCodeNo.SYS003, null, Status.FAILED);
+		User user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
+		
+		if(null == user){
+			return Result.errorResult("用户session不存在", ErrorCodeNo.SYS003, null, Status.SUCCESS);
 		}
+	
 		return apiTransportService.generalExportList(exportParam, user);
 	}
 	
@@ -86,7 +87,7 @@ public class ApiBulkExportAndImport {
 		try{
 			user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
 		}catch(Exception e){
-			Result.errorResult("", ErrorCodeNo.SYS003, null, Status.FAILED);
+			Result.errorResult("用户未登录", ErrorCodeNo.SYS003, null, Status.FAILED);
 		}
 		_LOGGER.info("文件上传");
 		

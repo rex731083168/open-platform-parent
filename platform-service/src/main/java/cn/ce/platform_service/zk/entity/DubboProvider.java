@@ -1,7 +1,6 @@
 package cn.ce.platform_service.zk.entity;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -33,9 +32,9 @@ public class DubboProvider {
 	
 	private String interfaceName; //接口名称
 	
-	private String[] methods; //调用方法
+	private String methods; //调用方法
 	
-	private String timeStamp; //时间戳
+	private Date timeStamp; //时间戳
 	
 	private String loadBalance; //负载策略
 	
@@ -125,19 +124,19 @@ public class DubboProvider {
 		this.interfaceName = interfaceName;
 	}
 
-	public String[] getMethods() {
+	public String getMethods() {
 		return methods;
 	}
 
-	public void setMethods(String[] methods) {
+	public void setMethods(String methods) {
 		this.methods = methods;
 	}
 
-	public String getTimeStamp() {
+	public Date getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(String timeStamp) {
+	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
@@ -178,8 +177,7 @@ public class DubboProvider {
 		return "DubboProvider [id=" + id + ", application=" + application + ", path=" + path + ", group=" + group
 				+ ", version=" + version + ", dubboVersion=" + dubboVersion + ", token=" + token + ", timeOut="
 				+ timeOut + ", owner=" + owner + ", interfaceName=" + interfaceName + ", methods="
-				+ Arrays.toString(methods) + ", timeStamp=" + timeStamp + ", loadBalance=" + loadBalance + ", protocol="
+				+ methods + ", timeStamp=" + timeStamp + ", loadBalance=" + loadBalance + ", protocol="
 				+ protocol + ", uri=" + uri + ", nodeId=" + nodeId + "]";
 	}
-	
 }

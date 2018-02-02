@@ -1,8 +1,5 @@
 package cn.ce.platform_service.zk.entity;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -17,13 +14,13 @@ public class DubboConsumer {
 	
 	private String application; //应用名称
 	
-	private String catetory; //类型-消费者
+	private String category; //类型-消费者
 	
 	private String thradPoolCoreSize; //线程池大小
 	
 	private String interfaceName; //接口名称
 	
-	private String[] methods; //调用方法
+	private String methods; //调用方法
 
 	private String uri;	//consumer的ip
 	
@@ -45,12 +42,12 @@ public class DubboConsumer {
 		this.application = application;
 	}
 
-	public String getCatetory() {
-		return catetory;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setCatetory(String catetory) {
-		this.catetory = catetory;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getThradPoolCoreSize() {
@@ -69,14 +66,14 @@ public class DubboConsumer {
 		this.interfaceName = interfaceName;
 	}
 
-	public String[] getMethods() {
+	public String getMethods() {
 		return methods;
 	}
 
-	public void setMethods(String[] methods) {
+	public void setMethods(String methods) {
 		this.methods = methods;
 	}
-	
+
 	public String getUri() {
 		return uri;
 	}
@@ -95,9 +92,9 @@ public class DubboConsumer {
 
 	@Override
 	public String toString() {
-		return "DubboConsumer [id=" + id + ", application=" + application + ", catetory=" + catetory
+		return "DubboConsumer [id=" + id + ", application=" + application + ", catetory=" + category
 				+ ", thradPoolCoreSize=" + thradPoolCoreSize + ", interfaceName=" + interfaceName + ", methods="
-				+ Arrays.toString(methods) + ", uri=" + uri + ", nodeId=" + nodeId + "]";
+				+ methods + ", uri=" + uri + ", nodeId=" + nodeId + "]";
 	}
 	
 }

@@ -40,7 +40,7 @@ public class DiyApplyProductController {
 
 	@Resource
 	private IPlublicDiyApplyService plublicDiyApplyService;
-
+	
 	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
 	@ApiOperation("获取产品实例 查询带分页")
 	public Result<TenantAppPage> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key,
