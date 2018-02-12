@@ -20,9 +20,9 @@
 	<bean id="ds" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
 		<property name="driver" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://127.0.0.1:3306/openplatform?characterEncoding=utf8&amp;allowMultiQueries=true" />
-		<property name="username" value="openplatform" />
-		<property name="password" value="q1w2e3r4ys" />
+			value="jdbc:mysql://${db.mysql.connect}?characterEncoding=utf8&amp;allowMultiQueries=true" />
+		<property name="username" value="${db.mysql.username}" />
+		<property name="password" value="${db.mysql.password}" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
