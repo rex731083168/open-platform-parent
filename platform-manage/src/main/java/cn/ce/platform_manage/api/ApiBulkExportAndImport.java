@@ -46,7 +46,7 @@ public class ApiBulkExportAndImport {
 	 * @date:   2017年12月12日 下午6:23:06 
 	 */
 	@RequestMapping(value="/exportApis",method=RequestMethod.GET)
-	public String exportApis(HttpServletRequest request, HttpServletResponse response, String recordId){
+	public String exportApis(HttpServletResponse response, String recordId){
 		// TODO 20171211 mkw 虽然返回的是string，但是实际String并不起作用
 		_LOGGER.info("批量导出api文档");
 		
@@ -61,7 +61,8 @@ public class ApiBulkExportAndImport {
 	 * @date:   2017年12月12日 下午6:22:43 
 	 */
 	@RequestMapping(value="/generalExportList", method=RequestMethod.POST)
-	public Result<?> generalExportList(HttpServletRequest request,@RequestBody ApiExportParamEntity exportParam){
+	public Result<?> generalExportList(HttpServletRequest request,
+			@RequestBody ApiExportParamEntity exportParam){
 		
 		_LOGGER.info("生成批量导出api的文件记录");
 		
@@ -75,7 +76,7 @@ public class ApiBulkExportAndImport {
 		User user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
 		
 		if(null == user){
-			return Result.errorResult("用户session不存在", ErrorCodeNo.SYS003, null, Status.SUCCESS);
+			return new Result<String>("用户session不存在", ErrorCodeNo.SYS003, null, Status.SUCCESS);
 		}
 	
 		return apiTransportService.generalExportList(exportParam, user);
@@ -83,12 +84,8 @@ public class ApiBulkExportAndImport {
 	
 	@RequestMapping(value="/importApis", method=RequestMethod.POST)
 	public Result<?> importApis(HttpServletRequest request, @RequestParam("file") MultipartFile file){
-		User user = null;
-		try{
-			user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
-		}catch(Exception e){
-			Result.errorResult("用户未登录", ErrorCodeNo.SYS003, null, Status.FAILED);
-		}
+		
+		User user = (User)request.getSession().getAttribute(Constants.SES_LOGIN_USER);
 		_LOGGER.info("文件上传");
 		
 		byte[] b= null;
@@ -100,16 +97,12 @@ public class ApiBulkExportAndImport {
 			b = file.getBytes();
 			long size = file.getSize();
 			if(size > AuditConstants.MAX_UPLOAD_SIZE){
-				Result.errorResult("文件大小不能超过2M", ErrorCodeNo.UPLOAD002, "'", Status.FAILED);
+				return new Result<String>("文件大小不能超过2M", ErrorCodeNo.UPLOAD002, null, Status.FAILED);
 			}
 			upStr = new String(b,"utf-8");
 		} catch (IOException e) {
 			_LOGGER.info("上传文件读取数据发生异常");
-			Result.errorResult("", ErrorCodeNo.SYS004, null, Status.FAILED);
-		}
-		
-		if(upStr.length() > 1000){
-			
+			return new Result<String>("上传文件读取数据发生异常", ErrorCodeNo.SYS004, null, Status.FAILED);
 		}
 		
 		return apiTransportService.importApis(upStr, user);
@@ -117,16 +110,16 @@ public class ApiBulkExportAndImport {
 	
 	@RequestMapping(value="getExportRecords", method=RequestMethod.GET)
 	public Result<?> getExportRecords(HttpServletRequest request, HttpServletResponse response, 
-			//@RequestBody DApiRecordEntity dRecordEntity,
 			@RequestParam(required=false,defaultValue= "1") int currentPage, 
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 	
 		
-		return apiTransportService.getExportRecords(PageValidateUtil.checkCurrentPage(currentPage),PageValidateUtil.checkPageSize(pageSize));
+		return apiTransportService.getExportRecords(PageValidateUtil.checkCurrentPage(currentPage)
+				,PageValidateUtil.checkPageSize(pageSize));
 	}
 	
 	@RequestMapping(value="getExportRecordById", method=RequestMethod.GET)
-	public Result<?> getExportRecordById(String recordId){
+	public Result<?> getExportRecordById(@RequestParam(required=true)String recordId){
 		
 		return apiTransportService.getExportRecordById(recordId);
 	}
@@ -136,11 +129,12 @@ public class ApiBulkExportAndImport {
 			@RequestParam(required=false,defaultValue= "1") int currentPage, 
 			@RequestParam(required=false,defaultValue= "10")int pageSize){
 		
-		return apiTransportService.getImportRecords(PageValidateUtil.checkCurrentPage(currentPage),PageValidateUtil.checkPageSize(pageSize));
+		return apiTransportService.getImportRecords(PageValidateUtil.checkCurrentPage(currentPage)
+				,PageValidateUtil.checkPageSize(pageSize));
 	}
 	
 	@RequestMapping(value="/getImportRecordById", method=RequestMethod.GET)
-	public Result<?> getImportRecordById(String recordId){
+	public Result<?> getImportRecordById(@RequestParam(required=true)String recordId){
 		
 		return apiTransportService.getImportRecordById(recordId);
 	}

@@ -9,6 +9,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -37,7 +38,7 @@ import cn.ce.platform_service.zk.service.ZkWatcher;
  * @Date : 2018年1月9日
  */
 @Service("zkDubboService")
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED)
 public class ZkDubboServiceImpl implements IZkDubboService {
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ZkDubboServiceImpl.class);

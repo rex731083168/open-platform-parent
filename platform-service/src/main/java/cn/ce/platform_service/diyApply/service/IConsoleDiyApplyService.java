@@ -54,13 +54,13 @@ public interface IConsoleDiyApplyService {
 	 * @Title: findById @Description: 根据id加载应用信息 @param : @param applyId @param
 	 *         : @return @return: ApplyEntity @throws
 	 */
-	public DiyApplyEntity findById(String applyId);
+	public Result<?> findById(String applyId);
 
 	
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
 
-	public Result<String> batchUpdate(String ids,int checkState, String checkMem);
+	public Result<String> batchUpdateCheckState(String ids,Integer checkState, String checkMem);
 
 	/**
 	 * 

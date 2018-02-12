@@ -23,7 +23,7 @@ public interface IMysqlDiyApplyDao {
 			, @Param("diyApplyId")String diyApplyId, @Param("openApplyId")String openApplyId);
 
 	int saveBoundApi(@Param("boundId")String boundId, @Param("diyApplyId")String diyApplyId,
-			@Param("openApplyId")String openApplyId,@Param("apiId") String apiId);
+			@Param("openApplyId")String openApplyId,@Param("apiId") String apiId, @Param("boundOpenId")String boundOpenId);
 
 	int findListSize(QueryDiyApplyEntity queryApply);
 
@@ -42,5 +42,7 @@ public interface IMysqlDiyApplyDao {
 	List<DiyBoundApi> findBoundApi(@Param("diyApplyId")String diyApplyId, @Param("openApplyId")String openApplyId);
 
 	List<DiyApplyEntity> findByIds(@Param("diyIds")List<String> diyIds);
+
+	int deleteAll();
 	
 }

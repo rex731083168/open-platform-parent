@@ -18,6 +18,8 @@ public class ApiHeaderEntity {
 	private boolean required;
 	
 	private String example;
+	
+	private String headerDesc; //描述
 
 	public String getId() {
 		return id;
@@ -67,10 +69,18 @@ public class ApiHeaderEntity {
 		this.example = example;
 	}
 
+	public String getHeaderDesc() {
+		return headerDesc;
+	}
+
+	public void setHeaderDesc(String headerDesc) {
+		this.headerDesc = headerDesc;
+	}
+
 	@Override
 	public String toString() {
 		return "ApiHeaderEntity [id=" + id + ", apiId=" + apiId + ", headerName=" + headerName + ", headerType="
-				+ headerType + ", required=" + required + ", example=" + example + "]";
+				+ headerType + ", required=" + required + ", example=" + example + ", headerDesc=" + headerDesc + "]";
 	}
 	
 }

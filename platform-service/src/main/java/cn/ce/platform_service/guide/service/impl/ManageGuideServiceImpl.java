@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
@@ -25,6 +27,7 @@ import cn.ce.platform_service.guide.service.IManageGuideService;
  *
  **/
 @Service("manageGuideService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ManageGuideServiceImpl implements IManageGuideService {
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ConsoleGuideServiceImpl.class);

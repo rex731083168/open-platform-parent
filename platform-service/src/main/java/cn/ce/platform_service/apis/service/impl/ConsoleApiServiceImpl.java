@@ -41,6 +41,7 @@ import cn.ce.platform_service.apis.entity.RetEntity;
 import cn.ce.platform_service.apis.entity.RetExamEntity;
 import cn.ce.platform_service.apis.entity.SubArgEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
+import cn.ce.platform_service.apis.util.ApiTransform;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -96,18 +97,14 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		try{ //资源类型校验
 			if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
-				return Result.errorResult("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
+				return new Result<String>("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
 			}
 		}catch(Exception e ){
 			_LOGGER.error("network error, cannot get resource type from zhong tai", e);
 		}
 		
-		Result<String> result = new Result<String>();
-		
-		
 		if(StringUtils.isBlank(apiEntity.getListenPath())){
-			result.setErrorMessage("listenPath不能为空", ErrorCodeNo.SYS005);
-			return result;
+			return new Result<String>("listenPath不能为空", ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
 		
 		apiEntity.setListenPath(checkListenPathFormat(apiEntity.getListenPath()));
@@ -115,30 +112,33 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		_LOGGER.info("************************** listenPath = " + apiEntity.getListenPath());
 		
 		//设置默认值，否则会后面审核api会报错
-		if(apiEntity.getCheckState() == null){
+		if(null == apiEntity.getCheckState() 
+				|| apiEntity.getCheckState() > AuditConstants.DIY_APPLY_CHECKED_COMMITED){
 			apiEntity.setCheckState(0);
 		}
 		
 		//如果apiId存在，则修改api
 		if(apiEntity.getId() != null ){
-			updateMysqlEntity(apiEntity);
+			boolean bool = updateMysqlEntity(apiEntity);
+			if(bool){
+				return new Result<String>("修改成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
+			}else{
+				return new Result<String>("修改失败，请检查当前id是否存在",ErrorCodeNo.SYS006,null,Status.FAILED);
+			}
 //			mysqlApiDao.save1(apiEntity);
 			//newApiDao.save(apiEntity);
-			result.setSuccessMessage("修改成功");
-			return result;
 		}
 		
 		
 		if(StringUtils.isBlank(apiEntity.getVersion())){
-			result.setErrorMessage("版本名称不能为空", ErrorCodeNo.SYS005);
-			return result;
+			return new Result<String>("版本名称不能为空", ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
 		
 		//ApiEntity vEntity = newApiDao.findByVersion(apiEntity.getVersionId(),apiEntity.getVersion());
 		int versionNum = mysqlApiDao.findVersionNum(apiEntity.getVersionId(),apiEntity.getVersion());
 		
 		if(versionNum > 0){
-			return Result.errorResult("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
+			return new Result<String>("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
 		}
 		// 第一次添加接口,并且选择未开启版本控制
 //		if (apiEntity.getApiVersion() == null || 
@@ -194,14 +194,11 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			apiEntity.setId(RandomUtil.random32UUID());
 			saveMysqlEntity(apiEntity);
 			
-			
 			_LOGGER.info("------新添加的数据为："+apiEntity.toString());
 //		}
-		result.setSuccessData("添加成功");
-		return result;
+		return new Result<String>("添加成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}
 	
-
 
 	/**
 	 * @Title: apiVerify
@@ -240,22 +237,15 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Override
 	public Result<?> modifyApi(NewApiEntity apiEntity) {
 		
-		Result<String> result = new Result<String>();
-//		if(null == newApiDao.findApiById(apiEntity.getId())){
-		if(null == mysqlApiDao.findById(apiEntity.getId())){
-			result.setErrorMessage("当前id不可用", ErrorCodeNo.SYS006);
-			return result;
+		boolean bool = updateMysqlEntity(apiEntity);
+		if(bool){
+			return new Result<String>("修改成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
+		}else{
+			return new Result<String>("当前id不可用", ErrorCodeNo.SYS006,null,Status.FAILED);
 		}
-		//newApiDao.save(apiEntity);
-		updateMysqlEntity(apiEntity);
-		result.setSuccessData("");
-		return result;
 	}
 
 	
-
-
-
 
 	/**
 	 * @Title: showApi
@@ -284,15 +274,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			wGatewayUrlList.add(gatewayColonyEntity.getwColUrl()+api.getListenPath());//外网访问地址
 		}
 		
-		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
+//		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(api));
+		JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(ApiTransform.transToApi(api)));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
 		jsonObject.put("wGatewayUrls", wGatewayUrlList);
 		result.setSuccessData(jsonObject);
 		return result;
 	}
-
-	
-
 
 
 
@@ -305,49 +293,24 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Override
 	public Result<?> showApiList(QueryApiEntity entity) {
 		
-		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
+//		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
+		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
 
 		//提供者查看api列表
 		//Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
 		
 		int totalNum =  mysqlApiDao.findListSize(entity);
 		List<NewApiEntity> apiList = mysqlApiDao.getPagedList(entity);
-		Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
-		page.setItems(apiList);
+		
+//		Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
+//		page.setItems(apiList);
+		Page<ApiEntity> page = new Page<ApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
+		page.setItems(ApiTransform.transToApis(apiList));
 		
 		result.setSuccessData(page);
 		return result;
 	}
-
-
-//	/**
-//	 * @Title: checkApiEnName
-//	 * @Description: 校验当前开放应用中是否存在这个英文名称
-//	 * @author: makangwei 
-//	 * @date:   2017年10月12日 下午2:49:22 
-//	 */
-//	@Override
-//	public Result<String> checkApiEnName(String apiEnName, String openApplyId) {
-//		
-//		Result<String> result = new Result<String>();
-//		if(StringUtils.isBlank(apiEnName)){
-//			result.setErrorMessage("apiEnName不能为空",ErrorCodeNo.SYS005);
-//			return result;
-//		}
-//		Map<String,Object> map =new HashMap<String,Object>();
-//		map.put(DBFieldsConstants.APIS_OPENAPPLY_ID, openApplyId);
-//		map.put(DBFieldsConstants.APIS_APIENNAME, apiEnName);
-//		ApiEntity entity = newApiDao.findOneByFields(map);
-//		
-//		if(enNum > 1){
-//			result.setErrorMessage("当前名称已经被占用", ErrorCodeNo.SYS010);
-//		}else{
-//			result.setSuccessMessage("当前名称可以使用");
-//		}
-//		return result;
-//	}
-
-
+	
 	/**
 	 * @Title: checkApiChName
 	 * @Description: 校验当前开放应用中是否存在这个中文名称
@@ -467,26 +430,14 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	public Result<?> checkListenPath(String listenPath) {
 		
 		//List<ApiEntity> list = newApiDao.findByField(DBFieldsConstants.APIS_LISTEN_PATH, listenPath);
-		int tempNum = mysqlApiDao.findCountByListenPath(listenPath);
-		Result<String> result = new Result<String>();
+		int tempNum = mysqlApiDao.checkListenPath(listenPath);
 		if(tempNum == 0){
-			result.setSuccessMessage("当前监听路径可用");
+			return new Result<String>("当前监听路径可用",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 		}else{
-			result.setErrorMessage("当前监听路径不可用",ErrorCodeNo.SYS009);
+			return new Result<String>("当前监听路径不可用",ErrorCodeNo.SYS009,null,Status.FAILED);
 		}
-		return result;
 	}
 	
-	private String checkListenPathFormat(String listenPath) {
-		if(!listenPath.startsWith("/")){
-			listenPath = "/"+listenPath;
-		}
-//		if(!listenPath.endsWith("/")){
-//			listenPath = listenPath+"/";
-//		}
-		return listenPath;
-	}
-
 	@Override
 	public Result<?> getResourceType() {
 		// TODO Auto-generated method stub
@@ -529,7 +480,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			result.setErrorMessage("获取资源池类型错误!");
 		}
 		
-		// TODO Auto-generated method stub
 		return result;
 	}
 
@@ -537,6 +487,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	public Result<String> migraApi() {
 		
 		List<ApiEntity> apiList = newApiDao.findAll();
+		mysqlApiDao.clearAll();
 		int i = 0;
 		for (ApiEntity apiEntity : apiList) {
 			List<SubArgEntity> headers = apiEntity.getHeaders(); //Header参数
@@ -556,6 +507,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
+	private String checkListenPathFormat(String listenPath) {
+		if(!listenPath.startsWith("/")){
+			listenPath = "/"+listenPath;
+		}
+		return listenPath;
+	}
+	
 	private void saveErrorCodes(List<ErrorCodeEntity> errorCodes, String apiId) {
 		for (ErrorCodeEntity errorCodeEntity : errorCodes) {
 			ApiCodeEntity code = new ApiCodeEntity();
@@ -586,6 +544,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			result.setId(RandomUtil.random32UUID());
 			result.setRetName(retEntity.getRetName());
 			result.setRetType(retEntity.getRetType());
+			result.setExample(retEntity.getExample());
+			result.setDesc(retEntity.getDesc());
 			apiResultDao.save(result);
 		}
 		
@@ -600,6 +560,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			arg.setArgType(subArgEntity.getArgType());
 			arg.setExample(subArgEntity.getExample());
 			arg.setRequired(subArgEntity.isRequired());
+			arg.setArgDesc(subArgEntity.getDesc());
 			apiArgDao.save(arg);
 		}
 		
@@ -614,6 +575,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			header.setHeaderName(subArgEntity.getArgName());
 			header.setHeaderType(subArgEntity.getArgType());
 			header.setExample(subArgEntity.getDesc());
+			header.setHeaderDesc(subArgEntity.getDesc());
 			apiHeaderDao.save(header);
 		}
 	}
@@ -660,6 +622,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return true;
 	}
 	
+	@Deprecated
+	@SuppressWarnings("unused")
 	private NewApiEntity findOneById(String apiId) {
 		
 		NewApiEntity api = mysqlApiDao.findById(apiId);
@@ -697,6 +661,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	
 	private boolean updateMysqlEntity(NewApiEntity apiEntity) {
 		
+		int num = mysqlApiDao.checkId(apiEntity.getId());
+		if(num <= 0){
+			return false;
+		}
 		mysqlApiDao.saveOrUpdateEntity(apiEntity);
 		
 		apiHeaderDao.deleteByApiId(apiEntity.getId());
@@ -742,7 +710,5 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 		return true;
 	}
-
-
 
 }

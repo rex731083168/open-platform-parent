@@ -12,6 +12,18 @@ public class ApiCodeEntity {
 	private String codeName;
 	private String codeDesc;
 
+	public ApiCodeEntity(){
+		super();
+	}
+	
+	public ApiCodeEntity(String id, String apiId, String codeName, String codeDesc) {
+		super();
+		this.id = id;
+		this.apiId = apiId;
+		this.codeName = codeName;
+		this.codeDesc = codeDesc;
+	}
+
 	public String getId() {
 		return id;
 	}

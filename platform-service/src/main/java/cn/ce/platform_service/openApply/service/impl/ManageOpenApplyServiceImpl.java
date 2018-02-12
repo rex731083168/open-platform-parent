@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
@@ -42,6 +44,7 @@ import net.sf.json.JSONObject;
  * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  */
 @Service(value = "manageOpenApplyService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 
 	/** 日志对象 */
@@ -301,7 +304,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		Page<OpenApplyEntity> page = new Page<OpenApplyEntity>(entity.getCurrentPage(),
 				totalNum, entity.getPageSize());
 		page.setItems(openList);
-		result.setData(page);
+		result.setSuccessData(page);
 		return result;
 	}
 
@@ -362,8 +365,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 					.getUrlReturnObject(replacedurl, InterfaMessageInfoString.class, null);
 
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setData(messageInfo);
-				result.setSuccessMessage("");
+				result.setSuccessData(messageInfo);
 				return result;
 			} else {
 				_LOGGER.error("saveOrUpdateApps data http getfaile return code :" + messageInfo.getMsg() + " ");

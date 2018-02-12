@@ -38,4 +38,6 @@ public interface IMysqlOpenApplyDao {
 	int checkApplyKeyById(@Param("applyKey")String applyKey, @Param("applyId")String applyId);
 
 	int update(OpenApplyEntity openApply);
+
+	int deleteAll();
 }

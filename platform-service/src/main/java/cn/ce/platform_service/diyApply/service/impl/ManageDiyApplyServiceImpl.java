@@ -1,15 +1,14 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -34,6 +33,7 @@ import net.sf.json.JSONObject;
  * @Date : 2017年10月16日
  */
 @Service("manageDiyApplyService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	private static Logger _LOGGER = Logger.getLogger(ManageDiyApplyServiceImpl.class);
 //	@Resource
@@ -52,7 +52,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		Page<DiyApplyEntity> page= new Page<DiyApplyEntity>(queryApply.getCurrentPage(),totalNum,queryApply.getPageSize(),list);
 		
 		result.setSuccessData(page);
-
+		
 		return result;
 	}
 
@@ -69,7 +69,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				result.setSuccessMessage("审核成功:" + num + "条");
 				return result;
 			}
-
+			
 			//Query query = new Query(Criteria.where("id").in(ids));
 			//List<DiyApplyEntity> diyApply = diyApplyDao.findListByIds(ids);
 			List<DiyApplyEntity> diyApply = mysqlDiyApplyDao.findByIds(ids);
@@ -79,7 +79,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 				result.setErrorCode(ErrorCodeNo.SYS015);
 				return result;
 			}
-
+			
 			RegisterBathAppInParameterEntity[] queryVO = new RegisterBathAppInParameterEntity[diyApply.size()];
 			for (int i = 0; i < diyApply.size(); i++) {
 				RegisterBathAppInParameterEntity rapentity = new RegisterBathAppInParameterEntity();
@@ -100,7 +100,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 					//new org.json.JSONArray(queryVO)
 					.getData();
 			_LOGGER.info("registerBathApp to interface states" + interfaMessageInfoJasonObjectResult.getStatus() + "");
-			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
+//			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
 //			Iterator<String> keys = jsonObjecttest.keys();
 //			Map<String, Object> map = new HashMap<String, Object>();
 //			String key = null;
@@ -141,7 +141,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		String appList$ = Pattern.quote("${appList}");
 		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, app);
 		//String replacedurl = url.replaceAll(tId$, tenantId);
-
+		
 		try {
 			/* get请求方法 */
 			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
@@ -153,8 +153,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
 
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setData(messageInfo);
-				result.setSuccessMessage("");
+				result.setSuccessData(messageInfo);
 				return result;
 			} else {
 				_LOGGER.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
@@ -171,7 +170,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		}
 
 	}
-
+	
 	@Override
 	public Result<DiyApplyEntity> findById(String applyId) {
 		Result<DiyApplyEntity> result = new Result<>();

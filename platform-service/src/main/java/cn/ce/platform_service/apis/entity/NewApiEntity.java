@@ -103,6 +103,55 @@ public class NewApiEntity implements Serializable {
     /**mysql做查询时候的临时字段。只用来做查询时候用的，不具有业务意义*/
     private int count;
     
+    public NewApiEntity(){
+    	super();
+    }
+    
+	public NewApiEntity(String id, String openApplyId, String userId, String userName, String apiChName, String appCode,
+			String defaultTargetUrl, String listenPath, String httpMethod, List<ApiHeaderEntity> headers,
+			List<ApiArgEntity> args, List<ApiResultEntity> result, ApiResultExampleEntity retExample,
+			List<ApiCodeEntity> errCodes, String versionId, String version, String versionRemark, boolean newVersion,
+			String apiType, String desc, int state, Integer checkState, String checkMem, int quotaMax,
+			int quotaRenewalRate, int rate, int per, Date createTime, Integer apiSource, String enterpriseName,
+			String resourceType, String resourceTypeName, int count) {
+		super();
+		this.id = id;
+		this.openApplyId = openApplyId;
+		this.userId = userId;
+		this.userName = userName;
+		this.apiChName = apiChName;
+		this.appCode = appCode;
+		this.defaultTargetUrl = defaultTargetUrl;
+		this.listenPath = listenPath;
+		this.httpMethod = httpMethod;
+		this.headers = headers;
+		this.args = args;
+		this.result = result;
+		this.retExample = retExample;
+		this.errCodes = errCodes;
+		this.versionId = versionId;
+		this.version = version;
+		this.versionRemark = versionRemark;
+		this.newVersion = newVersion;
+		this.apiType = apiType;
+		this.desc = desc;
+		this.state = state;
+		this.checkState = checkState;
+		this.checkMem = checkMem;
+		this.quotaMax = quotaMax;
+		this.quotaRenewalRate = quotaRenewalRate;
+		this.rate = rate;
+		this.per = per;
+		this.createTime = createTime;
+		this.apiSource = apiSource;
+		this.enterpriseName = enterpriseName;
+		this.resourceType = resourceType;
+		this.resourceTypeName = resourceTypeName;
+		this.count = count;
+	}
+
+
+
 	public String getId() {
 		return id;
 	}

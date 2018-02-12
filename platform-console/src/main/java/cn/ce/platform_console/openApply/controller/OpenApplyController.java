@@ -1,5 +1,7 @@
 package cn.ce.platform_console.openApply.controller;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
@@ -12,11 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.CoverBeanUtils;
 import io.swagger.annotations.ApiOperation;
 
 /***
@@ -39,20 +44,34 @@ public class OpenApplyController {
 	@Resource
 	private IConsoleOpenApplyService consoleOpenApplyService;
 
-	/***
-	 * 
-	 * @Title: appList
-	 * @Description: 查询应用列表
-	 * @param : @param entity
-	 * @param : @param currentPage
-	 * @param : @param pageSize
-	 * @param : @return
-	 * @return: Result<?>
-	 * @throws
+	/**
+	 * @Title: applyList
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author: makangwei
+	 * @date:   2018年2月5日 下午1:42:05  
 	 */
 	@RequestMapping(value = "/applyList", method = RequestMethod.POST)
-	public Result<?> applyList(@RequestBody QueryOpenApplyEntity entity) {
+	@ApiOperation("定制应用列表_TODO")
+//	public Result<?> applyList(@RequestBody QueryOpenApplyEntity entity) {
+	public Result<?> applyList(@RequestBody OpenApplyEntity entity1,
+			@RequestParam(required = false , defaultValue = "1") int currentPage,
+			@RequestParam(required = false , defaultValue = "10") int pageSize) {
 		
+		QueryOpenApplyEntity entity = new QueryOpenApplyEntity();
+		try {
+			CoverBeanUtils.copyProperties(entity, entity1);
+		} catch (IllegalAccessException | InvocationTargetException e1) {
+			e1.printStackTrace();
+			return new Result<String>("程序内部异常",ErrorCodeNo.SYS004,null,Status.FAILED);
+		}
+		try {
+			CoverBeanUtils.copyProperties(entity, entity1);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+			return new Result<String>("程序内部异常",ErrorCodeNo.SYS004, null, Status.FAILED);
+		}
+		entity.setCurrentPage(currentPage);
+		entity.setPageSize(pageSize);
 		return consoleOpenApplyService.applyList(entity);
 	}
 	
@@ -67,9 +86,10 @@ public class OpenApplyController {
 	 * @return: Result<?>
 	 * @throws
 	 */
-	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
-	@ApiOperation("###根据id查询应用")
+	@RequestMapping(value = "/getApplyByid", method = RequestMethod.GET)
+	@ApiOperation("根据id查询应用_TODO")
 	public Result<?> getApplyByid(@RequestParam(value = "id", required = true) String id) {
+		
 		return consoleOpenApplyService.getApplyById(id);
 	}
 	
@@ -84,29 +104,23 @@ public class OpenApplyController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/addApply", method = RequestMethod.POST)
-	@ApiOperation("###添加开放应用")
-	public Result<?> addApply(HttpSession session,
-			@RequestBody OpenApplyEntity apply) {
-		Result<?> result = new Result<>();
+	@ApiOperation("添加开放应用")
+	public Result<?> addApply(HttpSession session, @RequestBody OpenApplyEntity apply) {
 		
 		if(StringUtils.isBlank(apply.getApplyName())){
-			result.setErrorMessage("服务名称不能为空!");
-			return result;
+			return new Result<String>("服务名称不能为空!",ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
-		
 		if(StringUtils.isBlank(apply.getApplyKey())){
-			result.setErrorMessage("服务key不能为空!");
-			return result;
+			return new Result<String>("服务key不能为空!",ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-		return	result = consoleOpenApplyService.addApply(user, apply);
+		return	consoleOpenApplyService.addApply(user, apply);
 		
 	}
 	
 	@RequestMapping(value="/checkApplyName",method=RequestMethod.GET)
-	@ApiOperation("###校验应用名称")
-	public Result<?> checkApplyName(
-			@RequestParam(required=true) String applyName){
+	@ApiOperation("校验应用名称")
+	public Result<?> checkApplyName(@RequestParam(required=true) String applyName){
 		
 		return consoleOpenApplyService.checkApplyName(applyName);
 	}
@@ -115,10 +129,6 @@ public class OpenApplyController {
 	 * 
 	 * @Title: modifyApply
 	 * @Description: 修改应用
-	 * @param : @param openApply
-	 * @param : @return
-	 * @return: Result<?>
-	 * @throws
 	 */
 	@RequestMapping(value = "/modifyApply", method = RequestMethod.PUT)
 	@ApiOperation("修改api")
@@ -133,9 +143,10 @@ public class OpenApplyController {
 	 * @Description: 提交审核
 	 */
 	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
-	@ApiOperation("批量提交")
-	public Result<?> submitVerify(@RequestParam(value = "ids", required = true) String ids) {
-		return consoleOpenApplyService.submitVerify(ids,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
+	@ApiOperation("批量提交_TODO")
+//	public Result<?> submitVerify(@RequestParam(required = true) String ids) {
+	public Result<?> submitVerify(@RequestParam(value = "id", required = true) String id) {
+		return consoleOpenApplyService.submitVerify(id,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
 	}
 	
 }

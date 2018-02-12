@@ -40,26 +40,27 @@
 		<result column="diy_apply_id" property="diyApplyId" />
 		<result column="open_apply_id" property="openApplyId" />
 		<result column="api_id" property="apiId" />
+		<result column="bound_open_id" property = "boundOpenId"/>
 	</resultMap>
 	
 	<sql id="diyCondition">
 		<where>
-			<if test="applyId!= null">
+			<if test="applyId!= null and applyId != ''">
 				AND apply_id = #{applyId}
 			</if>
-			<if test="appId!= null">
+			<if test="appId!= null and appId != ''">
 				AND app_id = #{appId}
 			</if>
-			<if test="applyName!= null">
-				AND apply_name = #{applyName}
+			<if test="applyName!= null and applyName != ''">
+				AND apply_name like concat(concat("%",#{applyName}),"%")
 			</if>
-			<if test="productName!= null">
+			<if test="productName!= null and productName != ''">
 				AND product_name = #{productName}
 			</if>
-			<if test="userId!= null">
+			<if test="userId!= null and userId != ''">
 				AND user_id = #{userId}
 			</if>
-			<if test="userName!= null">
+			<if test="userName!= null and userName != ''">
 				AND user_name=#{userName}
 			</if>
 			<if test="checkState!= null">
@@ -89,9 +90,9 @@
 	
 	<insert id="saveBoundApi">
 		INSERT INTO diy_bound_api
-			(bound_id,diy_apply_id,open_apply_id,api_id)
+			(bound_id,diy_apply_id,open_apply_id,api_id,bound_open_id)
 		VALUES
-			(#{boundId},#{diyApplyId},#{openApplyId},#{apiId})
+			(#{boundId},#{diyApplyId},#{openApplyId},#{apiId},#{boundOpenId})
 	</insert>
 	
 	<select id="findListSize" parameterType="cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity"
@@ -104,6 +105,7 @@
 		resultMap="diyApplyMap">
 		select * from diy_apply
 		<include refid="diyCondition" />
+		order by create_time desc
 		limit #{startNum},#{pageSize}
 	</select>
 	
@@ -122,12 +124,11 @@
 	<update id="update" parameterType="cn.ce.platform_service.diyApply.entity.DiyApplyEntity">
 		update diy_apply
 		<set>
-			<if test="applyName != null">apply_name=#{applyName}, </if>
-			<!-- <if test="productName != null">product_name=#{productName}, </if> -->
-			<if test="domainUrl != null">domain_url=#{domainUrl}, </if>
+			<if test="applyName != null and applyName != ''">apply_name=#{applyName}, </if>
+			<if test="domainUrl != null and domainUrl != ''">domain_url=#{domainUrl}, </if>
 			<if test="frequencyType != null">frequency_type=#{frequencyType}, </if>
-			<if test="applyDesc != null">apply_desc=#{applyDesc}, </if>
-			<if test="checkMem">check_mem=#{checkMem}</if>
+			<if test="applyDesc != null and applyDesc != ''">apply_desc=#{applyDesc}, </if>
+			<if test="checkMem and checkMem != ''">check_mem=#{checkMem}</if>
 		</set>
 		where apply_id=#{id}
 	</update>
@@ -135,7 +136,7 @@
 	<update id="bathUpdateCheckState">
 		update diy_apply
 			<set>
-				<if test="checkMem != null">check_mem=#{checkMem},</if>
+				<if test="checkMem != null and checkMem != ''">check_mem=#{checkMem},</if>
 				<if test="checkState != null">check_state=#{checkState}</if>
 			</set>
 		where apply_id in
@@ -154,4 +155,12 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<delete id="deleteAll">
+		delete diy_apply.*,diy_bound_open.*,diy_bound_api.*
+		from 
+			diy_apply 
+			LEFT JOIN diy_bound_open ON diy_apply.apply_id = diy_bound_open.diy_apply_id
+			LEFT JOIN diy_bound_api ON diy_bound_open.bound_id = diy_bound_api.bound_open_id
+	</delete>
 </mapper>

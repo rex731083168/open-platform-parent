@@ -13,12 +13,13 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
-import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
@@ -56,13 +57,14 @@ import net.sf.json.JSONObject;
  *
  */
 @Service("consoleDiyApplyService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
 	
-	@Resource
-	private INewApiDao newApiDao;
+//	@Resource
+//	private INewApiDao newApiDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
 	@Resource
@@ -78,29 +80,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<?> saveApply(DiyApplyEntity entity) {
 		Result<String> result = new Result<>();
 
-		// 构建查询对象
-		// Criteria c = new Criteria();
-		//
-		// if (StringUtils.isNotBlank(entity.getUser().getId())) {
-		// c.and(MongoFiledConstants.BASIC_USERID).is(entity.getUser().getId());
-		// }
-		//
-		// if (StringUtils.isNotBlank(entity.getApplyName())) {
-		// c.and(MongoFiledConstants.DIY_APPLY_APPLYNAME).is(entity.getApplyName());
-		// }
-		//
-		// // 修改时排除当前修改应用
-		// if (StringUtils.isNotBlank(entity.getId())) {
-		// c.and(MongoFiledConstants.BASIC_ID).ne(entity.getId());
-		// }
-		//
-		// Query query = new Query(c).with(new Sort(Direction.DESC,
-		// MongoFiledConstants.BASIC_CREATEDATE));
-
-		// List<DiyApplyEntity> findPageByList =
-		// diyApplyDao.findListByQuery(query);
-		
-		//List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(entity);
 		int applyNum = mysqlDiyApplyDao.checkApplyName(entity.getUser().getId(),entity.getApplyName());
 		
 //		if (null != findPageByList && findPageByList.size() > 0) {
@@ -252,27 +231,24 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setId(RandomUtil.random32UUID());
 			mysqlDiyApplyDao.save(entity);
 			_LOGGER.info("****************将绑定关系保存到mysql其它表中****************");
-			//Map<String, List<String>> map = new HashMap<String, List<String>>();
 			int i = 1;
 			for (String appId : appIdList) {
-//				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
 				List<NewApiEntity> apiList = mysqlApiDao.findByOpenApply(appId);
 				List<String> apiIds = new ArrayList<String>();
-				for (NewApiEntity apiEntity : apiList) {
-					// version2.1改为只有api类型为开放的才绑定
-					if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
-							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
-						apiIds.add(apiEntity.getId());
-						mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID(), entity.getId(), appId, apiEntity.getId());
+				if (apiIds.size() > 0) {
+					String boundOpenId = RandomUtil.random32UUID();
+					mysqlDiyApplyDao.saveBoundOpenApply(boundOpenId, entity.getId(), appId);
+					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api是：" + apiIds);
+					for (NewApiEntity apiEntity : apiList) {
+						// version2.1改为只有api类型为开放的才绑定
+						if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
+								&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
+							apiIds.add(apiEntity.getId());
+							mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID(), entity.getId(), appId, apiEntity.getId(),boundOpenId);
+						}
 					}
 				}
-				if (apiIds.size() > 0) {
-//					map.put(appId, apiIds);
-					mysqlDiyApplyDao.saveBoundOpenApply(RandomUtil.random32UUID(), entity.getId(), appId);
-					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api是：" + apiIds);
-				}
 			}
-			//entity.setLimitList(map);
 			_LOGGER.info("****************绑定关系实体保存完成****************");
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
@@ -282,27 +258,30 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 		} else {
 			// 修改
-			DiyApplyEntity applyById = diyApplyDao.findById(entity.getId());
+//			DiyApplyEntity applyById = diyApplyDao.findById(entity.getId());
+			DiyApplyEntity applyById = mysqlDiyApplyDao.findById(entity.getId());
 
 			if (null == applyById) {
 				result.setErrorMessage("请求的应用信息不存在!");
 				return result;
 			} else {
 
-				if (StringUtils.isNotBlank(entity.getApplyName())) {
-					applyById.setApplyName(entity.getApplyName());
-				}
-
-				if (StringUtils.isNotBlank(entity.getApplyDesc())) {
-					applyById.setApplyDesc(entity.getApplyDesc());
-				}
 				if (entity.getCheckState().equals(AuditConstants.DIY_APPLY_CHECKED_SUCCESS)) {
 					result.setErrorMessage("应用审核成功,无法修改记录!");
 					return result;
 				}
+				if (StringUtils.isNotBlank(entity.getApplyName())) {
+					applyById.setApplyName(entity.getApplyName());
+				}
+				if (StringUtils.isNotBlank(entity.getApplyDesc())) {
+					applyById.setApplyDesc(entity.getApplyDesc());
+				}
+				if(StringUtils.isNotBlank(entity.getDomainUrl())){
+					applyById.setDomainUrl(entity.getDomainUrl());
+				}
 			}
 
-			_LOGGER.info("update apply begin : " + JSON.toJSONString(applyById));
+			_LOGGER.info("update apply begin : " + applyById);
 			mysqlDiyApplyDao.update(applyById);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("修改成功!");
@@ -384,9 +363,16 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public DiyApplyEntity findById(String applyId) {
+	public Result<DiyApplyEntity> findById(String applyId) {
 //		return diyApplyDao.findById(applyId);
-		return mysqlDiyApplyDao.findById(applyId);
+		Result<DiyApplyEntity> result = new Result<>();
+		DiyApplyEntity findById = mysqlDiyApplyDao.findById(applyId);
+		if (null == findById) {
+			result.setErrorMessage("应用不存在!");
+		} else {
+			result.setSuccessData(findById);
+		}
+		return result;
 	}
 
 	@Override
@@ -403,8 +389,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 					.getUrlReturnObject(replacedurl, InterfaMessageInfoString.class, null);
 
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setData(messageInfo);
-				result.setSuccessMessage("");
+				result.setSuccessData(messageInfo);
 				return result;
 			} else {
 				_LOGGER.error("generatorTenantKey data http getfaile return code :" + messageInfo.getMsg() + " ");
@@ -541,8 +526,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(String ids, int checkState, String checkMem) {
-		// TODO Auto-generated method stub
+	public Result<String> batchUpdateCheckState(String ids, Integer checkState, String checkMem) {
 		Result<String> result = new Result<>();
 		try {
 //			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
@@ -561,17 +545,18 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	@Override
 	public Result<?> migraDiyApply() {
-		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
 		int i = 0;
+		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
+		mysqlDiyApplyDao.deleteAll();
 		for (DiyApplyEntity diyApplyEntity : diyList) {
 			Map<String,List<String>> map = diyApplyEntity.getLimitList();
 			for (String openId : map.keySet()) {
-				mysqlDiyApplyDao.saveBoundOpenApply(RandomUtil.random32UUID()
-						,diyApplyEntity.getId(),openId);
+				String boundId = RandomUtil.random32UUID();
+				mysqlDiyApplyDao.saveBoundOpenApply(boundId,diyApplyEntity.getId(),openId);
 				List<String> apiIds = map.get(openId);
 				for (String apiId : apiIds) {
 					mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID()
-							, diyApplyEntity.getId(), openId, apiId);
+							, diyApplyEntity.getId(), openId, apiId,boundId);
 				}
 			}
 			i+=mysqlDiyApplyDao.save(diyApplyEntity);

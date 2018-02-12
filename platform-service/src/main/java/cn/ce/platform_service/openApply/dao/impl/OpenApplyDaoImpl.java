@@ -147,8 +147,8 @@ public class OpenApplyDaoImpl extends AbstractBaseMongoDao<OpenApplyEntity> impl
 	public Page<OpenApplyEntity> findOpenApplyByEntity(QueryOpenApplyEntity entity, int currentPage, int pageSize) {
 		Criteria c = new Criteria();
 
-		if (StringUtils.isNotBlank(entity.getAppName())) {
-			c.and(MongoFiledConstants.OPEN_APPLY_APPLYNAME).regex(entity.getAppName(),"i");
+		if (StringUtils.isNotBlank(entity.getApplyName())) {
+			c.and(MongoFiledConstants.OPEN_APPLY_APPLYNAME).regex(entity.getApplyName(),"i");
 		}
 
 		if (StringUtils.isNotBlank(entity.getUserName())) {

@@ -32,5 +32,7 @@ public interface IMysqlGwColonyDao {
 
 	List<GatewayColonyEntity> getAll();
 
+	int deleteAll();
+
 
 }

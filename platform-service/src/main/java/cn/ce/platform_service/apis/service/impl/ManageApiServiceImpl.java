@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -20,6 +22,7 @@ import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
+import cn.ce.platform_service.apis.util.ApiTransform;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.DBFieldsConstants;
@@ -38,6 +41,7 @@ import io.netty.handler.codec.http.HttpMethod;
  * @Date : 2017年10月12日
  */
 @Service(value = "manageApiService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ManageApiServiceImpl implements IManageApiService {
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ManageApiServiceImpl.class);
@@ -200,8 +204,9 @@ public class ManageApiServiceImpl implements IManageApiService {
 			wGatewayUrlList.add(gatewayColonyEntity.getwColUrl() + api.getListenPath());// 外网访问地址
 		}
 
-		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject
-				.parseObject(JSON.toJSONString(api));
+//		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject
+//				.parseObject(JSON.toJSONString(api));
+		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(JSON.toJSONString(ApiTransform.transToApi(api)));
 		jsonObject.put("gatewayUrls", gatewayUrlList);
 		jsonObject.put("wGatewayUrls", wGatewayUrlList);
 		result.setSuccessData(jsonObject);

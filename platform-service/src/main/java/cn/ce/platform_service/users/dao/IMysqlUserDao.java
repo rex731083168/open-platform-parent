@@ -42,6 +42,8 @@ public interface IMysqlUserDao {
 
 	List<User> getPagedList(QueryUserEntity userEntity);
 
+	int deleteAll();
+
 //	int checkUserName(@Param("userName")String userName,@Param("userId")String userId);
 //
 //	int checkEmail(@Param("email")String email,@Param("userId")String userId);

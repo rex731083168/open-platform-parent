@@ -18,13 +18,13 @@
 
 	<sql id="listCondition">
 		<where>
-			<if test="guideName != null">
+			<if test="guideName != null and guideName != ''">
 				guide_name like concat(concat("%",#{guideName}),"%")
 			</if>
-			<if test="userName != null">
+			<if test="userName != null and userName != ''">
 				AND user_name = #{userName}
 			</if>
-			<if test="openApplyId != null">
+			<if test="openApplyId != null and openApplyId != ''">
 				AND open_apply_id = #{openApplyId}
 			</if>
 			<if test="checkState != null">
@@ -52,8 +52,8 @@
   	<update id="updateGuide">
   		update api_guide
   		<set>
-  			<if test="guideName != null">guide_name=#{guideName},</if>
-  			<if test="guideDesc != null">guide_desc=#{guideDesc},</if>
+  			<if test="guideName != null and guideName != ''">guide_name=#{guideName},</if>
+  			<if test="guideDesc != null and guideDesc != ''">guide_desc=#{guideDesc},</if>
   			<if test="checkState != null">check_state=#{checkState}</if>
   		</set>
   		where guide_id=#{id}
@@ -66,8 +66,9 @@
 
 	<select id="getList" resultMap="guideMap">
 		select * from api_guide 
-		<include refid="listCondition" />
+		<include refid="listCondition" /> order by create_time desc
 		limit #{startIndex},#{pageSize}
+
 	</select>
 	
 	<delete id="deleteById">
@@ -89,7 +90,7 @@
 			<if test="checkState !=null">
 				check_state=#{checkState},
 			</if>
-			<if test="checkMem !=null">
+			<if test="checkMem !=null and checkMem != ''">
 				check_mem=#{checkMem}
 			</if>
 		</set>
@@ -98,4 +99,8 @@
 			#{item}
 		</foreach>
 	</update>
+	
+	<delete id="deleteAll">
+		delete from api_guide
+	</delete>
   </mapper>

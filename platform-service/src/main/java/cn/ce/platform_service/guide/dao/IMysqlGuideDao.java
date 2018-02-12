@@ -33,5 +33,7 @@ public interface IMysqlGuideDao {
 	//int batchSubmit(@Param("guideIds")List<String> guideIds, @Param("checkState")int checkState);
 
 	int bathUpdateCheckState(@Param("guideIds")List<String> guideIds, @Param("checkState")int checkState, @Param("checkMem")String checkMem);
+
+	int deleteAll();
 	
 }

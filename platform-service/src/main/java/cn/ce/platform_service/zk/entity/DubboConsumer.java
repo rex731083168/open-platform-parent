@@ -24,7 +24,7 @@ public class DubboConsumer {
 
 	private String uri;	//consumer的ip
 	
-	private String nodeId; 
+	private String nodeId; //所属dubbo node
 	
 	public String getId() {
 		return id;

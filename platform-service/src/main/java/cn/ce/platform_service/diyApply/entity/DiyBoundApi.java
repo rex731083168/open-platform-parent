@@ -14,6 +14,8 @@ public class DiyBoundApi {
 	private String openApplyId;
 	
 	private String apiId;
+	
+	private String boundOpenId;
 
 	public String getId() {
 		return id;
@@ -46,5 +48,12 @@ public class DiyBoundApi {
 	public void setApiId(String apiId) {
 		this.apiId = apiId;
 	}
-	
+
+	public String getBoundOpenId() {
+		return boundOpenId;
+	}
+
+	public void setBoundOpenId(String boundOpenId) {
+		this.boundOpenId = boundOpenId;
+	}
 }

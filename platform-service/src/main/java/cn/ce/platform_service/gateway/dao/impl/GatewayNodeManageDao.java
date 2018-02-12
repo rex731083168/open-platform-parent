@@ -83,4 +83,11 @@ public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity
 		
 		return super.find(new Query(c), GatewayNodeEntity.class);
 	}
+
+	@Override
+	public List<GatewayNodeEntity> getAll(String colId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("colId").is(colId));
+		return super.find(query, GatewayNodeEntity.class);
+	}
 }

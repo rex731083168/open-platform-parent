@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
@@ -31,6 +33,7 @@ import cn.ce.platform_service.util.SplitUtil;
  *
  **/
 @Service("consoleGuideService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ConsoleGuideServiceImpl.class);
@@ -123,7 +126,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		Page<GuideEntity> page = new Page<GuideEntity>(
 				entity.getCurrentPage(),guideNum,entity.getPageSize());
 		page.setItems(guideList);
-		result.setData(page);
+		result.setSuccessData(page);
 		return result;
 	}
 
@@ -192,6 +195,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	public Result<String> migraGuide() {
 		
 		List<GuideEntity> list = guideDaoImpl.findAll();
+		mysqlGuideDao.deleteAll();
 		int i = 0;
 		for (GuideEntity guideEntity : list) {
 			i+= mysqlGuideDao.save(guideEntity);

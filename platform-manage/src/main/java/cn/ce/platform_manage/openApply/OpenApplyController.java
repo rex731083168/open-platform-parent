@@ -12,6 +12,7 @@ import cn.ce.platform_manage.base.BaseController;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
@@ -37,20 +38,22 @@ public class OpenApplyController extends BaseController {
 
 	/**
 	 * 
-	 * @param ids
-	 *            jsondemo["1","2","3"]
-	 * @return
+	 * @Title: batchUpdate
+	 * @Description: 批量审核开放应用
+	 * @author: makangwei 
+	 * @date:   2018年2月5日 下午2:41:21 
+	 * @throws
 	 */
+//	@RequestMapping(value = "/batchCommit", method = RequestMethod.POST)
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
-	public Result<String> batchUpdate(@RequestParam(value = "ids", required = true) String ids,
+	@ApiOperation("批量更新_TODO")
+	public Result<?> batchUpdate(@RequestParam(value = "ids", required = true) String ids,
 			@RequestParam(value = "checkState",required = true) Integer checkState, 
 			@RequestParam(value = "checkMem", required = false) String checkMem) {
 		
-		if(checkState == null){
-			checkState = AuditConstants.OPEN_APPLY_CHECKED_SUCCESS;
-		}else if(checkState != AuditConstants.OPEN_APPLY_CHECKED_FAILED && checkState != AuditConstants.OPEN_APPLY_CHECKED_SUCCESS){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("当前审核状态不正确", ErrorCodeNo.SYS023);
+		if(checkState != AuditConstants.OPEN_APPLY_CHECKED_FAILED 
+				&& checkState != AuditConstants.OPEN_APPLY_CHECKED_SUCCESS){
+			return new Result<String>("当前审核状态不正确", ErrorCodeNo.SYS023,null,Status.FAILED);
 		}
 		
 		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
@@ -67,33 +70,32 @@ public class OpenApplyController extends BaseController {
 	 * @return: Result<?>
 	 * @throws
 	 */
-	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
-	@ApiOperation("###获取应用详情")
+//	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
+	@RequestMapping(value = "/getApplyByid", method = RequestMethod.GET)
+	@ApiOperation("获取应用详情_TODO")
 	public Result<OpenApplyEntity> getApplyByid(@RequestParam(value = "id", required = true) String id) {
 		return openApplyService.findById(id);
 	}
 	
 	
-	/***
-	 * 按照条件查询服务分类列表方法
+	/**
 	 * 
-	 * @author lida
-	 * @date 2017年8月8日15:11:11
-	 * @param request
-	 * @param response
-	 * @param appName
-	 *            服务分类名称
-	 * @param checkState
-	 *            服务分类状态
-	 * @param currentPage
-	 *            当前页
-	 * @param pageSize
-	 *            分页数
-	 * @return
+	 * @Title: openApplyList
+	 * @Description: 获取开放应用列表
+	 * @author: makangwei 
+	 * @date:   2018年2月5日 下午2:43:12 
 	 */
 	@RequestMapping(value = "/openApplyList", method = RequestMethod.POST)
+	@ApiOperation("开放应用列表_TODO")
+//	public Result<Page<OpenApplyEntity>> openApplyList(
+//			@RequestBody QueryOpenApplyEntity queryEntity) {
 	public Result<Page<OpenApplyEntity>> openApplyList(
-			@RequestBody QueryOpenApplyEntity queryEntity) {
+			@RequestBody QueryOpenApplyEntity queryEntity,
+			@RequestParam(required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false, defaultValue = "10") int pageSize) {
+		
+		queryEntity.setCurrentPage(currentPage);
+		queryEntity.setPageSize(pageSize);
 		return openApplyService.findOpenApplyList(queryEntity);
 	}
 	

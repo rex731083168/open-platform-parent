@@ -29,4 +29,6 @@ public interface IGatewayManageService {
 	Result<String> deleteGatewayNodeById(String nodeId);
 	
 	Result<String> modifyGatewayNodeById(GatewayNodeEntity nodeEntity);
+
+	Result<?> migraGateway();
 }

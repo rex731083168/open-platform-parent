@@ -22,9 +22,9 @@
  
  	<sql id="openCondition">
  		<where>
- 			<if test="appName != null">apply_name like concat(concat("%",#{appName}),"%")</if>
- 			<if test="userName != null"> AND user_name like concat(concat("%",#{userName}),"%")</if>
- 			<if test="enterpriseName != null"> AND enterprise_name = #{enterpriseName}</if>
+ 			<if test="applyName != null and applyName != ''">apply_name like concat(concat("%",#{applyName}),"%")</if>
+ 			<if test="userName != null and userName != ''"> AND user_name like concat(concat("%",#{userName}),"%")</if>
+ 			<if test="enterpriseName != null and enterpriseName != ''"> AND enterprise_name = #{enterpriseName}</if>
  			<if test="checkState != null"> AND check_state = #{checkState}</if>
  		</where>
  	</sql>
@@ -74,6 +74,7 @@
   		resultMap="openApplyMap">
   		select * from open_apply
   		<include refid="openCondition" />
+  		order by create_time desc
   		limit #{startIndex}, #{pageSize}
   	</select>
   	
@@ -98,11 +99,15 @@
   	<update id="update" parameterType="cn.ce.platform_service.openApply.entity.OpenApplyEntity">
   		update open_apply 
   		<set>
-  			<if test="applyName != null">apply_name = #{applyName},</if>
-  			<if test="applyKey != null">apply_key = #{applyKey},</if>
-  			<if test="applyDesc != null">apply_desc = #{applyDesc},</if>
+  			<if test="applyName != null and applyName != ''">apply_name = #{applyName},</if>
+  			<if test="applyKey != null and applyKey != ''">apply_key = #{applyKey},</if>
+  			<if test="applyDesc != null and applyDesc != ''">apply_desc = #{applyDesc},</if>
   			<if test="checkState != null"> check_state = #{checkState}</if>
   		</set>
   		where apply_id=#{id}
   	</update>
+  	
+  	<delete id="deleteAll">
+  		delete from open_apply
+  	</delete>
   </mapper>

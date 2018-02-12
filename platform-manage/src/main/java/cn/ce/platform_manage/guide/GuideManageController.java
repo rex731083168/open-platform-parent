@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.entity.QueryGuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
@@ -37,15 +36,25 @@ public class GuideManageController {
 	@Resource
 	private IManageGuideService manageGuideService;
 
-	@ApiOperation("###指南列表")
+	@ApiOperation("指南列表_TODO")
 	@RequestMapping(value = "/guideList", method = RequestMethod.POST)
-	public Result<?> guideList(@RequestBody QueryGuideEntity guideEntity) {
+//	public Result<?> guideList(@RequestBody QueryGuideEntity guideEntity) {
+	public Result<?> guideList(String guideName, String creatUserName, String applyId,Integer checkState,
+			@RequestParam(required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		
+		QueryGuideEntity guideEntity = new QueryGuideEntity();
+		guideEntity.setGuideName(guideName);
+		guideEntity.setUserName(creatUserName);
+		guideEntity.setOpenApplyId(applyId);
+		guideEntity.setCheckState(checkState);
+		guideEntity.setCurrentPage(currentPage);
+		guideEntity.setPageSize(pageSize);
 		return manageGuideService.guideList(guideEntity);
 	}
 
-	@ApiOperation("###指南详情")
-	@RequestMapping(value = "/getGuideById", method = RequestMethod.GET)
+	@ApiOperation("指南详情_TODO")
+	@RequestMapping(value = "/getGuideByid", method = RequestMethod.GET)
 	public Result<GuideEntity> getGuideByid(@RequestParam(value = "id", required = true) String id) {
 		return manageGuideService.getByid(id);
 

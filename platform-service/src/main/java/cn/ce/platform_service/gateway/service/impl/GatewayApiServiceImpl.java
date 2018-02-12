@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
@@ -21,6 +23,7 @@ import io.netty.handler.codec.http.HttpMethod;
 * @Date : 2017年8月14日
 */
 @Service("gatewayApiService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class GatewayApiServiceImpl implements IGatewayApiService{
 
 //	@Autowired @Qualifier("diyApplyDao")

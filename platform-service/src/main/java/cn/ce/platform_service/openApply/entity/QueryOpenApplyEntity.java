@@ -4,7 +4,9 @@ import cn.ce.platform_service.util.PageValidateUtil;
 
 public class QueryOpenApplyEntity {
 	
-	private String appName; //applyName
+	private String appName; //做兼容处理的字段，mysql上线后需要去掉，全部使用applyName
+	
+	private String applyName; //applyName
 	
 	private String userName;
 	
@@ -23,7 +25,17 @@ public class QueryOpenApplyEntity {
 	}
 
 	public void setAppName(String appName) {
-		this.appName = appName;
+		// set applyName
+		this.applyName = appName;
+	}
+
+	public String getApplyName() {
+		// return applyName
+		return applyName;
+	}
+
+	public void setApplyName(String applyName) {
+		this.applyName = applyName;
 	}
 
 	public String getUserName() {

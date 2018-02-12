@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -33,6 +35,7 @@ import cn.ce.platform_service.util.Util;
 * @Date : 2017年10月11日
 */
 @Service(value="consoleUserService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ConsoleUserServiceImpl.class);
@@ -338,8 +341,11 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	@Override
 	public Result<String> migraUser() {
+		
+		//删除mysql数据库中的user
 		int i = 0;
 		List<User> userList = newUserDao.findAll();
+		mysqlUserDao.deleteAll();
 		for (User user : userList) {
 			i+=mysqlUserDao.save(user);
 		}

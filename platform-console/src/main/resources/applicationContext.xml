@@ -60,6 +60,10 @@
             <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
+        	<mvc:mapping path="/guideConsole/guide"/>
+        	<bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
         	<mvc:mapping path="/**"/>
         	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
         </mvc:interceptor>

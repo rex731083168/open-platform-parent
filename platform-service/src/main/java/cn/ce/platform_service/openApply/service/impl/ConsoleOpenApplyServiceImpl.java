@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -45,6 +47,7 @@ import cn.ce.platform_service.util.SplitUtil;
  *
  */
 @Service(value = "colsoleOpenApplyService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(ConsoleOpenApplyServiceImpl.class);
@@ -270,7 +273,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		List<OpenApplyEntity> openList = mysqlOpenApplyDao.getPagedList(entity);
 		Page<OpenApplyEntity> page = new Page<OpenApplyEntity>(entity.getCurrentPage(),uNum,entity.getPageSize());
 		page.setItems(openList);
-		result.setData(page);
+		result.setSuccessData(page);
 		return result;
 	}
 
@@ -398,6 +401,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	public Result<?> migraOpenApply() {
 		List<OpenApplyEntity> openApplyList = newOpenApplyDao.findAll();
 		int i = 0;
+		mysqlOpenApplyDao.deleteAll();
 		for (OpenApplyEntity openApplyEntity : openApplyList) {
 			i+=mysqlOpenApplyDao.save(openApplyEntity);
 		}

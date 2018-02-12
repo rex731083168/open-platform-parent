@@ -24,7 +24,7 @@ public class GatewayNodeEntity {
 	@Field("colId")
 	private String colId; //所属集群的id
 	@Field("nodeStatus")
-	private Integer nodeStatus;
+	private Integer nodeStatus; //节点状态：0启用，1禁用
 
 	public String getColId() {
 		return colId;

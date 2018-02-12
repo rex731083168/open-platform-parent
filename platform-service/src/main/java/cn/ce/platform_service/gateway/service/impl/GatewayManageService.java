@@ -8,12 +8,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.gateway.dao.IGatewayColonyManageDao;
+import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
+import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
 import cn.ce.platform_service.gateway.dao.IMysqlGwColonyDao;
 import cn.ce.platform_service.gateway.dao.IMysqlGwNodeDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
@@ -28,14 +34,15 @@ import cn.ce.platform_service.util.RandomUtil;
  * @author makangwei 2017-8-4
  */
 @Service(value = "gatewayManageService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class GatewayManageService implements IGatewayManageService {
 
-	// @Resource
-	// private IGatewayManageDao gatewayManageDao;
-	// @Resource
-	// private IGatewayNodeManageDao gatewayNodeManageDao;
-	// @Resource
-	// private IGatewayColonyManageDao gatewayColonyManageDao;
+	 @Resource
+	 private IGatewayManageDao gatewayManageDao;
+	 @Resource
+	 private IGatewayNodeManageDao gatewayNodeManageDao;
+	 @Resource
+	 private IGatewayColonyManageDao gatewayColonyManageDao;
 	@Resource
 	private IMysqlGwColonyDao gwColonyDao;
 	@Resource
@@ -334,6 +341,29 @@ public class GatewayManageService implements IGatewayManageService {
 		gwNodeDao.update(nodeEntity);
 		result.setSuccessMessage("修该成功");
 		return result;
+	}
+
+	@Override
+	public Result<?> migraGateway() {
+		
+		List<GatewayColonyEntity> colList = gatewayColonyManageDao.findAll();
+		gwColonyDao.deleteAll();
+		gwNodeDao.deleteAll();
+		for (GatewayColonyEntity colEntity : colList) {
+			
+			List<GatewayNodeEntity> nodeList = gatewayNodeManageDao.getAll(colEntity.getColId());
+			
+			colEntity.setColId(RandomUtil.random32UUID());
+			colEntity.setColStatus(0);
+			gwColonyDao.addGatewayCol(colEntity);
+			for (GatewayNodeEntity nodeEntity : nodeList) {
+				nodeEntity.setColId(colEntity.getColId());
+				nodeEntity.setNodeId(RandomUtil.random32UUID());
+				nodeEntity.setNodeStatus(0);
+				gwNodeDao.addGatewayNode(nodeEntity);
+			}
+		}
+		return new Result<String>("",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
+import cn.ce.platform_service.gateway.service.IGatewayManageService;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.service.IConsoleUserService;
@@ -32,6 +33,8 @@ public class DataMigraController {
 	private IConsoleDiyApplyService consoleDiyApplyService;
 	@Resource
 	private IConsoleOpenApplyService consoleOpenApplyService;
+	@Resource
+	private IGatewayManageService gatewayManageService;
 	
 	@RequestMapping(value="/user", method=RequestMethod.GET)
 	public Result<?> migraUser(){
@@ -61,6 +64,12 @@ public class DataMigraController {
 	public Result<?> migraOpenApply(){
 		
 		return consoleOpenApplyService.migraOpenApply();
+	}
+	
+	@RequestMapping(value="/gateway", method=RequestMethod.GET)
+	public Result<?> migraGateway(){
+		
+		return gatewayManageService.migraGateway();
 	}
 	
 }

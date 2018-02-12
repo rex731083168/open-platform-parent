@@ -16,16 +16,16 @@
 
 	<sql id="nodeCondition">
 		<where>
-			<if test="nodeId != null">
+			<if test="nodeId != null and nodeId != ''">
 				node_id=#{nodeId}
 			</if>
-			<if test="nodeName != null">
+			<if test="nodeName != null and nodeName != ''">
 				AND node_name like concat(concat("%",#{nodeName}),"%")
 			</if>
-			<if test="nodeUrl != null">
+			<if test="nodeUrl != null and nodeUrl != ''">
 				AND node_url=#{nodeUrl}
 			</if>
-			<if test="colId != null">
+			<if test="colId != null and colId != ''">
 				AND col_id=#{colId}
 			</if>
 			<if test="nodeStatus != null">
@@ -59,16 +59,16 @@
 		parameterType="cn.ce.platform_service.gateway.entity.GatewayNodeEntity">
 		update gw_node
 		<set>
-			<if test="nodeName!= null">
+			<if test="nodeName!= null and nodeName != ''">
 				node_name=#{nodeName},
 			</if>
-			<if test="nodeUrl != null">
+			<if test="nodeUrl != null and nodeUrl != ''">
 				node_url=#{nodeUrl},
 			</if>
-			<if test="nodeDesc != null">
+			<if test="nodeDesc != null and nodeDesc != ''">
 				node_desc=#{nodeDesc},
 			</if>
-			<if test="colId != null">
+			<if test="colId != null and colId != ''">
 				col_id=#{colId},
 			</if>
 			<if test="nodeStatus != null">
@@ -102,5 +102,8 @@
 	<select id="getAll" resultMap="nodeMap">
 		select * from gw_node
 	</select>
-
+	
+	<delete id="deleteAll">
+		delete from gw_node
+	</delete>
 </mapper>

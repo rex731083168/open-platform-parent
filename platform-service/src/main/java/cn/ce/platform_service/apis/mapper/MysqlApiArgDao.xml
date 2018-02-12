@@ -12,13 +12,14 @@
 		<result column="arg_type" property="argType" />
 		<result column="required" property="required" />
 		<result column="example" property="example" />
+		<result column="arg_desc" property="argDesc" />
 	</resultMap>
 
 	<insert id="save" parameterType="cn.ce.platform_service.apis.entity.ApiArgEntity">
 		INSERT INTO api_arg
-		(arg_id,api_id,arg_name,arg_type,required,example)
+		(arg_id,api_id,arg_name,arg_type,required,example,arg_desc)
 		VALUES
-		(#{id},#{apiId},#{argName},#{argType},#{required},#{example})
+		(#{id},#{apiId},#{argName},#{argType},#{required},#{example},#{argDesc})
 	</insert>
 
 	<select id="findByApiId" resultMap="apiArgMap">

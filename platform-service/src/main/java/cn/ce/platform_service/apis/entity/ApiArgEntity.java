@@ -13,6 +13,8 @@ public class ApiArgEntity {
 	private String argType;
 	private boolean required; 
 	private String example;
+	private String argDesc;
+	
 	public String getId() {
 		return id;
 	}
@@ -49,13 +51,16 @@ public class ApiArgEntity {
 	public void setExample(String example) {
 		this.example = example;
 	}
+	public String getArgDesc() {
+		return argDesc;
+	}
+	public void setArgDesc(String argDesc) {
+		this.argDesc = argDesc;
+	}
+	
 	@Override
 	public String toString() {
 		return "ApiArgEntity [id=" + id + ", apiId=" + apiId + ", argName=" + argName + ", argType=" + argType
-				+ ", required=" + required + ", example=" + example + ", getId()=" + getId() + ", getApiId()="
-				+ getApiId() + ", getArgName()=" + getArgName() + ", getArgType()=" + getArgType() + ", isRequired()="
-				+ isRequired() + ", getExample()=" + getExample() + ", getClass()=" + getClass() + ", hashCode()="
-				+ hashCode() + ", toString()=" + super.toString() + "]";
+				+ ", required=" + required + ", example=" + example + ", argDesc=" + argDesc + "]";
 	}
-	
 }

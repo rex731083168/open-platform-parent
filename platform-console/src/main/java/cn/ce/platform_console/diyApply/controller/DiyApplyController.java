@@ -1,5 +1,7 @@
 package cn.ce.platform_console.diyApply.controller;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,11 +20,11 @@ import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.CoverBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -47,60 +49,67 @@ public class DiyApplyController {
 	private IConsoleDiyApplyService consoleDiyApplyService;
 
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
-	@ApiOperation(value = "###根据条件查询应用列表", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
-	public Result<?> findApplyList(HttpSession session,
-			@RequestBody QueryDiyApplyEntity queryApply) {
-
+	@ApiOperation(value = "根据条件查询应用列表_TODO", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
+//	public Result<?> findApplyList(HttpSession session,
+//			@RequestBody QueryDiyApplyEntity queryApply) {
+	public Result<?> findApplyList(HttpSession session, @RequestBody DiyApplyEntity apply,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,
+			@RequestParam(required = false, defaultValue = "1") int currentPage) {
+		
+		QueryDiyApplyEntity queryApply = new QueryDiyApplyEntity();
+		try {
+			CoverBeanUtils.copyProperties(queryApply, apply);
+		} catch (IllegalAccessException | InvocationTargetException e1) {
+			e1.printStackTrace();
+			return new Result<String>("类转化异常",ErrorCodeNo.SYS004,null,Status.FAILED);
+		}
+		queryApply.setApplyId(apply.getId());
+		queryApply.setCurrentPage(currentPage);
+		queryApply.setPageSize(pageSize);
 		
 		//只获取当前登录的用户数据,如果获取数据失败就会报异常
+		// TODO 20180205 mkw 这里的 try catch 可以去掉 因为前置的登录拦截器已经判断是否session中有用户数据了
 		User user = null;
 		try{
 			user = (User)session.getAttribute(Constants.SES_LOGIN_USER);
 		}catch(Exception e){
 			_LOGGER.error("session已经过期");
-			return Result.errorResult("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
+			return new Result<String>("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
 		}
-		
 		queryApply.setUserId(user.getId());
-		Result<Page<DiyApplyEntity>> result = consoleDiyApplyService.findApplyList(queryApply);
 		
-		return result;
+		return consoleDiyApplyService.findApplyList(queryApply);
 	}
 
 	@RequestMapping(value = "/deleteApplyByid", method = RequestMethod.DELETE)
-	@ApiOperation("根据标识删除应用")
-	public Result<String> deleteApplyByid(HttpServletResponse response,
+	@ApiOperation("根据标识删除应用_TODO")
+	public Result<?> deleteApplyByid(HttpServletResponse response,
 			@RequestParam(value = "id", required = true) String id) {
 
-		Result<String> result = new Result<>();
+		return consoleDiyApplyService.deleteApplyByid(id);
 
-		result = consoleDiyApplyService.deleteApplyByid(id);
-
-		return result;
 	}
 
 	@RequestMapping(value = "/getApplyById", method = RequestMethod.GET)
-	@ApiOperation("###根据应用标识查询应用")
-	public Result<DiyApplyEntity> getApplyById(@RequestParam(value = "applyId", required = true) String applyId) {
-		Result<DiyApplyEntity> result = new Result<>();
-		DiyApplyEntity findById = consoleDiyApplyService.findById(applyId);
-		if (null == findById) {
-			result.setErrorMessage("应用不存在!");
-		} else {
-			result.setSuccessData(findById);
-		}
-		return result;
+	@ApiOperation("根据应用标识查询应用")
+	public Result<?> getApplyById(@RequestParam(required = true) String applyId) {
+
+		return consoleDiyApplyService.findById(applyId);
 	}
 
+	/**
+	 * 
+	 * @Title: saveApply
+	 * @Description: 做兼容处理，如果包含id支持update
+	 * @author: makangwei
+	 * @date:   2018年2月8日 下午7:29:09  
+	 */
 	@RequestMapping(value = "/saveApply", method = RequestMethod.POST)
-	@ApiOperation("@@@新增应用")
+	@ApiOperation("新增或修改应用")
 	public Result<?> saveApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
-		Result<String> result = new Result<>();
-
 		if (StringUtils.isBlank(apply.getApplyName())) {
-			result.setErrorMessage("应用名称不能为空!");
-			return result;
+			return new Result<String>("应用名称不能为空!",ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
 
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
@@ -112,16 +121,18 @@ public class DiyApplyController {
 	}
 
 	@RequestMapping(value = "/updateApply", method = RequestMethod.POST)
-	@ApiOperation("###修改应用，不能修改产品密钥")
+	@ApiOperation("修改应用，不能修改产品密钥")
 	public Result<?> updateApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
 		return consoleDiyApplyService.updateApply(apply);
 	}
 
-	@ApiOperation("批量发布应用 更改checkState为1")
+//	@RequestMapping(value = "/batchCommit", method = RequestMethod.POST)
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
+	@ApiOperation("批量发布应用 更改checkState为1_TODO")
 	public Result<String> batchUpdate(@RequestParam String ids) {
-		return consoleDiyApplyService.batchUpdate(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
+		
+		return consoleDiyApplyService.batchUpdateCheckState(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
 	}
 
 }

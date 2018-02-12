@@ -12,6 +12,7 @@ public class ApiResultEntity {
 	private String retName;
 	private String retType;
 	private String example;
+	private String desc;
 	public String getId() {
 		return id;
 	}
@@ -42,10 +43,16 @@ public class ApiResultEntity {
 	public void setExample(String example) {
 		this.example = example;
 	}
+	public String getDesc() {
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 	@Override
 	public String toString() {
 		return "ApiResultEntity [id=" + id + ", apiId=" + apiId + ", retName=" + retName + ", retType=" + retType
-				+ ", example=" + example + "]";
+				+ ", example=" + example + ", desc=" + desc + "]";
 	}
 
 }

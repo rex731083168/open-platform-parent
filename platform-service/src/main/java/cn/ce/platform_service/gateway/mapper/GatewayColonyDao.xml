@@ -17,19 +17,19 @@
 
 	<sql id="colCondition">
 		<where>
-			<if test="colId != null">
+			<if test="colId != null and colId != ''">
 				col_id=#{colId}
 			</if>
-			<if test="colName != null">
+			<if test="colName != null and colName != ''">
 				AND col_name like concat(concat("%",#{colName}),"%")
 			</if>
-			<if test="colUrl != null">
+			<if test="colUrl != null and colUrl != ''">
 				AND col_url = #{colUrl}
 			</if>
-			<if test="wColUrl != null">
+			<if test="wColUrl != null and wColUrl != ''">
 				AND w_col_url = #{wColUrl}
 			</if>
-			<if test="colStatus != null">
+			<if test="colStatus != null and colStatus != ''">
 				AND col_status = #{colStatus}
 			</if>
 		</where>
@@ -60,19 +60,19 @@
 		parameterType="cn.ce.platform_service.gateway.entity.GatewayColonyEntity">
 		update gw_colony
 		<set>
-			<if test="colName!= null">
+			<if test="colName!= null and colName != ''">
 				col_name=#{colName},
 			</if>
-			<if test="colUrl != null">
+			<if test="colUrl != null and colUrl != ''">
 				col_url=#{colUrl},
 			</if>
-			<if test="wColUrl != null">
+			<if test="wColUrl != null and wColUrl != ''">
 				w_col_url=#{wColUrl},
 			</if>
 			<if test="colStatus != null">
 				col_status=#{colStatus},
 			</if>
-			<if test="colDesc != null">
+			<if test="colDesc != null and colDesc != ''">
 				col_desc=#{colDesc}
 			</if>
 		</set>
@@ -100,4 +100,7 @@
 		select * from gw_colony
 	</select>
 	
+	<delete id="deleteAll">
+		delete from gw_colony
+	</delete>
 </mapper>

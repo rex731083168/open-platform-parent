@@ -33,4 +33,6 @@ public interface IMysqlGwNodeDao {
 	List<GatewayNodeEntity> findByColId(String colId);
 
 	List<GatewayNodeEntity> getAll();
+
+	int deleteAll();
 }

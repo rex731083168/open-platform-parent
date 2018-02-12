@@ -26,7 +26,7 @@ public interface IMysqlApiDao {
 
 	public NewApiEntity findById(String apiId);
 
-	public int findCountByListenPath(String listenPath);
+	public int checkListenPath(String listenPath);
 
 	public int saveOrUpdateEntity(NewApiEntity apiEntity);
 
@@ -52,6 +52,8 @@ public interface IMysqlApiDao {
 	
 	public int checkVersion(@Param("versionId")String versionId, @Param("version")String version);
 
+	public int checkId(String id);
+	
 	public List<NewApiEntity> findByOpenApply(String openApplyId);
 
 	public int findByIdsAndNameLikeNum(@Param("apiIds")List<String> apiIds, @Param("apiName")String apiName, 
@@ -73,5 +75,9 @@ public interface IMysqlApiDao {
 	public List<NewApiEntity> findTotalOnesByIdsAndCheckState(@Param("apiIds")List<String> apiIds, @Param("checkState")Integer checkState);
 
 	public int deleteTotalOnesByIds(List<String> apiIds);
+
+	public int clearAll();
+
+
 
 }

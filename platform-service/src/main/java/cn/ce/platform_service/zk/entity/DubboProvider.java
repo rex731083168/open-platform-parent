@@ -42,7 +42,7 @@ public class DubboProvider {
 	
 	private String uri;	//服务地址
 	
-	private String nodeId;
+	private String nodeId;//所属dubbo node
 
 	public String getId() {
 		return id;

@@ -137,4 +137,8 @@
   		<include refid="userCondition" />
   		limit #{startNum},#{pageSize}
   	</select>
+  	
+  	<delete id="deleteAll">
+  		delete from user
+  	</delete>
   </mapper>

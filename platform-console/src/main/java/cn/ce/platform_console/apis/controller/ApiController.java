@@ -3,8 +3,6 @@ package cn.ce.platform_console.apis.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
+import cn.ce.platform_service.apis.util.ApiTransform;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.DBFieldsConstants;
@@ -34,7 +34,6 @@ import io.swagger.annotations.ApiOperation;
  * @author: makangwei
  * @date:   2017年10月10日 下午8:15:17   
  * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
- *
  */
 @RestController
 @RequestMapping("/api")
@@ -53,10 +52,16 @@ public class ApiController {
 	 * @date:   2017年10月10日 下午8:17:41  
 	 */
 	@RequestMapping(value = "/publishApi", method = RequestMethod.POST)
-	@ApiOperation("###发布api")
-	public Result<?> publishApi(HttpSession session, @RequestBody NewApiEntity apiEntity) {
-			
+	@ApiOperation("发布api_TODO")
+//	public Result<?> publishApi(HttpSession session, @RequestBody NewApiEntity apiEntity) {
+	public Result<?> publishApi(HttpSession session, @RequestBody ApiEntity entity) {
+	
+		/**
+		 * TODO 下一期改动api定义和api参数
+		 */
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
+		
+		NewApiEntity apiEntity = ApiTransform.transToTotalNewApi(entity);
 		
 		_LOGGER.info("publish api Entity:"+apiEntity.toString());
 		
@@ -78,23 +83,22 @@ public class ApiController {
 		}		
 		
 		return consoleApiService.publishApi(user, apiEntity);
-		
 	}
-	
+
 	@RequestMapping(value="/checkListenPath", method= RequestMethod.GET)
 	@ApiOperation("校验listenPath")
-	public Result<?> checkListenPath(String listenPath){
+	public Result<?> checkListenPath(@RequestParam(required=true)String listenPath){
 		
 		if(StringUtils.isBlank(listenPath)){
-			return Result.errorResult("listenPath不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
+			return new Result<String>("listenPath不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
 		}
-		
+		if(listenPath.endsWith("?")){
+			return new Result<String>("listenPath不能以问号结尾", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
 		if(!listenPath.startsWith("/")){
 			listenPath = "/"+listenPath;
 		}
-		if(listenPath.endsWith("?")){
-			return Result.errorResult("listenPath不能以问号结尾",ErrorCodeNo.SYS005, null, Status.FAILED); 
-		}
+		
 		return consoleApiService.checkListenPath(listenPath);
 	}
 	
@@ -105,10 +109,11 @@ public class ApiController {
 	 * @date:   2017年10月12日 上午11:23:58  
 	 */
 	@RequestMapping(value = "/submitApi", method = RequestMethod.POST)
-	public Result<?> submitApi(@RequestParam String apiIds) {
+	@ApiOperation("提供者提交审核")
+	public Result<?> submitApi(@RequestParam(required=true)String apiIds) {
 
 		_LOGGER.info("多个api提交审核："+apiIds);
-		// DOTO 多个参数将参数用逗号隔开传入
+		
 		List<String> apiId = SplitUtil.splitStringWithComma(apiIds);
 		
 		return consoleApiService.submitApi(apiId);
@@ -120,8 +125,11 @@ public class ApiController {
 	 * @date:   2017年10月10日 下午8:19:15  
 	 */
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
-	@ApiOperation("###api更新")
-	public Result<?> modifyApi(@RequestBody NewApiEntity apiEntity){
+	@ApiOperation("api更新_TODO")
+//	public Result<?> modifyApi(@RequestBody NewApiEntity apiEntity){
+	public Result<?> modifyApi(@RequestBody ApiEntity entity){
+		
+		NewApiEntity apiEntity = ApiTransform.transToTotalNewApi(entity);
 		
 		if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){	
 			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
@@ -136,8 +144,8 @@ public class ApiController {
 	 * @date:   2017年10月12日 下午1:17:55  
 	 */
 	@RequestMapping(value = "/showApi", method = RequestMethod.POST)
-	@ApiOperation("###显示完整的api详情")
-	public Result<?> showApi(String apiId) {
+	@ApiOperation("显示完整的api详情_TODO")
+	public Result<?> showApi(@RequestParam(required=true)String apiId) {
 		_LOGGER.info("显示当前api："+apiId);
 		return consoleApiService.showApi(apiId);
 	}
@@ -148,10 +156,16 @@ public class ApiController {
 	 * @date:   2017年10月12日 下午1:42:41  
 	 */
 	@RequestMapping(value="/showApiList",method=RequestMethod.POST)
-	@ApiOperation("###api列表")
+	@ApiOperation("api列表_TODO")
+//	public Result<?> showApiList(@RequestBody QueryApiEntity apiEntity){
 	public Result<?> showApiList(
 			HttpSession session,
-			@RequestBody QueryApiEntity apiEntity){
+			@RequestBody QueryApiEntity apiEntity,
+			@RequestParam(required=false,defaultValue= "1") int currentPage, 
+			@RequestParam(required=false,defaultValue= "10")int pageSize){
+		
+		apiEntity.setCurrentPage(currentPage);
+		apiEntity.setPageSize(pageSize);
 		
 		if(apiEntity.getUserType() != null && 
 				apiEntity.getUserType() == AuditConstants.USER_PROVIDER){
@@ -176,12 +190,17 @@ public class ApiController {
 	 * @date:   2017年11月14日 下午2:14:13  
 	 */
 	@RequestMapping(value="/showDocApiList",method=RequestMethod.POST)
-	@ApiOperation("###api文档中心列表")
+	@ApiOperation("api文档中心列表_TODO")
+//	public Result<?> showDocApiList(@RequestBody QueryApiEntity apiEntity){
 	public Result<?> showDocApiList(
 			HttpSession session,
-			@RequestBody QueryApiEntity apiEntity){
-		
+			@RequestBody QueryApiEntity apiEntity,
+			@RequestParam(required=false,defaultValue= "1") int currentPage, 
+			@RequestParam(required=false,defaultValue= "10")int pageSize){		
 
+		apiEntity.setCurrentPage(currentPage);
+		apiEntity.setPageSize(pageSize);
+		
 		apiEntity.setUserId(null);
 		apiEntity.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
 		apiEntity.setApiType(DBFieldsConstants.API_TYPE_OPEN);
@@ -194,42 +213,41 @@ public class ApiController {
 	
 	/**
 	 * 
-	 * @Title: checkApiEnName
-	 * @Description: apiEnName在当前开放应用不能重复
+	 * @Title: checkApiChName
+	 * @Description: 校验api中文名称，当前开放应用内不重复
 	 * @author: makangwei
-	 * @date:   2018年1月24日 上午11:19:01  
+	 * @date:   2018年2月5日 上午11:24:18  
 	 */
-//	@RequestMapping(value="/checkApiEnName",method=RequestMethod.GET)
-//	public Result<?> checkApiEnName(HttpServletRequest request,HttpServletResponse response,
-//			String appId,
-//			String apiEnName){
-//		
-//		return consoleApiService.checkApiEnName(apiEnName,appId);
-//	}
-	
-	@RequestMapping(value="/checkApiChName",method=RequestMethod.POST)
-	public Result<?> checkApiChName(HttpServletRequest request,HttpServletResponse response,
-			@RequestParam String appId,
+	@RequestMapping(value="/checkApiChName", method=RequestMethod.POST)
+	public Result<?> checkApiChName(@RequestParam String appId,
 			@RequestParam String apiChName){
 		
 		return consoleApiService.checkApiChName(apiChName,appId);
 	}
 	
-	@RequestMapping(value="/checkVersion",method=RequestMethod.GET,produces="application/json;charset=utf-8")
+	/**
+	 * 
+	 * @Title: checkVersion
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author: makangwei
+	 * @date:   2018年2月5日 上午11:25:29  
+	 */
+	@RequestMapping(value="/checkVersion", method=RequestMethod.GET)
+	@ApiOperation("校验版本号")
 	public Result<?> checkVersion(String versionId, String version){
 		
 		if(StringUtils.isBlank(versionId)){
-			return Result.errorResult("apiId不能为空", ErrorCodeNo.SYS005, null, null);
+			return new Result<String>("apiId不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
 		}if(StringUtils.isBlank(version)){
-			return Result.errorResult("version不能为空", ErrorCodeNo.SYS005, null, null);
+			return new Result<String>("version不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
 		}
 		
 		return consoleApiService.checkVersion(versionId,version);
 	}
 	
-	@RequestMapping(value="/getResourceType",method=RequestMethod.GET,produces="application/json;charset=utf-8")
+	@RequestMapping(value="/getResourceType", method=RequestMethod.GET)
 	public Result<?> getResourceType(){
+		
 		return consoleApiService.getResourceType();
 	}
-	
 }

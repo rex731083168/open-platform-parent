@@ -1,5 +1,6 @@
 package cn.ce.platform_service.diyApply.entity;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -349,7 +350,19 @@ public class DiyApplyEntity {
 	public void setResourceType(String resourceType) {
 		this.resourceType = resourceType;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "DiyApplyEntity [id=" + id + ", appId=" + appId + ", applyName=" + applyName + ", productAuthCode="
+				+ productAuthCode + ", productInstanceId=" + productInstanceId + ", bossProductInstance="
+				+ bossProductInstance + ", productName=" + productName + ", domainUrl=" + domainUrl + ", frequencyType="
+				+ frequencyType + ", rate=" + rate + ", per=" + per + ", quotaMax=" + quotaMax + ", quotaRenewRate="
+				+ quotaRenewRate + ", policyId=" + policyId + ", clientId=" + clientId + ", secret=" + secret
+				+ ", logoImage=" + Arrays.toString(logoImage) + ", applyDesc=" + applyDesc + ", createDate="
+				+ createDate + ", userId=" + userId + ", userName=" + userName + ", enterpriseName=" + enterpriseName
+				+ ", limitList=" + limitList + ", checkState=" + checkState + ", checkMem=" + checkMem
+				+ ", resourceType=" + resourceType + ", user=" + user + "]";
+	}
 	
 
 }

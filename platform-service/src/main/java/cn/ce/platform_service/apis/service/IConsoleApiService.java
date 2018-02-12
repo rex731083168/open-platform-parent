@@ -44,7 +44,7 @@ public interface IConsoleApiService {
 
 	Result<?> getResourceType();
 
-	Result<String> migraApi();
+	Result<?> migraApi();
 
 	
 }
