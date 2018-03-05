@@ -125,6 +125,12 @@ public class OpenApplyController {
 		return consoleOpenApplyService.checkApplyName(applyName);
 	}
 	
+	@RequestMapping(value="checkApplyKey",method=RequestMethod.GET)
+	@ApiOperation("校验应用key")
+	public Result<?> checkApplyKey(@RequestParam(required=true) String applyKey){
+		
+		return consoleOpenApplyService.checkApplyKey(applyKey);
+	}
 	/***
 	 * 
 	 * @Title: modifyApply
