@@ -90,5 +90,7 @@ public interface IConsoleOpenApplyService {
 
 	public Result<?> checkApplyName(String applyName);
 
+	public Result<?> checkApplyKey(String applyKey);
+
 	public Result<?> migraOpenApply();
 }

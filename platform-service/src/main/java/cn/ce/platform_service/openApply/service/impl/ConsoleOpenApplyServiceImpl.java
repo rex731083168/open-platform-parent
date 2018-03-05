@@ -179,54 +179,15 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		if (null == apply) {
 
 			result.setErrorMessage("当前开放应用不存在", ErrorCodeNo.SYS006);
-		} else if (AuditConstants.OPEN_APPLY_CHECKED_COMMITED == apply.getCheckState()
-				|| AuditConstants.OPEN_APPLY_CHECKED_SUCCESS == apply.getCheckState()) {
+		} else if (null == openApply.getCheckState()) {
+			
+			openApply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED);
+		} else if (AuditConstants.OPEN_APPLY_CHECKED_SUCCESS == apply.getCheckState()) {
 
 			result.setErrorMessage("当前状态不支持修改", ErrorCodeNo.SYS023);
 			return result;
-		} else if (null == openApply.getCheckState()) {
-
-			openApply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED);
-		} else if (AuditConstants.OPEN_APPLY_UNCHECKED != openApply.getCheckState()
-				|| AuditConstants.OPEN_APPLY_UNCHECKED != openApply.getCheckState()) {
-
-			result.setErrorMessage("不支持修改的状态", ErrorCodeNo.SYS012);
-			return result;
 		}
 
-		// Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
-		//
-		// List<OpenApplyEntity> entityList;
-		//
-		// if (StringUtils.isNotBlank(openApply.getApplyKey())) {
-		// whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYKEY,
-		// new MongoDBWhereEntity(openApply.getApplyKey(), ConditionEnum.EQ));
-		// whereEntity.put(MongoFiledConstants.OPEN_APPLY_ID,
-		// new MongoDBWhereEntity(openApply.getId(), ConditionEnum.NEQ));
-		// }
-		//
-		// entityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
-		//
-		// if (entityList != null && entityList.size() > 0) {
-		// result.setErrorMessage("应用key已存在!", ErrorCodeNo.SYS009);
-		// return result;
-		// }
-		//
-		// whereEntity.clear();
-		//
-		// if (StringUtils.isNotBlank(openApply.getApplyName())) {
-		// whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME,
-		// new MongoDBWhereEntity(openApply.getApplyName(), ConditionEnum.EQ));
-		// whereEntity.put(MongoFiledConstants.OPEN_APPLY_ID,
-		// new MongoDBWhereEntity(openApply.getId(), ConditionEnum.NEQ));
-		// }
-		//
-		// entityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
-		//
-		// if (entityList != null && entityList.size() > 0) {
-		// result.setErrorMessage("应用名称已存在!", ErrorCodeNo.SYS009);
-		// return result;
-		// }
 		int cNum = mysqlOpenApplyDao.checkApplyNameById(openApply.getApplyName(), openApply.getId());
 		if (cNum > 0) {
 			result.setErrorMessage("应用名称已存在!", ErrorCodeNo.SYS009);
@@ -369,6 +330,17 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		return Result.errorResult("可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
 	}
 
+	@Override
+	public Result<?> checkApplyKey(String applyKey) {
+
+		int aNum = mysqlOpenApplyDao.checkApplyKey(applyKey);
+		if(aNum > 0){
+			return Result.errorResult("当前应用key已经存在！", ErrorCodeNo.SYS009, null, Status.FAILED);
+		}
+		
+		return Result.errorResult("当前key可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+	}
+	
 	public boolean getRepatDiyApplyName(String applyName) {
 
 		boolean falult = false;
