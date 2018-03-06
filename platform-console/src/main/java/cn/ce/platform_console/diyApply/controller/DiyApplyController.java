@@ -108,6 +108,11 @@ public class DiyApplyController {
 	@ApiOperation("新增或修改应用")
 	public Result<?> saveApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
 
+		//如果id不为空就update
+		if(StringUtils.isNotBlank(apply.getId())){
+			return consoleDiyApplyService.updateApply(apply);
+		}
+		
 		if (StringUtils.isBlank(apply.getApplyName())) {
 			return new Result<String>("应用名称不能为空!",ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
