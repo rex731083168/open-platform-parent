@@ -252,7 +252,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.info("****************绑定关系实体保存完成****************");
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
-//			diyApplyDao.saveOrUpdate(entity);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("新增成功!");
 

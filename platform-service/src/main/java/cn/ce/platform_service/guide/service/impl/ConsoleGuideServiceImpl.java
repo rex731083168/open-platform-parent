@@ -120,7 +120,6 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		// TODO Auto-generated method stub
 		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
 
-		//result.setSuccessData(guideDaoImpl.listPage2(entity, currentPage, pageSize));
 		int guideNum = mysqlGuideDao.findTotalNum(entity);
 		List<GuideEntity> guideList = mysqlGuideDao.getList(entity);
 		Page<GuideEntity> page = new Page<GuideEntity>(

@@ -500,4 +500,12 @@
 			LEFT JOIN api_result_example re ON ad.api_id = re.api_id
 			LEFT JOIN api_code ac ON ad.api_id = ac.api_id
 	</delete>
+	
+	<select id="findApiByApplyIdsAndCheckState" resultMap="apiMap">
+		select * from api_detail where check_state = #{checkState} AND
+		open_apply_id in
+			<foreach collection="openApplyIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+	</select>
 </mapper>
