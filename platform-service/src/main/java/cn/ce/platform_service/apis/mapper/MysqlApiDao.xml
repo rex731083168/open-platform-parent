@@ -445,7 +445,7 @@
 			ag.arg_type as ag_arg_type,
 			ag.required as ag_required,
 			ag.example as ag_example,
-			ag.arg_desc as ag_arg_desc
+			ag.arg_desc as ag_arg_desc,
 			ru.result_id as ru_result_id,
 			ru.api_id as ru_api_id,
 			ru.ret_name as ru_ret_name,

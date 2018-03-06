@@ -310,7 +310,16 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
 				return result;
 			}
-//			diyApplyDao.saveOrUpdate(apply);
+			
+			if(!apply1.getApplyName().equals(apply.getApplyName())){
+				//校验applyName
+				int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUser().getId(),apply.getApplyName());
+				if(applyNum > 0){
+					result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
+					return result;
+				}
+				
+			}
 			mysqlDiyApplyDao.update(apply);
 			_LOGGER.info("updateApply success");
 			result.setSuccessMessage("修改成功");

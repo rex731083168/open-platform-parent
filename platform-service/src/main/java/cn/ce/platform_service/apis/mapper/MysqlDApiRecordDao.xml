@@ -13,7 +13,7 @@
 		<result column="opera_user_id" property="userId" />
 		
 		<collection property="apiIds" ofType="string" javaType="list">  
-            <result column="api_id" />  
+            <result column="api_id" javaType="string"/>  
         </collection>  
 	</resultMap>
 
@@ -34,7 +34,7 @@
 	</insert>
 
 	<select id="findTotalOneById" resultMap="downloadMap">
-		select d.*,a.api_id from record_down_des d left join record_down_bound_api a
+		select d.*,a.api_id from record_down_des d inner join record_down_bound_api a
 		ON d.down_id=a.down_id and d.down_id = #{recordId}
 	</select>
 	
