@@ -1,5 +1,7 @@
 package cn.ce.platform_service.diyApply.entity.inparameter;
 
+import cn.ce.annotation.dubbodescription.InterfaceDescription;
+
 /**
  *
  * @Title: GeneratorTenantKey.java
@@ -10,7 +12,6 @@ package cn.ce.platform_service.diyApply.entity.inparameter;
  *
  **/
 public class GeneratorTenantKeyInParameterEntity {
-
 	private String id;
 
 	public String getId() {

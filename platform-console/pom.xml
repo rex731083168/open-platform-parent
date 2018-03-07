@@ -10,15 +10,13 @@
 	<version>2.0.2</version>
 	<packaging>war</packaging>
 
- 	<properties>
+	<properties>
 		<platform.service.version>2.0.2</platform.service.version>
 	</properties>
 
-
-
 	<!-- denpendencies -->
 	<dependencies>
- 		<dependency>
+		<dependency>
 			<groupId>cn.ce</groupId>
 			<artifactId>platform-service</artifactId>
 			<version>${platform.service.version}</version>

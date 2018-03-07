@@ -1,5 +1,6 @@
 package cn.ce.platform_service.diyApply.service;
 
+import cn.ce.annotation.dubbodescription.InterfaceDescription;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
@@ -21,6 +22,7 @@ public interface IConsoleDiyApplyService {
 	 * 
 	 * @param entity
 	 */
+	@InterfaceDescription(name="",des="保存实体",version="1.0")
 	Result<?> saveApply(DiyApplyEntity entity);
 
 	/***
