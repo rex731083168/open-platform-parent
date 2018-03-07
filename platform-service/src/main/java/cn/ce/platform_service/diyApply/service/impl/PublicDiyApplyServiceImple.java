@@ -208,7 +208,6 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 		
 		int num = mysqlApiDao.findByIdsAndNameLikeNum(apiIds,apiName,AuditConstants.API_CHECK_STATE_SUCCESS,(currentPage-1)*pageSize,pageSize);
 		List<NewApiEntity> apiList = mysqlApiDao.findByIdsAndNameLike(apiIds, apiName, AuditConstants.API_CHECK_STATE_SUCCESS, (currentPage-1)*pageSize, pageSize);
-//		Page<NewApiEntity> page = new Page<NewApiEntity>(currentPage,num,pageSize);
 		Page<ApiEntity> page = new Page<ApiEntity>(currentPage,num,pageSize);
 		page.setItems(ApiTransform.transToApis(apiList));
 		result.setSuccessData(page);

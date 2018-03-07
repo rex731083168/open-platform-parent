@@ -200,7 +200,7 @@
 		order by ad.create_time desc
 	</sql>
 
-	<sql id="findByIdsAndNameLike">
+	<sql id="findByIdsAndNameLikeBic">
 		select * from api_detail where api_id in
 		<foreach collection="apiIds" item="item" index="index" 
 			open="(" separator="," close=")">
@@ -379,11 +379,11 @@
 	</select>
 	
 	<select id="findByIdsAndNameLikeNum" resultType="int">
-		select count(*) from (<include refid="findByIdsAndNameLike" />) table1
+		select count(*) from (<include refid="findByIdsAndNameLikeBic" />) table1
 	</select>
 	
 	<select id="findByIdsAndNameLike" resultMap="apiMap">
-		<include refid="findByIdsAndNameLike" />
+		<include refid="findByIdsAndNameLikeBic" />
 		limit #{startIndex},#{pageSize}
 	</select>
 	

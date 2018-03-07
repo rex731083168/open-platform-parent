@@ -90,8 +90,8 @@ public class DiyApplyProductController {
 	@RequestMapping(value="/getLimitScope",method=RequestMethod.GET) //查看当前定制应用是否有权限访问某组api或者某个api
 	@ApiOperation("获取定制应用下的可访问的某个开放应用列表下的api_DOTO") //修改返回参数ApiEntity为NewApiEntity
 	public Result<?> getLimitScope(
-			@RequestParam String diyApplyId,
-			@RequestParam String openApplyId,
+			@RequestParam(required=true) String diyApplyId,
+			@RequestParam(required=true) String openApplyId,
 			@RequestParam(required=false) String apiName,
 			@RequestParam(required=false, defaultValue="1") Integer currentPage,
 			@RequestParam(required=false, defaultValue="10") Integer pageSize){
