@@ -78,6 +78,9 @@ public interface IMysqlApiDao {
 
 	public int clearAll();
 
+	public List<NewApiEntity> findApiByApplyIdsAndCheckState(@Param("openApplyIds")List<String> openApplyIds, @Param("checkState")int checkState,
+			String apiTypeOpen);
+
 
 
 }

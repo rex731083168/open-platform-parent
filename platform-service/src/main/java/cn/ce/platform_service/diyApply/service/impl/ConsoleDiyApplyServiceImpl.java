@@ -139,6 +139,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantId:" + findTenantAppsByTenantKeyTenantIdtemp);
 
+				// TODO {"status":"error","message":"saasId or resourceType not found"}
 				// 根据网站实例id查询是否配置资源IP
 				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,
 						entity.getResourceType(), RequestMethod.GET.toString());
@@ -234,16 +235,15 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			int i = 1;
 			for (String appId : appIdList) {
 				List<NewApiEntity> apiList = mysqlApiDao.findByOpenApply(appId);
-				List<String> apiIds = new ArrayList<String>();
-				if (apiIds.size() > 0) {
+				if (apiList.size() > 0) {
 					String boundOpenId = RandomUtil.random32UUID();
 					mysqlDiyApplyDao.saveBoundOpenApply(boundOpenId, entity.getId(), appId);
-					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api是：" + apiIds);
+					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api个数是：" + apiList.size());
 					for (NewApiEntity apiEntity : apiList) {
 						// version2.1改为只有api类型为开放的才绑定
 						if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
 								&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
-							apiIds.add(apiEntity.getId());
+//							apiIds.add(apiEntity.getId());
 							mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID(), entity.getId(), appId, apiEntity.getId(),boundOpenId);
 						}
 					}
@@ -252,7 +252,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.info("****************绑定关系实体保存完成****************");
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
-//			diyApplyDao.saveOrUpdate(entity);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("新增成功!");
 
@@ -313,7 +312,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			
 			if(!apply1.getApplyName().equals(apply.getApplyName())){
 				//校验applyName
-				int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUser().getId(),apply.getApplyName());
+				int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUserId(),apply.getApplyName());
 				if(applyNum > 0){
 					result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
 					return result;

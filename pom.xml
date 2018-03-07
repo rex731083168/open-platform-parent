@@ -231,36 +231,36 @@
 
 	<dependencies>
 
-	<!-- spring mbatis mysql -->
-	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>${myql.mysql-connector-java}</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.mybatis</groupId>
-		<artifactId>mybatis</artifactId>
-		<version>${org.mybatis.mybatis}</version>
-	</dependency>
+		<!-- spring mbatis mysql -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${myql.mysql-connector-java}</version>
+		</dependency>
 
-	<dependency>
-		<groupId>org.mybatis</groupId>
-		<artifactId>mybatis-spring</artifactId>
-		<version>${org.mybatis.mybatis-spring}</version>
-	</dependency>
-	
-	<!-- junit -->
-	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>${junit}</version>
-	</dependency>
-	<dependency>
-		<groupId>org.apache.zookeeper</groupId>
-		<artifactId>zookeeper</artifactId>
-		<version>${org.apache.zookeeper}</version>
-	</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${org.mybatis.mybatis}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${org.mybatis.mybatis-spring}</version>
+		</dependency>
+
+		<!-- junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>${org.apache.zookeeper}</version>
+		</dependency>
 		<!-- springmvc 文件上传 -->
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -619,15 +619,13 @@
 			<artifactId>dom4j</artifactId>
 			<version>${dom4j.version}</version>
 		</dependency>
-		
+
 	</dependencies>
-
-
-
 
 	<modules>
 		<module>platform-service</module>
 		<module>platform-console</module>
 		<module>platform-manage</module>
+		<module>annotation</module>
 	</modules>
 </project>

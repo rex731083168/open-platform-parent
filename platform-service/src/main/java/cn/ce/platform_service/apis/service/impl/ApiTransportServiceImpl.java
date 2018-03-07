@@ -166,14 +166,9 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 			boolean flag = true;
 			AppList appList = validateApiAndApp(entity, user);// 校验并获取appList
 			
-			if (appList == null || appList.getAppCode() == null || appList.getAppId() == null) {
+			if (null==appList || null == appList.getAppCode() || null == appList.getAppId() ) {
 				// roback
-				_LOGGER.info("导入失败。文档格式不正确，回滚数据");
-//				newApiDao.deleteApis(successApiIds);
-				//mysqlApiDao.deleteTotalOnesByIds(successApiIds);
-				//_LOGGER.info("回滚数据成功");
-				//return Result.errorResult("线上应用不一致，请联系管理员", ErrorCodeNo.UPLOAD001, null, Status.FAILED);
-				importLog= "当前api格式错误或不同环境所属开放应用不一致";
+				importLog= "文档解析错误";
 				flag = false;
 			}else{
 				/**校验listenPath*/
@@ -213,10 +208,18 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 					successNum++;
 				} 
 			}
-
-			records.add(new UApiRecordList(entity.getId(), entity.getApiChName(), entity.getListenPath(),
-					entity.getApiType(), entity.getOpenApplyId(), entity.getAppCode(), appList.getAppName(),
-					entity.getVersionId(), entity.getVersion(), flag ,importLog));
+			
+			records.add(new UApiRecordList(entity.getId(), 
+					entity.getApiChName(), 
+					entity.getListenPath(),
+					entity.getApiType(), 
+					entity.getOpenApplyId(), 
+					entity.getAppCode(), 
+					null == appList? null : appList.getAppName(),
+					entity.getVersionId(), 
+					entity.getVersion(), 
+					flag ,
+					importLog));
 			
 		}
 

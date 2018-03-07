@@ -377,14 +377,16 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		//获取versionId集合以及用逗号隔开的长数组
 //		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS);
-		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS, DBFieldsConstants.API_TYPE_OPEN);
+		List<NewApiEntity> apiEntityList = mysqlApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS, DBFieldsConstants.API_TYPE_OPEN);
 		_LOGGER.info("根据开放应用Id查询的即将绑定的api数量"+apiEntityList.size());
 		StringBuffer versionIdsBuf = new StringBuffer(); // versionId用逗号分隔的长字符串
 		Set<String> versionIdList = new HashSet<String>(); //versionId的集合
-		for (ApiEntity apiEntity : apiEntityList) { //装参数
-			if(StringUtils.isNotBlank(apiEntity.getApiVersion().getVersionId())){
-				versionIdList.add(apiEntity.getApiVersion().getVersionId());
-				versionIdsBuf.append(","+apiEntity.getApiVersion().getVersionId());
+		for (NewApiEntity apiEntity : apiEntityList) { //装参数
+			if(StringUtils.isNotBlank(apiEntity.getVersionId())){
+				if(!versionIdList.contains(apiEntity.getVersionId())){
+					versionIdList.add(apiEntity.getVersionId());
+					versionIdsBuf.append(","+apiEntity.getVersionId());
+				}
 			}
 		}
 		if(!(versionIdsBuf.length() > 0)){
@@ -397,12 +399,12 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		versionIdsBuf.deleteCharAt(0); //versionId用逗号分隔的长字符串
 		Map<String, List<String>> apiInfos = new HashMap<String,List<String>>();
 		for (String versionId : versionIdList) {
-			List<ApiEntity> apiList = newApiDao.findByField("apiVersion.versionId", versionId);
+			List<NewApiEntity> apiList = mysqlApiDao.findByVersionId(versionId);
 			List<String> versionList = new ArrayList<String>();
-			for (ApiEntity apiEntity : apiList) {
+			for (NewApiEntity apiEntity : apiList) {
 				//只有审核通过的版本才能绑定关系
 				if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){
-					versionList.add(apiEntity.getApiVersion().getVersion());
+					versionList.add(apiEntity.getVersion());
 				}
 			}
 			apiInfos.put(versionId, versionList);
