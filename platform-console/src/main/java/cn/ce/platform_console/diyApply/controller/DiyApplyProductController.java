@@ -1,5 +1,8 @@
 package cn.ce.platform_console.diyApply.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.diyApply.entity.Menu;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.inparameter.GeneratorTenantKeyInParameterEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
@@ -70,20 +74,70 @@ public class DiyApplyProductController {
 		return consoleDiyApplyService.generatorTenantKey(queryVO.getId());
 	}
 
+	/**
+	 * @Title: productMenuList
+	 * @Description: 该接口已经废弃使用王佳的接口
+	 */
 	@ApiOperation("产品菜单列表")
+	@Deprecated
 	@RequestMapping(value = "/productMenuList", method = RequestMethod.GET)
 	public Result<String> productMenuList(
 			@RequestParam(required = true) String bossInstanceCode) {
 		return consoleDiyApplyService.productMenuList(bossInstanceCode);
 	}
 
+	
+	/**
+	 * @Title: registerMenu
+	 * @Description: 该接口已经废弃。改接王佳的接口
+	 */
 	@ApiOperation("注册菜单")
+	@Deprecated
 	@RequestMapping(value = "/registerMenu", method = RequestMethod.POST)
 	public Result<String> registerMenu(
 			@RequestParam(value = "appid", required = true) String appid,
 			@RequestParam(value = "bossInstanceCode", required = true) String bossInstanceCode,
 			String menuJson) {
 		return consoleDiyApplyService.registerMenu(appid, bossInstanceCode, menuJson);
+	}
+	
+	/**
+	 * 
+	 * @Title: productMenuList1
+	 * @Description: 菜单功能改造。调用王佳的接口
+	 * @author: makangwei
+	 * @date:   2018年3月7日 下午5:45:04  
+	 */
+	@RequestMapping(value="/productMenuList1", method=RequestMethod.GET)
+	public Result<?> productMenuList1(@RequestParam(required = true) String tenantId){
+		
+		return consoleDiyApplyService.productMenuList1(tenantId);
+	}
+	
+	/**
+	 * @Title: registerMenu
+	 * @Description: 注册或修改菜单
+	 * @author: makangwei
+	 * @date:   2018年3月7日 下午5:45:40  
+	 * @throws
+	 */
+	@RequestMapping(value = "/registerMenu1", method = RequestMethod.POST)
+	public Result<?> registerMenu1(@RequestParam String tenantId,
+			@RequestBody List<Menu> menus) {
+		return consoleDiyApplyService.registerMenu1(tenantId,menus);
+	}
+	
+	/**
+	 * 
+	 * @Title: deleteMenu1
+	 * @Description: 删除菜单
+	 * @author: makangwei
+	 * @date:   2018年3月8日 上午10:33:10  
+	 */
+	@RequestMapping(value="/deleteMenu1", method=RequestMethod.POST)
+	public Result<?> deleteMenu1(@RequestParam ArrayList<String> ids){
+		
+		return consoleDiyApplyService.deleteMenu1(ids);
 	}
 	
 	// 查看当前应用可以访问哪些开放应用下的哪些api

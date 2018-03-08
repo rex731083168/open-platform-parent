@@ -3,15 +3,19 @@ package cn.ce.platform_service.common.gateway;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
@@ -300,6 +304,101 @@ public class ApiCallUtils {
 		}
 	}
 	
+	public static String putOrPostForm(String url, List<NameValuePair> params, Map<String, String> headers, HttpMethod method){
+		_LOGGER.info("***********在代码中调用http/post or put /json请求***********");
+		_LOGGER.info("url:"+url);
+		_LOGGER.info("params:"+params.toString());
+		
+		//创建http client
+		HttpClient httpClient = null;
+		try{
+			httpClient = getHttpClient();
+		}catch(Exception  e){
+			_LOGGER.info("create httpClient error");
+			return null;
+		}
+		
+		//添加头信息
+		HttpEntityEnclosingRequestBase hrb;
+		if(HttpMethod.POST == method){
+			hrb = new HttpPost(url);
+		} else if(HttpMethod.PUT == method){
+			hrb = new HttpPut(url);
+		} else{
+			_LOGGER.info("该方法只支持post和put请求");
+			return null;
+		}
+		
+		if(headers != null){
+			for (String key : headers.keySet()) {
+				hrb.setHeader(key,headers.get(key));
+			}
+		}
+		
+		//添加请求体参数
+//		StringEntity strEntity = null;
+//		if(ContentType.APPLICATION_FORM_URLENCODED.toString().equals(contentType.toString())){
+//			strEntity = new StringEntity(params,ContentType.APPLICATION_FORM_URLENCODED);
+//			hrb.setHeader("Content-Type", "application/json");
+//		}else if(ContentType.APPLICATION_JSON.toString().equals(contentType.toString())){
+//			hrb.setHeader("Content-Type","application/x-www-form-urlencoded");
+//			strEntity =  new StringEntity(params,ContentType.APPLICATION_JSON);
+//		}
+//		strEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_ENCODING,"utf-8"));
+	    UrlEncodedFormEntity strEntity = null;  
+	    try {  
+	    	strEntity = new UrlEncodedFormEntity(params, "UTF-8");  
+	    } catch (UnsupportedEncodingException e) {  
+	        _LOGGER.error("form表单错误！");  
+	        e.printStackTrace();  
+	    } 
+		hrb.setEntity(strEntity);
+		
+		//调用，并取回返回结果，打印返回状态码
+		HttpResponse response = null;
+		try {
+			response = httpClient.execute(hrb);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			_LOGGER.error("error happens when execute http post");
+			return null;
+		}
+		
+		StatusLine status = response.getStatusLine();
+
+		_LOGGER.info("************resposne success************");
+		_LOGGER.info("response status:"+status.getStatusCode());
+		if(status.getStatusCode() == 200){ //只有状态为200才能够返回结果
+			InputStream is = null;;
+			try{
+				HttpEntity entity = response.getEntity();
+				is = entity.getContent();
+				String str = IOUtils.convertStreamToString(is);
+				_LOGGER.info("返回body："+str);
+				if(null != is){
+					is.close();
+				}
+				return str;
+			}catch(Exception e){
+				_LOGGER.error("200状态下拉取body数据失败");
+				return null;
+			}finally{
+				if(is != null){
+					try {is.close();} catch (IOException e) {}
+				}
+			}
+		}else{
+			try{
+				String result = IOUtils.convertStreamToString(response.getEntity().getContent());
+				_LOGGER.info("result:"+result);
+			}catch(Exception e){
+				_LOGGER.info("error happens when read http result stream");
+			}
+			_LOGGER.error("返回状态不正确，请检查是否正确调用");
+			return null;
+		}
+	}
 	public static String getOrDelMethod(String url, Map<String,String> headers, HttpMethod method){
 		
 		_LOGGER.info("***********在代码中调用http/ get or delete /json请求***********");
