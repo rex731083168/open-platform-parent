@@ -104,6 +104,17 @@ public class ApiTransform {
 		return oa;
 	}
 
+	public static List<NewApiEntity> transToNewApis(List<ApiEntity> apiList){
+		List<NewApiEntity> newList = new ArrayList<NewApiEntity>();
+		for (ApiEntity oldEntity : apiList) {
+			NewApiEntity newEntity = transToTotalNewApi(oldEntity);
+			if(null != newEntity){
+				newList.add(newEntity);
+			}
+		}
+		return newList;
+	}
+	
 	public static List<ApiEntity> transToApis(List<NewApiEntity> apiList) {
 		
 		List<ApiEntity> oList = new ArrayList<ApiEntity>();

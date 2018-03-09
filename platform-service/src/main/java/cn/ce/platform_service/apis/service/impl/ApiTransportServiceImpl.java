@@ -21,12 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.dao.IMysqlDApiRecordDao;
 import cn.ce.platform_service.apis.dao.IMysqlUApiRecordDao;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.ApiExportParamEntity;
 import cn.ce.platform_service.apis.entity.DApiRecordEntity;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.UApiRecordEntity;
 import cn.ce.platform_service.apis.entity.UApiRecordList;
 import cn.ce.platform_service.apis.service.IApiTransportService;
+import cn.ce.platform_service.apis.util.ApiTransform;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
@@ -145,7 +147,7 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 		}
 		// TODO 20171211 mkw 这里的操作人是admin写死的。将来用户模块抽离出来的时候，这里再修改绑定用户id和用户名等
 
-		return returnSuccessFile(successApiList, response);
+		return returnSuccessFile(ApiTransform.transToApis(successApiList), response);
 	}
 	
 	@Override
@@ -153,7 +155,8 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 
 		List<NewApiEntity> apiEntityList = null;
 		try{
-			apiEntityList = com.alibaba.fastjson.JSONArray.parseArray(upStr, NewApiEntity.class);// 将文档中的api集合导出
+			List<ApiEntity> oldList = com.alibaba.fastjson.JSONArray.parseArray(upStr, ApiEntity.class);// 将文档中的api集合导出
+			apiEntityList = ApiTransform.transToNewApis(oldList);
 		}catch(Exception e){
 			_LOGGER.info("文件导入时json数据解析错误。");
 			return Result.errorResult("文件内容读取错误", ErrorCodeNo.UPLOAD001, null, Status.FAILED);
@@ -168,7 +171,7 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 			
 			if (null==appList || null == appList.getAppCode() || null == appList.getAppId() ) {
 				// roback
-				importLog= "文档解析错误";
+				importLog= "文档解析错误或所属应用错误";
 				flag = false;
 			}else{
 				/**校验listenPath*/
@@ -287,7 +290,7 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 		return null;
 	}
 	
-	private String returnSuccessFile(List<NewApiEntity> successApiList, HttpServletResponse response) {
+	private String returnSuccessFile(List<?> successApiList, HttpServletResponse response) {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("multipart/form-data");
 		String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
