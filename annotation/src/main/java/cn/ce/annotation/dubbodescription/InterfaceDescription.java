@@ -5,9 +5,10 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ FIELD, METHOD })
 public @interface InterfaceDescription {
 

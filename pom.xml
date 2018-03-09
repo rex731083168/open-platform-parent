@@ -114,6 +114,18 @@
 			<url>http://10.12.51.10:8081/nexus/content/groups/public/</url>
 		</repository>
 
+		<repository>
+			<id>busnises</id>
+			<name>busnises Repositories</name>
+			<url>http://119.10.30.82:8081/nexus/content/groups/public</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+
 	</repositories>
 
 	<distributionManagement>
