@@ -2,14 +2,12 @@ package cn.ce.platform_service.util;
 
 import java.io.IOException;
 import java.net.JarURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarFile;
 
 import cn.ce.platform_service.dubbapply.entity.DubboApplyEntity;
-import net.sf.ehcache.store.disk.ods.AATreeSet;
 
 public class ReadDubboJarUtils {
 
