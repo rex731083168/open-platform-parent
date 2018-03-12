@@ -1,15 +1,21 @@
 package cn.ce.platform_service.dubbapply.entity;
 
+import java.util.Date;
+
 public class DubboApplyEntity {
 
 	private String pkid;
 	private String id;
 	private String parentId;
-	private String type; // 应用->jar 服务 ->class 接口-> interface
+	private String type; // 应用->jar 服务 ->Service 接口-> interface
 	private String name;
 	private String des;
 	private String version;
 	private String filePath; // jar file path
+	private String tag; // jar type 1 service 2 depency
+	private Date creatTime;
+	private String creatUserName;
+	private String creatUserId;
 
 	public String getPkid() {
 		return pkid;
@@ -73,5 +79,37 @@ public class DubboApplyEntity {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public Date getCreatTime() {
+		return creatTime;
+	}
+
+	public void setCreatTime(Date creatTime) {
+		this.creatTime = creatTime;
+	}
+
+	public String getCreatUserName() {
+		return creatUserName;
+	}
+
+	public void setCreatUserName(String creatUserName) {
+		this.creatUserName = creatUserName;
+	}
+
+	public String getCreatUserId() {
+		return creatUserId;
+	}
+
+	public void setCreatUserId(String creatUserId) {
+		this.creatUserId = creatUserId;
 	}
 }

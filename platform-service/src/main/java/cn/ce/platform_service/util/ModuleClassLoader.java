@@ -45,13 +45,6 @@ public class ModuleClassLoader extends URLClassLoader {
 
 	public static void main(String[] args) throws Exception {
 		URL url1 = new URL("file:D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar");
-		// URLClassLoader myClassLoader1 = new URLClassLoader(new URL[] { url1 },
-		// Thread.currentThread().getContextClassLoader());
-		// Class<?> myClass1 =
-		// myClassLoader1.loadClass("cn.ce.ebiz.info.service.AppInfoCategoryService");
-		// myClass1.getDeclaredMethods();
-		// myClass1.newInstance();
-
 		URL url2 = new URL("file:D:/lib/service-info-api-2.0.0-SNAPSHOT.jar");
 		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
 		moduleClassLoader.setDefaultAssertionStatus(false);
