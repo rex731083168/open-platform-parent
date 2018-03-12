@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
+import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
@@ -214,9 +215,9 @@ public class ManageApiServiceImpl implements IManageApiService {
 	}
 
 	@Override
-	public Result<Page<NewApiEntity>> apiAllList(QueryApiEntity entity) {
+	public Result<Page<ApiEntity>> apiAllList(QueryApiEntity entity) {
 
-		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
+		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
 
 		// Page<ApiEntity> page = newApiDao.findManagerList(entity, currentPage,
 		// pageSize);
@@ -224,10 +225,10 @@ public class ManageApiServiceImpl implements IManageApiService {
 		entity.setOrgCurrentPage(1);
 		entity.setOrgPageSize(totalNum);
 		List<NewApiEntity> list = mysqlApiDao.getPagedList(entity);
-
+		List<ApiEntity> apiList= ApiTransform.transToApis(list);
 		if (list != null) {
-			Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(), totalNum, entity.getPageSize(),
-					list);
+			Page<ApiEntity> page = new Page<ApiEntity>(entity.getCurrentPage(), totalNum, entity.getPageSize(),
+					apiList);
 			result.setSuccessData(page);
 		} else {
 			result.setErrorMessage("查询不到结果", ErrorCodeNo.SYS006);
@@ -236,18 +237,19 @@ public class ManageApiServiceImpl implements IManageApiService {
 	}
 
 	@Override
-	public Result<Page<NewApiEntity>> apiList(QueryApiEntity entity) {
+	public Result<Page<ApiEntity>> apiList(QueryApiEntity entity) {
 
-		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
+		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
 
 		// Page<ApiEntity> page =
 		// newApiDao.findManagerListWithoutPage(apiEntity);
 		int totalNum = mysqlApiDao.findListSize(entity);
 		List<NewApiEntity> list = mysqlApiDao.getPagedList(entity);
-
+		List<ApiEntity> apiList = ApiTransform.transToApis(list);
+		
 		if (list != null) {
-			Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(), totalNum, entity.getPageSize(),
-					list);
+			Page<ApiEntity> page = new Page<ApiEntity>(entity.getCurrentPage(), totalNum, entity.getPageSize(),
+					apiList);
 			result.setSuccessData(page);
 		} else {
 			result.setErrorMessage("查询不到结果", ErrorCodeNo.SYS006);
