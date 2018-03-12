@@ -17,7 +17,6 @@ import cn.ce.platform_service.users.entity.User;
 public interface IApiTransportService {
 
 	@InterfaceDescription(name = "我的", des = "啊啊啊啊啊", version = "1.0.0")
-	@SuppressWarnings(value = { "check" })
 	String exportApis(String recordId, HttpServletResponse response);
 
 	Result<?> generalExportList(ApiExportParamEntity exportParam, User user);

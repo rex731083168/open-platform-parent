@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.ce.annotation.dubbodescription.InterfaceDescription;
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
-import cn.ce.platform_service.apis.service.IApiTransportService;
 
 /**
  * 返回自定义标签接口描述的公共方法
@@ -33,6 +32,7 @@ public class CustomAnnotationUtils {
 				ide.setDes(service.des());
 				ide.setVersion(service.version());
 				ServiceMap.put(method[i].getName(), ide);
+				System.out.println(ide.getDes());
 				logger.info(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
 						+ method[i].getName());
 			}
