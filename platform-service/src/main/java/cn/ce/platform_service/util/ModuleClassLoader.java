@@ -51,7 +51,7 @@ public class ModuleClassLoader extends URLClassLoader {
 		moduleClassLoader.loadJar(url1.toURI().toURL());
 		moduleClassLoader.loadJar(url2.toURI().toURL());
 		System.out.println("加载成功");
-		Class<?> spawnClass = Class.forName("cn.ce.ebiz.info.service.AppInfoCategoryService");
+		Class<?> spawnClass = Class.forName("cn.ce.ebiz.info.service.AppInfoService"); //AppInfoCategoryService
 		spawnClass.getDeclaredMethods();
 		CustomAnnotationUtils.initJsonServiceMap(spawnClass);
 	}
