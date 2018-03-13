@@ -107,7 +107,7 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 		}
 
 		// guideDaoImpl.saveOrUpdateGuide(g);
-		g.setCheckState(AuditConstants.GUIDE_UNCHECKED);
+		//g.setCheckState(AuditConstants.GUIDE_UNCHECKED);
 		mysqlGuideDao.updateGuide(g);
 		result.setSuccessMessage("修改成功");
 		_LOGGER.info("update guide message success");
