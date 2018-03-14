@@ -40,13 +40,6 @@ public class UApiRecordEntity {
 		this.operaUserId = operaUserId;
 	}
 	
-	public List<UApiRecordList> getdApiBoundList() {
-		return uApiRecordList;
-	}
-
-	public void setdApiBoundList(List<UApiRecordList> dApiBoundList) {
-		this.uApiRecordList = dApiBoundList;
-	}
 
 	public Date getOperaTime() {
 		return operaTime;

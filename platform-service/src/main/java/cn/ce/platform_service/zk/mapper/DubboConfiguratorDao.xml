@@ -6,7 +6,7 @@
   <mapper namespace="cn.ce.platform_service.zk.dao.IDubboConfiguratorDao1">
   	<resultMap type="cn.ce.platform_service.zk.entity.DubboConfigurator" id="configuratorMap">
   		<id column="id" property="id"/>
-  		<result column="desc" property="desc"/>
+  		<result column="cfg_desc" property="desc"/>
   		<result column="node_id" property="nodeId"/>
   	</resultMap>
   
@@ -17,7 +17,7 @@
   	
   	<insert id="save" parameterType="cn.ce.platform_service.zk.entity.DubboConfigurator">
   		insert into dubbo_configurator 
-  			(id,desc,node_id)
+  			(id,cfg_desc,node_id)
   		values
   			(#{id},#{desc},#{nodeId})
   	</insert>

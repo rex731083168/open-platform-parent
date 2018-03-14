@@ -18,11 +18,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.ce.platform_service.apis.dao.IMysqlApiArgDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiCodeDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiHeaderDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiResultDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiRexampleDao;
 import cn.ce.platform_service.apis.dao.IMysqlDApiRecordDao;
 import cn.ce.platform_service.apis.dao.IMysqlUApiRecordDao;
+import cn.ce.platform_service.apis.entity.ApiArgEntity;
+import cn.ce.platform_service.apis.entity.ApiCodeEntity;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.ApiExportParamEntity;
+import cn.ce.platform_service.apis.entity.ApiHeaderEntity;
+import cn.ce.platform_service.apis.entity.ApiResultEntity;
+import cn.ce.platform_service.apis.entity.ApiResultExampleEntity;
 import cn.ce.platform_service.apis.entity.DApiRecordEntity;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.UApiRecordEntity;
@@ -49,6 +59,16 @@ import io.netty.handler.codec.http.HttpMethod;
 @Transactional(propagation=Propagation.REQUIRED)
 public class ApiTransportServiceImpl implements IApiTransportService{
 	
+	@Resource
+	private IMysqlApiHeaderDao apiHeaderDao;
+	@Resource
+	private IMysqlApiArgDao apiArgDao;
+	@Resource
+	private IMysqlApiResultDao apiResultDao;
+	@Resource
+	private IMysqlApiRexampleDao apiRexampleDao;
+	@Resource 
+	private IMysqlApiCodeDao apiCodeDao;
 //	@Resource
 //	private INewApiDao newApiDao;
 	@Resource
@@ -61,6 +81,7 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 //	private IUApiRecordDao uApiRecordDao;
 	@Resource
 	private IMysqlUApiRecordDao mysqlUApiRecord;
+	
 	
 	private static Logger _LOGGER = LoggerFactory.getLogger(ApiTransportServiceImpl.class);
 	@Override
@@ -204,9 +225,8 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 					entity.setUserId(user.getId());
 					entity.setApiSource(1);
 					entity.setEnterpriseName(user.getEnterpriseName());
-//				newApiDao.save(entity);
 					entity.setId(RandomUtil.random32UUID());
-					mysqlApiDao.save1(entity);
+					saveMysqlEntity(entity);
 					successApiIds.add(entity.getId());
 					successNum++;
 				} 
@@ -345,4 +365,45 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 		return null;
 	}
 
+	private boolean saveMysqlEntity(NewApiEntity apiEntity) {
+		
+		mysqlApiDao.save1(apiEntity);
+		
+		List<ApiHeaderEntity> headers = apiEntity.getHeaders();
+		for (ApiHeaderEntity header : headers) {
+			header.setApiId(apiEntity.getId());
+			header.setId(RandomUtil.random32UUID());
+			apiHeaderDao.save(header);
+		}
+		
+		List<ApiArgEntity> args = apiEntity.getArgs();
+		for (ApiArgEntity arg : args) {
+			arg.setApiId(apiEntity.getId());
+			arg.setId(RandomUtil.random32UUID());
+			apiArgDao.save(arg);
+		}
+		
+		List<ApiResultEntity> results = apiEntity.getResult();
+		for (ApiResultEntity result : results) {
+			result.setApiId(apiEntity.getId());
+			result.setId(RandomUtil.random32UUID());
+			apiResultDao.save(result);
+		}
+		
+		ApiResultExampleEntity rExample = apiEntity.getRetExample();
+		if(null != rExample){
+			rExample.setApiId(apiEntity.getId());
+			rExample.setId(RandomUtil.random32UUID());
+			apiRexampleDao.save(rExample);
+		}
+		
+		List<ApiCodeEntity> codes = apiEntity.getErrCodes();
+		for (ApiCodeEntity code : codes) {
+			code.setApiId(apiEntity.getId());
+			code.setId(RandomUtil.random32UUID());
+			apiCodeDao.save(code);
+		}
+
+		return true;
+	}
 }
