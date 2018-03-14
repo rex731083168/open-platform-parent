@@ -32,7 +32,6 @@ public class CustomAnnotationUtils {
 				ide.setDes(service.des());
 				ide.setVersion(service.version());
 				ServiceMap.put(method[i].getName(), ide);
-				System.out.println(ide.getDes());
 				logger.info(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
 						+ method[i].getName());
 				System.out.println(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
