@@ -27,11 +27,10 @@ public class ReadDubboJarUtils {
 		for (int i = 0; i < filePath.size(); i++) {
 			URL url = new URL(filePath.get(i));
 			moduleClassLoader.loadJar(url);
-			
+
 			JarURLConnection connection = (JarURLConnection) url.openConnection();
 			DubboApplyEntity de = new DubboApplyEntity();
 			JarFile jarFile = connection.getJarFile();
-			de.setName(jarFile.getName());
 		}
 
 		return null;

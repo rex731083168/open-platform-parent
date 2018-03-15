@@ -3,6 +3,7 @@ package cn.ce.platform_service.util;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.jar.JarEntry;
 
 public class ModuleClassLoader extends URLClassLoader {
 
@@ -51,7 +52,7 @@ public class ModuleClassLoader extends URLClassLoader {
 		moduleClassLoader.loadJar(url1.toURI().toURL());
 		moduleClassLoader.loadJar(url2.toURI().toURL());
 		System.out.println("加载成功");
-		Class<?> spawnClass = Class.forName("cn.ce.ebiz.info.service.AppInfoService"); //AppInfoCategoryService
+		Class<?> spawnClass = Class.forName("cn.ce.ebiz.info.service.AppInfoService"); // AppInfoCategoryService
 		spawnClass.getDeclaredMethods();
 		CustomAnnotationUtils.initJsonServiceMap(spawnClass);
 	}

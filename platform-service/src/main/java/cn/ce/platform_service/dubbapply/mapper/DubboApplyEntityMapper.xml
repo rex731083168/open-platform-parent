@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ce.platform_service.dubbapply.dao.IDubboApplyDao">
+	<resultMap id="BaseResultMap"
+		type="cn.ce.platform_service.dubbapply.entity.DubboApplyEntity">
+		<id column="pkid" jdbcType="INTEGER" property="pkid" />
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="parentId" jdbcType="VARCHAR" property="parentid" />
+		<result column="appName" jdbcType="VARCHAR" property="appname" />
+		<result column="appId" jdbcType="VARCHAR" property="appid" />
+		<result column="appCode" jdbcType="VARCHAR" property="appcode" />
+		<result column="unitType" jdbcType="VARCHAR" property="unittype" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="packageName" jdbcType="VARCHAR" property="packagename" />
+		<result column="className" jdbcType="VARCHAR" property="classname" />
+		<result column="interFaceRealName" jdbcType="VARCHAR" property="interfacerealname" />
+		<result column="interFaceName" jdbcType="VARCHAR" property="interfacename" />
+		<result column="interFaceDes" jdbcType="VARCHAR" property="interfacedes" />
+		<result column="interFaceVersion" jdbcType="VARCHAR" property="interfaceversion" />
+		<result column="fileName" jdbcType="VARCHAR" property="filename" />
+		<result column="filePath" jdbcType="VARCHAR" property="filepath" />
+		<result column="filetag" jdbcType="VARCHAR" property="filetag" />
+		<result column="creatTime" jdbcType="TIMESTAMP" property="creattime" />
+		<result column="updatTime" jdbcType="TIMESTAMP" property="updattime" />
+		<result column="creatUserName" jdbcType="VARCHAR" property="creatusername" />
+		<result column="creatUserId" jdbcType="VARCHAR" property="creatuserid" />
+	</resultMap>
+
+</mapper>
