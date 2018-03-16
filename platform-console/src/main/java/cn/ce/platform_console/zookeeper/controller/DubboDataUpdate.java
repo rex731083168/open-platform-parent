@@ -1,5 +1,6 @@
 package cn.ce.platform_console.zookeeper.controller;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;

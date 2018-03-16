@@ -16,11 +16,11 @@ import org.slf4j.LoggerFactory;
 public class ZkWatcher implements Watcher{
 
 	private static CountDownLatch connectedSemaphore = new CountDownLatch(1);
-	private static final Logger _LOGGER = LoggerFactory.getLogger(ZkWatcher.class);
+	//private static final Logger _LOGGER = LoggerFactory.getLogger(ZkWatcher.class);
 	@Override
 	public void process(WatchedEvent event) {
 		
-		_LOGGER.info("Receive watched event : "+ event);
+		//_LOGGER.info("Receive watched event : "+ event);
 		if (KeeperState.SyncConnected == event.getState()) {
 			connectedSemaphore.countDown();
 		}
