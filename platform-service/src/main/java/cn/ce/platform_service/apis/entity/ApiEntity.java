@@ -139,7 +139,7 @@ public class ApiEntity implements Serializable {
      * 1代表文件导入
      * */
     @Field("apiSource")
-    private Integer apiSource; 
+    private Integer apiSource;
     
     @Field("enterpriseName")
     private String enterpriseName;
