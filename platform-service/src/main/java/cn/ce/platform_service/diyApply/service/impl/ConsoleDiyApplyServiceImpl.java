@@ -660,7 +660,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		}
 		
-		//校验menus
+		//如果id不为空校验menus
 		if(!validateMenu(menus)){
 			result.setErrorMessage("发布菜单错误,请联系管理员",ErrorCodeNo.SYS032); 
 			return result;
@@ -779,29 +779,34 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return false;
 		}
 		for (Menu menu : menus) {
-			if(null == menu.getLevel() || menu.getLevel() < 1 || menu.getLevel() > 3){
-				_LOGGER.info("菜单level错误");
-				return false;
-//			}else if(null == menu.getTenantId() || menu.getTenantId() < 1){
-//				_LOGGER.info("菜单tenantId错误");
-//				return false;
-			}else if(StringUtils.isBlank(menu.getUrl())){
-				_LOGGER.info("菜单url错误");
-				return false;
-			}else if(null == menu.getParentId() && null == menu.getBeforeMenuId()
-					&& null == menu.getBehandMenuId()){
-				_LOGGER.info("菜单相对定位坐标错误");
-				return false;
-			}else if(null == menu.getPoint() || menu.getPoint() < 1){
-				_LOGGER.info("菜单相对定位位移错误");
-				return false;
-			}else if(1 != menu.getLeaf() && 0 != menu.getLeaf()){
-				_LOGGER.info("菜单是否为叶子错误");
-				return false;
+			//如果id为空做添加叫校验。否则做修改校验
+			if(null != menu.getId() && menu.getId() > 0){
+				//修改校验
+				if(StringUtils.isBlank(menu.getUrl())){
+					_LOGGER.info("菜单url错误");
+					return false;
+				}
+			}else{
+				//添加校验
+				if(null == menu.getLevel() || menu.getLevel() < 1 || menu.getLevel() > 3){
+					_LOGGER.info("菜单level错误");
+					return false;
+				}else if(StringUtils.isBlank(menu.getUrl())){
+					_LOGGER.info("菜单url错误");
+					return false;
+				}else if(null == menu.getParentId() && null == menu.getBeforeMenuId()
+						&& null == menu.getBehandMenuId()){
+					_LOGGER.info("菜单相对定位坐标错误");
+					return false;
+				}else if(null == menu.getPoint() || menu.getPoint() < 1){
+					_LOGGER.info("菜单相对定位位移错误");
+					return false;
+				}else if(1 != menu.getLeaf() && 0 != menu.getLeaf()){
+					_LOGGER.info("菜单是否为叶子错误");
+					return false;
+				}
 			}
 		}
 		return true;
 	}
-
-
 }

@@ -123,7 +123,7 @@ public class DiyApplyProductController {
 	 */
 	@RequestMapping(value = "/registerMenu1", method = RequestMethod.POST)
 	public Result<?> registerMenu1(@RequestParam String tenantId,
-			@RequestBody List<Menu> menus) {
+			@RequestBody ArrayList<Menu> menus) {
 		return consoleDiyApplyService.registerMenu1(tenantId,menus);
 	}
 	
