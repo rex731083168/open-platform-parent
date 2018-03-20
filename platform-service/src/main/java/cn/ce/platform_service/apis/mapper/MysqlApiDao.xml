@@ -85,6 +85,10 @@
 		<result column="resource_type" property="resourceType" /> <!-- 资源类型 -->
 		<result column="resource_type_name" property="resourceTypeName" />
 		<result column="create_time" property="createTime" />
+		<result column="request_body_type" property="requestBodyType" />
+		<result column="request_body_type" property="responseBodyType" />
+		<result column="protocol" property="protocol" />
+		<result column="org_path" property="orgPath" />
 
 		<association property="retExample" column="api_id"
 			resultMap="apiRexampleMap" columnPrefix="re_"
@@ -97,7 +101,11 @@
 		<collection property="args" javaType="ArrayList"
 			ofType="cn.ce.platform_service.apis.entity.ApiArgEntity"
 			columnPrefix="ag_" resultMap="apiArgMap" />
-
+		
+		<collection property="queryArgs" javaType="ArrayList"
+			ofType="cn.ce.platform_service.apis.entity.ApiArgEntity"
+			columnPrefix="qag_" resultMap="apiArgMap" />
+			
 		<collection property="result" javaType="ArrayList"
 			ofType="cn.ce.platform_service.apis.entity.ApiResultEntity"
 			columnPrefix="ru_" resultMap="apiResultMap" />
@@ -124,6 +132,13 @@
 		ag.required as ag_required,
 		ag.example as ag_example,
 		ag.arg_desc as ag_arg_desc,
+		qag.arg_id as qag_arg_id,
+		qag.api_id as qag_api_id,
+		qag.arg_name as qag_arg_name,
+		qag.arg_type as qag_arg_type,
+		qag.required as qag_required,
+		qag.example as qag_example,
+		qag.arg_desc as qag_arg_desc,
 		ru.result_id as ru_result_id,
 		ru.api_id as ru_api_id,
 		ru.ret_name as ru_ret_name,
@@ -194,6 +209,7 @@
 			</choose>
 		) ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
 		LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
+		LEFT JOIN api_query_arg qag ON ad.api_id = qag.api_id
 		LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
 		LEFT JOIN api_result_example re ON ad.api_id = re.api_id
 		LEFT JOIN api_code ac ON ad.api_id = ac.api_id
@@ -219,14 +235,16 @@
 		(api_id,open_apply_id,user_id,user_name,api_ch_name,app_code,default_target_url
 		,listen_path,http_method,version_id,version,version_remark,new_version,api_type
 		,api_desc,state,check_state,check_mem,quota_max,quota_renew_ms,rate,per,api_source
-		,enterprise_name,resource_type,resource_type_name,create_time)
+		,enterprise_name,resource_type,resource_type_name,create_time
+		,request_body_type,response_body_type,protocol,org_path)
 		VALUES
 		(#{id},#{openApplyId},#{userId},#{userName},#{apiChName},#{appCode},#{defaultTargetUrl}
 		,#{listenPath},#{httpMethod}
 		,#{apiVersion.versionId},#{apiVersion.version},#{apiVersion.versionRemark},#{apiVersion.newVersion}
 		,#{apiType},#{desc},#{state},#{checkState},#{checkMem},#{quotaMax},#{quotaRenewalRate}
 		,#{rate},#{per},#{apiSource},#{enterpriseName},#{resourceType},#{resourceTypeName}
-		,#{createTime})
+		,#{createTime}
+		,requestBodyType,responseBodyType,protocol,orgPath)
 	</insert>
 
 	<insert id="save1" parameterType="cn.ce.platform_service.apis.entity.NewApiEntity">
@@ -234,14 +252,16 @@
 		(api_id,open_apply_id,user_id,user_name,api_ch_name,app_code,default_target_url
 		,listen_path,http_method,version_id,version,version_remark,new_version,api_type
 		,api_desc,state,check_state,check_mem,quota_max,quota_renew_ms,rate,per,api_source
-		,enterprise_name,resource_type,resource_type_name,create_time)
+		,enterprise_name,resource_type,resource_type_name,create_time
+		,request_body_type,response_body_type,protocol,org_path)
 		VALUES
 		(#{id},#{openApplyId},#{userId},#{userName},#{apiChName},#{appCode},#{defaultTargetUrl}
 		,#{listenPath},#{httpMethod}
 		,#{versionId},#{version},#{versionRemark},#{newVersion}
 		,#{apiType},#{desc},#{state},#{checkState},#{checkMem},#{quotaMax},#{quotaRenewalRate}
 		,#{rate},#{per},#{apiSource},#{enterpriseName},#{resourceType},#{resourceTypeName}
-		,#{createTime})
+		,#{createTime}
+		,#{requestBodyType},#{responseBodyType},#{protocol},#{orgPath})
 	</insert>
 
 	<select id="findByListenPath" resultMap="apiMap">
@@ -276,6 +296,13 @@
 			ag.arg_desc as ag_arg_desc,
 			ag.required as ag_required,
 			ag.example as ag_example,
+			qag.arg_id as qag_arg_id,
+			qag.api_id as qag_api_id,
+			qag.arg_name as qag_arg_name,
+			qag.arg_type as qag_arg_type,
+			qag.required as qag_required,
+			qag.example as qag_example,
+			qag.arg_desc as qag_arg_desc,
 			ru.result_id as ru_result_id,
 			ru.api_id as ru_api_id,
 			ru.ret_name as ru_ret_name,
@@ -295,6 +322,7 @@
 		FROM
 			api_detail ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
 			LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
+			LEFT JOIN api_query_arg qag ON ad.api_id = qag.api_id
 			LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
 			LEFT JOIN api_result_example re ON ad.api_id = re.api_id
 			LEFT JOIN api_code ac ON ad.api_id = ac.api_id
@@ -317,6 +345,10 @@
 			,rate=#{rate},per=#{per},api_source=#{apiSource},enterprise_name=#{enterpriseName}
 			,resource_type=#{resourceType},resource_type_name=#{resourceTypeName}
 			,create_time=#{createTime}
+			,request_body_type=#{requestBodyType}
+			,response_body_type=#{responseBodyType}
+			,protocol=#{protocol}
+			,org_path=#{orgPath}
 			where api_id = #{id}
 		</if>
 		<if test="count==0">
@@ -324,14 +356,16 @@
 			(api_id,open_apply_id,user_id,user_name,api_ch_name,app_code,default_target_url
 			,listen_path,http_method,version_id,version,version_remark,new_version,api_type
 			,api_desc,state,check_state,check_mem,quota_max,quota_renew_ms,rate,per,api_source
-			,enterprise_name,resource_type,resource_type_name,create_time)
+			,enterprise_name,resource_type,resource_type_name,create_time
+			,request_body_type,response_body_type,protocol,org_path)
 			VALUES
 			(#{id},#{openApplyId},#{userId},#{userName},#{apiChName},#{appCode},#{defaultTargetUrl}
 			,#{listenPath},#{httpMethod}
 			,#{versionId},#{version},#{versionRemark},#{newVersion}
 			,#{apiType},#{desc},#{state},#{checkState},#{checkMem},#{quotaMax},#{quotaRenewalRate}
 			,#{rate},#{per},#{apiSource},#{enterpriseName},#{resourceType},#{resourceTypeName}
-			,#{createTime})
+			,#{createTime}
+			,#{request_body_type},#{response_body_type},#{protocol},#{orgPath})
 		</if>
 
 	</insert>
@@ -446,6 +480,13 @@
 			ag.required as ag_required,
 			ag.example as ag_example,
 			ag.arg_desc as ag_arg_desc,
+			qag.arg_id as qag_arg_id,
+			qag.api_id as qag_api_id,
+			qag.arg_name as qag_arg_name,
+			qag.arg_type as qag_arg_type,
+			qag.required as qag_required,
+			qag.example as qag_example,
+			qag.arg_desc as qag_arg_desc,
 			ru.result_id as ru_result_id,
 			ru.api_id as ru_api_id,
 			ru.ret_name as ru_ret_name,
@@ -464,6 +505,7 @@
 		FROM
 			api_detail ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
 			LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
+			LEFT JOIN api_query_arg qag ON ad.api_id = qag.api_id
 			LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
 			LEFT JOIN api_result_example re ON ad.api_id = re.api_id
 			LEFT JOIN api_code ac ON ad.api_id = ac.api_id
@@ -479,6 +521,7 @@
 		delete ad,hd,ag,ru,re,ac from 			
 			api_detail ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
 			LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
+			LEFT JOIN api_query_arg qag ON ad.api_id = qag.api_id
 			LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
 			LEFT JOIN api_result_example re ON ad.api_id = re.api_id
 			LEFT JOIN api_code ac ON ad.api_id = ac.api_id

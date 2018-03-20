@@ -10,6 +10,9 @@ import org.apache.commons.beanutils.converters.DoubleConverter;
 import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.beanutils.converters.LongConverter;
 import org.apache.commons.beanutils.converters.ShortConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
 * @Description : BeanUtils默认会将基本数据类型的包装类的null赋值为0，该类能够解决将null赋值给null
@@ -25,11 +28,19 @@ public class CoverBeanUtils {
 		ConvertUtils.register(new DoubleConverter(null), Double.class);
 		ConvertUtils.register(new BigDecimalConverter(null), BigDecimal.class);
 		}
+
+	private static final Logger _LOGGER = LoggerFactory.getLogger(CoverBeanUtils.class);
 	
-	
-	public static void copyProperties(Object dest, Object orig) 
-			throws IllegalAccessException, InvocationTargetException{
+	public static boolean copyProperties(Object dest, Object orig) {
 		
-		BeanUtils.copyProperties(dest, orig);
+			try {
+				BeanUtils.copyProperties(dest, orig);
+				return true;
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				_LOGGER.error("bean复制异常:/n");
+				e.printStackTrace();
+				return false;
+			}
+
 	}
 }

@@ -61,28 +61,32 @@ public class ApiController {
 		 */
 		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		
-		NewApiEntity apiEntity = ApiTransform.transToTotalNewApi(entity);
+		NewApiEntity newApiEntity = ApiTransform.transToTotalNewApi(entity);
 		
-		_LOGGER.info("publish api Entity:"+apiEntity.toString());
+		_LOGGER.info("publish api Entity:"+newApiEntity.toString());
 		
-		if(apiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNAUDITED
-				|| apiEntity.getCheckState() < AuditConstants.API_CHECK_STATE_UNCOMMITED){
+		if(newApiEntity.getCheckState() > AuditConstants.API_CHECK_STATE_UNAUDITED
+				|| newApiEntity.getCheckState() < AuditConstants.API_CHECK_STATE_UNCOMMITED){
 			return Result.errorResult("api审核状态不可用", ErrorCodeNo.SYS012, null, Status.FAILED);
 		}
 		
-		if(apiEntity.getApiType() == null || StringUtils.isBlank(apiEntity.getApiType().toString())){
+		if(newApiEntity.getApiType() == null || StringUtils.isBlank(newApiEntity.getApiType().toString())){
 			return Result.errorResult("api类型必须指定", ErrorCodeNo.SYS008, null, Status.FAILED);
 		}
 		
-		if(StringUtils.isBlank(apiEntity.getResourceType())){
+		if(StringUtils.isBlank(newApiEntity.getResourceType())){
 			return Result.errorResult("api资源类型必须指定", ErrorCodeNo.SYS005, null, Status.FAILED);
 		}
 		
-		if(StringUtils.isBlank(apiEntity.getResourceTypeName())){
+		if(StringUtils.isBlank(newApiEntity.getResourceTypeName())){
 			return Result.errorResult("api资源类型名称必须指定", ErrorCodeNo.SYS005, null, Status.FAILED);
 		}		
 		
-		return consoleApiService.publishApi(user, apiEntity);
+		// TODO 如果请求body不为空校验请求body为可选值
+		// TODO 如果返回body不为空校验返回body为固定值
+		// TODO 校验protocol 协议必须是http或者https
+		
+		return consoleApiService.publishApi(user, newApiEntity);
 	}
 
 	@RequestMapping(value="/checkListenPath", method= RequestMethod.GET)
@@ -208,7 +212,7 @@ public class ApiController {
 //		apiEntity.setCurrentPage(PageValidateUtil.checkCurrentPage(apiEntity.getCurrentPage()));
 //		apiEntity.setPageSize(PageValidateUtil.checkPageSize(apiEntity.getPageSize()));
 //		apiEntity.setStartNum((apiEntity.getCurrentPage()-1)*apiEntity.getPageSize());
-		return consoleApiService.showApiList(apiEntity);
+		return consoleApiService.showDocApiList(apiEntity);
 	}
 	
 	/**

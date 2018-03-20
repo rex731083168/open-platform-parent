@@ -36,11 +36,15 @@ public class NewApiEntity implements Serializable {
 	
 	private String listenPath;
 	
+	private String protocol; //协议，http或者https
+	
+	private String orgPath; //回原地址，非必填
 	/** http方法GET或POST */
 	private String httpMethod;
 	
 	private List<ApiHeaderEntity> headers;
 	private List<ApiArgEntity> args;
+	private List<ApiArgEntity> queryArgs;
 	private List<ApiResultEntity> result;
 	private ApiResultExampleEntity retExample;
 	private List<ApiCodeEntity> errCodes;
@@ -100,6 +104,10 @@ public class NewApiEntity implements Serializable {
      */
     private String resourceTypeName;
 
+    
+    private String requestBodyType;  //请求body类型
+    
+    private String responseBodyType; //返回body类型
     /**mysql做查询时候的临时字段。只用来做查询时候用的，不具有业务意义*/
     private int count;
     
@@ -416,18 +424,60 @@ public class NewApiEntity implements Serializable {
 		this.count = count;
 	}
 
+	public List<ApiArgEntity> getQueryArgs() {
+		return queryArgs;
+	}
+
+	public void setQueryArgs(List<ApiArgEntity> queryArgs) {
+		this.queryArgs = queryArgs;
+	}
+
+	public String getRequestBodyType() {
+		return requestBodyType;
+	}
+
+	public void setRequestBodyType(String requestBodyType) {
+		this.requestBodyType = requestBodyType;
+	}
+
+	public String getResponseBodyType() {
+		return responseBodyType;
+	}
+
+	public void setResponseBodyType(String responseBodyType) {
+		this.responseBodyType = responseBodyType;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+
+	public String getOrgPath() {
+		return orgPath;
+	}
+
+	public void setOrgPath(String orgPath) {
+		this.orgPath = orgPath;
+	}
+
 	@Override
 	public String toString() {
 		return "NewApiEntity [id=" + id + ", openApplyId=" + openApplyId + ", userId=" + userId + ", userName="
 				+ userName + ", apiChName=" + apiChName + ", appCode=" + appCode + ", defaultTargetUrl="
-				+ defaultTargetUrl + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod + ", headers="
-				+ headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample + ", errCodes="
-				+ errCodes + ", versionId=" + versionId + ", version=" + version + ", versionRemark=" + versionRemark
-				+ ", newVersion=" + newVersion + ", apiType=" + apiType + ", desc=" + desc + ", state=" + state
-				+ ", checkState=" + checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax
-				+ ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime="
-				+ createTime + ", apiSource=" + apiSource + ", enterpriseName=" + enterpriseName + ", resourceType="
-				+ resourceType + ", resourceTypeName=" + resourceTypeName + ", count=" + count + "]";
+				+ defaultTargetUrl + ", listenPath=" + listenPath + ", protocol=" + protocol + ", orgPath=" + orgPath
+				+ ", httpMethod=" + httpMethod + ", headers=" + headers + ", args=" + args + ", queryArgs=" + queryArgs
+				+ ", result=" + result + ", retExample=" + retExample + ", errCodes=" + errCodes + ", versionId="
+				+ versionId + ", version=" + version + ", versionRemark=" + versionRemark + ", newVersion=" + newVersion
+				+ ", apiType=" + apiType + ", desc=" + desc + ", state=" + state + ", checkState=" + checkState
+				+ ", checkMem=" + checkMem + ", quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate
+				+ ", rate=" + rate + ", per=" + per + ", createTime=" + createTime + ", apiSource=" + apiSource
+				+ ", enterpriseName=" + enterpriseName + ", resourceType=" + resourceType + ", resourceTypeName="
+				+ resourceTypeName + ", requestBodyType=" + requestBodyType + ", responseBodyType=" + responseBodyType
+				+ ", count=" + count + "]";
 	}
-	
+
 }

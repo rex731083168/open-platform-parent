@@ -46,5 +46,7 @@ public interface IConsoleApiService {
 
 	Result<?> migraApi();
 
+	Result<?> showDocApiList(QueryApiEntity apiEntity);
+
 	
 }

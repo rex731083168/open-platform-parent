@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.GatewayVersion;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
@@ -85,9 +87,6 @@ public class ManageApiServiceImpl implements IManageApiService {
 
 				// 根据versionId查询只有版本信息不同的其他相同的多个api
 				// 添加新的版本需要将旧的版本信息和新的版本信息一同推送到网关
-				// List<ApiEntity> apiVersionList =
-				// newApiDao.findByField(DBFieldsConstants.APIS_APIVERSION_VERSIONID,
-				// apiEntity.getVersionId());
 				List<NewApiEntity> apiVersionList = mysqlApiDao.findByVersionIdExp(apiEntity.getVersionId(),
 						apiEntity.getId());
 
@@ -96,19 +95,24 @@ public class ManageApiServiceImpl implements IManageApiService {
 				 * 所以这个bug由业务来避免了。
 				 */
 
-				Map<String, String> map = new HashMap<String, String>(); // map中放着不同的版本和版本对应的endPoint.
+				//Map<String, String> map = new HashMap<String, String>(); // map中放着不同的版本和版本对应的endPoint.
+				List<GatewayVersion> versionList = new ArrayList<GatewayVersion>();
 				for (NewApiEntity entity : apiVersionList) { // 查询旧的版本信息和Url
 					if (entity.getCheckState() == 2) {
 						// TODO 这里将来会往两个网关里推，测试网关推送测试Url，正式网关推送正式Url
-						map.put(entity.getVersion() + "", entity.getListenPath()); // 这里只往正式网关里面推送
+						//map.put(entity.getVersion() + "", entity.getListenPath()); // 这里只往正式网关里面推送
+						versionList.add(new GatewayVersion(entity.getVersion(),entity.getListenPath(),
+								entity.getHttpMethod().toUpperCase(),entity.getOrgPath()));
 					}
 				}
-				map.put(apiEntity.getVersion() + "", apiEntity.getListenPath());// 最后加上新添加的版本信息和Url
+				//map.put(apiEntity.getVersion() + "", apiEntity.getListenPath());// 最后加上新添加的版本信息和Url
+				versionList.add(new GatewayVersion(apiEntity.getVersion(),apiEntity.getListenPath(),
+						apiEntity.getHttpMethod().toUpperCase(),apiEntity.getOrgPath()));
 
 				// 打印最终所有的版本信息和每个版本的请求路径
-				for (String key : map.keySet()) {
-					_LOGGER.info("版本键：" + key + "," + "请求地址是：" + map.get(key));
-				}
+//				for (String key : map.keySet()) {
+//					_LOGGER.info("版本键：" + key + "," + "请求地址是：" + map.get(key));
+//				}
 
 				if (!apiEntity.getListenPath().startsWith("/")) {
 					apiEntity.setListenPath("/" + apiEntity.getListenPath());
@@ -117,11 +121,12 @@ public class ManageApiServiceImpl implements IManageApiService {
 				// apiEntity.setListenPath(apiEntity.getListenPath()+"/");
 				// }
 				String listenPath = apiEntity.getListenPath();
-				String targetUrl = apiEntity.getDefaultTargetUrl(); // endPoint如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
+				String targetUrl = apiEntity.getDefaultTargetUrl(); // 如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
 				String resourceType = apiEntity.getResourceType();
 				/*** 添加api到网关接口 ***/
+				/** 20180319 update:api支持url重定向。如果回源地址不为空。就要支持url重定向*/
 				JSONObject params = generateGwApiJson(apiEntity.getVersionId(), listenPath, listenPath, resourceType,
-						targetUrl, map, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+						targetUrl, versionList, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
 
 				if (params == null) {
 					_LOGGER.info("拼接网关api json发生错误");
@@ -258,9 +263,7 @@ public class ManageApiServiceImpl implements IManageApiService {
 	}
 
 	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String resourceType,
-			String targetUrl, Map<String, String> map,
-
-			boolean gatewayApiVersionedTrue) {
+			String targetUrl, List<GatewayVersion> versionList, boolean gatewayApiVersionedTrue) {
 
 		String path = Constants.GW_API_JSON;
 		JSONObject job = LocalFileReadUtil.readLocalClassPathJson(path);
@@ -274,12 +277,27 @@ public class ManageApiServiceImpl implements IManageApiService {
 		job.put(DBFieldsConstants.GW_API_ID, versionId);
 		job.put(DBFieldsConstants.GW_API_RESOURCE_TYPE, resourceType);
 		JSONObject versions = new JSONObject();
-		for (String key : map.keySet()) {
+		for (GatewayVersion gVersion : versionList) {
 			JSONObject version = new JSONObject();
-			version.put(DBFieldsConstants.GW_API_VERSIONS_NAME, key);
+			version.put(DBFieldsConstants.GW_API_VERSIONS_NAME, gVersion.getVersion());
 			version.put(DBFieldsConstants.GW_API_VERSIONS_EXPIRES, "-1");
-			version.put(DBFieldsConstants.GW_API_VERSIONS_OVERRIDE_TARGET, map.get(key));
-			versions.put(key, version);
+			version.put(DBFieldsConstants.GW_API_VERSIONS_OVERRIDE_TARGET, gVersion.getListenPath());
+			/** 20180319 update:api支持url重定向。如果回源地址不为空。就要支持url重定向*/
+			if(StringUtils.isNotBlank(gVersion.getOrgPath())){
+				version.put(DBFieldsConstants.GW_API_VERSIONS_USE_EXTENDED_PATHS, true);
+				JSONObject extendedPaths = new JSONObject();
+				JSONArray urlReArr = new JSONArray();
+				JSONObject urlReObj = new JSONObject();
+				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_PATH, 
+						listenPath); //TODO 这里的listenPath不同版本都必须使用相同的，做不到不同的版本不同的listenPath
+				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_METHOD, gVersion.getMethod().toUpperCase());
+				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_PATTERN, "/(.+)");
+				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_REWRITE_TO, gVersion.getOrgPath());
+				urlReArr.put(urlReObj);
+				extendedPaths.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITES, urlReArr);
+				version.put(DBFieldsConstants.GW_API_VERSIONS_EXTENDED_PATHS, extendedPaths);
+			}
+			versions.put(gVersion.getVersion(), version);
 		}
 		// job.put(DBFieldsConstants.GW_API_VERSIONS, versions);
 		job.getJSONObject(DBFieldsConstants.GW_API_VERSION_DATA).put(DBFieldsConstants.GW_API_VERSIONS, versions);

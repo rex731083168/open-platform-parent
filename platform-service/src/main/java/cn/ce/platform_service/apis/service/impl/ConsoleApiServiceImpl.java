@@ -25,6 +25,7 @@ import cn.ce.platform_service.apis.dao.IMysqlApiArgDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiCodeDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiHeaderDao;
+import cn.ce.platform_service.apis.dao.IMysqlApiQueryArgDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiResultDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiRexampleDao;
 import cn.ce.platform_service.apis.dao.INewApiDao;
@@ -75,6 +76,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	private IMysqlApiHeaderDao apiHeaderDao;
 	@Resource
 	private IMysqlApiArgDao apiArgDao;
+	@Resource
+	private IMysqlApiQueryArgDao apiQueryArgDao;
 	@Resource
 	private IMysqlApiResultDao apiResultDao;
 	@Resource
@@ -141,27 +144,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			return new Result<String>("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
 		}
 		// 第一次添加接口,并且选择未开启版本控制
-//		if (apiEntity.getApiVersion() == null || 
-//				StringUtils.isBlank(apiEntity.getApiVersion().getVersion())) {
-//			//api添加者信息和添加时间
-//			apiEntity.setUserId(user.getId());
-//			apiEntity.setUserName(user.getUserName());
-//			apiEntity.setCreateTime(new Date());
-//			
-//			//未开启版本控制的version信息
-//			ApiVersion version = new ApiVersion();
-//			version.setVersionId(UUID.randomUUID().toString().replace("-", ""));
-//			apiEntity.setApiVersion(version);
-//			
-//			// 过滤apienname不能以/开头和结尾
-//			// TODO 2期无法获取开放应用的enName，所以添加时不拼接和处理apiEnName lida 2017年10月18日17:10:19
-//			if(StringUtils.isNotBlank(apiEntity.getApiEnName())){
-//				apiEntity.setApiEnName(apiEntity.getApiEnName().replaceAll("/", ""));
-//			}
-//
-//			newApiDao.save(apiEntity);
-//
-//		} else {
 			
 			// 开启版本控制
 			if(StringUtils.isBlank(user.getId())
@@ -293,23 +275,36 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Override
 	public Result<?> showApiList(QueryApiEntity entity) {
 		
-//		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
 		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
 
-		//提供者查看api列表
-		//Page<ApiEntity> page = newApiDao.findSupplierApis(entity,currentPage, pageSize);
-		
 		int totalNum =  mysqlApiDao.findListSize(entity);
 		List<NewApiEntity> apiList = mysqlApiDao.getPagedList(entity);
 		
-//		Page<NewApiEntity> page = new Page<NewApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
-//		page.setItems(apiList);
 		Page<ApiEntity> page = new Page<ApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
 		page.setItems(ApiTransform.transToApis(apiList));
 		
 		result.setSuccessData(page);
 		return result;
 	}
+	
+
+	@Override
+	public Result<?> showDocApiList(QueryApiEntity entity) {
+		
+		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
+
+		int totalNum =  mysqlApiDao.findListSize(entity);
+		List<NewApiEntity> apiList = mysqlApiDao.getPagedList(entity);
+		for (NewApiEntity api : apiList) {
+			api.setOrgPath(null); //文档中心回源地址不可见
+		}
+		Page<ApiEntity> page = new Page<ApiEntity>(entity.getCurrentPage(),totalNum,entity.getPageSize());
+		page.setItems(ApiTransform.transToApis(apiList));
+		
+		result.setSuccessData(page);
+		return result;
+	}
+
 	
 	/**
 	 * @Title: checkApiChName
@@ -599,6 +594,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			arg.setId(RandomUtil.random32UUID());
 			apiArgDao.save(arg);
 		}
+
+		List<ApiArgEntity> queryArgs = apiEntity.getQueryArgs();
+		for (ApiArgEntity arg : queryArgs) {
+			arg.setApiId(apiEntity.getId());
+			arg.setId(RandomUtil.random32UUID());
+			apiQueryArgDao.save(arg);
+		}
 		
 		List<ApiResultEntity> results = apiEntity.getResult();
 		for (ApiResultEntity result : results) {
@@ -671,6 +673,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		apiHeaderDao.deleteByApiId(apiEntity.getId());
 		apiArgDao.deleteByApiId(apiEntity.getId());
+		apiQueryArgDao.deleteByApiId(apiEntity.getId());
 		apiResultDao.deleteByApiId(apiEntity.getId());
 		apiRexampleDao.deleteByApiId(apiEntity.getId());
 		apiCodeDao.deleteByApiId(apiEntity.getId());
@@ -687,6 +690,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			arg.setId(RandomUtil.random32UUID());
 			arg.setApiId(apiEntity.getId());
 			apiArgDao.save(arg);
+		}
+		
+		List<ApiArgEntity> queryArgs = apiEntity.getQueryArgs();
+		for (ApiArgEntity queryArg : queryArgs) {
+			queryArg.setId(RandomUtil.random32UUID());
+			queryArg.setApiId(apiEntity.getId());
+			apiQueryArgDao.save(queryArg);
 		}
 		
 		List<ApiResultEntity> results = apiEntity.getResult();
@@ -712,5 +722,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 		return true;
 	}
+
 
 }

@@ -67,4 +67,6 @@ public class AuditConstants {
 	/********** 文件大小控制 **********/
 	public static final long MAX_UPLOAD_SIZE= 2097152; // 2M=2097152bytes
 	
+	public static final String STATS_BUCKET = "2";
+	
 }

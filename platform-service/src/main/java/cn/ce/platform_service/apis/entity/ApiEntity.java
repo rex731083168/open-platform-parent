@@ -63,6 +63,8 @@ public class ApiEntity implements Serializable {
 	
 	@Field("listenPath")
 	private String listenPath;
+	private String protocol; //协议。http或者https
+	private String orgPath; //回原地址。非必填
 	
 	/** http方法GET或POST */
 	@Field("httpMethod")
@@ -76,6 +78,9 @@ public class ApiEntity implements Serializable {
 	@Field("args")
 	@Deprecated
 	private List<SubArgEntity> args;
+	
+	private List<SubArgEntity> queryArgs; //查询参数
+	
 	@Deprecated
 	/** 返回结果描述 */
 	@Field("result")
@@ -156,6 +161,10 @@ public class ApiEntity implements Serializable {
      */
     @Field("resourceTypeName")
     private String resourceTypeName;
+    
+    private String requestBodyType; //请求body类型 :json/form
+    
+    private String responseBodyType; //返回参数类型:json/form
     
     /** 服务分类信息 */
     @Transient
@@ -428,19 +437,61 @@ public class ApiEntity implements Serializable {
 	public void setDefaultTargetUrl(String defaultTargetUrl) {
 		this.defaultTargetUrl = defaultTargetUrl;
 	}
+	
+	public String getRequestBodyType() {
+		return requestBodyType;
+	}
+
+	public void setRequestBodyType(String requestBodyType) {
+		this.requestBodyType = requestBodyType;
+	}
+
+	public String getResponseBodyType() {
+		return responseBodyType;
+	}
+
+	public void setResponseBodyType(String responseBodyType) {
+		this.responseBodyType = responseBodyType;
+	}
+
+	public List<SubArgEntity> getQueryArgs() {
+		return queryArgs;
+	}
+
+	public void setQueryArgs(List<SubArgEntity> queryArgs) {
+		this.queryArgs = queryArgs;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+
+	public String getOrgPath() {
+		return orgPath;
+	}
+
+	public void setOrgPath(String orgPath) {
+		this.orgPath = orgPath;
+	}
 
 	@Override
 	public String toString() {
 		return "ApiEntity [id=" + id + ", openApplyId=" + openApplyId + ", userId=" + userId + ", userName=" + userName
 				+ ", apiChName=" + apiChName + ", appCode=" + appCode + ", endPoint=" + endPoint + ", defaultTargetUrl="
-				+ defaultTargetUrl + ", listenPath=" + listenPath + ", httpMethod=" + httpMethod + ", headers="
-				+ headers + ", args=" + args + ", result=" + result + ", retExample=" + retExample + ", errCodes="
-				+ errCodes + ", apiVersion=" + apiVersion + ", apiType=" + apiType + ", desc=" + desc + ", state="
-				+ state + ", countByDay=" + countByDay + ", checkState=" + checkState + ", checkMem=" + checkMem
-				+ ", quotaMax=" + quotaMax + ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per="
-				+ per + ", createTime=" + createTime + ", apiSource=" + apiSource + ", enterpriseName=" + enterpriseName
-				+ ", resourceType=" + resourceType + ", resourceTypeName=" + resourceTypeName + ", openApplyEntity="
-				+ openApplyEntity + "]";
+				+ defaultTargetUrl + ", listenPath=" + listenPath + ", protocol=" + protocol + ", orgPath=" + orgPath
+				+ ", httpMethod=" + httpMethod + ", headers=" + headers + ", args=" + args + ", queryArgs=" + queryArgs
+				+ ", result=" + result + ", retExample=" + retExample + ", errCodes=" + errCodes + ", apiVersion="
+				+ apiVersion + ", apiType=" + apiType + ", desc=" + desc + ", state=" + state + ", countByDay="
+				+ countByDay + ", checkState=" + checkState + ", checkMem=" + checkMem + ", quotaMax=" + quotaMax
+				+ ", quotaRenewalRate=" + quotaRenewalRate + ", rate=" + rate + ", per=" + per + ", createTime="
+				+ createTime + ", apiSource=" + apiSource + ", enterpriseName=" + enterpriseName + ", resourceType="
+				+ resourceType + ", resourceTypeName=" + resourceTypeName + ", requestBodyType=" + requestBodyType
+				+ ", responseBodyType=" + responseBodyType + ", openApplyEntity=" + openApplyEntity + "]";
 	}
+
 	
 }

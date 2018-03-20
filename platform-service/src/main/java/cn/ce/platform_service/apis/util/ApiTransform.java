@@ -35,24 +35,26 @@ public class ApiTransform {
 		List<RetEntity> ors = entity.getResult();
 		RetExamEntity ore = entity.getRetExample();
 		List<ErrorCodeEntity> oecs = entity.getErrCodes();
+		List<SubArgEntity> oqas = entity.getQueryArgs();
 		
 		entity.setHeaders(null);
 		entity.setArgs(null);
+		entity.setQueryArgs(null);
 		entity.setResult(null);
 		entity.setRetExample(null);
 		entity.setErrCodes(null);
 		NewApiEntity newEntity = new NewApiEntity();
-		try {
-			CoverBeanUtils.copyProperties(newEntity, entity);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-			return null ;
+	
+		if(!CoverBeanUtils.copyProperties(newEntity, entity)){
+			return null;
 		}
+
 		newEntity.setHeaders(parserApiHeaders(ohs));
 		newEntity.setArgs(parserApiArgs(oas));
 		newEntity.setResult(parserApiResult(ors));
 		newEntity.setRetExample(parserApiRExample(ore));
 		newEntity.setErrCodes(parserApiErrorCode(oecs));
+		newEntity.setQueryArgs(parserApiQueryArgs(oqas));
 		
 		if(null != entity.getApiVersion()){
 			newEntity.setVersion(entity.getApiVersion().getVersion());
@@ -63,6 +65,7 @@ public class ApiTransform {
 		return newEntity;
 	}
 
+
 	public static ApiEntity transToApi(NewApiEntity entity) {
 		if(null == entity){
 			return null;
@@ -70,6 +73,7 @@ public class ApiTransform {
 		
 		List<ApiHeaderEntity> hs = entity.getHeaders();
 		List<ApiArgEntity> as = entity.getArgs();
+		List<ApiArgEntity> qas = entity.getQueryArgs();
 		List<ApiResultEntity> rs = entity.getResult();
 		ApiResultExampleEntity re = entity.getRetExample();
 		List<ApiCodeEntity> ecs = entity.getErrCodes();
@@ -79,17 +83,17 @@ public class ApiTransform {
 		entity.setResult(null);
 		entity.setRetExample(null);
 		entity.setErrCodes(null);
+		entity.setQueryArgs(null);
 		
 		ApiEntity oa = new ApiEntity();
-		try {
-			CoverBeanUtils.copyProperties(oa, entity);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-			return null ;
+
+		if(!CoverBeanUtils.copyProperties(oa, entity)){
+			return null;
 		}
 		
 		oa.setHeaders(parserOApiHeaders(hs));
 		oa.setArgs(parserOApiArgs(as));
+		oa.setQueryArgs(parserOApiQueryArgs(qas));
 		oa.setResult(parserOApiResult(rs));
 		oa.setRetExample(parserOApiRExample(re));
 		oa.setErrCodes(parserOApiErrorCode(ecs));
@@ -189,6 +193,24 @@ public class ApiTransform {
 		}
 		return oas;
 	}
+	
+	private static List<SubArgEntity> parserOApiQueryArgs(List<ApiArgEntity> qas) {
+		if(null == qas){
+			return null;
+		}
+		
+		List<SubArgEntity> oas = new ArrayList<SubArgEntity>();
+		for (ApiArgEntity a : qas) {
+			SubArgEntity qoa = new SubArgEntity();
+			qoa.setArgName(a.getArgName());
+			qoa.setArgType(a.getArgType());
+			qoa.setExample(a.getExample());
+			qoa.setRequired(a.isRequired());
+			qoa.setDesc(a.getArgDesc());
+			oas.add(qoa);
+		}
+		return oas;
+	}
 
 	private static List<SubArgEntity> parserOApiHeaders(List<ApiHeaderEntity> hs) {
 		if(null == hs || hs.isEmpty()){
@@ -265,6 +287,24 @@ public class ApiTransform {
 			a.setRequired(oa.isRequired());
 			a.setArgDesc(oa.getDesc());
 			as.add(a);
+		}
+		return as;
+	}
+	
+	private static List<ApiArgEntity> parserApiQueryArgs(List<SubArgEntity> oqas) {
+		if(null == oqas || oqas.size() < 1){
+			return null;
+		}
+		
+		List<ApiArgEntity> as = new ArrayList<ApiArgEntity>();
+		for (SubArgEntity oa : oqas) {
+			ApiArgEntity qa = new ApiArgEntity();
+			qa.setArgName(oa.getArgName());
+			qa.setArgType(oa.getArgType());
+			qa.setExample(oa.getExample());
+			qa.setRequired(oa.isRequired());
+			qa.setArgDesc(oa.getDesc());
+			as.add(qa);
 		}
 		return as;
 	}

@@ -58,18 +58,12 @@ public class OpenApplyController {
 			@RequestParam(required = false , defaultValue = "10") int pageSize) {
 		
 		QueryOpenApplyEntity entity = new QueryOpenApplyEntity();
-		try {
-			CoverBeanUtils.copyProperties(entity, entity1);
-		} catch (IllegalAccessException | InvocationTargetException e1) {
-			e1.printStackTrace();
-			return new Result<String>("程序内部异常",ErrorCodeNo.SYS004,null,Status.FAILED);
-		}
-		try {
-			CoverBeanUtils.copyProperties(entity, entity1);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
+
+	
+		if(!CoverBeanUtils.copyProperties(entity, entity1)){
 			return new Result<String>("程序内部异常",ErrorCodeNo.SYS004, null, Status.FAILED);
 		}
+
 		entity.setCurrentPage(currentPage);
 		entity.setPageSize(pageSize);
 		return consoleOpenApplyService.applyList(entity);

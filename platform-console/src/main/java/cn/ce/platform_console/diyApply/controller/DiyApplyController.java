@@ -57,11 +57,8 @@ public class DiyApplyController {
 			@RequestParam(required = false, defaultValue = "1") int currentPage) {
 		
 		QueryDiyApplyEntity queryApply = new QueryDiyApplyEntity();
-		try {
-			CoverBeanUtils.copyProperties(queryApply, apply);
-		} catch (IllegalAccessException | InvocationTargetException e1) {
-			e1.printStackTrace();
-			return new Result<String>("类转化异常",ErrorCodeNo.SYS004,null,Status.FAILED);
+		if(!CoverBeanUtils.copyProperties(queryApply, apply)){
+			return new Result<String>("程序内部异常",ErrorCodeNo.SYS004, null, Status.FAILED);
 		}
 		queryApply.setApplyId(apply.getId());
 		queryApply.setCurrentPage(currentPage);

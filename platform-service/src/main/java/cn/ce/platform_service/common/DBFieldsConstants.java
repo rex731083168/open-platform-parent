@@ -47,6 +47,13 @@ public class DBFieldsConstants {
 	public static final String GW_API_VERSIONS_NAME = "name";
 	public static final String GW_API_VERSIONS_EXPIRES = "expires";
 	public static final String GW_API_VERSIONS_OVERRIDE_TARGET = "override_target";
+	public static final String GW_API_VERSIONS_USE_EXTENDED_PATHS = "use_extended_paths";
+	public static final String GW_API_VERSIONS_EXTENDED_PATHS = "extended_paths";
+	public static final String GW_API_VERSIONS_URL_REWRITES = "url_rewrites";
+	public static final String GW_API_VERSIONS_URL_REWRITE_PATH = "path";
+	public static final String GW_API_VERSIONS_URL_REWRITE_METHOD = "method";
+	public static final String GW_API_VERSIONS_URL_REWRITE_PATTERN = "match_pattern";
+	public static final String GW_API_VERSIONS_URL_REWRITE_REWRITE_TO = "rewrite_to";
 	public static final String GW_API_PROXY_LISTENPATH = "listen_path";
 	public static final String GW_API_PROXY_TARGETURL = "target_url";
 	public static final String GW_API_PROXY = "proxy";

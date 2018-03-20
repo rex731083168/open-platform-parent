@@ -23,6 +23,7 @@ import cn.ce.es.util.ElasticsearchUtils;
 import cn.ce.es.util.SplitDateUtil;
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.Result;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -77,7 +78,7 @@ public class StatsServiceImpl implements IStatsService {
 		String tempkey = nae.getVersionId();
 		String version = nae.getVersion();
 
-		if ("2".equals(param)) {
+		if (AuditConstants.STATS_BUCKET.equals(param)) {
 			mpb = QueryBuilders.matchPhraseQuery("api_id", tempkey);
 			mpbv = QueryBuilders.matchPhraseQuery("api_version", version);
 		} else {

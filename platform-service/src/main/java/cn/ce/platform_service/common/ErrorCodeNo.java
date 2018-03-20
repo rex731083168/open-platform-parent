@@ -48,12 +48,12 @@ public enum ErrorCodeNo {
 	
 	
 	private String desc;
-	private String codeNo;
+//	private String codeNo;
 	
-	private ErrorCodeNo(String codeNo,String desc){
-		this.desc = desc;
-		this.codeNo = codeNo;
-	}
+//	private ErrorCodeNo(String codeNo,String desc){
+//		this.desc = desc;
+//		this.codeNo = codeNo;
+//	}
 	
 	private ErrorCodeNo(String desc){
 		this.desc = desc;
@@ -63,8 +63,8 @@ public enum ErrorCodeNo {
 		return desc;
 	}
 
-	public String getCodeNo() {
-		return codeNo;
-	}
+//	public String getCodeNo() {
+//		return codeNo;
+//	}
 	
 }
