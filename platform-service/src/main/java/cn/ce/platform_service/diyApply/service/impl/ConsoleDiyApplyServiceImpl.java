@@ -1,5 +1,7 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +13,8 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,12 +35,15 @@ import cn.ce.platform_service.common.RateConstants;
 import cn.ce.platform_service.common.RateEnum;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.Menu;
 import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.RetMenu;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
@@ -573,5 +580,233 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		Result<String> result = new Result<String>();
 		result.setSuccessMessage("一共"+diyList.size()+"条数据，成功插入mysql数据库"+i+"条");
 		return result;
+	}
+
+	@Override
+	public Result<?> productMenuList1(String tenantId) {
+		Result<List<RetMenu>> result = new Result<>();
+
+		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList1");
+
+		if (StringUtils.isBlank(productMenuListURL)) {
+			_LOGGER.error("productMenuListURL is null !");
+			result.setErrorMessage("获取产品菜单列表错误,请联系管理员!");
+			return result;
+		}
+
+		String reqURL = productMenuListURL.replace("{tenantId}", tenantId);
+
+		_LOGGER.info("send productMenuList URL is " + reqURL);
+
+		try {
+
+			StringBuffer sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
+
+			_LOGGER.debug("produMenuList return json:" + sendGetRequest);
+
+			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest.toString());
+
+			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg") && jsonObject.has("data")) {
+
+				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+
+				switch (status) {
+				case "200":
+					result.setStatus(Status.SUCCESS);
+
+					result.setSuccessData(com.alibaba.fastjson.JSONArray.parseArray((jsonObject.getString("data")), RetMenu.class));
+
+					break;
+				
+				// TODO other status
+//				case "201":
+//					result.setErrorCode(ErrorCodeNo.SYS029);
+//					result.setStatus(Status.FAILED);
+//					break;
+//				case "301":
+//					result.setErrorCode(ErrorCodeNo.SYS029);
+//					result.setStatus(Status.FAILED);
+//					break;
+				default:
+					result.setErrorCode(ErrorCodeNo.SYS029);
+					result.setStatus(Status.SYSTEMERROR);
+					break;
+				}
+
+				result.setMessage(jsonObject.get("msg").toString());
+
+			} else {
+				_LOGGER.error("获取产品菜单列表时,缺失返回值:" + jsonObject);
+
+				result.setErrorMessage("获取产品菜单列表错误!");
+			}
+			
+		} catch (Exception e) {
+			_LOGGER.error("send productMenuList error e:" + e.toString());
+			result.setErrorMessage("获取产品菜单列表错误!");
+		}
+		// TODO Auto-generated method stub
+		return result;
+	}
+
+	@Override
+	public Result<?> registerMenu1(String tenantId, List<Menu> menus) {
+		String registerMenuURL = PropertiesUtil.getInstance().getValue("registerMenu1");
+
+		Result<String> result = new Result<>();
+		if (StringUtils.isBlank(registerMenuURL)) {
+			_LOGGER.error("registerMenuURL is null !");
+			result.setErrorMessage("发布菜单错误,请联系管理员");
+			return result;
+		}
+		
+		//如果id不为空校验menus
+		if(!validateMenu(menus)){
+			result.setErrorMessage("发布菜单错误,请联系管理员",ErrorCodeNo.SYS032); 
+			return result;
+		}
+		for (Menu menu : menus) {
+			menu.setCode(RandomUtil.random32UUID());
+			menu.setFrame(1);
+		}
+		
+		String reqURL = registerMenuURL.replace("{tenantId}", tenantId);
+		String menusStr = com.alibaba.fastjson.JSONObject.toJSONString(menus);
+		_LOGGER.info("修改或注册的菜单为"+menusStr);
+		List<NameValuePair> list = new ArrayList<NameValuePair>();
+		list.add(new BasicNameValuePair("customerMenus", menusStr));
+		try {
+			String sentPostByForm = ApiCallUtils.putOrPostForm(reqURL, list, null, HttpMethod.POST);
+//			String sendPostByJson = HttpClientUtilsNew.getResponseString(registerMenuURL, body);
+
+			_LOGGER.info("registerMenuURL return sentPostByForm : " + sentPostByForm);
+
+			JSONObject jsonObject = JSONObject.fromObject(sentPostByForm);
+
+			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {
+
+				String status = null == jsonObject.get("status") ? "" : jsonObject.get("status").toString();
+
+				switch (status) {
+				case "200":
+					result.setStatus(Status.SUCCESS);
+					result.setErrorCode(ErrorCodeNo.SYS000);
+					break;
+				case "110":
+					result.setStatus(Status.FAILED);
+					break;
+				// TODO other status
+//				case "301":
+//					result.setStatus(Status.FAILED);
+//					break;
+				default:
+					result.setStatus(Status.SYSTEMERROR);
+					break;
+				}
+				result.setMessage(jsonObject.get("msg").toString());
+			} else {
+				_LOGGER.error("发布菜单时,缺失返回值:" + jsonObject);
+
+				result.setErrorMessage("发布菜单出现错误!");
+			}
+		} catch (Exception e) {
+			_LOGGER.error("send registerMenuURL error,e:" + e.toString());
+			result.setErrorMessage("发布菜单错误!");
+		}
+		return result;
+	}
+
+	@Override
+	public Result<?> deleteMenu1(ArrayList<String> ids) {
+		String deleteMenuURL = PropertiesUtil.getInstance().getValue("deleteMenu1");
+
+		Result<String> result = new Result<>();
+		if (StringUtils.isBlank(deleteMenuURL)) {
+			_LOGGER.error("registerMenuURL is null !");
+			result.setErrorMessage("发布菜单错误,请联系管理员");
+			return result;
+		}
+		
+		String reqURL = null;
+		try {
+			reqURL = deleteMenuURL.replace("{ids}", URLEncoder.encode(ids.toString(), "utf-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			String sendGet = ApiCallUtils.getOrDelMethod(reqURL, null, HttpMethod.GET);
+
+			_LOGGER.info("deleteMenuURL return setGet : " + sendGet);
+
+			JSONObject jsonObject = JSONObject.fromObject(sendGet);
+
+			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {
+
+				String status = null == jsonObject.get("status") ? "" : jsonObject.get("status").toString();
+
+				switch (status) {
+				case "200":
+					result.setStatus(Status.SUCCESS);
+					result.setErrorCode(ErrorCodeNo.SYS000);
+					break;
+				// TODO other status
+//				case "201":
+//					result.setStatus(Status.FAILED);
+//					break;
+//				case "301":
+//					result.setStatus(Status.FAILED);
+//					break;
+				default:
+					result.setStatus(Status.SYSTEMERROR);
+					break;
+				}
+				result.setMessage(jsonObject.get("msg").toString());
+			} else {
+				_LOGGER.error("删除菜单时,缺失返回值:" + jsonObject);
+
+				result.setErrorMessage("删除菜单出现错误!");
+			}
+		} catch (Exception e) {
+			_LOGGER.error("send deleteMenuURL error,e:" + e.toString());
+			result.setErrorMessage("删除菜单错误!");
+		}
+		return result;
+	}
+	
+	private boolean validateMenu(List<Menu> menus) {
+		
+		if(menus.isEmpty()){
+			return false;
+		}
+		for (Menu menu : menus) {
+			//如果id为空做添加叫校验。否则做修改校验
+			if(null != menu.getId() && menu.getId() > 0){
+				//修改校验
+				if(StringUtils.isBlank(menu.getUrl())){
+					_LOGGER.info("菜单url错误");
+					return false;
+				}
+			}else{
+				//添加校验
+				if(null == menu.getLevel() || menu.getLevel() < 1 || menu.getLevel() > 3){
+					_LOGGER.info("菜单level错误");
+					return false;
+				}else if(StringUtils.isBlank(menu.getUrl())){
+					_LOGGER.info("菜单url错误");
+					return false;
+				}else if(null == menu.getParentId() && null == menu.getBeforeMenuId()
+						&& null == menu.getBehandMenuId()){
+					_LOGGER.info("菜单相对定位坐标错误");
+					return false;
+				}else if(null == menu.getPoint() || menu.getPoint() < 1){
+					_LOGGER.info("菜单相对定位位移错误");
+					return false;
+				}else if(1 != menu.getLeaf() && 0 != menu.getLeaf()){
+					_LOGGER.info("菜单是否为叶子错误");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

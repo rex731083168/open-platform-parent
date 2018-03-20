@@ -1,9 +1,12 @@
 package cn.ce.platform_service.diyApply.service;
 
 import cn.ce.annotation.dubbodescription.InterfaceDescription;
+import java.util.ArrayList;
+import java.util.List;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.Menu;
 import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 
@@ -83,6 +86,12 @@ public interface IConsoleDiyApplyService {
 	Result<?> updateApply(DiyApplyEntity apply);
 
 	Result<?> migraDiyApply();
+
+	Result<?> productMenuList1(String tenantId);
+
+	Result<?> registerMenu1(String tenantId, List<Menu> menus);
+
+	Result<?> deleteMenu1(ArrayList<String> ids);
 
 
 	
