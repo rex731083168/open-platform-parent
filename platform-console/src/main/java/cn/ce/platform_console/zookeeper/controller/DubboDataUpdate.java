@@ -29,26 +29,15 @@ public class DubboDataUpdate {
 	@Value("#{redis['dubbo.node']}")
 	private String datakey;
 	
-	
 	@Resource
 	private IZkDubboService zkDubboService;
 
-
-	
-	@PostConstruct
-	//每次容器一启动就会调用该方法。注册到陈金龙的调度中心,但是调度中心没有删除操作。所以每次上线前需要陈金龙手动删除原来的调度动作
-	public void potConstruct(){
-		manualUpdataData();
-	}
-	
-
-		
 	@RequestMapping(value="/manualUpdataData", method=RequestMethod.GET)
 	public Result<?> manualUpdataData(){
 		boolean flag1 = zkDubboService.clearAll();
 		boolean flag2 = zkDubboService.updateData(zkconnectioninfo, datakey);
 		if(flag1 && flag2){
-			return Result.errorResult("批量更新数据库成功", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+			return new Result<String>("批量更新数据库成功", ErrorCodeNo.SYS000, null, Status.SUCCESS);
 		}
 		return Result.errorResult("批量更新数据失败", ErrorCodeNo.SYS031, null, Status.FAILED);
 	}

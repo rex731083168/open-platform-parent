@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cn.ce.platform_service.zk.dao.IDubboConsumerDao1">
+  	<resultMap type="cn.ce.platform_service.zk.entity.DubboConsumer" id="consumerMap">
+  		<id column="id" property="id"/>
+  		<result column="application" property="application"/>
+  		<result column="category" property="category"/>
+  		<result column="thread_pool_core_size" property="thradPoolCoreSize"/>
+  		<result column="interface_name" property="interfaceName"/>
+  		<result column="methods" property="methods"/>
+  		<result column="uri" property="uri"/>
+  		<result column="node_id" property="nodeId"/>
+  	</resultMap>
+  
+  	
+  	<delete id="clearAll">
+  		delete from dubbo_consumer
+  	</delete>
+  	
+  	<insert id="save" parameterType="cn.ce.platform_service.zk.entity.DubboConsumer">
+  		insert into dubbo_consumer 
+  			(id,application,category,thread_pool_core_size,interface_name,methods,uri,node_id)
+  		values
+  			(#{id},#{application},#{category},#{thradPoolCoreSize},#{interfaceName},#{methods},#{uri},#{nodeId})
+  	</insert>
+  	
+  	<select id="findTotalPage" resultType="int">
+  		select count(id) from dubbo_consumer
+  		<if test="nodeId !=null">
+  			where node_id=#{nodeId}
+  		</if>
+  	</select>
+  	
+  	<select id="findPage" resultMap="consumerMap">
+  		select * from dubbo_consumer 
+  		<if test="nodeId != null">
+  			where node_id=#{nodeId}
+  		</if>
+  		limit #{startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="findById" resultMap="consumerMap">
+  		select * from dubbo_consumer where id=#{id}
+  	</select>
+  	
+  </mapper>

@@ -15,12 +15,21 @@
 	http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	">
 
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
 	<bean id="ds" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
 		<property name="driver" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://127.0.0.1:3306/openplatform?characterEncoding=utf8&amp;allowMultiQueries=true" />
-		<property name="username" value="openplatform" />
-		<property name="password" value="q1w2e3r4ys" />
+			value="jdbc:mysql://${db.mysql.connect}?characterEncoding=utf8&amp;allowMultiQueries=true" />
+		<property name="username" value="${db.mysql.username}" />
+		<property name="password" value="${db.mysql.password}" />
+	    <property name="poolMaximumActiveConnections" value="20" />
+	    <property name="poolMaximumIdleConnections" value="10" />
+	    <property name="poolMaximumCheckoutTime" value="15" />
+	    <property name="poolTimeToWait" value="10" />
+	    <property name="poolPingQuery" value="select 1 from dual" />
+	    <property name="poolPingEnabled" value="true" />
+	    <property name="poolPingConnectionsNotUsedFor" value="0" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -28,7 +37,7 @@
 		<!-- <property name="typeAliasesPackage" value="cn.ce.platform_service" 
 			/> -->
 		<property name="mapperLocations"
-			value="classpath*:cn/ce/platform_console/**/mapper/*.xml" />
+			value="classpath*:cn/ce/platform_service/**/mapper/*.xml" />
 		<!-- <property name="configLocation" value="classpath:mybatis-config.xml" 
 			/> -->
 	</bean>
@@ -39,7 +48,7 @@
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="cn.ce.platform_console.**.dao" />
+		<property name="basePackage" value="cn.ce.platform_service.**.dao" />
 	</bean>
 
 </beans>

@@ -1,7 +1,5 @@
 package cn.ce.platform_service.admin.service;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpSession;
 
 import cn.ce.platform_service.common.Result;
@@ -19,5 +17,5 @@ import cn.ce.platform_service.common.Result;
 public interface IAdminService {
 	
 	//后天管理员登录
-	Result<Map<String, Object>> login(HttpSession session, String userName, String password);
+	Result<?> login(HttpSession session, String userName, String password);
 }

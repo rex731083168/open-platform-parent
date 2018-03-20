@@ -34,4 +34,6 @@ public interface IConsoleUserService {
 	User findUserById(String userId);
 
 	Result<?> checkIdCard(String idCard);
+
+	Result<String> migraUser();
 }

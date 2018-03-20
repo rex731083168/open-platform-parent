@@ -2,6 +2,7 @@ package cn.ce.platform_service.zk.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class ZkDubboParser{
 			// TODO
 			return null;
 		}
-		_LOGGER.info("org:"+data);
+		
 		String[] tempDataArray = data.split("\\?", 2);
 		if (tempDataArray.length != 2) {
 			_LOGGER.info("dubbo数据解析错误");
@@ -81,16 +82,16 @@ public class ZkDubboParser{
 			provider.setInterfaceName(params.get("interface"));
 		}
 		if(StringUtils.isNotBlank(params.get("timestamp"))){
-			provider.setTimeStamp(params.get("timestamp"));
+			provider.setTimeStamp(new Date(Long.valueOf(params.get("timestamp"))));
 		}
 		if(StringUtils.isNotBlank(params.get("loadbalance"))){
 			provider.setLoadBalance(params.get("loadbalance"));
 		}
 		if(StringUtils.isNotBlank(params.get("methods"))){
-			provider.setMethods(params.get("methods").split(","));
+//			provider.setMethods(params.get("methods").split(","));
+			provider.setMethods(params.get("methods"));
 		}
 
-		_LOGGER.info("aft:"+provider);
 		return provider;
 	}
 
@@ -103,7 +104,6 @@ public class ZkDubboParser{
 			// TODO
 			return null;
 		}
-		_LOGGER.info("org:"+data);
 
 		String[] tempDataArray = data.split("\\?", 2);
 		if (tempDataArray.length != 2) {
@@ -122,8 +122,8 @@ public class ZkDubboParser{
 		if(StringUtils.isNotBlank(params.get("application"))){
 			consumer.setApplication(params.get("application"));
 		}
-		if(StringUtils.isNotBlank(params.get("catetory"))){
-			consumer.setCatetory(params.get("catetory"));
+		if(StringUtils.isNotBlank(params.get("category"))){
+			consumer.setCategory(params.get("category"));
 		}
 		if(StringUtils.isNotBlank(params.get("default.ThreadPoolCoreSize"))){
 			consumer.setThradPoolCoreSize(params.get("default.ThreadPoolCoreSize"));
@@ -132,9 +132,9 @@ public class ZkDubboParser{
 			consumer.setInterfaceName(params.get("interface"));
 		}
 		if(StringUtils.isNotBlank(params.get("methods"))){
-			consumer.setMethods(params.get("methods").split(","));
+//			consumer.setMethods(params.get("methods").split(","));
+			consumer.setMethods(params.get("methods"));
 		}
-		_LOGGER.info("aft:"+consumer);
 		return consumer;
 	}
 

@@ -114,17 +114,29 @@
 			<url>http://10.12.51.10:8081/nexus/content/groups/public/</url>
 		</repository>
 
+		<repository>
+			<id>busnises</id>
+			<name>busnises Repositories</name>
+			<url>http://119.10.30.82:8081/nexus/content/groups/public</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+
 	</repositories>
 
 	<distributionManagement>
 		<repository>
-			<id>platform-releases</id>
+			<id>project-release</id>
 			<name>Maven Release Repository</name>
 			<!-- <url>http://10.12.40.200:8081/nexus/content/repositories/releases/</url> -->
 			<url>http://10.12.51.10:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
-			<id>platform-snapshots</id>
+			<id>project-snapshots</id>
 			<name>Maven Snapshot Repository</name>
 			<!-- <url>http://10.12.40.200:8081/nexus/content/repositories/snapshots/</url> -->
 			<url>http://10.12.51.10:8081/nexus/content/repositories/snapshots/</url>
@@ -144,9 +156,17 @@
 		<resources>
 			<!-- 先指定 src/main/resources下所有文件及文件夹为资源文件 -->
 			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.json</include>
+				</includes>
+			</resource>
+			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
 					<include>**/*</include>
+					<include>**/*.xml</include>
 					<include>conf/application.properties</include>
 				</includes>
 				<filtering>true</filtering>
@@ -223,36 +243,36 @@
 
 	<dependencies>
 
-	<!-- spring mbatis mysql -->
-	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>${myql.mysql-connector-java}</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.mybatis</groupId>
-		<artifactId>mybatis</artifactId>
-		<version>${org.mybatis.mybatis}</version>
-	</dependency>
+		<!-- spring mbatis mysql -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${myql.mysql-connector-java}</version>
+		</dependency>
 
-	<dependency>
-		<groupId>org.mybatis</groupId>
-		<artifactId>mybatis-spring</artifactId>
-		<version>${org.mybatis.mybatis-spring}</version>
-	</dependency>
-	
-	<!-- junit -->
-	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>${junit}</version>
-	</dependency>
-	<dependency>
-		<groupId>org.apache.zookeeper</groupId>
-		<artifactId>zookeeper</artifactId>
-		<version>${org.apache.zookeeper}</version>
-	</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${org.mybatis.mybatis}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${org.mybatis.mybatis-spring}</version>
+		</dependency>
+
+		<!-- junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>${org.apache.zookeeper}</version>
+		</dependency>
 		<!-- springmvc 文件上传 -->
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -611,15 +631,13 @@
 			<artifactId>dom4j</artifactId>
 			<version>${dom4j.version}</version>
 		</dependency>
-		
+
 	</dependencies>
-
-
-
 
 	<modules>
 		<module>platform-service</module>
 		<module>platform-console</module>
 		<module>platform-manage</module>
+		<module>annotation</module>
 	</modules>
 </project>

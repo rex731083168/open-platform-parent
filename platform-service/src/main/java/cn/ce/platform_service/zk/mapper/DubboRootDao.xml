@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cn.ce.platform_service.zk.dao.IDubboRootDao1">
+  	<resultMap type="cn.ce.platform_service.zk.entity.DubboRoot" id="rootMap">
+  		<id column="id" property="id"/>
+  		<result column="root_name" property="rootName"/>
+  	</resultMap>
+  
+  	
+  	<delete id="clearAll">
+  		delete from dubbo_root
+  	</delete>
+  	
+  	<insert id="save" parameterType="cn.ce.platform_service.zk.entity.DubboRoot">
+  		insert into dubbo_root 
+  			(id,root_name)
+  		values
+  			(#{id},#{rootName})
+  	</insert>
+  	
+  	<select id="findTotalPage" resultType="int">
+  		select count(id) from dubbo_root
+  	</select>
+  	
+  	<select id="findPage" resultMap="rootMap">
+  		select * from dubbo_root limit #{startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="findById" resultMap="rootMap">
+  		select * from dubbo_root where id=#{id}
+  	</select>
+  	
+  </mapper>

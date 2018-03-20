@@ -1,0 +1,86 @@
+package cn.ce.platform_service.apis.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
+import cn.ce.platform_service.apis.entity.QueryApiEntity;
+
+/**
+* @Description : 说明
+* @Author : makangwei
+* @Date : 2018年1月18日
+*/
+@Transactional(propagation=Propagation.REQUIRED)
+public interface IMysqlApiDao {
+	
+	public int save(ApiEntity apiEntity);
+
+	public void save1(NewApiEntity apiEntity);
+
+	public List<NewApiEntity> findByListenPath(String listenPath);
+
+	public NewApiEntity findById(String apiId);
+
+	public int checkListenPath(String listenPath);
+
+	public int saveOrUpdateEntity(NewApiEntity apiEntity);
+
+	public int findVersionNum(@Param("versionId")String versionId, @Param("version")String version);
+
+	public int updateVersionByVersionId(@Param("versionId")String versionId, @Param("newVersion")boolean b);
+
+	public int updateCheckState(@Param("apiId")String apiId,@Param("checkState") Integer checkState);
+
+	public NewApiEntity findTotalOneById(String apiId);
+
+	/**
+	 * 
+	 * @Description: 根据条件查询条数
+	 * @author: makangwei 
+	 * @date:   2018年1月23日 下午3:23:50 
+	 */
+	public int findListSize(QueryApiEntity entity);
+
+	public List<NewApiEntity> getPagedList(QueryApiEntity entity);
+
+	public int checkApiChName(@Param("apiChName")String apiChName, @Param("openApplyId")String openApplyId);
+	
+	public int checkVersion(@Param("versionId")String versionId, @Param("version")String version);
+
+	public int checkId(String id);
+	
+	public List<NewApiEntity> findByOpenApply(String openApplyId);
+
+	public int findByIdsAndNameLikeNum(@Param("apiIds")List<String> apiIds, @Param("apiName")String apiName, 
+			@Param("checkState")Integer checkState, @Param("startIndex")int startIndex, @Param("pageSize")Integer pageSize);
+
+	public List<NewApiEntity> findByIdsAndNameLike(@Param("apiIds")List<String> apiIds, @Param("apiName")String apiName, 
+			@Param("checkState")Integer checkState, @Param("startIndex")int startIndex, @Param("pageSize")Integer pageSize);
+
+	public List<NewApiEntity> findByIds(@Param("apiIds")List<String> apiIds);
+
+	public List<NewApiEntity> findByVersionId(String versionId);
+
+	public List<NewApiEntity> findByVersionIdExp(@Param("versionId")String versionId, @Param("id")String id);
+
+	public List<String> findIdByCheckState(Integer checkState);
+
+	public List<String> findIdByIdsOrOpenApplys(@Param("apiIds")List<String> apiIds, @Param("appIds")List<String> appIds, @Param("checkState")Integer checkState);
+
+	public List<NewApiEntity> findTotalOnesByIdsAndCheckState(@Param("apiIds")List<String> apiIds, @Param("checkState")Integer checkState);
+
+	public int deleteTotalOnesByIds(List<String> apiIds);
+
+	public int clearAll();
+
+	public List<NewApiEntity> findApiByApplyIdsAndCheckState(@Param("openApplyIds")List<String> openApplyIds, @Param("checkState")int checkState,
+			String apiTypeOpen);
+
+
+
+}

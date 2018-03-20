@@ -13,7 +13,7 @@ public class ApiExportParamEntity {
 	
 	private List<String> appIds;
 	
-	private Integer allFlag;
+	private Integer allFlag; //如果allFlag =1 代表导出数据库中所有审核通过的api
 
 	public List<String> getApiIds() {
 		return apiIds;

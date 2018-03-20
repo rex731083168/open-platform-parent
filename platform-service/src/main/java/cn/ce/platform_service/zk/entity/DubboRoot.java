@@ -22,6 +22,11 @@ public class DubboRoot {
 		this.rootName = rootName;
 	}
 
+	public DubboRoot(String rootName, String id) {
+		this.id = id;
+		this.rootName = rootName;
+	}
+
 	public String getId() {
 		return id;
 	}

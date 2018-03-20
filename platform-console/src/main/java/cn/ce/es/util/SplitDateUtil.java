@@ -144,8 +144,8 @@ public class SplitDateUtil {
 	}
 
 	public static void main(String[] args) {
-		List<KeyValueForDate> list = SplitDateUtil.getKeyValueForDate("2016-08-23T09:55:33.000+08:00",
-				"2016-08-23T10:55:00.000+08:00");
+		List<KeyValueForDate> list = SplitDateUtil.getKeyValueForDate("2016-08-23T09:55:33.000000000+08:00",
+				"2016-08-23T10:55:00.000000000+08:00");
 
 		System.out.println("开始日期--------------结束日期");
 		for (KeyValueForDate date : list) {

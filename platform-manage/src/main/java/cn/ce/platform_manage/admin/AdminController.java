@@ -8,11 +8,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_manage.base.BaseController;
 import cn.ce.platform_service.admin.service.IAdminService;
+import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
 
 @RestController
 @RequestMapping("/admin")
@@ -22,13 +25,14 @@ public class AdminController extends BaseController{
     private IAdminService adminService;
     
     @RequestMapping(value="/login", method=RequestMethod.POST)
-	public Result<Map<String,Object>> login(HttpSession session,String userName, String password) {
+	public Result<?> login(HttpSession session,
+			@RequestParam(required=true)String userName, 
+			@RequestParam(required=true)String password) {
     	
     	if(StringUtils.isBlank(userName) || StringUtils.isBlank(password)){
-    		Result<Map<String,Object>> result = new Result<Map<String,Object>>();
-    		result.setErrorMessage("用户名或密码不能为空");
-    		return result;
+    		return new Result<String>("用户名或密码不能为空",ErrorCodeNo.SYS005,null,Status.FAILED);
     	}
+    	
     	return adminService.login(session,userName,password);
 	}
 	
@@ -37,9 +41,7 @@ public class AdminController extends BaseController{
 	@RequestMapping(value = "/logOut", method = RequestMethod.POST)
 	public Result<String> logOut(HttpSession session) {
 		
-		Result<String> result = new Result<String>();
 		session.invalidate();
-		result.setSuccessMessage("退出登录成功");
-		return result;
+		return new Result<String>("退出登录成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}
 }

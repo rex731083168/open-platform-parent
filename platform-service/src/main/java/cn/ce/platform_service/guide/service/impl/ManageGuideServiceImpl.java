@@ -6,12 +6,15 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.guide.dao.IGuideDao;
+import cn.ce.platform_service.guide.dao.IMysqlGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
+import cn.ce.platform_service.guide.entity.QueryGuideEntity;
 import cn.ce.platform_service.guide.service.IManageGuideService;
 
 /**
@@ -23,56 +26,49 @@ import cn.ce.platform_service.guide.service.IManageGuideService;
  * @date dat2017年10月12日 time下午7:51:16
  *
  **/
-@Service("iManageGuideService")
+@Service("manageGuideService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ManageGuideServiceImpl implements IManageGuideService {
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ConsoleGuideServiceImpl.class);
+//	@Resource
+//	private IGuideDao guideDaoImpl;
 	@Resource
-	private IGuideDao guideDaoImpl;
+	private IMysqlGuideDao mysqlGuideDao;
 
 	@Override
-	public Result<Page<GuideEntity>> guideList(String guideName, String creatUserName, String applyId, Integer checkState, int currentPage,
-			int pageSize) {
-		// TODO Auto-generated method stub
-		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
-
-		result.setSuccessData(guideDaoImpl.listPage(guideName, creatUserName, applyId, checkState, currentPage,
-				pageSize));
+	public Result<Page<GuideEntity>> guideList(QueryGuideEntity guideEntity) {
 		
+		Result<Page<GuideEntity>> result = new Result<Page<GuideEntity>>();
+		int totalNum = mysqlGuideDao.findTotalNum(guideEntity);
+		List<GuideEntity> list = mysqlGuideDao.getList(guideEntity);
+		Page<GuideEntity> page = new Page<GuideEntity>(guideEntity.getCurrentPage(),totalNum,guideEntity.getPageSize(),list);
+		result.setSuccessData(page);
 		return result;
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids, Integer state, String checkMem) {
+	public Result<String> batchUpdateCheckState(List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
-		try {
-			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids, state, checkMem));
-			_LOGGER.info("bachUpdate guide message " + message + " count");
-			result.setSuccessMessage("审核成功:" + message + "条");
+//			String message = String.valueOf(guideDaoImpl.bachUpdateGuide(ids, checkState, checkMem));
+			int totalNum = mysqlGuideDao.bathUpdateCheckState(ids,checkState,checkMem);
+			_LOGGER.info("bachUpdate guide message " + totalNum + " count");
+			result.setSuccessMessage("审核成功:" + totalNum + "条");
 			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			_LOGGER.info("bachUpdate guide message faile " + e + " ");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("审核失败");
-			return result;
-		}
 	}
 
 	@Override
 	public Result<GuideEntity> getByid(String id) {
 		// TODO Auto-generated method stub
 		Result<GuideEntity> result = new Result<GuideEntity>();
-		GuideEntity byId = guideDaoImpl.getById(id);
+		//GuideEntity byId = guideDaoImpl.getById(id);
+		GuideEntity byId = mysqlGuideDao.findById(id);
 		if (null == byId) {
-			result.setMessage("应用id不存在!");
-			_LOGGER.info("getByid success 应用id不存在! ");
-			result.setErrorCode(ErrorCodeNo.SYS009);
+			result.setErrorMessage("当前指南不存在!",ErrorCodeNo.SYS009);
 		} else {
 			result.setSuccessData(byId);
 		}
-		_LOGGER.info("getByid success ");
 		return result;
 	}
 

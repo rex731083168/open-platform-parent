@@ -39,6 +39,7 @@ public enum ErrorCodeNo {
 	,SYS029("调用菜单中心异常，请检查参数")
 	,SYS030("审核失败")
 	,SYS031("批量更新dubbo数据失败")
+	,SYS032("传入数据格式错误")
 	,DOWNLOAD001("部分id不存在")
 	,DOWNLOAD002("开放应用id不存在")
 	,DOWNLOAD003("文件格式错误")
@@ -48,12 +49,12 @@ public enum ErrorCodeNo {
 	
 	
 	private String desc;
-	private String codeNo;
+//	private String codeNo;
 	
-	private ErrorCodeNo(String codeNo,String desc){
-		this.desc = desc;
-		this.codeNo = codeNo;
-	}
+//	private ErrorCodeNo(String codeNo,String desc){
+//		this.desc = desc;
+//		this.codeNo = codeNo;
+//	}
 	
 	private ErrorCodeNo(String desc){
 		this.desc = desc;
@@ -63,8 +64,8 @@ public enum ErrorCodeNo {
 		return desc;
 	}
 
-	public String getCodeNo() {
-		return codeNo;
-	}
+//	public String getCodeNo() {
+//		return codeNo;
+//	}
 	
 }

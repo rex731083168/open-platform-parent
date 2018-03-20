@@ -1,9 +1,9 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
@@ -11,16 +11,24 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
+import cn.ce.platform_service.apis.util.ApiTransform;
+import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
+import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.DiyBoundApi;
 import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.entity.tenantAppPage.TenantAppPage;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
@@ -37,13 +45,18 @@ import cn.ce.platform_service.util.PropertiesUtil;
  *
  **/
 @Service("publicDiyApplyServiceImple")
+@Transactional(propagation=Propagation.REQUIRED)
 public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	private static Logger _LOGGER = Logger.getLogger(PublicDiyApplyServiceImple.class);
 
 	@Resource
 	private INewApiDao newApiDao;
 	@Resource
+	private IMysqlApiDao mysqlApiDao;
+	@Resource
 	private IDiyApplyDao diyApplyDao;
+	@Resource
+	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
 	private IConsoleApiService consoleApiService;
 	
@@ -77,8 +90,7 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 			// Apps apps = (Apps) testgetUrlReturnObject("findPagedApps", replacedurl,
 			// Apps.class, classMap);
 			if (apps.getStatus().equals("200") || apps.getStatus().equals("110")) {
-				result.setData(apps);
-				result.setSuccessMessage("");
+				result.setSuccessData(apps);
 				return result;
 			} else {
 				_LOGGER.error("findPagedApps data http getfaile return code :" + apps.getMsg() + " ");
@@ -109,8 +121,7 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 			TenantApps applyproduct = (TenantApps) HttpClientUtil.getUrlReturnObject(replacedurl, TenantApps.class, null);
 
 			if (applyproduct.getStatus() != null && applyproduct.getStatus().equals("200")) {
-				result.setData(applyproduct);
-				result.setSuccessMessage("");
+				result.setSuccessData(applyproduct);
 				return result;
 			} else {
 				_LOGGER.error(
@@ -176,26 +187,34 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	@Override
 	public Result<?> limitScope(String diyApplyId, String openApplyId, String apiName, Integer currentPage, Integer pageSize ) {
 
+//		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
 		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
-		DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
+		//DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
+		DiyApplyEntity diyEntity = mysqlDiyApplyDao.findById(diyApplyId);
 		if (null == diyEntity) {
 			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS015);
 			return result;
 		}
-		Map<String, List<String>> limitMap = diyEntity.getLimitList();
-		if (limitMap == null || limitMap.size() == 0) {
+		
+		List<DiyBoundApi> boundApis = mysqlDiyApplyDao.findBoundApi(diyApplyId, openApplyId);
+		if(boundApis.size() < 1){
 			result.setErrorMessage("当前定制应用暂时未绑定该开放应用", ErrorCodeNo.SYS017);
 			return result;
 		}
-
-		Set<String> openApplySet = limitMap.keySet();
-		if (openApplySet.contains(openApplyId)) {
-			List<String> apiIds = limitMap.get(openApplyId);
-			Page<ApiEntity> apiPage = newApiDao.findApiPageByIdsAndNameLike(apiIds,apiName,new Page<ApiEntity>(currentPage,0,pageSize));
-			result.setSuccessData(apiPage);
-		} else {
-			result.setErrorMessage("当前开放应用不可用", ErrorCodeNo.SYS017);
+		List<String> apiIds = new ArrayList<String>();
+		for (DiyBoundApi diyBoundApi : boundApis) {
+			apiIds.add(diyBoundApi.getApiId());
 		}
+		
+		int num = mysqlApiDao.findByIdsAndNameLikeNum(apiIds,apiName,AuditConstants.API_CHECK_STATE_SUCCESS,(currentPage-1)*pageSize,pageSize);
+		List<NewApiEntity> apiList = mysqlApiDao.findByIdsAndNameLike(apiIds, apiName, AuditConstants.API_CHECK_STATE_SUCCESS, (currentPage-1)*pageSize, pageSize);
+		for (NewApiEntity api : apiList) {
+			api.setOrgPath(null); //通过定制应用看到的api列表不显示回源地址
+		}
+		
+		Page<ApiEntity> page = new Page<ApiEntity>(currentPage,num,pageSize);
+		page.setItems(ApiTransform.transToApis(apiList));
+		result.setSuccessData(page);
 		return result;
 	}
 }

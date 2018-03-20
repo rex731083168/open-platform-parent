@@ -287,5 +287,4 @@ public class NewApiDaoImpl extends BaseMongoDaoImpl<ApiEntity> implements INewAp
 	}
 
 
-
 }

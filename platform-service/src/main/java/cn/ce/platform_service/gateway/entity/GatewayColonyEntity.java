@@ -22,7 +22,7 @@ public class GatewayColonyEntity {
 	@Field("wColUrl")
 	private String wColUrl; //集群代理域名(外网)
 	@Field("colStatus")
-	private Integer colStatus;	//集群状态 1可用，0禁用
+	private Integer colStatus;	//集群状态 0启用，1禁用
 	@Field("colDesc")
 	private String colDesc;  //集群描述
 	

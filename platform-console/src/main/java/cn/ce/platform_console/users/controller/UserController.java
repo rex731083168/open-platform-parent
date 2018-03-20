@@ -42,7 +42,14 @@ public class UserController {
 
 	@Resource
 	private IConsoleUserService consoleUserService;
-
+	
+	/**
+	 * 
+	 * 用户中心迁移后，该类已经不再使用。
+	 * 新的迁移mysql未经过联调测试，如果重新使用该模块，需要重新联调测试
+	 * @date:   2018年01月29日 上午11:10:18 
+	 */
+	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	@ApiOperation("用户注册")
 	public Result<?> userRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session,
@@ -57,15 +64,11 @@ public class UserController {
 		
 		
 		//邮箱验证码校验
-		Result<String> result = new Result<String>();
-		
 		if(checkCode1 == null){
-			result.setErrorMessage("session数据不存在", ErrorCodeNo.SYS019);
-			return result;
+			return new Result<String>("session数据不存在", ErrorCodeNo.SYS019,null,Status.FAILED);
 		}
 		if(!user.getCheckCode().equals(checkCode1)){
-			result.setErrorMessage("验证码错误", ErrorCodeNo.SYS008);
-			return result;
+			return new Result<String>("验证码错误", ErrorCodeNo.SYS008,null,Status.FAILED);
 		}
 		 
 		return consoleUserService.userRegister(user);
@@ -86,10 +89,10 @@ public class UserController {
 	
 	@RequestMapping(value="/checkIdCard",method=RequestMethod.GET)
 	@ApiOperation("校验身份证唯一性")
-	public Result<?> checkIdCard(String idCard){
+	public Result<?> checkIdCard(@RequestParam(required=true) String idCard){
 		
 		if(StringUtils.isBlank(idCard)){
-			return Result.errorResult("idCard不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
+			return new Result<String>("idCard不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
 		}
 		
 		return consoleUserService.checkIdCard(idCard);
@@ -108,10 +111,7 @@ public class UserController {
 	@ApiOperation("检查登录")
 	public Result<?> checkLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		
-		Result<User> result = new Result<User>();
 		User user = null;
-		
-		
 
 		Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
 		if(userObj == null){
@@ -134,25 +134,17 @@ public class UserController {
 		_LOGGER.info("********checkLogin 获取新的用户数据：");
 		session.setAttribute(Constants.SES_LOGIN_USER, userNew);
 		
-		result.setSuccessData(userNew);
+		return new Result<User>(null,null,userNew,Status.SUCCESS);
 		
-		return result;
 	}
 
 	@RequestMapping(value = "/logOut", method = RequestMethod.POST)
 	@ApiOperation("退出登录")
 	public Result<?> logOut(HttpSession session) {
+		
 		_LOGGER.info("---------->> Action for logout");
-		Result<String> result = new Result<String>();
-		try {
-			session.invalidate();
-			result.setSuccessMessage("");
-			return result;
-		} catch (Exception e) {
-			_LOGGER.info("error happens when execute user logout",e);
-			result.setErrorMessage("");
-			return result;
-		}
+		session.invalidate();
+		return new Result<String>("ok",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}
 	
 	@RequestMapping(value="modifyPassword",method=RequestMethod.POST)
@@ -164,9 +156,7 @@ public class UserController {
 		
 		String uuid1 = (String)session.getAttribute("uuid");
 		if(!uuid.equals(uuid1)){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("uuid错误",ErrorCodeNo.SYS016);
-			return result;
+			return new Result<String>("uuid错误",ErrorCodeNo.SYS016,null,Status.FAILED);
 		}
 		
 		return consoleUserService.modifyPassword(email,newPassword);
@@ -181,7 +171,8 @@ public class UserController {
 	
 	@RequestMapping(value="/sendRePwdEmail", method=RequestMethod.POST)
 	@ApiOperation("忘记密码时发送邮箱验证码")
-	public Result<?> sendRePwdEmail(HttpSession session, @RequestParam String email){
+	public Result<?> sendRePwdEmail(HttpSession session, 
+			@RequestParam(required=true) String email){
 		
 		return consoleUserService.sendRePwdEmail(email,session);
 	}
@@ -195,24 +186,19 @@ public class UserController {
 		String verifyCode = session.getAttribute(email) == null ? "" : session.getAttribute(email).toString();
 		Long transTime = (Long) session.getAttribute(email+"TransTime");
 		
-		Result<String> result = new Result<String>();
 		if(StringUtils.isBlank(verifyCode) || transTime == null){
-			result.setErrorMessage("当前是新的session");
-			return result;
+			return new Result<String>("当前是新的session",ErrorCodeNo.SYS019,null,Status.FAILED);
 		}
 		if(!telVerifyCode.equals(verifyCode)){
-			result.setErrorMessage("验证码错误",ErrorCodeNo.SYS008);
-			return result;
+			return new Result<String>("验证码错误",ErrorCodeNo.SYS008,null,Status.FAILED);
 		}
 		if((transTime + Constants.TEL_VALIDITY) < System.currentTimeMillis()){
-			result.setErrorMessage("验证码过期",ErrorCodeNo.SYS011);
-			return result;
+			return new Result<String>("验证码过期",ErrorCodeNo.SYS011,null,Status.FAILED);
 		}
 		
 		String uuid = UUID.randomUUID().toString();
 		session.setAttribute("uuid", uuid);
-		result.setSuccessData(uuid);
-		return result;
+		return new Result<String>(uuid,ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}
 	
 	//校验邮箱
@@ -222,9 +208,7 @@ public class UserController {
 			String email){
 	
 		if(StringUtils.isBlank(email)){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("邮箱不能为空",ErrorCodeNo.SYS005);
-			return result;
+			return new Result<String>("邮箱不能为空",ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
 		return consoleUserService.checkEmail(email);
 	}
@@ -234,9 +218,7 @@ public class UserController {
 	public Result<?> checkUserName(String userName){
 		
 		if(StringUtils.isBlank(userName)){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("当前用户名不能为空",ErrorCodeNo.SYS005);
-			return result;
+			return new Result<String>("当前用户名不能为空",ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
 		
 		return consoleUserService.checkUserName(userName);
@@ -247,12 +229,8 @@ public class UserController {
 	public Result<?> checkTelNumber(String telNumber){
 		
 		if(StringUtils.isBlank(telNumber)){
-			Result<String> result = new Result<String>();
-			result.setErrorMessage("手机号不能为空",ErrorCodeNo.SYS005);
-			return result;
+			return new Result<String>("手机号不能为空",ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
-		
 		return consoleUserService.checkTelNumber(telNumber);
 	}
-	
 }

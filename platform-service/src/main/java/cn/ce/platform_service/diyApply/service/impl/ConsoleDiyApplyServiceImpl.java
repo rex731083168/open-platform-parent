@@ -1,5 +1,7 @@
 package cn.ce.platform_service.diyApply.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,14 +13,18 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.platform_service.apis.dao.INewApiDao;
-import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.dao.IMysqlApiDao;
+import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
@@ -29,16 +35,22 @@ import cn.ce.platform_service.common.RateConstants;
 import cn.ce.platform_service.common.RateEnum;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
+import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.Menu;
+import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.RetMenu;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.AppList;
 import cn.ce.platform_service.diyApply.entity.tenantAppsEntity.TenantApps;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
+import cn.ce.platform_service.util.RandomUtil;
 import cn.ce.platform_service.util.SplitUtil;
 import io.netty.handler.codec.http.HttpMethod;
 import net.sf.json.JSONObject;
@@ -52,15 +64,20 @@ import net.sf.json.JSONObject;
  *
  */
 @Service("consoleDiyApplyService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ConsoleDiyApplyServiceImpl.class);
-
+	
+//	@Resource
+//	private INewApiDao newApiDao;
 	@Resource
-	private INewApiDao newApiDao;
+	private IMysqlApiDao mysqlApiDao;
 	@Resource
 	private IDiyApplyDao diyApplyDao;
+	@Resource
+	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
 	private IConsoleApiService consoleApiService;
 	@Resource
@@ -70,30 +87,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<?> saveApply(DiyApplyEntity entity) {
 		Result<String> result = new Result<>();
 
-		// 构建查询对象
-		// Criteria c = new Criteria();
-		//
-		// if (StringUtils.isNotBlank(entity.getUser().getId())) {
-		// c.and(MongoFiledConstants.BASIC_USERID).is(entity.getUser().getId());
-		// }
-		//
-		// if (StringUtils.isNotBlank(entity.getApplyName())) {
-		// c.and(MongoFiledConstants.DIY_APPLY_APPLYNAME).is(entity.getApplyName());
-		// }
-		//
-		// // 修改时排除当前修改应用
-		// if (StringUtils.isNotBlank(entity.getId())) {
-		// c.and(MongoFiledConstants.BASIC_ID).ne(entity.getId());
-		// }
-		//
-		// Query query = new Query(c).with(new Sort(Direction.DESC,
-		// MongoFiledConstants.BASIC_CREATEDATE));
-
-		// List<DiyApplyEntity> findPageByList =
-		// diyApplyDao.findListByQuery(query);
-		List<DiyApplyEntity> findPageByList = diyApplyDao.findListByEntity(entity);
-
-		if (null != findPageByList && findPageByList.size() > 0) {
+		int applyNum = mysqlDiyApplyDao.checkApplyName(entity.getUser().getId(),entity.getApplyName());
+		
+//		if (null != findPageByList && findPageByList.size() > 0) {
+		if(applyNum > 0){
 			result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
 			return result;
 		}
@@ -149,6 +146,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 				_LOGGER.info(">>>>>>>>>>>>>>>>>>> tenantId:" + findTenantAppsByTenantKeyTenantIdtemp);
 
+				// TODO {"status":"error","message":"saasId or resourceType not found"}
 				// 根据网站实例id查询是否配置资源IP
 				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,
 						entity.getResourceType(), RequestMethod.GET.toString());
@@ -238,57 +236,59 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			entity.setPolicyId(policyId);
 			entity.setClientId(clientId);
 			entity.setSecret(secret);
-
-			_LOGGER.info("****************将绑定关系保存到实体中****************");
-			Map<String, List<String>> map = new HashMap<String, List<String>>();
+			entity.setId(RandomUtil.random32UUID());
+			mysqlDiyApplyDao.save(entity);
+			_LOGGER.info("****************将绑定关系保存到mysql其它表中****************");
 			int i = 1;
 			for (String appId : appIdList) {
-				List<ApiEntity> apiList = newApiDao.findByField(DBFieldsConstants.APIS_OPENAPPLY_ID, appId);
-				List<String> apiIds = new ArrayList<String>();
-				for (ApiEntity apiEntity : apiList) {
-					// version2.1改为只有api类型为开放的才绑定
-					if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
-							&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
-						apiIds.add(apiEntity.getId());
+				List<NewApiEntity> apiList = mysqlApiDao.findByOpenApply(appId);
+				if (apiList.size() > 0) {
+					String boundOpenId = RandomUtil.random32UUID();
+					mysqlDiyApplyDao.saveBoundOpenApply(boundOpenId, entity.getId(), appId);
+					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api个数是：" + apiList.size());
+					for (NewApiEntity apiEntity : apiList) {
+						// version2.1改为只有api类型为开放的才绑定
+						if (DBFieldsConstants.API_TYPE_OPEN.equals(apiEntity.getApiType())
+								&& apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS) {
+//							apiIds.add(apiEntity.getId());
+							mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID(), entity.getId(), appId, apiEntity.getId(),boundOpenId);
+						}
 					}
 				}
-				if (apiIds.size() > 0) {
-					map.put(appId, apiIds);
-					_LOGGER.info("当前定制应用和第" + i++ + "个开放应用" + appId + "下绑定的api：" + apiIds);
-				}
 			}
-			entity.setLimitList(map);
 			_LOGGER.info("****************绑定关系实体保存完成****************");
 			_LOGGER.info("/********************创建定制应用绑定频次，推送网关结束***************************/");
 			_LOGGER.info("insert apply begin : " + JSON.toJSONString(entity));
-			diyApplyDao.saveOrUpdate(entity);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("新增成功!");
 
 		} else {
 			// 修改
-			DiyApplyEntity applyById = diyApplyDao.findById(entity.getId());
+//			DiyApplyEntity applyById = diyApplyDao.findById(entity.getId());
+			DiyApplyEntity applyById = mysqlDiyApplyDao.findById(entity.getId());
 
 			if (null == applyById) {
 				result.setErrorMessage("请求的应用信息不存在!");
 				return result;
 			} else {
 
-				if (StringUtils.isNotBlank(entity.getApplyName())) {
-					applyById.setApplyName(entity.getApplyName());
-				}
-
-				if (StringUtils.isNotBlank(entity.getApplyDesc())) {
-					applyById.setApplyDesc(entity.getApplyDesc());
-				}
 				if (entity.getCheckState().equals(AuditConstants.DIY_APPLY_CHECKED_SUCCESS)) {
 					result.setErrorMessage("应用审核成功,无法修改记录!");
 					return result;
 				}
+				if (StringUtils.isNotBlank(entity.getApplyName())) {
+					applyById.setApplyName(entity.getApplyName());
+				}
+				if (StringUtils.isNotBlank(entity.getApplyDesc())) {
+					applyById.setApplyDesc(entity.getApplyDesc());
+				}
+				if(StringUtils.isNotBlank(entity.getDomainUrl())){
+					applyById.setDomainUrl(entity.getDomainUrl());
+				}
 			}
 
-			_LOGGER.info("update apply begin : " + JSON.toJSONString(applyById));
-
+			_LOGGER.info("update apply begin : " + applyById);
+			mysqlDiyApplyDao.update(applyById);
 			_LOGGER.info("save end");
 			result.setSuccessMessage("修改成功!");
 
@@ -304,8 +304,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.info("updateApply");
 			if (StringUtils.isBlank(apply.getId())) {
 				result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
+				return result;
 			}
-			DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+			//DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+			DiyApplyEntity apply1 = mysqlDiyApplyDao.findById(apply.getId());
 			if (null == apply1) {
 				result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
 				return result;
@@ -314,7 +316,17 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
 				return result;
 			}
-			diyApplyDao.saveOrUpdate(apply);
+			
+			if(!apply1.getApplyName().equals(apply.getApplyName())){
+				//校验applyName
+				int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUserId(),apply.getApplyName());
+				if(applyNum > 0){
+					result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
+					return result;
+				}
+				
+			}
+			mysqlDiyApplyDao.update(apply);
 			_LOGGER.info("updateApply success");
 			result.setSuccessMessage("修改成功");
 			return result;
@@ -331,12 +343,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<String> deleteApplyByid(String id) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<>();
-		DiyApplyEntity apply = diyApplyDao.findById(id);
+//		DiyApplyEntity apply = diyApplyDao.findById(id);
+		DiyApplyEntity apply = mysqlDiyApplyDao.findById(id);
 		if (null == apply) {
 			result.setErrorMessage("请求删除的应用不存在!");
-			return result;
-		} else if (apply.getAuthIds() != null && apply.getAuthIds().size() > 0) {
-			result.setErrorMessage("应用下存在api,删除失败!");
 			return result;
 		} else if (apply.getCheckState().equals(AuditConstants.DIY_APPLY_CHECKED_SUCCESS)
 				|| apply.getCheckState().equals(AuditConstants.DIY_APPLY_CHECKED_COMMITED)) {
@@ -344,7 +354,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			return result;
 		} else {
 			_LOGGER.info("delete apply begin applyId:" + id);
-			diyApplyDao.delete(id);
+			mysqlDiyApplyDao.deleteById(id);
 			_LOGGER.info("delete apply end");
 			result.setSuccessMessage("删除成功!");
 			return result;
@@ -353,18 +363,31 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page) {
-		Result<Page<DiyApplyEntity>> result = new Result<>();
-		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(), entity.getProductName(),
-				entity.getCheckState(), entity.getUserId(), page);
-
-		result.setSuccessData(diyApplyPage);
+	public Result<Page<DiyApplyEntity>> findApplyList(QueryDiyApplyEntity queryApply) {
+		
+		Result<Page<DiyApplyEntity>> result = new Result<Page<DiyApplyEntity>>();
+		
+		int totalNum = mysqlDiyApplyDao.findListSize(queryApply);
+		List<DiyApplyEntity> diyList = mysqlDiyApplyDao.getPagedList(queryApply);
+//		Page<DiyApplyEntity> diyApplyPage = diyApplyDao.findApplyList(entity.getApplyName(), entity.getProductName(),
+//				entity.getCheckState(), entity.getUserId(), page);
+		Page<DiyApplyEntity> page = new Page<DiyApplyEntity>(queryApply.getCurrentPage(), totalNum, queryApply.getPageSize());
+		page.setItems(diyList);
+		result.setSuccessData(page);
 		return result;
 	}
 
 	@Override
-	public DiyApplyEntity findById(String applyId) {
-		return diyApplyDao.findById(applyId);
+	public Result<DiyApplyEntity> findById(String applyId) {
+//		return diyApplyDao.findById(applyId);
+		Result<DiyApplyEntity> result = new Result<>();
+		DiyApplyEntity findById = mysqlDiyApplyDao.findById(applyId);
+		if (null == findById) {
+			result.setErrorMessage("应用不存在!");
+		} else {
+			result.setSuccessData(findById);
+		}
+		return result;
 	}
 
 	@Override
@@ -381,8 +404,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 					.getUrlReturnObject(replacedurl, InterfaMessageInfoString.class, null);
 
 			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setData(messageInfo);
-				result.setSuccessMessage("");
+				result.setSuccessData(messageInfo);
 				return result;
 			} else {
 				_LOGGER.error("generatorTenantKey data http getfaile return code :" + messageInfo.getMsg() + " ");
@@ -488,7 +510,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 
 			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {
 
-				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+				String status = null == jsonObject.get("status") ? "" : jsonObject.get("status").toString();
 
 				switch (status) {
 				case "101":
@@ -519,13 +541,13 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(String ids, int checkState, String checkMem) {
-		// TODO Auto-generated method stub
+	public Result<String> batchUpdateCheckState(String ids, Integer checkState, String checkMem) {
 		Result<String> result = new Result<>();
 		try {
-			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
-			_LOGGER.info("bachUpdate diyApply message " + message + " count");
-			result.setSuccessMessage("审核成功:" + message + "条");
+//			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+			int changeNum = mysqlDiyApplyDao.bathUpdateCheckState(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+			_LOGGER.info("bachUpdate diyApply message " + changeNum + " count");
+			result.setSuccessMessage("审核成功:" + changeNum + "条");
 			return result;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -534,5 +556,257 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			result.setErrorMessage("审核失败");
 			return result;
 		}
+	}
+
+	@Override
+	public Result<?> migraDiyApply() {
+		int i = 0;
+		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
+		mysqlDiyApplyDao.deleteAll();
+		for (DiyApplyEntity diyApplyEntity : diyList) {
+			Map<String,List<String>> map = diyApplyEntity.getLimitList();
+			for (String openId : map.keySet()) {
+				String boundId = RandomUtil.random32UUID();
+				mysqlDiyApplyDao.saveBoundOpenApply(boundId,diyApplyEntity.getId(),openId);
+				List<String> apiIds = map.get(openId);
+				for (String apiId : apiIds) {
+					mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID()
+							, diyApplyEntity.getId(), openId, apiId,boundId);
+				}
+			}
+			i+=mysqlDiyApplyDao.save(diyApplyEntity);
+			
+		}
+		Result<String> result = new Result<String>();
+		result.setSuccessMessage("一共"+diyList.size()+"条数据，成功插入mysql数据库"+i+"条");
+		return result;
+	}
+
+	@Override
+	public Result<?> productMenuList1(String tenantId) {
+		Result<List<RetMenu>> result = new Result<>();
+
+		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList1");
+
+		if (StringUtils.isBlank(productMenuListURL)) {
+			_LOGGER.error("productMenuListURL is null !");
+			result.setErrorMessage("获取产品菜单列表错误,请联系管理员!");
+			return result;
+		}
+
+		String reqURL = productMenuListURL.replace("{tenantId}", tenantId);
+
+		_LOGGER.info("send productMenuList URL is " + reqURL);
+
+		try {
+
+			StringBuffer sendGetRequest = HttpClientUtil.sendGetRequest(reqURL, "UTF-8");
+
+			_LOGGER.debug("produMenuList return json:" + sendGetRequest);
+
+			JSONObject jsonObject = JSONObject.fromObject(sendGetRequest.toString());
+
+			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg") && jsonObject.has("data")) {
+
+				String status = jsonObject.get("status") == null ? "" : jsonObject.get("status").toString();
+
+				switch (status) {
+				case "200":
+					result.setStatus(Status.SUCCESS);
+
+					result.setSuccessData(com.alibaba.fastjson.JSONArray.parseArray((jsonObject.getString("data")), RetMenu.class));
+
+					break;
+				
+				// TODO other status
+//				case "201":
+//					result.setErrorCode(ErrorCodeNo.SYS029);
+//					result.setStatus(Status.FAILED);
+//					break;
+//				case "301":
+//					result.setErrorCode(ErrorCodeNo.SYS029);
+//					result.setStatus(Status.FAILED);
+//					break;
+				default:
+					result.setErrorCode(ErrorCodeNo.SYS029);
+					result.setStatus(Status.SYSTEMERROR);
+					break;
+				}
+
+				result.setMessage(jsonObject.get("msg").toString());
+
+			} else {
+				_LOGGER.error("获取产品菜单列表时,缺失返回值:" + jsonObject);
+
+				result.setErrorMessage("获取产品菜单列表错误!");
+			}
+			
+		} catch (Exception e) {
+			_LOGGER.error("send productMenuList error e:" + e.toString());
+			result.setErrorMessage("获取产品菜单列表错误!");
+		}
+		// TODO Auto-generated method stub
+		return result;
+	}
+
+	@Override
+	public Result<?> registerMenu1(String tenantId, List<Menu> menus) {
+		String registerMenuURL = PropertiesUtil.getInstance().getValue("registerMenu1");
+
+		Result<String> result = new Result<>();
+		if (StringUtils.isBlank(registerMenuURL)) {
+			_LOGGER.error("registerMenuURL is null !");
+			result.setErrorMessage("发布菜单错误,请联系管理员");
+			return result;
+		}
+		
+		//如果id不为空校验menus
+		if(!validateMenu(menus)){
+			result.setErrorMessage("发布菜单错误,请联系管理员",ErrorCodeNo.SYS032); 
+			return result;
+		}
+		for (Menu menu : menus) {
+			menu.setCode(RandomUtil.random32UUID());
+			menu.setFrame(1);
+		}
+		
+		String reqURL = registerMenuURL.replace("{tenantId}", tenantId);
+		String menusStr = com.alibaba.fastjson.JSONObject.toJSONString(menus);
+		_LOGGER.info("修改或注册的菜单为"+menusStr);
+		List<NameValuePair> list = new ArrayList<NameValuePair>();
+		list.add(new BasicNameValuePair("customerMenus", menusStr));
+		try {
+			String sentPostByForm = ApiCallUtils.putOrPostForm(reqURL, list, null, HttpMethod.POST);
+//			String sendPostByJson = HttpClientUtilsNew.getResponseString(registerMenuURL, body);
+
+			_LOGGER.info("registerMenuURL return sentPostByForm : " + sentPostByForm);
+
+			JSONObject jsonObject = JSONObject.fromObject(sentPostByForm);
+
+			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {
+
+				String status = null == jsonObject.get("status") ? "" : jsonObject.get("status").toString();
+
+				switch (status) {
+				case "200":
+					result.setStatus(Status.SUCCESS);
+					result.setErrorCode(ErrorCodeNo.SYS000);
+					break;
+				case "110":
+					result.setStatus(Status.FAILED);
+					break;
+				// TODO other status
+//				case "301":
+//					result.setStatus(Status.FAILED);
+//					break;
+				default:
+					result.setStatus(Status.SYSTEMERROR);
+					break;
+				}
+				result.setMessage(jsonObject.get("msg").toString());
+			} else {
+				_LOGGER.error("发布菜单时,缺失返回值:" + jsonObject);
+
+				result.setErrorMessage("发布菜单出现错误!");
+			}
+		} catch (Exception e) {
+			_LOGGER.error("send registerMenuURL error,e:" + e.toString());
+			result.setErrorMessage("发布菜单错误!");
+		}
+		return result;
+	}
+
+	@Override
+	public Result<?> deleteMenu1(ArrayList<String> ids) {
+		String deleteMenuURL = PropertiesUtil.getInstance().getValue("deleteMenu1");
+
+		Result<String> result = new Result<>();
+		if (StringUtils.isBlank(deleteMenuURL)) {
+			_LOGGER.error("registerMenuURL is null !");
+			result.setErrorMessage("发布菜单错误,请联系管理员");
+			return result;
+		}
+		
+		String reqURL = null;
+		try {
+			reqURL = deleteMenuURL.replace("{ids}", URLEncoder.encode(ids.toString(), "utf-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			String sendGet = ApiCallUtils.getOrDelMethod(reqURL, null, HttpMethod.GET);
+
+			_LOGGER.info("deleteMenuURL return setGet : " + sendGet);
+
+			JSONObject jsonObject = JSONObject.fromObject(sendGet);
+
+			if (null != jsonObject && jsonObject.has("status") && jsonObject.has("msg")) {
+
+				String status = null == jsonObject.get("status") ? "" : jsonObject.get("status").toString();
+
+				switch (status) {
+				case "200":
+					result.setStatus(Status.SUCCESS);
+					result.setErrorCode(ErrorCodeNo.SYS000);
+					break;
+				// TODO other status
+//				case "201":
+//					result.setStatus(Status.FAILED);
+//					break;
+//				case "301":
+//					result.setStatus(Status.FAILED);
+//					break;
+				default:
+					result.setStatus(Status.SYSTEMERROR);
+					break;
+				}
+				result.setMessage(jsonObject.get("msg").toString());
+			} else {
+				_LOGGER.error("删除菜单时,缺失返回值:" + jsonObject);
+
+				result.setErrorMessage("删除菜单出现错误!");
+			}
+		} catch (Exception e) {
+			_LOGGER.error("send deleteMenuURL error,e:" + e.toString());
+			result.setErrorMessage("删除菜单错误!");
+		}
+		return result;
+	}
+	
+	private boolean validateMenu(List<Menu> menus) {
+		
+		if(menus.isEmpty()){
+			return false;
+		}
+		for (Menu menu : menus) {
+			//如果id为空做添加叫校验。否则做修改校验
+			if(null != menu.getId() && menu.getId() > 0){
+				//修改校验
+				if(StringUtils.isBlank(menu.getUrl())){
+					_LOGGER.info("菜单url错误");
+					return false;
+				}
+			}else{
+				//添加校验
+				if(null == menu.getLevel() || menu.getLevel() < 1 || menu.getLevel() > 3){
+					_LOGGER.info("菜单level错误");
+					return false;
+				}else if(StringUtils.isBlank(menu.getUrl())){
+					_LOGGER.info("菜单url错误");
+					return false;
+				}else if(null == menu.getParentId() && null == menu.getBeforeMenuId()
+						&& null == menu.getBehandMenuId()){
+					_LOGGER.info("菜单相对定位坐标错误");
+					return false;
+				}else if(null == menu.getPoint() || menu.getPoint() < 1){
+					_LOGGER.info("菜单相对定位位移错误");
+					return false;
+				}else if(1 != menu.getLeaf() && 0 != menu.getLeaf()){
+					_LOGGER.info("菜单是否为叶子错误");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

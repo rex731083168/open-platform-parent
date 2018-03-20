@@ -14,8 +14,6 @@
 		<platform.service.version>2.0.2</platform.service.version>
 	</properties>
 
-
-
 	<!-- denpendencies -->
 	<dependencies>
 		<dependency>

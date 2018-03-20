@@ -8,7 +8,9 @@ package cn.ce.platform_service.apis.entity;
 // download api bound entity
 public class UApiRecordList {
 
-	private String id;
+	private int id;
+	
+	private String uploadId;
 	
 	private String apiChName;
 	
@@ -22,31 +24,34 @@ public class UApiRecordList {
 	
 	private String appName;
 	
-	private ApiVersion apiVersion;
+	private String versionId;
+	
+	private String version;
 	
 	private boolean isDownLoadSuccess;
 	
 	private String errorDesc;
 	
-	public UApiRecordList(String id, String apiChName, String listenPath, String apiType, String openApplyId
-			, String appCode, String appName, ApiVersion apiVersion, boolean isDownLoadSuccess, String errorDesc){
-		this.id = id;
+	public UApiRecordList(String uploadId, String apiChName, String listenPath, String apiType, String openApplyId
+			, String appCode, String appName, String versionId, String version, boolean isDownLoadSuccess, String errorDesc){
+		this.uploadId = uploadId;
 		this.apiChName = apiChName;
 		this.listenPath = listenPath;
 		this.apiType = apiType;
 		this.openApplyId = openApplyId;
+		this.versionId = versionId;
+		this.version = version;
 		this.appCode = appCode;
 		this.appName = appName;
-		this.apiVersion = apiVersion;
 		this.isDownLoadSuccess = isDownLoadSuccess;
 		this.errorDesc = errorDesc;
 	}
 	
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -98,12 +103,20 @@ public class UApiRecordList {
 		this.appName = appName;
 	}
 
-	public ApiVersion getApiVersion() {
-		return apiVersion;
+	public String getVersionId() {
+		return versionId;
 	}
 
-	public void setApiVersion(ApiVersion apiVersion) {
-		this.apiVersion = apiVersion;
+	public void setVersionId(String versionId) {
+		this.versionId = versionId;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public boolean isDownLoadSuccess() {
@@ -121,5 +134,13 @@ public class UApiRecordList {
 	public void setErrorDesc(String errorDesc) {
 		this.errorDesc = errorDesc;
 	}
-	
+
+	public String getUploadId() {
+		return uploadId;
+	}
+
+	public void setUploadId(String uploadId) {
+		this.uploadId = uploadId;
+	}
+
 }

@@ -1,10 +1,9 @@
 package cn.ce.platform_service.openApply.service;
 
-import javax.servlet.http.HttpSession;
-
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.users.entity.User;
 
 /***
@@ -62,7 +61,7 @@ public interface IConsoleOpenApplyService {
 	 * @return: Result<?>
 	 * @throws
 	 */
-	public Result<?> applyList(OpenApplyEntity entity);
+	public Result<?> applyList(QueryOpenApplyEntity entity);
 	
 	/***
 	 * 
@@ -90,4 +89,8 @@ public interface IConsoleOpenApplyService {
 	public Result<?> getApplyById(String id);
 
 	public Result<?> checkApplyName(String applyName);
+
+	public Result<?> checkApplyKey(String applyKey);
+
+	public Result<?> migraOpenApply();
 }

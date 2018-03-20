@@ -74,6 +74,9 @@
     <!-- Loads MongoDB configuraton -->  
     <import resource="mongo-config.xml"/>   
     
+    <!-- Loads mysql configuraton -->  
+    <import resource="mybatis-config.xml"/>   
+ 
 	<!-- redis -->
 	<import resource="spring-session.xml" /> 
 	

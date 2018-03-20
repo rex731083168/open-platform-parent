@@ -46,7 +46,8 @@ public class DiyApplyProductController {
 
 	@RequestMapping(value = "/findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
-	public Result<Apps> findPagedApps(@RequestParam(value = "owner", required = false) String owner,
+	public Result<Apps> findPagedApps(
+			@RequestParam(required = false) String owner,
 			@RequestParam(required = false) String name,
 			@RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
@@ -55,17 +56,18 @@ public class DiyApplyProductController {
 		_LOGGER.info("查询条件：");
 		_LOGGER.info("所属企业:"+owner);
 		_LOGGER.info("名称模糊："+name);
-		_LOGGER.info("传入页码："+currentPage);
-		_LOGGER.info("页码大小："+pageSize);
 		
-		return plublicDiyApplyService.findPagedApps(owner, name, PageValidateUtil.checkCurrentPage(currentPage), 
+		return plublicDiyApplyService.findPagedApps(owner, name, 
+				PageValidateUtil.checkCurrentPage(currentPage), 
 				PageValidateUtil.checkPageSize(pageSize));
 	}
 
 	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
 	@ApiOperation("获取产品实例 查询带分页")
-	public Result<TenantAppPage> findTenantAppsByTenantKey(@RequestParam(value = "key", required = true) String key,
-			@RequestParam(required = false)  String appName, @RequestParam(required = true, defaultValue = "10") int pageSize,
+	public Result<TenantAppPage> findTenantAppsByTenantKey(
+			@RequestParam(required = true) String key,
+			@RequestParam(required = false)  String appName,
+			@RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
 		return plublicDiyApplyService.findTenantAppsByTenantKeyPage(key, appName, currentPage, pageSize);
 	}
@@ -73,7 +75,7 @@ public class DiyApplyProductController {
 	@RequestMapping(value = "registerBathApp", method = RequestMethod.POST)
 	@ApiOperation("开发者在开放平台发布应用审核")
 	public Result<InterfaMessageInfoString> registerBathApp(
-			@RequestParam(value = "tenantId", required = false) String tenantId,
+			@RequestParam(required = false) String tenantId,
 			@RequestBody RegisterBathAppInParameterEntity[] queryVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		return manageDiyApplyService.registerBathApp(tenantId, JSONArray.fromObject(queryVO).toString());

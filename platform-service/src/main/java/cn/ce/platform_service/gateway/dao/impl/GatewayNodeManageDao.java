@@ -14,7 +14,6 @@ import cn.ce.platform_service.common.DBFieldsConstants;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.core.AbstractBaseMongoDao;
 import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
-import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 
 /**
@@ -83,5 +82,12 @@ public class GatewayNodeManageDao extends AbstractBaseMongoDao<GatewayNodeEntity
 		c.and(DBFieldsConstants.GW_COL_ID).ne(nodeId);
 		
 		return super.find(new Query(c), GatewayNodeEntity.class);
+	}
+
+	@Override
+	public List<GatewayNodeEntity> getAll(String colId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("colId").is(colId));
+		return super.find(query, GatewayNodeEntity.class);
 	}
 }

@@ -27,4 +27,6 @@ public interface IGatewayNodeManageDao {
 	List<GatewayNodeEntity> getAll(Class<?> class1);
 
 	List<GatewayNodeEntity> checkNodeUrl(String nodeUrl, String nodeId);
+
+	List<GatewayNodeEntity> getAll(String colId);
 }

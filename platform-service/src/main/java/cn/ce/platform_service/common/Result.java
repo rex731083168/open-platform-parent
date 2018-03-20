@@ -15,7 +15,16 @@ public class Result <T> {
 	
 	private ErrorCodeNo errorCode = ErrorCodeNo.SYS001;
 
-
+	public Result(){
+		super();
+	}
+	
+	public Result( String message, ErrorCodeNo errorCode, T data, String status){
+		this.message = message;
+		this.errorCode = errorCode;
+		this.data =data;
+		this.status = status;
+	}
 	
 	public T getData() {
 		return data;
@@ -55,10 +64,24 @@ public class Result <T> {
 		this.errorCode = errorCodeNo;
 	}
 	
+	public Result<T> returnErrorMessage(String message,ErrorCodeNo errorCodeNo){
+		this.message = message;
+		this.status = Status.FAILED;
+		this.errorCode = errorCodeNo;
+		return this;
+	}
+	
 	public void setSuccessMessage(String message){
 		this.message = message;
 		this.status = Status.SUCCESS;
 		this.errorCode = ErrorCodeNo.SYS000;
+	}
+	
+	public Result<T> returnSuccessMessage(String message){
+		this.message = message;
+		this.status = Status.SUCCESS;
+		this.errorCode = ErrorCodeNo.SYS000;
+		return this;
 	}
 
 	

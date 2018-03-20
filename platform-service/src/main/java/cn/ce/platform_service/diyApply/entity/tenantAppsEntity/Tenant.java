@@ -56,7 +56,7 @@ public class Tenant {
 	private String unittype;
 	private String templateCode;
 	private String youyiProductName;
-	private List<String> domains;
+	private List<Object> domains;
 	private String ningkerDomain;
 	private String ningkerCusdomain;
 	private String hotelDomain;
@@ -250,12 +250,12 @@ public class Tenant {
 		return youyiProductName;
 	}
 
-	public void setDomains(List<String> domains) {
-		this.domains = domains;
+	public List<Object> getDomains() {
+		return domains;
 	}
 
-	public List<String> getDomains() {
-		return domains;
+	public void setDomains(List<Object> domains) {
+		this.domains = domains;
 	}
 
 	public void setNingkerDomain(String ningkerDomain) {

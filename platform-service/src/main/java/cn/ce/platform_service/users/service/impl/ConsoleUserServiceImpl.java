@@ -1,6 +1,7 @@
 package cn.ce.platform_service.users.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -9,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -19,6 +22,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.mail.MailInfo;
 import cn.ce.platform_service.common.mail.MailUtil;
+import cn.ce.platform_service.users.dao.IMysqlUserDao;
 import cn.ce.platform_service.users.dao.INewUserDao;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
@@ -31,12 +35,16 @@ import cn.ce.platform_service.util.Util;
 * @Date : 2017年10月11日
 */
 @Service(value="consoleUserService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ConsoleUserServiceImpl.class);
 	
     @Resource
     private INewUserDao newUserDao;
+    @Resource
+    private IMysqlUserDao mysqlUserDao;
+    
     
 	@Override
 	public Result<String> userRegister(User user) {
@@ -46,14 +54,16 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		Result<String> result = new Result<String>();
 		
 		//校验用户名
-		User user1= newUserDao.findUserByUserName(user.getUserName());
-		if(user1 != null){
+//		User user1= newUserDao.findUserByUserName(user.getUserName());
+		int uNum = mysqlUserDao.checkUserName(user.getUserName());
+		if(uNum > 0){
 			result.setErrorMessage("当前用户名已经存在", ErrorCodeNo.SYS009);
 			return result;
 		}
 		//校验邮箱
-		User user2 = newUserDao.findUserByEmail(user.getEmail());
-		if(user2 != null){
+		//User user2 = newUserDao.findUserByEmail(user.getEmail());
+		int eNum = mysqlUserDao.checkEmail(user.getEmail());
+		if(eNum > 0){
 			result.setErrorMessage("当前邮箱已经被注册", ErrorCodeNo.SYS009);
 			return result;
 		}
@@ -73,7 +83,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 			user.setUserType(AuditConstants.USER_DEVELOPER); // TODO 默认设置为普通用户
 			user.setCheckState(AuditConstants.USER__UNCHECKED);//默认启用
 			user.setAppSecret(Util.getRandomStrs(Constants.SECRET_LENGTH));
-			newUserDao.save(user);
+			//newUserDao.save(user);
+			mysqlUserDao.save(user);
 			
 			_LOGGER.info("consoleUserRegister success! user:" + JSON.toJSONString(user));
 			
@@ -89,7 +100,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	@Override
 	public Result<?> authenticate(String userId, String enterpriseName, String idCard, String userRealName, HttpSession session) {
 		Result<String> result = new Result<String>();
-		User user = newUserDao.findUserById(userId);
+//		User user = newUserDao.findUserById(userId);
+		User user = mysqlUserDao.findById(userId);
 		
 		if(user == null){
 			result.setErrorMessage("当前用户不存在", ErrorCodeNo.SYS006);
@@ -103,8 +115,9 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		}
 		
 		//判断当前身份证号码是否已经被占用
-		User userTemp = newUserDao.findUserByIdCard(idCard,AuditConstants.USER__CHECKED_SUCCESS);
-		if(StringUtils.isBlank(idCard) || userTemp != null){
+//		User userTemp = newUserDao.findUserByIdCard(idCard,AuditConstants.USER__CHECKED_SUCCESS);
+		int iNum = mysqlUserDao.checkIdCard(idCard,AuditConstants.USER__CHECKED_SUCCESS);
+		if(StringUtils.isBlank(idCard) || iNum > 0){
 			return Result.errorResult("当前身份证号已经存在", ErrorCodeNo.SYS009, null, Status.FAILED);
 		}
 		
@@ -115,7 +128,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		
 		_LOGGER.info("consoleUserAuthenticate begin user:" + JSON.toJSONString(user));
 		
-		newUserDao.save(user);
+//		newUserDao.save(user);
+		mysqlUserDao.update(user);
 		
 		_LOGGER.info("consoleUserAuthenticate success!");
 		
@@ -132,7 +146,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 		Result<User> result = new Result<User>();
 		
-		User user = newUserDao.findUserByName(userName);
+//		User user = newUserDao.findUserByName(userName);
+		User user = mysqlUserDao.findByUserName(userName);
 		
 		if (user == null) {
 			result.setErrorMessage("您输入的账号不存在", ErrorCodeNo.SYS020);
@@ -160,7 +175,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		
 		_LOGGER.info("consoleUserSendRegisterEmail begin,email:" + email);
 		
-		User user = newUserDao.findUserByEmail(email);
+//		User user = newUserDao.findUserByEmail(email);
+		User user = mysqlUserDao.findByEmail(email);
 		
 		Result<String> result = new Result<String>();
 		
@@ -199,9 +215,10 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		
 		Result<String> result = new Result<String>();
 		
-		User user = newUserDao.findUserByEmail(email);
+//		User user = newUserDao.findUserByEmail(email);
+		User user = mysqlUserDao.findByEmail(email);
 		
-		if(user == null){
+		if(null == user){
 			result.setErrorMessage("当前用户不存在",ErrorCodeNo.SYS006);
 			return result;
 		}
@@ -232,9 +249,10 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	
 	@Override
 	public Result<?> checkTelNumber(String telNumber) {
-		User user = newUserDao.findUserByTelNumber(telNumber);
+//		User user = newUserDao.findUserByTelNumber(telNumber);
+		int tNum = mysqlUserDao.checkTelNumber(telNumber);
 		Result<String> result = new Result<String>();
-		if(user != null) {
+		if(tNum > 0) {
 			result.setErrorMessage("当前手机号已经被注册");
 		}else{
 			result.setSuccessMessage("");
@@ -245,9 +263,10 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	@Override
 	public Result<?> checkEmail(String email) {
-		User user = newUserDao.findUserByEmail(email);
+//		User user = newUserDao.findUserByEmail(email);
+		int uNum = mysqlUserDao.checkEmail(email);
 		Result<String> result = new Result<String>();
-		if(user != null) {
+		if(uNum > 0) {
 			result.setErrorMessage("当前邮箱已经被注册");
 		}else{
 			result.setSuccessMessage("");
@@ -258,9 +277,10 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	@Override
 	public Result<?> checkUserName(String userName) {
-		User user = newUserDao.findUserByUserName(userName);
+//		User user = newUserDao.findUserByUserName(userName);
+		int uNum = mysqlUserDao.checkUserName(userName);
 		Result<String> result = new Result<String>();
-		if(user != null){
+		if(uNum > 0){
 			result.setErrorMessage("当前用户名已存在，请重新输入");
 		}else{
 			result.setSuccessMessage("当前用户名可以使用");
@@ -276,7 +296,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		
 		Result<String> result = new Result<String>();
 		
-		User user = newUserDao.findUserByEmail(email);
+//		User user = newUserDao.findUserByEmail(email);
+		User user = mysqlUserDao.findByEmail(email);
 		
 		if(user == null){
 			result.setErrorMessage("当前用户不存在",ErrorCodeNo.SYS006);
@@ -285,7 +306,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 		
 		user.setPassword(newPassword);
 		
-		newUserDao.save(user);
+//		newUserDao.save(user);
+		mysqlUserDao.update(user);
 		
 		_LOGGER.info("consoleUserModifyPassword success!");
 		
@@ -297,19 +319,39 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	@Override
 	public User findUserById(String userId) {
-		return newUserDao.findUserById(userId);
+//		return newUserDao.findUserById(userId);
+		return mysqlUserDao.findById(userId);
 	}
 
 
 	@Override
 	public Result<?> checkIdCard(String idCard) {
 		//根据chenckState来查询。只能检查checkState为2的身份证信息
-		User user = newUserDao.findUserByIdCard(idCard,AuditConstants.USER__CHECKED_SUCCESS);
+//		User user = newUserDao.findUserByIdCard(idCard,AuditConstants.USER__CHECKED_SUCCESS);
+		int iNum = mysqlUserDao.checkIdCard1(idCard);
 		
-		if(user != null){
+		if(iNum > 0){
 			return Result.errorResult("当前身份证号码已经被注册", ErrorCodeNo.SYS009, null, Status.FAILED);
 		}
 		return Result.errorResult("当前身份证号可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+	}
+	
+	
+
+
+	@Override
+	public Result<String> migraUser() {
+		
+		//删除mysql数据库中的user
+		int i = 0;
+		List<User> userList = newUserDao.findAll();
+		mysqlUserDao.deleteAll();
+		for (User user : userList) {
+			i+=mysqlUserDao.save(user);
+		}
+		Result<String> result = new Result<String>();
+		result.setSuccessMessage("一共"+userList.size()+"条数据，成功插入mysql数据库"+i+"条");
+		return result;
 	}
 	
 }

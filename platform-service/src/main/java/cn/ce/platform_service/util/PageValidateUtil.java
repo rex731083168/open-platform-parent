@@ -12,18 +12,18 @@ import cn.ce.platform_service.common.Constants;
 public class PageValidateUtil {
 
 	public static Integer checkCurrentPage(Integer currentPage){
-		if(currentPage < 1 || currentPage == null){
+		if(currentPage == null || currentPage < 1){
 			currentPage = 1;
 		}
 		return currentPage;
 	}
 	
 	public static Integer checkPageSize(Integer pageSize){
+		if(pageSize == null || pageSize < 1 ){
+			pageSize = Constants.PAGE_COMMON_SIZE;
+		}
 		if(pageSize > Constants.PAGE_MAX_SIZE){
 			pageSize = Constants.PAGE_MAX_SIZE;
-		}
-		if(pageSize < 0 || pageSize == null){
-			pageSize = Constants.PAGE_COMMON_SIZE;
 		}
 		return pageSize;
 	}

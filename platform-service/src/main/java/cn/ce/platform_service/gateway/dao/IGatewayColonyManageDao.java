@@ -1,5 +1,7 @@
 package cn.ce.platform_service.gateway.dao;
 
+import java.util.List;
+
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 
 /***
@@ -17,5 +19,7 @@ public interface IGatewayColonyManageDao {
 	GatewayColonyEntity getColonySingle();
 
 	GatewayColonyEntity findById(String colId);
+
+	List<GatewayColonyEntity> findAll();
 	
 }

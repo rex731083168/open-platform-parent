@@ -9,17 +9,19 @@ import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.zk.dao.IDubboConfiguratorDao;
-import cn.ce.platform_service.zk.dao.IDubboConsumerDao;
-import cn.ce.platform_service.zk.dao.IDubboNodeDao;
-import cn.ce.platform_service.zk.dao.IDubboProviderDao;
-import cn.ce.platform_service.zk.dao.IDubboRootDao;
-import cn.ce.platform_service.zk.dao.IDubboRouterDao;
-import cn.ce.platform_service.zk.dao.IZkDao;
+import cn.ce.platform_service.util.RandomUtil;
+import cn.ce.platform_service.zk.dao.IDubboConfiguratorDao1;
+import cn.ce.platform_service.zk.dao.IDubboConsumerDao1;
+import cn.ce.platform_service.zk.dao.IDubboNodeDao1;
+import cn.ce.platform_service.zk.dao.IDubboProviderDao1;
+import cn.ce.platform_service.zk.dao.IDubboRootDao1;
+import cn.ce.platform_service.zk.dao.IDubboRouterDao1;
 import cn.ce.platform_service.zk.entity.DubboConfigurator;
 import cn.ce.platform_service.zk.entity.DubboConsumer;
 import cn.ce.platform_service.zk.entity.DubboNode;
@@ -36,38 +38,52 @@ import cn.ce.platform_service.zk.service.ZkWatcher;
  * @Date : 2018年1月9日
  */
 @Service("zkDubboService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ZkDubboServiceImpl implements IZkDubboService {
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ZkDubboServiceImpl.class);
+//	@Resource
+//	private IZkDao zkDao;
+	/** mongo dao */
+//	@Resource
+//	private IDubboRootDao dubboRootDao;
+//	@Resource
+//	private IDubboProviderDao dubboProviderDao;
+//	@Resource
+//	private IDubboConsumerDao dubboConsumerDao;
+//	@Resource
+//	private IDubboRouterDao dubboRouterDao;
+//	@Resource
+//	private IDubboConfiguratorDao dubboConfiguratorDao;
+//	@Resource
+//	private IDubboNodeDao dubboNodeDao;
+	
+	/** mysql dao */
 	@Resource
-	private IZkDao zkDao;
+	private IDubboRootDao1 dubboRootDao1;
 	@Resource
-	private IDubboRootDao dubboRootDao;
+	private IDubboProviderDao1 dubboProviderDao1;
 	@Resource
-	private IDubboProviderDao dubboProviderDao;
+	private IDubboConsumerDao1 dubboConsumerDao1;
 	@Resource
-	private IDubboConsumerDao dubboConsumerDao;
+	private IDubboRouterDao1 dubboRouterDao1;
 	@Resource
-	private IDubboRouterDao dubboRouterDao;
+	private IDubboConfiguratorDao1 dubboConfiguratorDao1;
 	@Resource
-	private IDubboConfiguratorDao dubboConfiguratorDao;
-	@Resource
-	private IDubboNodeDao dubboNodeDao;
+	private IDubboNodeDao1 dubboNodeDao1;
 	
 	private static String[] childCategory = { "/providers", "/consumers", "/routers", "/configurators" };
 
 	@Override
 	public boolean clearAll() {
-		boolean flag1 = dubboProviderDao.clearAll();
-		boolean flag2 = dubboConsumerDao.clearAll();
-		boolean flag3 = dubboNodeDao.clearAll();
-		boolean flag4 = dubboRouterDao.clearAll();
-		boolean flag5 = dubboConfiguratorDao.clearAll();
-		boolean flag6 = dubboRootDao.clearAll();
-		if (flag1 && flag2 && flag3 && flag4 && flag5) {
-			return true;
-		}
-		return false;
+		dubboProviderDao1.clearAll();
+		dubboConsumerDao1.clearAll();
+		dubboNodeDao1.clearAll();
+		dubboRouterDao1.clearAll();
+		dubboConfiguratorDao1.clearAll();
+		dubboRootDao1.clearAll();
+		
+		return true;
 	}
 
 	/**
@@ -93,7 +109,8 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 		for (String root : zkRoots) {
 			
 			//将root表存放到数据库
-			DubboRoot dRoot = dubboRootDao.save(new DubboRoot(root));
+			DubboRoot dRoot = new DubboRoot(root,RandomUtil.random32UUID());
+			dubboRootDao1.save(dRoot);
 			
 			List<String> nodes = null;
 			try {
@@ -107,33 +124,35 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 
 			for (String nodeStr : nodes) {
 
-				DubboNode dNode = dubboNodeDao.save(new DubboNode(nodeStr, dRoot.getId()));
+				DubboNode dNode = new DubboNode(nodeStr, dRoot.getId(),RandomUtil.random32UUID());
+				dubboNodeDao1.save(dNode);
 
 				String nodePath = root + "/" + nodeStr;
 
 				// 解析所有分支的providers/consumers/routers/configurators
 				for (String category : childCategory) {
+					List<String> currentNodeData  = null;
 					try {
-						List<String> currentNodeData = zk.getChildren(nodePath + category, true);
-						boolean flag = false;
-						switch (category) {
-						case "/providers":
-							flag = saveProviders(currentNodeData, dNode.getId());
-							break;
-						case "/consumers":
-							flag = saveConsumers(currentNodeData, dNode.getId());
-							break;
-						case "/routers":
-							flag = saveRouters(currentNodeData, dNode.getId());
-							break;
-						case "/configurators":
-							flag = saveConfigurators(currentNodeData, dNode.getId());
-							break;
-						}
+						currentNodeData = zk.getChildren(nodePath + category, true);
 					} catch (KeeperException | InterruptedException e) {
 						// 如果发生异常继续往下执行，放弃当前节点数据
-						_LOGGER.error("error happens when get zk child:" + nodePath + category);
+						_LOGGER.error("no node found:" + nodePath + category,e.getMessage());
 						continue;
+					}
+					boolean flag = false;
+					switch (category) {
+					case "/providers":
+						flag = saveProviders(currentNodeData, dNode.getId());
+						break;
+					case "/consumers":
+						flag = saveConsumers(currentNodeData, dNode.getId());
+						break;
+					case "/routers":
+						flag = saveRouters(currentNodeData, dNode.getId());
+						break;
+					case "/configurators":
+						flag = saveConfigurators(currentNodeData, dNode.getId());
+						break;
 					}
 				}
 			}
@@ -147,7 +166,9 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 			DubboProvider provider = ZkDubboParser.parserProvider(string);
 			if (provider != null) {
 				provider.setNodeId(nodeId);
-				dubboProviderDao.save(provider);
+				provider.setId(RandomUtil.random32UUID());
+				dubboProviderDao1.save(provider);
+				_LOGGER.debug("save Provider:"+provider);
 			} else {
 				// TODO 记录失败信息到数据库
 			}
@@ -161,7 +182,9 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 			DubboConsumer consumer = ZkDubboParser.parserConsumer(string);
 			if (consumer != null) {
 				consumer.setNodeId(nodeId);
-				dubboConsumerDao.save(consumer);
+				consumer.setId(RandomUtil.random32UUID());
+				dubboConsumerDao1.save(consumer);
+				_LOGGER.debug("save Consumer:"+consumer);
 			} else {
 				// TODO 记录失败信息到数据库
 			}
@@ -176,7 +199,9 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 			DubboRouter router = ZkDubboParser.parserRouter(string);
 			if (router != null) {
 				router.setNodeId(nodeId);
-				dubboRouterDao.save(router);
+				router.setId(RandomUtil.random32UUID());
+				dubboRouterDao1.save(router);
+				_LOGGER.debug("save Router:"+router);
 			} else {
 				// TODO 记录失败信息到数据库
 			}
@@ -191,7 +216,9 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 			DubboConfigurator configurator = ZkDubboParser.parserConfigurators(string);
 			if (configurator != null) {
 				configurator.setNodeId(nodeId);
-				dubboConfiguratorDao.save(configurator);
+				configurator.setId(RandomUtil.random32UUID());
+				dubboConfiguratorDao1.save(configurator);
+				_LOGGER.debug("save Configurator:"+configurator);
 			} else {
 				// TODO 记录失败信息到数据库
 			}
@@ -212,7 +239,9 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 	@Override
 	public Result<?> findRootPage(Integer currentPage, Integer pageSize) {
 		
-		Page<DubboRoot> page = dubboRootDao.findPage(currentPage, pageSize);
+		int pageNum = dubboRootDao1.findTotalPage();
+		List<DubboRoot> rootList = dubboRootDao1.findPage((currentPage-1)*pageSize, pageSize);
+		Page<DubboRoot> page = new Page<DubboRoot>(currentPage,pageNum,pageSize,rootList);
 		Result<Page<DubboRoot>> result = new Result<Page<DubboRoot>>();
 		result.setSuccessData(page);
 		return result;
@@ -221,7 +250,10 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 	@Override
 	public Result<?> findNodePage(int currentPage, int pageSize, String rootId) {
 		
-		Page<DubboNode> page = dubboNodeDao.findPage(currentPage, pageSize, rootId);
+		//Page<DubboNode> page = dubboNodeDao.findPage(currentPage, pageSize, rootId);
+		int pageNum = dubboNodeDao1.findTotalPage(rootId);
+		List<DubboNode> rootList = dubboNodeDao1.findPage((currentPage-1)*pageSize, pageSize,rootId);
+		Page<DubboNode> page = new Page<DubboNode>(currentPage,pageNum,pageSize,rootList);
 		Result<Page<DubboNode>> result = new Result<Page<DubboNode>>();
 		result.setSuccessData(page);
 		return result;
@@ -231,7 +263,7 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 	public Result<?> findNodeById(String id) {
 		
 		Result<DubboNode> result = new Result<DubboNode>();
-		DubboNode node = dubboNodeDao.findById(id);
+		DubboNode node = dubboNodeDao1.findById(id);
 		if(null != node){
 			result.setSuccessData(node);
 		}else{
@@ -242,7 +274,10 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 
 	@Override
 	public Result<?> findProviderPage(int currentPage, int pageSize, String nodeId) {
-		Page<DubboProvider> page = dubboProviderDao.findPage(currentPage, pageSize, nodeId);
+//		Page<DubboProvider> page = dubboProviderDao.findPage(currentPage, pageSize, nodeId);
+		int pageNum = dubboProviderDao1.findTotalPage(nodeId);
+		List<DubboProvider> rootList = dubboProviderDao1.findPage((currentPage-1)*pageSize, pageSize,nodeId);
+		Page<DubboProvider> page = new Page<DubboProvider>(currentPage,pageNum,pageSize,rootList);
 		Result<Page<DubboProvider>> result = new Result<Page<DubboProvider>>();
 		result.setSuccessData(page);
 		return result;
@@ -252,7 +287,7 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 	public Result<?> findProviderById(String id) {
 		
 		Result<DubboProvider> result = new Result<DubboProvider>();
-		DubboProvider provider = dubboProviderDao.findById(id);
+		DubboProvider provider = dubboProviderDao1.findById(id);
 		if(null != provider){
 			result.setSuccessData(provider);
 		}else{
@@ -263,7 +298,10 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 
 	@Override
 	public Result<?> findConsumerPage(int currentPage, int pageSize, String nodeId) {
-		Page<DubboConsumer> page = dubboConsumerDao.findPage(currentPage, pageSize, nodeId);
+//		Page<DubboConsumer> page = dubboConsumerDao.findPage(currentPage, pageSize, nodeId);
+		int pageNum = dubboConsumerDao1.findTotalPage(nodeId);
+		List<DubboConsumer> rootList = dubboConsumerDao1.findPage((currentPage-1)*pageSize, pageSize,nodeId);
+		Page<DubboConsumer> page = new Page<DubboConsumer>(currentPage,pageNum,pageSize,rootList);
 		Result<Page<DubboConsumer>> result = new Result<Page<DubboConsumer>>();
 		result.setSuccessData(page);
 		return result;
@@ -272,7 +310,7 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 	@Override
 	public Result<?> findConsumerById(String id) {
 		Result<DubboConsumer> result = new Result<DubboConsumer>();
-		DubboConsumer consumer= dubboConsumerDao.findById(id);
+		DubboConsumer consumer= dubboConsumerDao1.findById(id);
 		if(null != consumer){
 			result.setSuccessData(consumer);
 		}else{
@@ -283,7 +321,10 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 
 	@Override
 	public Result<?> findRouterPage(int currentPage, int pageSize, String nodeId) {
-		Page<DubboRouter> page = dubboRouterDao.findPage(currentPage, pageSize, nodeId);
+//		Page<DubboRouter> page = dubboRouterDao.findPage(currentPage, pageSize, nodeId);
+		int pageNum = dubboRouterDao1.findTotalPage(nodeId);
+		List<DubboRouter> rootList = dubboRouterDao1.findPage((currentPage-1)*pageSize, pageSize,nodeId);
+		Page<DubboRouter> page = new Page<DubboRouter>(currentPage,pageNum,pageSize,rootList);
 		Result<Page<DubboRouter>> result = new Result<Page<DubboRouter>>();
 		result.setSuccessData(page);
 		return result;
@@ -292,7 +333,7 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 	@Override
 	public Result<?> findRouterById(String id) {
 		Result<DubboRouter> result = new Result<DubboRouter>();
-		DubboRouter router= dubboRouterDao.findById(id);
+		DubboRouter router= dubboRouterDao1.findById(id);
 		if(null != router){
 			result.setSuccessData(router);
 		}else{
@@ -303,7 +344,10 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 
 	@Override
 	public Result<?> findConfiguratorPage(int currentPage, int pageSize, String nodeId) {
-		Page<DubboConfigurator> page = dubboConfiguratorDao.findPage(currentPage, pageSize, nodeId);
+//		Page<DubboConfigurator> page = dubboConfiguratorDao.findPage(currentPage, pageSize, nodeId);
+		int pageNum = dubboConfiguratorDao1.findTotalPage(nodeId);
+		List<DubboConfigurator> rootList = dubboConfiguratorDao1.findPage((currentPage-1)*pageSize, pageSize,nodeId);
+		Page<DubboConfigurator> page = new Page<DubboConfigurator>(currentPage,pageNum,pageSize,rootList);
 		Result<Page<DubboConfigurator>> result = new Result<Page<DubboConfigurator>>();
 		result.setSuccessData(page);
 		return result;
@@ -312,7 +356,7 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 	@Override
 	public Result<?> findConfiguratorById(String id) {
 		Result<DubboConfigurator> result = new Result<DubboConfigurator>();
-		DubboConfigurator configurator= dubboConfiguratorDao.findById(id);
+		DubboConfigurator configurator= dubboConfiguratorDao1.findById(id);
 		if(null != configurator){
 			result.setSuccessData(configurator);
 		}else{
@@ -320,7 +364,5 @@ public class ZkDubboServiceImpl implements IZkDubboService {
 		}
 		return result;
 	}
-
-
 
 }

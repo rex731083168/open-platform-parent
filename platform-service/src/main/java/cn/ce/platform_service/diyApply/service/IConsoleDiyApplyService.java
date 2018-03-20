@@ -1,8 +1,13 @@
 package cn.ce.platform_service.diyApply.service;
 
+import cn.ce.annotation.dubbodescription.InterfaceDescription;
+import java.util.ArrayList;
+import java.util.List;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
+import cn.ce.platform_service.diyApply.entity.Menu;
+import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.interfaceMessageInfo.InterfaMessageInfoString;
 
 /***
@@ -20,6 +25,7 @@ public interface IConsoleDiyApplyService {
 	 * 
 	 * @param entity
 	 */
+	@InterfaceDescription(name="",des="保存实体",version="1.0")
 	Result<?> saveApply(DiyApplyEntity entity);
 
 	/***
@@ -37,8 +43,8 @@ public interface IConsoleDiyApplyService {
 	 * @param pageSize
 	 * @return
 	 */
-	Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page);
-
+	//Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page);
+	Result<Page<DiyApplyEntity>> findApplyList(QueryDiyApplyEntity queryApply);
 
 	/**
 	 * 根据id加载应用信息
@@ -53,13 +59,13 @@ public interface IConsoleDiyApplyService {
 	 * @Title: findById @Description: 根据id加载应用信息 @param : @param applyId @param
 	 *         : @return @return: ApplyEntity @throws
 	 */
-	public DiyApplyEntity findById(String applyId);
+	public Result<?> findById(String applyId);
 
 	
 	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
 
 
-	public Result<String> batchUpdate(String ids,int checkState, String checkMem);
+	public Result<String> batchUpdateCheckState(String ids,Integer checkState, String checkMem);
 
 	/**
 	 * 
@@ -78,6 +84,15 @@ public interface IConsoleDiyApplyService {
 	public Result<String> registerMenu(String appid, String bossInstanceCode, String menuJson);
 
 	Result<?> updateApply(DiyApplyEntity apply);
+
+	Result<?> migraDiyApply();
+
+	Result<?> productMenuList1(String tenantId);
+
+	Result<?> registerMenu1(String tenantId, List<Menu> menus);
+
+	Result<?> deleteMenu1(ArrayList<String> ids);
+
 
 	
 }

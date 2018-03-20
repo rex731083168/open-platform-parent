@@ -24,14 +24,13 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.IOUtils;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.gateway.dao.IGatewayColonyManageDao;
-import cn.ce.platform_service.gateway.dao.IGatewayManageDao;
-import cn.ce.platform_service.gateway.dao.IGatewayNodeManageDao;
+import cn.ce.platform_service.gateway.dao.IMysqlGwColonyDao;
+import cn.ce.platform_service.gateway.dao.IMysqlGwNodeDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.entity.GatewayNodeEntity;
 import io.netty.handler.codec.http.HttpMethod;
@@ -44,17 +43,21 @@ import io.netty.handler.codec.http.HttpMethod;
  * 2017-7-31
  *
  */
-@Controller
+@Component
 public class GatewayUtils {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(GatewayUtils.class);
 	
+//	@Resource
+//	private IGatewayManageDao gatewayManageDao;
+//	@Resource
+//	private IGatewayNodeManageDao gatewayNodeManageDao;
+//	@Resource
+//	private IGatewayColonyManageDao gatewayColonyManageDao;
 	@Resource
-	private IGatewayManageDao gatewayManageDao;
+	private IMysqlGwColonyDao gwColonyDao;
 	@Resource
-	private IGatewayNodeManageDao gatewayNodeManageDao;
-	@Resource
-	private IGatewayColonyManageDao gatewayColonyManageDao;
+	private IMysqlGwNodeDao gwNodeDao;
 	
 	
 	private static GatewayUtils utils;
@@ -62,9 +65,11 @@ public class GatewayUtils {
 	@PostConstruct
 	public void init(){
 		utils = this;
-		utils.gatewayManageDao = this.gatewayManageDao;
-		utils.gatewayNodeManageDao = this.gatewayNodeManageDao;
-		utils.gatewayColonyManageDao = this.gatewayColonyManageDao;
+//		utils.gatewayManageDao = this.gatewayManageDao;
+//		utils.gatewayNodeManageDao = this.gatewayNodeManageDao;
+//		utils.gatewayColonyManageDao = this.gatewayColonyManageDao;
+		utils.gwColonyDao = this.gwColonyDao;
+		utils.gwNodeDao = this.gwNodeDao;
 	}
 	
 	
@@ -415,16 +420,17 @@ public class GatewayUtils {
 	//查询所有集群
 	public static List<GatewayColonyEntity> getAllGatewayColony(){
 		
-		List<GatewayColonyEntity> colonyList = utils.gatewayManageDao.getAll(GatewayColonyEntity.class);
+//		List<GatewayColonyEntity> colonyList = utils.gatewayManageDao.getAll(GatewayColonyEntity.class);
+		List<GatewayColonyEntity> colonyList = utils.gwColonyDao.getAll();
 		
 		return colonyList;
 	}
 	
 	//根据集群id查询当前集群下的所有节点
-	public static List<GatewayNodeEntity> getGatwayNodesByColonyId(Integer colId){
+	public static List<GatewayNodeEntity> getGatwayNodesByColonyId(String colId){
 		
-		@SuppressWarnings("unchecked")
-		List<GatewayNodeEntity> nodeList = utils.gatewayNodeManageDao.findByField("colId", colId, GatewayNodeEntity.class);
+//		List<GatewayNodeEntity> nodeList = utils.gatewayNodeManageDao.findByField("colId", colId, GatewayNodeEntity.class);
+		List<GatewayNodeEntity> nodeList = utils.gwNodeDao.findByColId(colId);
 		
 		return nodeList;
 		
@@ -433,7 +439,8 @@ public class GatewayUtils {
 	//查询所有集群节点
 	public static List<GatewayNodeEntity> getAllGatwayNodes(){
 		
-		List<GatewayNodeEntity> nodeList = utils.gatewayNodeManageDao.getAll(GatewayNodeEntity.class);
+//		List<GatewayNodeEntity> nodeList = utils.gatewayNodeManageDao.getAll(GatewayNodeEntity.class);
+		List<GatewayNodeEntity> nodeList = utils.gwNodeDao.getAll();
 		
 		return nodeList;
 		
@@ -532,7 +539,7 @@ public class GatewayUtils {
 	/** >>>>>>>>>>>>>>>>>>>>>>>>>>> 网关路由操作开始  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 	
 	public static String getRouteBySaasId(String saasId,String method){
-		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		GatewayColonyEntity colonySingle = utils.gwColonyDao.getAll().get(0);
 		Result<String> result = new Result<>();
 		if(null == colonySingle){
 			LOGGER.error("网关集群信息为空!");
@@ -554,7 +561,7 @@ public class GatewayUtils {
 	}
 	
 	public static String saveRoute(String saasId,String targetUrl,String method){
-		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		GatewayColonyEntity colonySingle = utils.gwColonyDao.getAll().get(0);
 		Result<String> result = new Result<>();
 		String gwJsonApi = "";
 		if(null == colonySingle){
@@ -576,7 +583,7 @@ public class GatewayUtils {
 	}
 	
 	public static String deleteRoute(String saasId,String method){
-		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		GatewayColonyEntity colonySingle = utils.gwColonyDao.getAll().get(0);
 		Result<String> result = new Result<>();
 		String gwJsonApi = "";
 		if(null == colonySingle){

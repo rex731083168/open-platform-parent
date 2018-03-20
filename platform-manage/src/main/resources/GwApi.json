@@ -26,7 +26,8 @@
           "v1": {
           "name": "v1",
           "expires": "-1",
-          "override_target": "www.test.com"
+          "override_target": "www.test.com",
+          "use_extended_paths":false
         }
       }
     },

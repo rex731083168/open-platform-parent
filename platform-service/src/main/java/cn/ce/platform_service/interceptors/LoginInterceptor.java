@@ -64,7 +64,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		if(StringUtils.isBlank(ticket)){
 	       return userNotLogged(response);
 		}
-//		String url = "http://10.12.40.161:8088/passport/checkTicket";
 		String url = PropertiesUtil.getInstance().getValue("checkTicket");
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("ticket", ticket);
@@ -84,7 +83,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			return true;
 		}catch(Exception e){
 			_LOGGER.info("用户中心session已经过期");
-			return false;
+			//return false;
+			return userInfoError(response, ErrorCodeNo.SYS019, "session过期或不存在");
 		}
 	}
 

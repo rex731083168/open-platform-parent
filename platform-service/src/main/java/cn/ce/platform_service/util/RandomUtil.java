@@ -1,6 +1,7 @@
 package cn.ce.platform_service.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  *
@@ -49,5 +50,14 @@ public class RandomUtil {
 		
 		return rm;
 	}
-
+	
+	public static String random32UUID(){
+		String s = UUID.randomUUID().toString();
+		StringBuilder sb = new StringBuilder(33);
+		return sb.append(s.substring(0,8)).append(s.substring(9,13))
+			.append(s.substring(14,18)).append(s.substring(19,23)).append(s.substring(24))
+			.toString();
+		
+	}
+	
 }
