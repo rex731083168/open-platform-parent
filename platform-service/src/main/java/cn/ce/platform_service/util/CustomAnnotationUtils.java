@@ -31,11 +31,11 @@ public class CustomAnnotationUtils {
 				ide.setName(service.name());
 				ide.setDes(service.des());
 				ide.setVersion(service.version());
-				ServiceMap.put(method[i].getName(), ide);
+				ServiceMap.put(method[i].getDeclaringClass().getName() + "." + method[i].getName(), ide);
 				logger.info(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
-						+ method[i].getName());
+						+ method[i].getDeclaringClass().getName() + "." + method[i].getName());
 				System.out.println(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
-						+ method[i].getName());
+						+ method[i].getDeclaringClass().getName() + "." + method[i].getName());
 			}
 		}
 		return ServiceMap;
