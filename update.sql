@@ -28,3 +28,8 @@ CREATE TABLE `openplatform`.`api_query_arg` (
 -------------------Phase 2.4.4.6 2018-03.19-------------------  
 ALTER TABLE `openplatform`.`api_query_arg` 
 CHANGE COLUMN `uuid` `uuid` INT(11) NOT NULL AUTO_INCREMENT ;
+
+-------------------Phase 2.4.4.6 2018-03.22-------------------
+ALTER TABLE `openplatform`.`diy_apply` 
+CHANGE COLUMN `apply_id` `apply_id` VARCHAR(45) NOT NULL COMMENT '定制应用主键，唯一标识' ,
+CHANGE COLUMN `app_id` `app_id` VARCHAR(100) NULL DEFAULT NULL COMMENT '推送到产品中心后，回推的字段，很重要' ;

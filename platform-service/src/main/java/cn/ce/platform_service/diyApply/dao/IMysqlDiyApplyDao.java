@@ -44,5 +44,7 @@ public interface IMysqlDiyApplyDao {
 	List<DiyApplyEntity> findByIds(@Param("diyIds")List<String> diyIds);
 
 	int deleteAll();
+
+	int auditSuccess(@Param("applyId")String applyId, @Param("appId")String appId, @Param("checkState")Integer checkState, @Param("checkMem")String checkMem);
 	
 }
