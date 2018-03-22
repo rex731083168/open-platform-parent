@@ -33,3 +33,16 @@ CHANGE COLUMN `uuid` `uuid` INT(11) NOT NULL AUTO_INCREMENT ;
 ALTER TABLE `openplatform`.`diy_apply` 
 CHANGE COLUMN `apply_id` `apply_id` VARCHAR(45) NOT NULL COMMENT '定制应用主键，唯一标识' ,
 CHANGE COLUMN `app_id` `app_id` VARCHAR(100) NULL DEFAULT NULL COMMENT '推送到产品中心后，回推的字段，很重要' ;
+
+-------------------Phase 2.4.4.6 2018-03.22-------------------
+CREATE TABLE `openplatform`.`saas` (
+  `uuid` INT NOT NULL AUTO_INCREMENT,
+  `id` VARCHAR(45) NOT NULL COMMENT 'saas表业务主键',
+  `saas_id` VARCHAR(45) NOT NULL,
+  `resource_type` VARCHAR(45) NOT NULL,
+  `target_url` VARCHAR(200) NOT NULL,
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
+COMMENT = 'saas表';
+

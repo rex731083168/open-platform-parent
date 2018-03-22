@@ -1,5 +1,6 @@
 package cn.ce.platform_manage.gateway;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
+import cn.ce.platform_service.gateway.service.ISaasService;
 
 /***
  * 
@@ -27,6 +29,9 @@ import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 @RestController
 @RequestMapping("/route")
 public class GatewayRouteController {
+	
+	@Resource
+	private ISaasService saasService;
 	
 	Logger LOGGER = LoggerFactory.getLogger(GatewayRouteController.class);
 	private static final String DEFAULT_RESTYPE_CODE = "XGW_SERVICE";//官网部门服务 默认值
@@ -48,8 +53,7 @@ public class GatewayRouteController {
 			result.setErrorMessage("saasId不能为空!");
 			return result.toString();
 		}
-		String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(saasId,resourceType,request.getMethod());
-		return routeBySaasId;
+		return saasService.getSaas(saasId,resourceType);
 	}
 	
 	

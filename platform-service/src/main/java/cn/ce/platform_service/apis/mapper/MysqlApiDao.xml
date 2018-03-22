@@ -244,7 +244,7 @@
 		,#{apiType},#{desc},#{state},#{checkState},#{checkMem},#{quotaMax},#{quotaRenewalRate}
 		,#{rate},#{per},#{apiSource},#{enterpriseName},#{resourceType},#{resourceTypeName}
 		,#{createTime}
-		,requestBodyType,responseBodyType,protocol,orgPath)
+		,#{requestBodyType},#{responseBodyType},#{protocol},#{orgPath})
 	</insert>
 
 	<insert id="save1" parameterType="cn.ce.platform_service.apis.entity.NewApiEntity">
