@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ce.platform_service.gateway.dao.IMysqlSaasDao">
+	<resultMap type="cn.ce.platform_service.gateway.entity.SaasEntity" id="saasMap">
+		<result column="saas_id" property="saas_id"/>
+		<result column="resource_type" property="resource_type"/>
+		<result column="target_url" property="target_url"/>
+	</resultMap>
+
+
+	<insert id="save" parameterType="cn.ce.platform_service.gateway.entity.SaasEntity">
+		INSERT INTO saas
+			(saas_id,resource_type,target_url)
+		VALUES
+			(#{saas_id},#{resource_type},#{target_url})
+	</insert>
+
+	<delete id="clearAll">
+		delete from saas where uuid > 0
+	</delete>
+	
+	<select id="getSaas" resultMap="saasMap">
+		select 
+			saas_id,resource_type,target_url
+		from saas 
+			where saas_id = #{saas_id} and resource_type=#{resource_type}
+	</select>
+	
+	<delete id="deleteSaas">
+		delete from saas where
+			saas_id=#{saas_id} and resource_type=#{resource_type}
+	</delete>
+	
+	<update id="updateSaas">
+		update saas set  
+			target_url = #{target_url} 
+		where 
+			saas_id=#{saas_id} and resource_type=#{resource_type} 
+	</update>
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

@@ -117,4 +117,16 @@ public class DataMigraController {
 		result.setSuccessMessage("一共迁移了"+i+"条saas数据");
 		return result;
 	}
+	
+	/**
+	 * 
+	 * @Title: migraGetQueryParam
+	 * @Description: 迁移get请求参数
+	 * @author: makangwei 
+	 * @date:   2018年3月23日 下午7:45:41 
+	 */
+	@RequestMapping(value="/get/queryParam", method=RequestMethod.GET)
+	public Result<?> migraGetQueryParam(){
+		
+	}
 }

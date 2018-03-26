@@ -45,4 +45,7 @@ CREATE TABLE `openplatform`.`saas` (
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 COMMENT = 'saas表';
+-------------------Phase 2.4.4.6 2018-03.23-------------------
+ALTER TABLE `openplatform`.`api_result_example` 
+CHANGE COLUMN `rex_value` `rex_value` LONGTEXT NULL DEFAULT NULL ;
 

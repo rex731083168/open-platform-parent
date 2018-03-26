@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.gateway.service.ISaasService;
 
 /***
@@ -53,7 +52,7 @@ public class GatewayRouteController {
 			result.setErrorMessage("saasId不能为空!");
 			return result.toString();
 		}
-		return saasService.getSaas(saasId,resourceType);
+		return saasService.getSaas(saasId,resourceType,request.getMethod());
 	}
 	
 	
@@ -69,8 +68,8 @@ public class GatewayRouteController {
 	@RequestMapping(value="/saas/{saasId}/{resourceType}", method = { RequestMethod.POST, RequestMethod.PUT },produces="application/json;charset=utf-8")
 	public String saveRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType,
 			@RequestParam(value = "target_url",required = true) String targetUrl){
-		String routeBySaasId = GatewayRouteUtils.saveRoute(saasId, targetUrl, resourceType,request.getMethod());
-		return routeBySaasId;
+		
+		return saasService.saveSaas(saasId,resourceType,targetUrl,request.getMethod());
 	}
 	
 	
@@ -86,8 +85,8 @@ public class GatewayRouteController {
 	 */
 	@RequestMapping(value="/saas/{saasId}/{resourceType}", method=RequestMethod.DELETE)
 	public String deleteRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType){
-		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,resourceType,request.getMethod());
-		return routeBySaasId;
+		
+		return saasService.deleteRoute(saasId,resourceType,request.getMethod());
 	}
 	
 	
@@ -136,8 +135,8 @@ public class GatewayRouteController {
 	 */
 	@RequestMapping(value="/saas/{saasId}", method=RequestMethod.DELETE)
 	public String deleteRoute(HttpServletRequest request,@PathVariable("saasId") String saasId){
-		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,DEFAULT_RESTYPE_CODE,request.getMethod());
-		return routeBySaasId;
+		
+		return this.deleteRoute(request, saasId, DEFAULT_RESTYPE_CODE);
 	}
 	
 }

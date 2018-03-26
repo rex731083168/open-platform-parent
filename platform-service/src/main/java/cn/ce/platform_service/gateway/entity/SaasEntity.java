@@ -11,33 +11,41 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class SaasEntity {
 
 	@Field("saas_id")
-	private String saasId;
+	private String saas_id;
 	@Field("resource_type")
-	private String resourceType;
+	private String resource_type;
 	@Field("target_url")
-	private String targetUrl;
+	private String target_url;
 	
-	public String getSaasId() {
-		return saasId;
+	
+	public SaasEntity() {
+		super();
 	}
-	public void setSaasId(String saasId) {
-		this.saasId = saasId;
+	
+	public SaasEntity(String saas_id, String resource_type, String target_url) {
+		super();
+		this.saas_id = saas_id;
+		this.resource_type = resource_type;
+		this.target_url = target_url;
 	}
-	public String getResourceType() {
-		return resourceType;
+	
+	public String getSaas_id() {
+		return saas_id;
 	}
-	public void setResourceType(String resourceType) {
-		this.resourceType = resourceType;
+	public void setSaas_id(String saas_id) {
+		this.saas_id = saas_id;
 	}
-	public String getTargetUrl() {
-		return targetUrl;
+	public String getResource_type() {
+		return resource_type;
 	}
-	public void setTargetUrl(String targetUrl) {
-		this.targetUrl = targetUrl;
+	public void setResource_type(String resource_type) {
+		this.resource_type = resource_type;
 	}
-	@Override
-	public String toString() {
-		return "SaasEntity [saasId=" + saasId + ", resourceType=" + resourceType + ", targetUrl=" + targetUrl + "]";
+	public String getTarget_url() {
+		return target_url;
+	}
+	public void setTarget_url(String target_url) {
+		this.target_url = target_url;
 	}
 	
 }
