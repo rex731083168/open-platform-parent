@@ -163,4 +163,13 @@
 			LEFT JOIN diy_bound_open ON diy_apply.apply_id = diy_bound_open.diy_apply_id
 			LEFT JOIN diy_bound_api ON diy_bound_open.bound_id = diy_bound_api.bound_open_id
 	</delete>
+	
+	<update id="auditSuccess">
+		update diy_apply set
+		<if test="null != checkMem and checkMem != ''">
+			check_mem=#{checkMem},
+		</if>
+		check_state=#{checkState},app_id=#{appId}
+		where apply_id=#{applyId}
+	</update>
 </mapper>
