@@ -374,6 +374,11 @@
 		select count(api_id) from
 		api_detail where version_id=#{versionId} and version=#{version}
 	</select>
+	
+	<select id="findVersionNumExpId" resultType="int">
+		select count(api_id) from
+		api_detail where version_id=#{versionId} and version=#{version} and api_id != #{apiId}
+	</select>
 
 	<update id="updateVersionByVersionId">
 		update api_detail

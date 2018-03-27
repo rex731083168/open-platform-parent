@@ -31,6 +31,8 @@ public interface IMysqlApiDao {
 	public int saveOrUpdateEntity(NewApiEntity apiEntity);
 
 	public int findVersionNum(@Param("versionId")String versionId, @Param("version")String version);
+	
+	public int findVersionNumExpId(@Param("apiId")String apiId, @Param("versionId")String versionId, @Param("version")String version);
 
 	public int updateVersionByVersionId(@Param("versionId")String versionId, @Param("newVersion")boolean b);
 
@@ -80,6 +82,8 @@ public interface IMysqlApiDao {
 
 	public List<NewApiEntity> findApiByApplyIdsAndCheckState(@Param("openApplyIds")List<String> openApplyIds, @Param("checkState")int checkState,
 			String apiTypeOpen);
+
+
 
 
 

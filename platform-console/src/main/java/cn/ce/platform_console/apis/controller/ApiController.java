@@ -135,9 +135,9 @@ public class ApiController {
 		
 		NewApiEntity apiEntity = ApiTransform.transToTotalNewApi(entity);
 		
-		if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){	
-			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
-		}
+//		if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){	
+//			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
+//		}
 		
 		return consoleApiService.modifyApi(apiEntity);
 	}
