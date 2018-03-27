@@ -904,4 +904,23 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return true;
 	}
 
+
+	@Override
+	public Result<?> migraQueryArgs() {
+		//1、删除旧的query表中导入的数据
+		apiQueryArgDao.deleteByImport();
+		//2、查询param库
+		List<ApiArgEntity> args = apiArgDao.getAllGetParam();
+		
+		//3、转化后插入query库
+		for (ApiArgEntity a : args) {
+			a.setImported(true);
+			apiQueryArgDao.saveImport(a);
+			apiArgDao.updateImport(a.getId());
+		}
+		
+		apiArgDao.deleteImport();
+		return Result.errorResult("一共迁移"+args.size()+"条数据", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+	}
+
 }
