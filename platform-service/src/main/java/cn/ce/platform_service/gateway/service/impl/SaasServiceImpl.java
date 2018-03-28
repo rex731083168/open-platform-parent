@@ -26,8 +26,7 @@ public class SaasServiceImpl implements ISaasService{
 	@Resource
 	private IMysqlSaasDao saasDao;
 	
-	@Override
-	public int save(SaasEntity saas) {
+	private int save(SaasEntity saas) {
 		if(null ==saas){
 			return 0;
 		}else if(StringUtils.isBlank(saas.getResource_type()) ||

@@ -1,7 +1,5 @@
 package cn.ce.platform_service.gateway.service;
 
-import cn.ce.platform_service.gateway.entity.SaasEntity;
-
 /**
 * @Description : 说明
 * @Author : makangwei
@@ -9,7 +7,7 @@ import cn.ce.platform_service.gateway.entity.SaasEntity;
 */
 public interface ISaasService {
 
-	int save(SaasEntity saas);
+//	int save(SaasEntity saas);
 
 	void clearAll();
 

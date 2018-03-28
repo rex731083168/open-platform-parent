@@ -23,6 +23,6 @@ public interface IMysqlSaasDao {
 	SaasEntity getSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type);
 
 	int updateSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type, @Param("target_url")String target_url);
-	
+
 }
 

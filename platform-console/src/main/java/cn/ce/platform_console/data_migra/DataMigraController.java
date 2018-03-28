@@ -26,6 +26,7 @@ import cn.ce.platform_service.guide.service.IConsoleGuideService;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.PropertiesUtil;
+import io.netty.handler.codec.http.HttpMethod;
 
 /**
 * @Description : 说明
@@ -110,7 +111,8 @@ public class DataMigraController {
 		saasService.clearAll();
 		for (Document doc : docs) {
 			SaasEntity saas = JSON.parseObject(doc.toJson(), SaasEntity.class);
-			i =i+saasService.save(saas);
+			saasService.saveSaas(saas.getSaas_id(), saas.getResource_type(),saas.getTarget_url(),HttpMethod.POST.toString());
+			i++;
 		}
 		mongo.close();
 		Result<String> result = new Result<String>();
@@ -118,15 +120,4 @@ public class DataMigraController {
 		return result;
 	}
 	
-	/**
-	 * 
-	 * @Title: migraGetQueryParam
-	 * @Description: 迁移get请求参数
-	 * @author: makangwei 
-	 * @date:   2018年3月23日 下午7:45:41 
-	 */
-	@RequestMapping(value="/get/queryParam", method=RequestMethod.GET)
-	public Result<?> migraGetQueryParam(){
-		
-	}
 }
