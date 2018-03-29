@@ -98,3 +98,11 @@ CREATE TABLE `dubbo_apply` (
   `creatUserId` varchar(255) DEFAULT NULL COMMENT '创建用户ID',
   PRIMARY KEY (`pkid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-------------------Phase 2.4.5.6 2018-03.29-------------------
+ALTER TABLE `openplatform`.`api_arg` 
+CHANGE COLUMN `arg_name` `arg_name` VARCHAR(200) NULL DEFAULT NULL ;
+
+ALTER TABLE `openplatform`.`api_result` 
+CHANGE COLUMN `ret_name` `ret_name` VARCHAR(200) NULL DEFAULT NULL ;
+
