@@ -26,6 +26,13 @@ public class SaasServiceImpl implements ISaasService{
 	@Resource
 	private IMysqlSaasDao saasDao;
 	
+	/**
+	 * 
+	 * @Title: save
+	 * @Description: 只能添加不能新增
+	 * @author: makangwei 
+	 * @date:   2018年3月28日 下午7:45:32 
+	 */
 	private int save(SaasEntity saas) {
 		if(null ==saas){
 			return 0;
