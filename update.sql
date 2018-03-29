@@ -49,3 +49,12 @@ COMMENT = 'saas表';
 ALTER TABLE `openplatform`.`api_result_example` 
 CHANGE COLUMN `rex_value` `rex_value` LONGTEXT NULL DEFAULT NULL ;
 
+-------------------Phase 2.4.5.6 2018-03.29-------------------
+ALTER TABLE `openplatform`.`api_result` 
+CHANGE COLUMN `ret_name` `ret_name` VARCHAR(200) NULL DEFAULT NULL ;
+
+ALTER TABLE `openplatform`.`api_arg` 
+CHANGE COLUMN `arg_name` `arg_name` VARCHAR(200) NULL DEFAULT NULL ;
+
+ALTER TABLE `openplatform`.`api_query_arg` 
+CHANGE COLUMN `arg_name` `arg_name` VARCHAR(200) NULL DEFAULT NULL ;
