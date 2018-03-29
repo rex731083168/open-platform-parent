@@ -12,10 +12,16 @@ public interface ISaasService {
 	void clearAll();
 
 	String getSaas(String saasId, String resourceType, String method);
-
+	
+	String getBoxSaas(String saasId, String resourceType, String boxId, String method);
+	
 	String saveSaas(String saasId, String resourceType, String targetUrl, String method);
+	
+	String saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method);
 
 	String deleteRoute(String saasId, String resourceType, String method);
+	
+	String deleteBoxRoute(String saasId, String resourceType, String boxId, String method);
 
 
 }

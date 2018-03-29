@@ -62,6 +62,12 @@ public class SaasServiceImpl implements ISaasService{
 	}
 
 	@Override
+	public String getBoxSaas(String saasId, String resourceType, String boxId, String method) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public String saveSaas(String saasId, String resourceType, String targetUrl,String method) {
 		
 		String routeBySaasId = GatewayRouteUtils.saveRoute(saasId, targetUrl, resourceType,method);
@@ -79,6 +85,12 @@ public class SaasServiceImpl implements ISaasService{
 	}
 
 	@Override
+	public String saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public String deleteRoute(String saasId, String resourceType, String method) {
 		
 		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,resourceType,method);
@@ -88,6 +100,12 @@ public class SaasServiceImpl implements ISaasService{
 			saasDao.deleteSaas(saasId, resourceType);
 		}
 		return routeBySaasId;
+	}
+
+	@Override
+	public String deleteBoxRoute(String saasId, String resourceType, String boxId, String method) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
