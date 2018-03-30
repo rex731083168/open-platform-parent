@@ -13,6 +13,8 @@ import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.gateway.dao.IMysqlSaasDao;
 import cn.ce.platform_service.gateway.entity.SaasEntity;
 import cn.ce.platform_service.gateway.service.ISaasService;
+import cn.ce.platform_service.sandbox.dao.IMysqlSandboxRouterDao;
+import cn.ce.platform_service.sandbox.entity.SandboxRouterEntity;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
@@ -25,6 +27,9 @@ public class SaasServiceImpl implements ISaasService{
 
 	@Resource
 	private IMysqlSaasDao saasDao;
+	
+	@Resource
+	private IMysqlSandboxRouterDao srDao;
 	
 	/**
 	 * 
@@ -62,9 +67,8 @@ public class SaasServiceImpl implements ISaasService{
 	}
 
 	@Override
-	public String getBoxSaas(String saasId, String resourceType, String boxId, String method) {
-		// TODO Auto-generated method stub
-		return null;
+	public SandboxRouterEntity getBoxSaas(String saasId, String resourceType, String boxId, String method) {
+		return srDao.getSandboxRouter(saasId, resourceType, boxId);
 	}
 	
 	@Override
@@ -86,8 +90,13 @@ public class SaasServiceImpl implements ISaasService{
 
 	@Override
 	public String saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		SandboxRouterEntity sandboxRouter = srDao.getSandboxRouter(saasId, resourceType, boxId);
+		
+		int i = srDao.save(sandboxRouter);
+		
+		return String.valueOf(i);
+		 
 	}
 	
 	@Override
@@ -104,8 +113,7 @@ public class SaasServiceImpl implements ISaasService{
 
 	@Override
 	public String deleteBoxRoute(String saasId, String resourceType, String boxId, String method) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.valueOf(srDao.deleteSandboxRouter(saasId, resourceType, boxId));
 	}
 	
 }

@@ -1,5 +1,7 @@
 package cn.ce.platform_service.gateway.service;
 
+import cn.ce.platform_service.sandbox.entity.SandboxRouterEntity;
+
 /**
 * @Description : 说明
 * @Author : makangwei
@@ -13,7 +15,7 @@ public interface ISaasService {
 
 	String getSaas(String saasId, String resourceType, String method);
 	
-	String getBoxSaas(String saasId, String resourceType, String boxId, String method);
+	SandboxRouterEntity getBoxSaas(String saasId, String resourceType, String boxId, String method);
 	
 	String saveSaas(String saasId, String resourceType, String targetUrl, String method);
 	

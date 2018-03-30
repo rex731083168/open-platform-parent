@@ -16,10 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
+import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.BoxPool;
 import cn.ce.platform_service.gateway.service.ISaasService;
@@ -30,6 +32,7 @@ import cn.ce.platform_service.sandbox.service.ISandBoxService;
 import cn.ce.platform_service.util.PropertiesUtil;
 import cn.ce.platform_service.util.RandomUtil;
 import io.netty.handler.codec.http.HttpMethod;
+import io.swagger.models.Method;
 import net.sf.json.JSONObject;
 
 /**
@@ -54,8 +57,8 @@ public class SandBoxServiceImpl implements ISandBoxService{
 	private static final String SANDBOX_NAME = "sandboxname";
 	private static final String boxStateUrl = PropertiesUtil.getInstance().getValue("box_state");
 	private static final String boxPoolUrl = PropertiesUtil.getInstance().getValue("box_getPool");
-	private static final String boxAddUrl = PropertiesUtil.getInstance().getValue("box_add");
 	private static final String boxDeleteUrl = PropertiesUtil.getInstance().getValue("box_delete");
+	private static final String boxAddUrl = PropertiesUtil.getInstance().getValue("box_add");
 	@Override
 	public Result<?> getResourcePool() {
 		String reStr = ApiCallUtils.getOrDelMethod(boxPoolUrl, null, HttpMethod.GET);
@@ -166,21 +169,72 @@ public class SandBoxServiceImpl implements ISandBoxService{
 
 	
 	@Override
-	public Result<?> andRoute(String saasId, String resourceType, String targetUrl) {
+	public Result<?> andRoute(String saasId, String resourceType, String targetUrl , String boxId) {
+		Result<?> result = new Result<>();
+		
+		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
+		
+		org.json.JSONObject params = new org.json.JSONObject();
+		params.put("saas_id", saasId);
+		params.put("resource_type",resourceType);
+		params.put("sandbox_id", boxId);
+		params.put("target_url", targetUrl);
+		
+		boolean postGwJson = ApiCallUtils.postGwJson(url, params);
+		
+		if(postGwJson){
+			saasService.saveBoxSaas(saasId, resourceType, targetUrl, boxId,Method.POST.toString());
+			result.setSuccessMessage("add router Success!");
+		} else {
+			result.setErrorMessage("add router fail!");
+		}
 		
 		return null;
 	}
 
 	@Override
-	public Result<?> updateRoute(String saasId, String resourceType, String targetUrl) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result<?> updateRoute(String saasId, String resourceType, String targetUrl , String boxId) {
+		
+		Result<?> result = new Result<>();
+		
+		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
+		
+		org.json.JSONObject params = new org.json.JSONObject();
+		params.put("saas_id", saasId);
+		params.put("resource_type",resourceType);
+		params.put("sandbox_id", boxId);
+		params.put("target_url", targetUrl);
+		
+		boolean postGwJson = ApiCallUtils.postGwJson(url, params);
+		
+		if(postGwJson){
+			saasService.saveBoxSaas(saasId, resourceType, targetUrl, boxId,Method.PUT.toString());
+			result.setSuccessMessage("update router Success!");
+		} else {
+			result.setErrorMessage("update router fail!");
+		}
+
+		return result;
 	}
 
 	@Override
-	public Result<?> deleteRoute(String saasId, String resourceType) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result<?> deleteRoute(String saasId, String resourceType , String boxId) {
+		
+		Result<?> result = new Result<>();
+		
+		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
+		url.concat("/").concat(saasId).concat("-").concat(resourceType).concat("-").concat(boxId);
+		
+		boolean postGwJson = ApiCallUtils.deleteGwJson(url);
+		
+		if(postGwJson){
+			saasService.deleteBoxRoute(saasId, resourceType, boxId, Method.DELETE.toString());
+			result.setSuccessMessage("update router Success!");
+		} else {
+			result.setErrorMessage("update router fail!");
+		}
+		
+		return result;
 	}
 	
 	private SandBox validateAllState(SandBox sandBox) {

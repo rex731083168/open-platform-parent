@@ -17,11 +17,11 @@ public interface ISandBoxService {
 
 	Result<?> boxList(QuerySandBox queryBox);
 
-	Result<?> andRoute(String saasId, String resourceType, String targetUrl);
+	Result<?> andRoute(String saasId, String resourceType, String targetUrl , String boxId);
 
-	Result<?> updateRoute(String saasId, String resourceType, String targetUrl);
+	Result<?> updateRoute(String saasId, String resourceType, String targetUrl , String boxId);
 
-	Result<?> deleteRoute(String saasId, String resourceType);
+	Result<?> deleteRoute(String saasId, String resourceType, String boxId);
 
 	Result<?> getOne(String boxId);
 

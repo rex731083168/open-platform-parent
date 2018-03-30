@@ -76,21 +76,22 @@ public class SandBoxController {
 	public Result<?> andRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType,
 			@PathVariable("boxId")String boxId, @RequestParam(value = "targetUrl",required = true) String targetUrl){
 	
-		return sandBoxService.andRoute(saasId, resourceType, targetUrl);
+		return sandBoxService.andRoute(saasId, resourceType, targetUrl , boxId);
 	}
 	
 	@RequestMapping(value="/andRoute/{saasId}/{resourceType}", method=RequestMethod.PUT)
 	public Result<?> updateRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType,
-	@RequestParam(value = "target_url",required = true) String targetUrl){
+	@RequestParam(value = "target_url",required = true) String targetUrl,@PathVariable("boxId")String boxId){
 		
-		return sandBoxService.updateRoute(saasId, resourceType, targetUrl);
+		return sandBoxService.updateRoute(saasId, resourceType, targetUrl , boxId);
 		
 	}
 	
 	@RequestMapping(value="/andRoute/{saasId}/{resourceType}", method=RequestMethod.DELETE)
-	public Result<?> updateRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType){
+	public Result<?> updateRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,
+			@PathVariable("resourceType") String resourceType,@PathVariable("boxId")String boxId){
 		
-		return sandBoxService.deleteRoute(saasId, resourceType);
+		return sandBoxService.deleteRoute(saasId, resourceType , boxId);
 		
 	}
 	
