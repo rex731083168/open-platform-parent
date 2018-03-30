@@ -2,6 +2,8 @@ package cn.ce.platform_service.sandbox.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.ce.platform_service.sandbox.entity.QuerySandBox;
 import cn.ce.platform_service.sandbox.entity.SandBox;
 
@@ -12,11 +14,11 @@ import cn.ce.platform_service.sandbox.entity.SandBox;
 */
 public interface ISandBoxDao {
 
-	SandBox findByName(String name);
+	SandBox findByName(@Param("name")String name);
 
 	int saveBox(SandBox sandBox);
 
-	SandBox findById(String boxId);
+	SandBox findById(@Param("boxId")String boxId);
 
 	int findListSize(QuerySandBox queryBox);
 

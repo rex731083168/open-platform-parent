@@ -32,7 +32,7 @@ public class SandBoxController {
 	@Resource
 	private ISandBoxService sandBoxService;
 	
-	@RequestMapping(value="/getResourcePools", method=RequestMethod.POST)
+	@RequestMapping(value="/getResourcePools", method=RequestMethod.GET)
 	public Result<?> getResourcePool(){
 		if(!EnvironmentHool.isSupportBox()){
 			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
