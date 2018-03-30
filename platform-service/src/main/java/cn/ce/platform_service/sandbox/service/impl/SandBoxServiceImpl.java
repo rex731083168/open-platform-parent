@@ -60,8 +60,12 @@ public class SandBoxServiceImpl implements ISandBoxService{
 	public Result<?> getResourcePool() {
 		String reStr = ApiCallUtils.getOrDelMethod(boxPoolUrl, null, HttpMethod.GET);
 		_LOGGER.info("获取沙箱resourcePool："+reStr);
-		List<BoxPool> poolList = JSON.parseArray(reStr, BoxPool.class);
-		return new Result<List<BoxPool>>("",ErrorCodeNo.SYS000,poolList,Status.SUCCESS);
+		BoxPool pool = JSON.parseObject(reStr, BoxPool.class);
+		BoxPool.Pool[] pools = null;
+		if(null != pool && 1 == pool.getResult()){
+			pools = pool.getData();
+		}
+		return new Result<BoxPool.Pool[]>("",ErrorCodeNo.SYS000,pools,Status.SUCCESS);
 	}
 	
 	@Override

@@ -74,7 +74,7 @@ public class SandBoxController {
 	
 	@RequestMapping(value="/andRoute/{saasId}/{resourceType}/{boxId}", method=RequestMethod.POST)
 	public Result<?> andRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType,
-			, @PathVariable("boxId")String boxId @RequestParam(value = "targetUrl",required = true) String targetUrl){
+			@PathVariable("boxId")String boxId, @RequestParam(value = "targetUrl",required = true) String targetUrl){
 	
 		return sandBoxService.andRoute(saasId, resourceType, targetUrl);
 	}

@@ -41,7 +41,7 @@ public class BoxPool {
 	}
 
 
-	class Pool{
+	public class Pool{
 		private boolean upgrade;
 		private String hclusterName;
 		private String hclusterNmeAlias;
