@@ -50,7 +50,8 @@
 			</if>
 		</where>
 	</sql>
-	<select id="findListSize" parameterType="cn.ce.platform_service.sandbox.entity.QuerySandBox">
+	<select id="findListSize" parameterType="cn.ce.platform_service.sandbox.entity.QuerySandBox"
+		resultType = "int">
 		select count(*) from sand_box
 		<include refid="listBasic" />
 	</select>

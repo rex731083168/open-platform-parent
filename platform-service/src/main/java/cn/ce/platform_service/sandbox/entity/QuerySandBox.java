@@ -29,11 +29,11 @@ public class QuerySandBox {
 		this.name = name;
 	}
 
-	public int getState() {
+	public Integer getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 
@@ -43,10 +43,6 @@ public class QuerySandBox {
 
 	public void setCreateState(String createState) {
 		this.createState = createState;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
 	}
 
 	public Integer getCurrentPage() {
@@ -82,11 +78,6 @@ public class QuerySandBox {
 		}
 	}
 	
-	public static void main(String[] args) {
-		String url = "http://10.12.40.83:8080/webportal-webapp-1.0-SNAPSHOT/gce/checkStatus?sandboxname={sandboxname}&resourcePool={resourcePool}";
-		url.replaceAll("{sandboxname}", "hello");
-		System.out.println(url);
-	}
 	
 }
 

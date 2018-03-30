@@ -52,6 +52,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 	
 	private static final Logger _LOGGER = LoggerFactory.getLogger(SandBoxServiceImpl.class);
 	private static final int resultSuccess = 1;
+	private static final int resultFailed = 0;
 	private static final String domainSuffix  = "design.yun300.cn"; //域名后缀
 	private static final String TEMPLATE_NAME = "templatename";
 	private static final String RESOURCE_POOL = "resourcePool";
@@ -166,11 +167,15 @@ public class SandBoxServiceImpl implements ISandBoxService{
 			sandBox.setDeleted(true);
 			sandBoxDao.updateBox(sandBox);
 			return new Result<String>("",ErrorCodeNo.SYS000,"",Status.SUCCESS);
+		}else if(resultFailed == jsonRet.getInt("result")){
+			// TODO 修改逻辑
+			sandBox.setDeleted(true);
+			sandBoxDao.updateBox(sandBox);
+			return new Result<String>("",ErrorCodeNo.SYS000,"",Status.SUCCESS);
 		}else{
 			return new Result<String>("删除失败",ErrorCodeNo.SYS034,"",Status.FAILED);
 		}
 	}
-
 	
 	@Override
 	public Result<?> andRoute(String saasId, String resourceType, String targetUrl , String boxId) {
