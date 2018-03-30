@@ -29,9 +29,23 @@
 			where saas_id = #{saas_id} and resource_type=#{resource_type}
 	</select>
 	
+	<select id="getSandboxSaas" resultMap="saasMap">
+		select 
+			saas_id,resource_type,target_url,sandbox_id
+		from saas 
+			where saas_id = #{saas_id} and resource_type=#{resource_type}
+			and sandbox_id = #{sandbox_id}
+	</select>	
+	
 	<delete id="deleteSaas">
 		delete from saas where
 			saas_id=#{saas_id} and resource_type=#{resource_type}
+	</delete>
+	
+	<delete id="deleteSandboxSaas">
+		delete from saas where
+			saas_id=#{saas_id} and resource_type=#{resource_type}
+			and sandbox_id=#{sandbox_id}
 	</delete>
 	
 	<update id="updateSaas">
@@ -41,25 +55,33 @@
 			saas_id=#{saas_id} and resource_type=#{resource_type} 
 	</update>
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	<update id="updateSandboxSaas">
+		update saas set  
+			target_url = #{target_url} 
+		where 
+			saas_id=#{saas_id} and resource_type=#{resource_type} 
+			and sandbox_id=#{sandbox_id}
+	</update>
+	
+	<select id="getSandBoxRouterList" resultMap="saasMap">
+		select 
+			saas_id,resource_type,target_url,sandbox_id 
+		from saas 
+		<where>
+		
+			<if test="saas_id != null">
+				and saas_id = #{saas_id}
+			</if>
+			
+			<if test="resource_type != null">
+				and resource_type = #{resource_type}
+			</if>		
+				
+			<if test="sandbox_id != null">
+				and sandbox_id = #{sandbox_id}
+			</if>
+			
+		</where>
+	</select>	
+	
 </mapper>

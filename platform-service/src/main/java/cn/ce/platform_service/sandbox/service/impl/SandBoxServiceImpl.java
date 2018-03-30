@@ -190,7 +190,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 			result.setErrorMessage("add router fail!");
 		}
 		
-		return null;
+		return result;
 	}
 
 	@Override

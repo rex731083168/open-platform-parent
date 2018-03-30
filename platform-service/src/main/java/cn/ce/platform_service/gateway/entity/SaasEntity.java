@@ -16,6 +16,8 @@ public class SaasEntity {
 	private String resource_type;
 	@Field("target_url")
 	private String target_url;
+	@Field("sandbox_id")
+	private String sandbox_id;
 	
 	
 	public SaasEntity() {
@@ -28,7 +30,15 @@ public class SaasEntity {
 		this.resource_type = resource_type;
 		this.target_url = target_url;
 	}
+
+	public String getSandbox_id() {
+		return sandbox_id;
+	}
 	
+	public void setSandbox_id(String sandbox_id) {
+		this.sandbox_id = sandbox_id;
+	}
+
 	public String getSaas_id() {
 		return saas_id;
 	}
