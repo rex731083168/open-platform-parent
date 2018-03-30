@@ -1,6 +1,9 @@
 package cn.ce.platform_service.gateway.service;
 
-import cn.ce.platform_service.sandbox.entity.SandboxRouterEntity;
+import java.util.List;
+
+import cn.ce.platform_service.gateway.entity.SaasEntity;
+import cn.ce.platform_service.sandbox.entity.SandBox;
 
 /**
 * @Description : 说明
@@ -15,15 +18,19 @@ public interface ISaasService {
 
 	String getSaas(String saasId, String resourceType, String method);
 	
-	SandboxRouterEntity getBoxSaas(String saasId, String resourceType, String boxId, String method);
-	
 	String saveSaas(String saasId, String resourceType, String targetUrl, String method);
-	
-	String saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method);
 
 	String deleteRoute(String saasId, String resourceType, String method);
 	
-	String deleteBoxRoute(String saasId, String resourceType, String boxId, String method);
+	
+	
+	SaasEntity getBoxSaas(String saasId, String resourceType, String boxId, String method);
+	
+	int saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method);
+	
+	int deleteBoxRoute(String saasId, String resourceType, String boxId, String method);
+	
+	List<SandBox> getSendBoxSaasList(SaasEntity saas);
 
 
 }

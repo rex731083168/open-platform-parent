@@ -1,5 +1,7 @@
 package cn.ce.platform_service.gateway.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,8 +15,7 @@ import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.gateway.dao.IMysqlSaasDao;
 import cn.ce.platform_service.gateway.entity.SaasEntity;
 import cn.ce.platform_service.gateway.service.ISaasService;
-import cn.ce.platform_service.sandbox.dao.IMysqlSandboxRouterDao;
-import cn.ce.platform_service.sandbox.entity.SandboxRouterEntity;
+import cn.ce.platform_service.sandbox.entity.SandBox;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
@@ -27,9 +28,6 @@ public class SaasServiceImpl implements ISaasService{
 
 	@Resource
 	private IMysqlSaasDao saasDao;
-	
-	@Resource
-	private IMysqlSandboxRouterDao srDao;
 	
 	/**
 	 * 
@@ -66,10 +64,6 @@ public class SaasServiceImpl implements ISaasService{
 		}
 	}
 
-	@Override
-	public SandboxRouterEntity getBoxSaas(String saasId, String resourceType, String boxId, String method) {
-		return srDao.getSandboxRouter(saasId, resourceType, boxId);
-	}
 	
 	@Override
 	public String saveSaas(String saasId, String resourceType, String targetUrl,String method) {
@@ -89,17 +83,6 @@ public class SaasServiceImpl implements ISaasService{
 	}
 
 	@Override
-	public String saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method) {
-		
-		SandboxRouterEntity sandboxRouter = srDao.getSandboxRouter(saasId, resourceType, boxId);
-		
-		int i = srDao.save(sandboxRouter);
-		
-		return String.valueOf(i);
-		 
-	}
-	
-	@Override
 	public String deleteRoute(String saasId, String resourceType, String method) {
 		
 		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,resourceType,method);
@@ -110,10 +93,32 @@ public class SaasServiceImpl implements ISaasService{
 		}
 		return routeBySaasId;
 	}
+	
+	@Override
+	public SaasEntity getBoxSaas(String saasId, String resourceType, String boxId, String method) {
+		return saasDao.getSandboxSaas(saasId, resourceType, boxId);
+	}
+	
+	
+	@Override
+	public int saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method) {
+		SaasEntity saas = new SaasEntity();
+		saas.setSaas_id(saasId);
+		saas.setResource_type(resourceType);
+		saas.setTarget_url(targetUrl);
+		saas.setSandbox_id(boxId);
+		return saasDao.save(saas); 
+		 
+	}
 
 	@Override
-	public String deleteBoxRoute(String saasId, String resourceType, String boxId, String method) {
-		return String.valueOf(srDao.deleteSandboxRouter(saasId, resourceType, boxId));
+	public int deleteBoxRoute(String saasId, String resourceType, String boxId, String method) {
+		return saasDao.deleteSandboxSaas(saasId, resourceType, boxId);
+	}
+
+	@Override
+	public List<SandBox> getSendBoxSaasList(SaasEntity saas) {
+		return saasDao.getSandBoxRouterList(saas);
 	}
 	
 }
