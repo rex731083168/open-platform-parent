@@ -11,11 +11,9 @@ public class QuerySandBox {
 
 	private String name;
 	
-	private String boxName;
+	private Integer state;
 	
-	private int state;
-	
-	private boolean isDelete;
+	private String createState;
 	
 	private Integer currentPage = 1;
 	
@@ -31,14 +29,6 @@ public class QuerySandBox {
 		this.name = name;
 	}
 
-	public String getBoxName() {
-		return boxName;
-	}
-
-	public void setBoxName(String boxName) {
-		this.boxName = boxName;
-	}
-
 	public int getState() {
 		return state;
 	}
@@ -47,12 +37,16 @@ public class QuerySandBox {
 		this.state = state;
 	}
 
-	public boolean isDelete() {
-		return isDelete;
+	public String getCreateState() {
+		return createState;
 	}
 
-	public void setDelete(boolean isDelete) {
-		this.isDelete = isDelete;
+	public void setCreateState(String createState) {
+		this.createState = createState;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 	public Integer getCurrentPage() {
@@ -86,6 +80,12 @@ public class QuerySandBox {
 				&& this.pageSize != null && this.pageSize > 0){
 			this.startNum = (this.currentPage-1)*this.pageSize;
 		}
+	}
+	
+	public static void main(String[] args) {
+		String url = "http://10.12.40.83:8080/webportal-webapp-1.0-SNAPSHOT/gce/checkStatus?sandboxname={sandboxname}&resourcePool={resourcePool}";
+		url.replaceAll("{sandboxname}", "hello");
+		System.out.println(url);
 	}
 	
 }

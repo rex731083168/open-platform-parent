@@ -3,6 +3,7 @@ package cn.ce.platform_service.sandbox.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -239,9 +240,12 @@ public class SandBoxServiceImpl implements ISandBoxService{
 	
 	private SandBox validateAllState(SandBox sandBox) {
 		String stateUrl = boxStateUrl;
-		stateUrl.replaceFirst("{sandboxname}", sandBox.getBoxId());
-		stateUrl.replaceFirst("{resourcePool}", sandBox.getResourcePool());
-		String resultStr = ApiCallUtils.getOrDelMethod(stateUrl, null, HttpMethod.GET);
+		String sandboxname$ = Pattern.quote("${sandboxname}");
+		String resourcePool$ = Pattern.quote("${resourcePool}");
+		String replaceUrl = stateUrl.replaceAll(sandboxname$, sandBox.getBoxId())
+			.replaceAll(resourcePool$, sandBox.getResourcePool());;
+		
+		String resultStr = ApiCallUtils.getOrDelMethod(replaceUrl, null, HttpMethod.GET);
 		JSONObject job = JSONObject.fromString(resultStr);
 		JSONObject paasState = job.getJSONObject("data");
 		if(null == paasState){

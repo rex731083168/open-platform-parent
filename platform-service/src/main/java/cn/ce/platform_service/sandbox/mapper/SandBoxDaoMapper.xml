@@ -42,16 +42,50 @@
 			<if test="null != name and name != ''">
 				AND name like concat(concat("%",#{name}),"%")
 			</if>
-			<if test="null != boxName and boxName != ''">
-				
+			<if test="null != state and state != ''">
+				AND state = #{state}
+			</if>
+			<if test="null != createState and createState != ''">
+				AND create_state=#{createState}
 			</if>
 		</where>
 	</sql>
 	<select id="findListSize" parameterType="cn.ce.platform_service.sandbox.entity.QuerySandBox">
-		
+		select count(*) from sand_box
+		<include refid="listBasic" />
+	</select>
+	
+	<select id="getPagedList" parameterType="cn.ce.platform_service.sandbox.entity.QuerySandBox"
+		resultMap="sandBoxMap">
+		select * from sand_box 
+		<include refid="listBasic" />
+		order by create_date desc
+			limit
+			<choose>
+				<when test="startNum == null or startNum == '0'">
+					0,
+				</when>
+				<otherwise>
+					#{startNum},
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="pageSize == null or pageSize == '0' ">
+					10
+				</when>
+				<otherwise>
+					#{pageSize}
+				</otherwise>
+			</choose>
 	</select>
 
-
+	<update id="updateBox">
+		update sand_box set name=#{name},template_name=#{templateName},
+			box_url=#{boxUrl},resource_pool=#{resourcePool},create_state=#{createState},
+			state=#{state},deleted=#{deleted},create_date=#{createDate},
+			delete_date=#{deleteDate},user_id#{userId},enterprise_name=#{enterpriseName})
+		where box_id = #{boxId}
+	</update>
 
 
 

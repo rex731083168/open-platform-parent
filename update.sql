@@ -58,3 +58,22 @@ CHANGE COLUMN `arg_name` `arg_name` VARCHAR(200) NULL DEFAULT NULL ;
 
 ALTER TABLE `openplatform`.`api_query_arg` 
 CHANGE COLUMN `arg_name` `arg_name` VARCHAR(200) NULL DEFAULT NULL ;
+
+-------------------Phase 2.4.5.6 2018-03.30-------------------
+CREATE TABLE `openplatform`.`sand_box` (
+  `uuid` INT NOT NULL AUTO_INCREMENT,
+  `box_id` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(100) NULL,
+  `template_name` VARCHAR(45) NULL,
+  `box_url` VARCHAR(200) NULL,
+  `resource_pool` VARCHAR(200) NULL,
+  `create_state` VARCHAR(45) NULL,
+  `state` TINYINT(1) UNSIGNED NULL,
+  `deleted` VARCHAR(45) NULL,
+  `create_date` DATETIME NULL,
+  `delete_date` DATETIME NULL,
+  `user_id` VARCHAR(45) NULL,
+  `enterprise_name` VARCHAR(45) NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `box_id_UNIQUE` (`box_id` ASC),
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
