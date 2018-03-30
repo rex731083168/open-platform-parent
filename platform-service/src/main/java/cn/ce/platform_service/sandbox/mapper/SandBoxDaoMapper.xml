@@ -83,7 +83,7 @@
 		update sand_box set name=#{name},template_name=#{templateName},
 			box_url=#{boxUrl},resource_pool=#{resourcePool},create_state=#{createState},
 			state=#{state},deleted=#{deleted},create_date=#{createDate},
-			delete_date=#{deleteDate},user_id#{userId},enterprise_name=#{enterpriseName})
+			delete_date=#{deleteDate},user_id=#{userId},enterprise_name=#{enterpriseName}
 		where box_id = #{boxId}
 	</update>
 

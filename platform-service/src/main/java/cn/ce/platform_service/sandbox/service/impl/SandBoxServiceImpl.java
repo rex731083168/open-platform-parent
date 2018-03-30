@@ -149,6 +149,9 @@ public class SandBoxServiceImpl implements ISandBoxService{
 	public Result<?> deleteOne(String boxId) {
 
 		SandBox sandBox = sandBoxDao.findById(boxId);
+		if(null == sandBox || sandBox.isDeleted()){
+			return Result.errorResult("已删除", ErrorCodeNo.SYS023, null, Status.FAILED);
+		}
 		if(null == sandBox || null == sandBox.getBoxId()){
 			return Result.errorResult("查询结果不存在", ErrorCodeNo.SYS015, null, Status.FAILED);
 		}
@@ -247,13 +250,22 @@ public class SandBoxServiceImpl implements ISandBoxService{
 		
 		String resultStr = ApiCallUtils.getOrDelMethod(replaceUrl, null, HttpMethod.GET);
 		JSONObject job = JSONObject.fromString(resultStr);
-		JSONObject paasState = job.getJSONObject("data");
+		
+		JSONObject paasState = null;
+		try{
+			paasState = job.getJSONObject("data");
+		}catch(Exception e){
+			sandBox.setDeleted(true);
+			sandBoxDao.updateBox(sandBox);
+			return sandBox;
+		}
 		if(null == paasState){
 			//说明paas平台的沙箱根本就不存在。所以将数据库中的沙箱状态改为删除
 			sandBox.setDeleted(true);
 			sandBoxDao.updateBox(sandBox);
 			return sandBox;
 		}
+		
 		if(null != sandBox.getCreateState() 
 				&& sandBox.getCreateState().equals(paasState.getString("status"))
 				&& sandBox.isDeleted() == paasState.getBoolean("deleted")){
