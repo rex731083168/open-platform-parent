@@ -30,7 +30,7 @@
 			create_date,delete_date,user_id,enterprise_name)
 		values
 			(#{boxId},#{name},#{templateName},#{boxUrl},#{resourcePool},#{resourceType}
-			#{createState},#{state},#{deleted},#{createDate},#{deleteDate},
+			,#{createState},#{state},#{deleted},#{createDate},#{deleteDate},
 			#{userId},#{enterpriseName})
 	</insert>
 	
@@ -43,11 +43,14 @@
 			<if test="null != name and name != ''">
 				AND name like concat(concat("%",#{name}),"%")
 			</if>
-			<if test="null != state and state != ''">
+			<if test="null != state">
 				AND state = #{state}
 			</if>
 			<if test="null != createState and createState != ''">
 				AND create_state=#{createState}
+			</if>
+			<if test="1 ==1">
+				AND deleted = 0
 			</if>
 		</where>
 	</sql>

@@ -17,16 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
-import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.gateway.entity.BoxPool;
-import cn.ce.platform_service.gateway.entity.QuerySaasEntity;
-import cn.ce.platform_service.gateway.entity.SaasEntity;
 import cn.ce.platform_service.gateway.service.ISaasService;
 import cn.ce.platform_service.sandbox.dao.ISandBoxDao;
 import cn.ce.platform_service.sandbox.entity.QuerySandBox;
@@ -35,7 +31,6 @@ import cn.ce.platform_service.sandbox.service.ISandBoxService;
 import cn.ce.platform_service.util.PropertiesUtil;
 import cn.ce.platform_service.util.RandomUtil;
 import io.netty.handler.codec.http.HttpMethod;
-import io.swagger.models.Method;
 import net.sf.json.JSONObject;
 
 /**
@@ -89,7 +84,10 @@ public class SandBoxServiceImpl implements ISandBoxService{
 			return Result.errorResult("沙箱资源池不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
 		}
 		
-		sandBox.setBoxId(RandomUtil.random32UUID());
+		do{
+			sandBox.setBoxId(RandomUtil.random16Number());
+		}while(null != sandBoxDao.findById(sandBox.getBoxId()));
+		
 		//调用paas接口
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -167,13 +165,15 @@ public class SandBoxServiceImpl implements ISandBoxService{
 		JSONObject jsonRet = JSONObject.fromString(str);
 		if(resultSuccess == jsonRet.getInt("result")){
 			sandBox.setDeleted(true);
+			sandBox.setDeleteDate(new Date());
 			sandBoxDao.updateBox(sandBox);
-			return new Result<String>("",ErrorCodeNo.SYS000,"",Status.SUCCESS);
+			return new Result<String>("删除成功",ErrorCodeNo.SYS000,"",Status.SUCCESS);
 		}else if(resultFailed == jsonRet.getInt("result")){
 			// TODO 修改逻辑
 			sandBox.setDeleted(true);
+			sandBox.setDeleteDate(new Date());
 			sandBoxDao.updateBox(sandBox);
-			return new Result<String>("",ErrorCodeNo.SYS000,"",Status.SUCCESS);
+			return Result.errorResult("已删除", ErrorCodeNo.SYS023, null, Status.FAILED);
 		}else{
 			return new Result<String>("删除失败",ErrorCodeNo.SYS034,"",Status.FAILED);
 		}

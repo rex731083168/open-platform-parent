@@ -35,6 +35,11 @@ public class SaasService1Impl implements ISaasService1{
 	@Override
 	public Result<?> saveOrUpdateBoxSaas(SaasEntity saasEntity) {
 		
+		//判断部分参数不能为空
+		if(StringUtils.isBlank(saasEntity.getResourceType()) ||
+				StringUtils.isBlank(saasEntity.getTargetUrl()) ){
+			return Result.errorResult("缺少必要参数", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
 		//如果是跟新操作需要判断saasId,resourceType,sandboxId与原来一致
 		if(StringUtils.isNotBlank(saasEntity.getRouteId())){
 			SaasEntity saas1 = saasDao.getById(saasEntity.getRouteId());
@@ -50,7 +55,11 @@ public class SaasService1Impl implements ISaasService1{
 			}
 		}
 		
-		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
+		if(StringUtils.isBlank(saasEntity.getSaasId())){
+			saasEntity.setSaasId(RandomUtil.random32UUID());
+		}
+		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl().concat(Constants.NETWORK_SAAS_URL)
+				.concat("/").concat(saasEntity.getSaasId());
 		org.json.JSONObject params = new org.json.JSONObject();
 		params.put("saas_id", saasEntity.getSaasId());
 		params.put("resource_type",saasEntity.getResourceType());
@@ -68,14 +77,15 @@ public class SaasService1Impl implements ISaasService1{
 			saasEntity.setCreateDate(new Date());
 			saasEntity.setUpdateDate(saasEntity.getCreateDate());
 			saasDao.save(saasEntity);
+			return new Result<SaasEntity>("添加成功",ErrorCodeNo.SYS000,saasEntity,Status.SUCCESS);
 		}else{
 			//修改
 			saas2.setTargetUrl(saasEntity.getTargetUrl());
 			saas2.setUpdateDate(new Date());
-			saasDao.updateBoxSaas(saasEntity);
+			saasDao.updateBoxSaas(saas2);
+			return new Result<SaasEntity>("修改成功",ErrorCodeNo.SYS000,saas2,Status.SUCCESS);
 		}
 
-		return new Result<SaasEntity>("添加或修改成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}
 
 	@Override
@@ -85,8 +95,8 @@ public class SaasService1Impl implements ISaasService1{
 			return new Result<String>("当前id不存在",ErrorCodeNo.SYS006,null,Status.FAILED);
 		}
 		
-		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
-		url.concat("/").concat(saas1.getSaasId()).concat("/").concat(saas1.getResourceType()).concat("/").concat(saas1.getSandboxId());
+		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_SAAS_URL
+				.concat("/").concat(saas1.getSaasId()).concat("/").concat(saas1.getResourceType()).concat("/").concat(saas1.getSandboxId());
 		
 		boolean postGwJson = ApiCallUtils.deleteGwJson(url);
 		

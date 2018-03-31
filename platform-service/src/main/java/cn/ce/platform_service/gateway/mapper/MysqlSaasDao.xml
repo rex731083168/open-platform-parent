@@ -67,7 +67,6 @@
 			,sandbox_id=#{sandboxId},update_date=#{updateDate}
 		where 
 			route_id=#{routeId}
-			and (isnull(sandbox_id) or sandbox_id ='')
 	</update>
 	
 	<select id="getById" resultMap="saasMap">

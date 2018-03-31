@@ -9,13 +9,13 @@ import cn.ce.platform_service.util.PageValidateUtil;
 */
 public class QuerySaasEntity {
 
-	private String saas_id;
+	private String saasId;
 	
-	private String resource_type;
+	private String resourceType;
 	
-	private String target_url;
+	private String targetUrl;
 	
-	private String sandbox_id;
+	private String sandboxId;
 	
 	private Integer currentPage = 1;
 	
@@ -23,36 +23,36 @@ public class QuerySaasEntity {
 	
 	private Integer startNum = 0; // 分页起始下标
 	
-	public String getSaas_id() {
-		return saas_id;
+	public String getSaasId() {
+		return saasId;
 	}
 
-	public void setSaas_id(String saas_id) {
-		this.saas_id = saas_id;
+	public void setSaasId(String saasId) {
+		this.saasId = saasId;
 	}
 
-	public String getResource_type() {
-		return resource_type;
+	public String getResourceType() {
+		return resourceType;
 	}
 
-	public void setResource_type(String resource_type) {
-		this.resource_type = resource_type;
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
 	}
 
-	public String getTarget_url() {
-		return target_url;
+	public String getTargetUrl() {
+		return targetUrl;
 	}
 
-	public void setTarget_url(String target_url) {
-		this.target_url = target_url;
+	public void setTargetUrl(String targetUrl) {
+		this.targetUrl = targetUrl;
 	}
 
-	public String getSandbox_id() {
-		return sandbox_id;
+	public String getSandboxId() {
+		return sandboxId;
 	}
 
-	public void setSandbox_id(String sandbox_id) {
-		this.sandbox_id = sandbox_id;
+	public void setSandboxId(String sandboxId) {
+		this.sandboxId = sandboxId;
 	}
 
 	public Integer getCurrentPage() {

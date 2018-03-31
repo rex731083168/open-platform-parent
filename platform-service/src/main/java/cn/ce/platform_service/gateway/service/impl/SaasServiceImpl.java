@@ -68,10 +68,18 @@ public class SaasServiceImpl implements ISaasService{
 		if(null == saas){
 			String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(saasId,resourceType,HttpMethod.GET.toString());
 			SaasEntity saas1 = JSON.parseObject(routeBySaasId, SaasEntity.class);
-			int num = this.save(saas1);
+			if(null != saas1 && StringUtils.isNotBlank(saas1.getSaasId())
+					&&StringUtils.isNotBlank(saas1.getResourceType())
+					&&StringUtils.isNotBlank(saas1.getTargetUrl())){
+				int num = this.save(saas1);
+			}
 			return routeBySaasId;
 		}else{
-			return JSON.toJSONString(saas); 
+			JSONObject job = new JSONObject();
+			job.put("saas_id", saas.getSaasId());
+			job.put("resource_type", saas.getResourceType());
+			job.put("target_url",saas.getTargetUrl());
+			return job.toString(); 
 		}
 	}
 

@@ -36,10 +36,26 @@ public class SandBox {
 	private String enterpriseName; //所属组织
 
 	public enum Template{
-		test,prod;
+		test(0),prod(1);
+		
+		private Integer state;
+
+		Template(){}
+		
+		Template(int state){
+			this.state = state;
+		}
+		public Integer getState() {
+			return state;
+		}
+
+		public void setState(Integer state) {
+			this.state = state;
+		}
+		
 	}
 	public enum CreateState{
-		BUILDDING,RUNNING,FAILED;
+		BUILDDING,RUNNING,FAILED,BUILDFAIL;
 	}
 
 	public String getResourceType() {

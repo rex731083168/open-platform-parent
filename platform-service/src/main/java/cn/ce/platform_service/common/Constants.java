@@ -48,6 +48,8 @@ public class Constants {
 	
 	public static final String NETWORK_ROUTE_BOX = "/tyk/router";
 	
+	public static final String NETWORK_SAAS_URL = "/tyk/router/saas";
+	
 	
 //	-----------------------HTTP请求相关-------------------------------------------------
 	public static final String HEADER_CONTENT_TYPE = "Content-type";

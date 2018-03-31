@@ -78,17 +78,10 @@ public class SandBoxController {
 	}
 
 	
-	@RequestMapping(value="/addBoxSaas", method=RequestMethod.POST)
+	@RequestMapping(value="/saveOrUpdateBoxSaas", method=RequestMethod.POST)
 	public Result<?> andBoxSaas(HttpServletRequest request,@RequestBody SaasEntity saasEntity){
 	
 		return saasService1.saveOrUpdateBoxSaas(saasEntity);
-	}
-	
-	@RequestMapping(value="/updateBoxSaas", method=RequestMethod.PUT)
-	public Result<?> updateBoxSaas(HttpServletRequest request,@RequestBody SaasEntity saasEntity){
-		
-		return saasService1.saveOrUpdateBoxSaas(saasEntity);
-		
 	}
 	
 	@RequestMapping(value="/deleteBoxSaas", method=RequestMethod.DELETE)
@@ -105,7 +98,7 @@ public class SandBoxController {
 		
 	}
 	
-	@RequestMapping(value="/routeList", method=RequestMethod.POST)
+	@RequestMapping(value="/sandBoxList", method=RequestMethod.POST)
 	public Result<?> routeList(HttpServletRequest request,@RequestBody QuerySaasEntity saas){
 		
 		return saasService1.boxSaasList(saas);
