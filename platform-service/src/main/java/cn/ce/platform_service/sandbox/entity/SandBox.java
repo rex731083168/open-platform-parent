@@ -19,6 +19,8 @@ public class SandBox {
 	
 	private String resourcePool; //所属沙箱资源
 	
+	private String resourceType; //所属组织
+	
 	private CreateState createState; //创建时状态
 	
 	private int state; //状态：0禁用，1启用
@@ -38,6 +40,14 @@ public class SandBox {
 	}
 	public enum CreateState{
 		BUILDDING,RUNNING,FAILED;
+	}
+
+	public String getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
 	}
 
 	public String getName() {

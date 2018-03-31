@@ -1,6 +1,6 @@
 package cn.ce.platform_service.gateway.service.impl;
 
-import java.util.List;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -15,7 +15,7 @@ import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.gateway.dao.IMysqlSaasDao;
 import cn.ce.platform_service.gateway.entity.SaasEntity;
 import cn.ce.platform_service.gateway.service.ISaasService;
-import cn.ce.platform_service.sandbox.entity.SandBox;
+import cn.ce.platform_service.util.RandomUtil;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
@@ -32,18 +32,21 @@ public class SaasServiceImpl implements ISaasService{
 	/**
 	 * 
 	 * @Title: save
-	 * @Description: 只能添加不能新增
+	 * @Description: 只能添加不能修改,添加不带沙箱的路由
 	 * @author: makangwei 
 	 * @date:   2018年3月28日 下午7:45:32 
 	 */
 	private int save(SaasEntity saas) {
 		if(null ==saas){
 			return 0;
-		}else if(StringUtils.isBlank(saas.getResource_type()) ||
-				StringUtils.isBlank(saas.getSaas_id()) ||
-				StringUtils.isBlank(saas.getTarget_url())){
+		}else if(StringUtils.isBlank(saas.getResourceType()) ||
+				StringUtils.isBlank(saas.getSaasId()) ||
+				StringUtils.isBlank(saas.getTargetUrl())){
 			return 0;
 		}
+		saas.setRouteId(RandomUtil.random32UUID());
+		saas.setCreateDate(new Date());
+		saas.setUpdateDate(saas.getCreateDate());
 		return saasDao.save(saas);
 	}
 
@@ -52,19 +55,33 @@ public class SaasServiceImpl implements ISaasService{
 		saasDao.clearAll();
 	}
 
+	/**
+	 * 
+	 * @Title: getSaas
+	 * @Description: 获取不带沙箱的路由
+	 * @author: makangwei 
+	 * @date:   2018年3月31日 上午10:05:34 
+	 */
 	@Override
 	public String getSaas(String saasId, String resourceType,String method) {
 		SaasEntity saas = saasDao.getSaas(saasId,resourceType);
 		if(null == saas){
 			String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(saasId,resourceType,HttpMethod.GET.toString());
-			int num = this.save(JSON.parseObject(routeBySaasId, SaasEntity.class));
+			SaasEntity saas1 = JSON.parseObject(routeBySaasId, SaasEntity.class);
+			int num = this.save(saas1);
 			return routeBySaasId;
 		}else{
 			return JSON.toJSONString(saas); 
 		}
 	}
 
-	
+	/**
+	 * 
+	 * @Title: saveSaas
+	 * @Description: 保存不带沙箱的路由
+	 * @author: makangwei 
+	 * @date:   2018年3月31日 上午10:06:09 
+	 */
 	@Override
 	public String saveSaas(String saasId, String resourceType, String targetUrl,String method) {
 		
@@ -73,7 +90,7 @@ public class SaasServiceImpl implements ISaasService{
 		JSONObject job = new JSONObject(routeBySaasId);
 		if(SaasConstants.STATUS_OK.equals(job.getString(SaasConstants.STATUS))){
 				SaasEntity saas1 = saasDao.getSaas(saasId, resourceType);
-				if(null != saas1 && StringUtils.isNotBlank(saas1.getResource_type()) && StringUtils.isNotBlank(saas1.getSaas_id())){
+				if(null != saas1 && StringUtils.isNotBlank(saas1.getResourceType()) && StringUtils.isNotBlank(saas1.getSaasId())){
 					saasDao.updateSaas(saasId, resourceType, targetUrl);
 				}else{
 					this.save(new SaasEntity(saasId, resourceType, targetUrl));
@@ -82,8 +99,15 @@ public class SaasServiceImpl implements ISaasService{
 		return routeBySaasId;
 	}
 
+	/**
+	 * 
+	 * @Title: deleteSaas
+	 * @Description: 删除不带沙箱的路由
+	 * @author: makangwei 
+	 * @date:   2018年3月31日 上午10:06:40 
+	 */
 	@Override
-	public String deleteRoute(String saasId, String resourceType, String method) {
+	public String deleteSaas(String saasId, String resourceType, String method) {
 		
 		String routeBySaasId = GatewayRouteUtils.deleteRoute(saasId,resourceType,method);
 		JSONObject job = new JSONObject(routeBySaasId);
@@ -93,33 +117,5 @@ public class SaasServiceImpl implements ISaasService{
 		}
 		return routeBySaasId;
 	}
-	
-	@Override
-	public SaasEntity getBoxSaas(String saasId, String resourceType, String boxId, String method) {
-		return saasDao.getSandboxSaas(saasId, resourceType, boxId);
-	}
-	
-	
-	@Override
-	public int saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method) {
-		SaasEntity saas = new SaasEntity();
-		saas.setSaas_id(saasId);
-		saas.setResource_type(resourceType);
-		saas.setTarget_url(targetUrl);
-		saas.setSandbox_id(boxId);
-		return saasDao.save(saas); 
-		 
-	}
-
-	@Override
-	public int deleteBoxRoute(String saasId, String resourceType, String boxId, String method) {
-		return saasDao.deleteSandboxSaas(saasId, resourceType, boxId);
-	}
-
-	@Override
-	public List<SandBox> getSendBoxSaasList(SaasEntity saas) {
-		return saasDao.getSandBoxRouterList(saas);
-	}
-	
 }
 

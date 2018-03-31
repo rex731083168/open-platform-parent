@@ -124,9 +124,22 @@ public class ApiCallUtils {
 		}
 		
 		StatusLine status = response.getStatusLine();
-
 		_LOGGER.info("************resposne success************");
 		_LOGGER.info("response status:"+status.getStatusCode());
+		InputStream is = null;
+		try{
+			HttpEntity entity = response.getEntity();
+			is = entity.getContent();
+			String str = IOUtils.convertStreamToString(is);
+			_LOGGER.info("response body:"+str);
+		}catch(Exception e){
+			_LOGGER.error("postGwJson response io error");
+		}finally{
+			try {
+				if(null != is){is.close();}
+			} catch (IOException e) {}
+		}
+
 		if(status.getStatusCode() == 200){
 			return true;	
 		}
@@ -660,6 +673,20 @@ public class ApiCallUtils {
 		StatusLine statusLine = response.getStatusLine();
 		
 		_LOGGER.info("get delete status:"+statusLine.getStatusCode());
+		
+		InputStream is = null;
+		try{
+			HttpEntity entity = response.getEntity();
+			is = entity.getContent();
+			String str = IOUtils.convertStreamToString(is);
+			_LOGGER.info("response body:"+str);
+		}catch(Exception e){
+			_LOGGER.error("postGwJson response io error");
+		}finally{
+			try {
+				if(null != is){is.close();}
+			} catch (IOException e) {}
+		}
 		
 		if(statusLine.getStatusCode() == 200){
 			_LOGGER.info("delete success");

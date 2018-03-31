@@ -86,7 +86,7 @@ public class GatewayRouteController {
 	@RequestMapping(value="/saas/{saasId}/{resourceType}", method=RequestMethod.DELETE)
 	public String deleteRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType){
 		
-		return saasService.deleteRoute(saasId,resourceType,request.getMethod());
+		return saasService.deleteSaas(saasId,resourceType,request.getMethod());
 	}
 	
 	

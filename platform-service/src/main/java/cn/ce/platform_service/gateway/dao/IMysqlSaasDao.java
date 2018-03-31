@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.ce.platform_service.gateway.entity.QuerySaasEntity;
 import cn.ce.platform_service.gateway.entity.SaasEntity;
 import cn.ce.platform_service.sandbox.entity.SandBox;
 
@@ -17,23 +18,47 @@ import cn.ce.platform_service.sandbox.entity.SandBox;
 @Transactional(propagation=Propagation.REQUIRED)
 public interface IMysqlSaasDao {
 
-	int save(SaasEntity s);
 
 	void clearAll();
 
-	int deleteSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type);
+	//保存实体
+	int save(SaasEntity s);
 	
-	int deleteSandboxSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type,@Param("sandbox_id")String sandbox_id);
-
-	SaasEntity getSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type);
+	/**
+	 * @Description: 获取不带沙箱id的路由
+	 * @author: makangwei 
+	 * @date:   2018年3月31日 上午11:58:28 
+	 */
+	SaasEntity getSaas(@Param("saasId")String saasId, @Param("resourceType")String resourceType);
 	
-	SaasEntity getSandboxSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type , @Param("sandbox_id")String sandbox_id);
-
-	int updateSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type, @Param("target_url")String target_url);
+	/**
+	 * @Description: 更新不带沙箱id的路由
+	 * @author: makangwei 
+	 * @date:   2018年3月31日 上午11:58:55 
+	 */
+	int updateSaas(@Param("saasId")String saasId, @Param("resourceType")String resourceType, @Param("targetUrl")String targetUrl);
 	
-	int updateSandboxSaas(@Param("saas_id")String saas_id, @Param("resource_type")String resource_type, @Param("target_url")String target_url,@Param("sandbox_id")String sandbox_id);
+	/**
+	 * @Description: 删除不带沙箱的路由
+	 * @author: makangwei 
+	 * @date:   2018年3月31日 上午11:59:20 
+	 */
+	int deleteSaas(@Param("saasId")String saasId, @Param("resourceType")String resourceType);
+	
+	SaasEntity getById(@Param("routeId")String routeId);
 
-	List<SandBox> getSandBoxRouterList(SaasEntity s);
+	int updateBoxSaas(SaasEntity saasEntity);
+
+	int deleteById(@Param("routeId")String routeId);
+	
+	int findListSize(QuerySaasEntity saas);
+	
+	List<SaasEntity> getPagedList(QuerySaasEntity saas);
+
+	SaasEntity getBoxSaas(@Param("saasId")String saasId, @Param("resourceType")String resourceType, @Param("sandboxId")String sandboxId);
+
+
+
 	
 }
 

@@ -5,83 +5,124 @@
 
 <mapper namespace="cn.ce.platform_service.gateway.dao.IMysqlSaasDao">
 	<resultMap type="cn.ce.platform_service.gateway.entity.SaasEntity" id="saasMap">
-		<result column="saas_id" property="saas_id"/>
-		<result column="resource_type" property="resource_type"/>
-		<result column="target_url" property="target_url"/>
+		<id column="route_id" property="routeId"/>
+		<result column="saas_id" property="saasId"/>
+		<result column="resource_type" property="resourceType"/>
+		<result column="target_url" property="targetUrl"/>
+		<result column="sandbox_id" property="sandboxId"/>
+		<result column="create_date" property="createDate"/>
+		<result column="update_date" property="updateDate"/>
 	</resultMap>
 
 
 	<insert id="save" parameterType="cn.ce.platform_service.gateway.entity.SaasEntity">
 		INSERT INTO saas
-			(saas_id,resource_type,target_url)
+			(route_id,saas_id,resource_type,target_url,sandbox_id,create_date,update_date)
 		VALUES
-			(#{saas_id},#{resource_type},#{target_url})
+			(#{routeId},#{saasId},#{resourceType},#{targetUrl},#{sandboxId},#{createDate},#{updateDate})
 	</insert>
 
 	<delete id="clearAll">
 		delete from saas where uuid > 0
 	</delete>
 	
-	<select id="getSaas" resultMap="saasMap">
+	<!-- 获取不带沙箱id的路由 -->
+	<select id="getSaas" resultMap="saasMap" >
 		select 
-			saas_id,resource_type,target_url
+			*
 		from saas 
-			where saas_id = #{saas_id} and resource_type=#{resource_type}
+			where saas_id = #{saasId} and resource_type=#{resourceType} 
+			and (isnull(sandbox_id) or sandbox_id ='')
 	</select>
 	
-	<select id="getSandboxSaas" resultMap="saasMap">
+	<select id="getBoxSaas" resultMap="saasMap" >
 		select 
-			saas_id,resource_type,target_url,sandbox_id
+			*
 		from saas 
-			where saas_id = #{saas_id} and resource_type=#{resource_type}
-			and sandbox_id = #{sandbox_id}
-	</select>	
-	
+		where 
+			saas_id = #{saasId} and resource_type=#{resourceType}
+			<if test="null != sandboxId and sandboxId != ''">
+				and sandbox_id=#{sandboxId}
+			</if>
+	</select>
+	<!-- 删除不带沙箱id的路由 -->
 	<delete id="deleteSaas">
 		delete from saas where
-			saas_id=#{saas_id} and resource_type=#{resource_type}
+			saas_id=#{saasId} and resource_type=#{resourceType}
+			and (isnull(sandbox_id) or sandbox_id ='')
 	</delete>
 	
-	<delete id="deleteSandboxSaas">
-		delete from saas where
-			saas_id=#{saas_id} and resource_type=#{resource_type}
-			and sandbox_id=#{sandbox_id}
-	</delete>
-	
+	<!-- 更新不带沙箱的路由 -->
 	<update id="updateSaas">
 		update saas set  
-			target_url = #{target_url} 
+			target_url = #{targetUrl} 
 		where 
-			saas_id=#{saas_id} and resource_type=#{resource_type} 
+			saas_id=#{saasId} and resource_type=#{resourceType} 
+			and (isnull(sandbox_id) or sandbox_id ='')
 	</update>
 	
-	<update id="updateSandboxSaas">
+	<update id="updateBoxSaas" parameterType="cn.ce.platform_service.gateway.entity.SaasEntity">
 		update saas set  
-			target_url = #{target_url} 
+			target_url = #{targetUrl},saas_id=#{saasId},resource_type=#{resourceType}
+			,sandbox_id=#{sandboxId},update_date=#{updateDate}
 		where 
-			saas_id=#{saas_id} and resource_type=#{resource_type} 
-			and sandbox_id=#{sandbox_id}
+			route_id=#{routeId}
+			and (isnull(sandbox_id) or sandbox_id ='')
 	</update>
 	
-	<select id="getSandBoxRouterList" resultMap="saasMap">
-		select 
-			saas_id,resource_type,target_url,sandbox_id 
-		from saas 
+	<select id="getById" resultMap="saasMap">
+		select * from saas where route_id=#{routeId}
+	</select>
+	
+	<delete id="deleteById">
+		delete from saas where route_id=#{routeId}
+	</delete>
+	
+	<sql id="listBasic">
 		<where>
-		
-			<if test="saas_id != null">
-				and saas_id = #{saas_id}
+			<if test="null != saasId and saasId != ''">
+				AND saas_id = #{saasId}
 			</if>
-			
-			<if test="resource_type != null">
-				and resource_type = #{resource_type}
-			</if>		
-				
-			<if test="sandbox_id != null">
-				and sandbox_id = #{sandbox_id}
+			<if test="null != targetUrl and targetUrl != ''">
+				AND target_url like concat(concat("%",#{targetUrl}),"%")
 			</if>
-			
+			<if test="null != sandboxId and sandboxId != ''">
+				AND sandbox_id = #{sandboxId}
+			</if>
+			<if test="null != resourceType and resourceType != ''">
+				AND resource_type like concat(concat("%",#{resourceType}),"%")
+			</if>
 		</where>
-	</select>	
+	</sql>
+	
+	<select id="findListSize" parameterType="cn.ce.platform_service.gateway.entity.QuerySaasEntity" 
+		resultType="int">
+		select count(*) from saas
+		<include refid="listBasic" />
+	</select>
+	
+	<select id="getPagedList" parameterType="cn.ce.platform_service.gateway.entity.QuerySaasEntity" 
+		resultMap="saasMap">
+		select * from saas 
+		<include refid="listBasic" />
+		order by update_date desc, create_date desc
+			limit
+			<choose>
+				<when test="startNum == null or startNum == '0'">
+					0,
+				</when>
+				<otherwise>
+					#{startNum},
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="pageSize == null or pageSize == '0' ">
+					10
+				</when>
+				<otherwise>
+					#{pageSize}
+				</otherwise>
+			</choose>
+	</select>
 	
 </mapper>

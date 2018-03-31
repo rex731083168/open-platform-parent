@@ -1,61 +1,113 @@
 package cn.ce.platform_service.gateway.entity;
 
+import java.util.Date;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
-* @Author : makangwei
-* @Date : 2018年3月21日
-*/
+ * 
+ * @ClassName:  SaasEntity   
+ * @Description:路由实体。将saas数据同步网关的saas数据
+ * @author: makangwei 
+ * @date:   2018年3月31日 上午10:01:49   
+ * @Copyright: 2018 中企动力科技股份有限公司  1999-2017 300.cn 
+
+ All Rights Reserved
+ *
+ */
 @Document(collection="saas")
 public class SaasEntity {
 
+	
+	private String routeId;
 	@Field("saas_id")
-	private String saas_id;
+	private String saasId;
 	@Field("resource_type")
-	private String resource_type;
+	private String resourceType;
 	@Field("target_url")
-	private String target_url;
+	private String targetUrl;
 	@Field("sandbox_id")
-	private String sandbox_id;
+	private String sandboxId; //
+	
+	private Date createDate;
+	
+	private Date updateDate;
 	
 	
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	public SaasEntity() {
 		super();
 	}
 	
-	public SaasEntity(String saas_id, String resource_type, String target_url) {
+	public SaasEntity(String saasId, String resourceType, String targetUrl) {
 		super();
-		this.saas_id = saas_id;
-		this.resource_type = resource_type;
-		this.target_url = target_url;
-	}
-
-	public String getSandbox_id() {
-		return sandbox_id;
+		this.saasId = saasId;
+		this.resourceType = resourceType;
+		this.targetUrl = targetUrl;
 	}
 	
-	public void setSandbox_id(String sandbox_id) {
-		this.sandbox_id = sandbox_id;
+	public SaasEntity(String routeId, String saasId, String resourceType, String targetUrl) {
+		super();
+		this.routeId=routeId;
+		this.saasId = saasId;
+		this.resourceType = resourceType;
+		this.targetUrl = targetUrl;
+	}
+	
+	public String getRouteId() {
+		return routeId;
 	}
 
-	public String getSaas_id() {
-		return saas_id;
+	public void setRouteId(String routeId) {
+		this.routeId = routeId;
 	}
-	public void setSaas_id(String saas_id) {
-		this.saas_id = saas_id;
+
+	public String getSaasId() {
+		return saasId;
 	}
-	public String getResource_type() {
-		return resource_type;
+
+	public void setSaasId(String saasId) {
+		this.saasId = saasId;
 	}
-	public void setResource_type(String resource_type) {
-		this.resource_type = resource_type;
+
+	public String getResourceType() {
+		return resourceType;
 	}
-	public String getTarget_url() {
-		return target_url;
+
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
 	}
-	public void setTarget_url(String target_url) {
-		this.target_url = target_url;
+
+	public String getTargetUrl() {
+		return targetUrl;
+	}
+
+	public void setTargetUrl(String targetUrl) {
+		this.targetUrl = targetUrl;
+	}
+
+	public String getSandboxId() {
+		return sandboxId;
+	}
+
+	public void setSandboxId(String sandboxId) {
+		this.sandboxId = sandboxId;
 	}
 	
 }

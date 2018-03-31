@@ -15,6 +15,9 @@ import cn.ce.platform_service.common.EnvironmentHool;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.gateway.entity.QuerySaasEntity;
+import cn.ce.platform_service.gateway.entity.SaasEntity;
+import cn.ce.platform_service.gateway.service.ISaasService1;
 import cn.ce.platform_service.sandbox.entity.QuerySandBox;
 import cn.ce.platform_service.sandbox.entity.SandBox;
 import cn.ce.platform_service.sandbox.service.ISandBoxService;
@@ -31,6 +34,8 @@ public class SandBoxController {
 	
 	@Resource
 	private ISandBoxService sandBoxService;
+	@Resource
+	private ISaasService1 saasService1;
 	
 	@RequestMapping(value="/getResourcePools", method=RequestMethod.GET)
 	public Result<?> getResourcePool(){
@@ -71,27 +76,39 @@ public class SandBoxController {
 		
 		return sandBoxService.boxList(queryBox);
 	}
+
 	
-	@RequestMapping(value="/andRoute/{saasId}/{resourceType}/{boxId}", method=RequestMethod.POST)
-	public Result<?> andRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType,
-			@PathVariable("boxId")String boxId, @RequestParam(value = "targetUrl",required = true) String targetUrl){
+	@RequestMapping(value="/addBoxSaas", method=RequestMethod.POST)
+	public Result<?> andBoxSaas(HttpServletRequest request,@RequestBody SaasEntity saasEntity){
 	
-		return sandBoxService.andRoute(saasId, resourceType, targetUrl , boxId);
+		return saasService1.saveOrUpdateBoxSaas(saasEntity);
 	}
 	
-	@RequestMapping(value="/andRoute/{saasId}/{resourceType}", method=RequestMethod.PUT)
-	public Result<?> updateRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,@PathVariable("resourceType") String resourceType,
-	@RequestParam(value = "target_url",required = true) String targetUrl,@PathVariable("boxId")String boxId){
+	@RequestMapping(value="/updateBoxSaas", method=RequestMethod.PUT)
+	public Result<?> updateBoxSaas(HttpServletRequest request,@RequestBody SaasEntity saasEntity){
 		
-		return sandBoxService.updateRoute(saasId, resourceType, targetUrl , boxId);
+		return saasService1.saveOrUpdateBoxSaas(saasEntity);
 		
 	}
 	
-	@RequestMapping(value="/andRoute/{saasId}/{resourceType}", method=RequestMethod.DELETE)
-	public Result<?> updateRoute(HttpServletRequest request,@PathVariable("saasId") String saasId,
-			@PathVariable("resourceType") String resourceType,@PathVariable("boxId")String boxId){
+	@RequestMapping(value="/deleteBoxSaas", method=RequestMethod.DELETE)
+	public Result<?> updateRoute(HttpServletRequest request, @RequestParam String routeId){
 		
-		return sandBoxService.deleteRoute(saasId, resourceType , boxId);
+		return saasService1.deleteBoxSaas(routeId);
+		
+	}
+	
+	@RequestMapping(value="/getBoxSaas", method=RequestMethod.GET)
+	public Result<?> getRoute(HttpServletRequest request,@RequestParam String routeId){
+		
+		return saasService1.getBoxSaas(routeId);
+		
+	}
+	
+	@RequestMapping(value="/routeList", method=RequestMethod.POST)
+	public Result<?> routeList(HttpServletRequest request,@RequestBody QuerySaasEntity saas){
+		
+		return saasService1.boxSaasList(saas);
 		
 	}
 	

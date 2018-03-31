@@ -10,6 +10,7 @@
 		<result column="template_name" property="templateName"/>
 		<result column="box_url" property="boxUrl"/>
 		<result column="resource_pool" property="resourcePool"/>
+		<result column="resource_Type" property="resourceType"/>
 		<result column="create_state" property="createState"/>
 		<result column="state" property="state"/>
 		<result column="deleted" property="deleted"/>
@@ -25,10 +26,10 @@
 	
 	<insert id="saveBox" parameterType="cn.ce.platform_service.sandbox.entity.SandBox">
 		insert into sand_box 
-			(box_id,name,template_name,box_url,resource_pool,create_state,state,deleted,
+			(box_id,name,template_name,box_url,resource_pool,resource_type,create_state,state,deleted,
 			create_date,delete_date,user_id,enterprise_name)
 		values
-			(#{boxId},#{name},#{templateName},#{boxUrl},#{resourcePool},
+			(#{boxId},#{name},#{templateName},#{boxUrl},#{resourcePool},#{resourceType}
 			#{createState},#{state},#{deleted},#{createDate},#{deleteDate},
 			#{userId},#{enterpriseName})
 	</insert>

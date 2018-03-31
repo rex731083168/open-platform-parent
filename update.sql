@@ -77,3 +77,10 @@ CREATE TABLE `openplatform`.`sand_box` (
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `box_id_UNIQUE` (`box_id` ASC),
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
+  
+-------------------Phase 2.4.5.6 2018-03.31-------------------  
+ALTER TABLE `openplatform`.`saas` 
+ADD COLUMN `sandbox_id` VARCHAR(45) NULL AFTER `target_url`,
+ADD COLUMN `create_date` DATETIME NULL AFTER `sandbox_id`,
+ADD COLUMN `update_date` DATETIME NULL AFTER `create_date`;
+ADD COLUMN `route_id` VARCHAR(45) NULL AFTER `uuid`;

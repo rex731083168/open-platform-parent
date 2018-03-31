@@ -1,12 +1,7 @@
 package cn.ce.platform_service.gateway.service;
 
-import java.util.List;
-
-import cn.ce.platform_service.gateway.entity.SaasEntity;
-import cn.ce.platform_service.sandbox.entity.SandBox;
-
 /**
-* @Description : 说明
+* @Description : 提供给中台。对外的saas service
 * @Author : makangwei
 * @Date : 2018年3月22日
 */
@@ -20,18 +15,7 @@ public interface ISaasService {
 	
 	String saveSaas(String saasId, String resourceType, String targetUrl, String method);
 
-	String deleteRoute(String saasId, String resourceType, String method);
+	String deleteSaas(String saasId, String resourceType, String method);
 	
-	
-	
-	SaasEntity getBoxSaas(String saasId, String resourceType, String boxId, String method);
-	
-	int saveBoxSaas(String saasId, String resourceType, String targetUrl, String boxId, String method);
-	
-	int deleteBoxRoute(String saasId, String resourceType, String boxId, String method);
-	
-	List<SandBox> getSendBoxSaasList(SaasEntity saas);
-
-
 }
 

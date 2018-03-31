@@ -1,11 +1,13 @@
 package cn.ce.platform_console.data_migra;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.bson.Document;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,11 +24,12 @@ import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
 import cn.ce.platform_service.gateway.entity.SaasEntity;
 import cn.ce.platform_service.gateway.service.IGatewayManageService;
 import cn.ce.platform_service.gateway.service.ISaasService;
+import cn.ce.platform_service.gateway.service.ISaasService1;
 import cn.ce.platform_service.guide.service.IConsoleGuideService;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.PropertiesUtil;
-import io.netty.handler.codec.http.HttpMethod;
+import cn.ce.platform_service.util.RandomUtil;
 
 /**
 * @Description : 说明
@@ -35,6 +38,7 @@ import io.netty.handler.codec.http.HttpMethod;
 */
 @RestController
 @RequestMapping("/data/migra")
+@Transactional
 public class DataMigraController {
 
 	@Resource
@@ -49,6 +53,8 @@ public class DataMigraController {
 	private IConsoleOpenApplyService consoleOpenApplyService;
 	@Resource
 	private IGatewayManageService gatewayManageService;
+	@Resource
+	private ISaasService1 saasService1;
 	@Resource
 	private ISaasService saasService;
 	
@@ -111,7 +117,7 @@ public class DataMigraController {
 		saasService.clearAll();
 		for (Document doc : docs) {
 			SaasEntity saas = JSON.parseObject(doc.toJson(), SaasEntity.class);
-			saasService.saveSaas(saas.getSaas_id(), saas.getResource_type(),saas.getTarget_url(),HttpMethod.POST.toString());
+			saasService1.migraSaas(saas);
 			i++;
 		}
 		mongo.close();
