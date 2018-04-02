@@ -148,7 +148,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 
 	@Override
 	public Result<?> deleteOne(String boxId) {
-
+		
 		SandBox sandBox = sandBoxDao.findById(boxId);
 		if(null == sandBox || sandBox.isDeleted()){
 			return Result.errorResult("已删除", ErrorCodeNo.SYS023, null, Status.FAILED);
@@ -173,7 +173,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 			sandBox.setDeleted(true);
 			sandBox.setDeleteDate(new Date());
 			sandBoxDao.updateBox(sandBox);
-			return Result.errorResult("已删除", ErrorCodeNo.SYS023, null, Status.FAILED);
+			return Result.errorResult("删除成功", ErrorCodeNo.SYS000, null, Status.FAILED);
 		}else{
 			return new Result<String>("删除失败",ErrorCodeNo.SYS034,"",Status.FAILED);
 		}
@@ -215,100 +215,6 @@ public class SandBoxServiceImpl implements ISandBoxService{
 			return sandBox;
 		}
 	}
-	
-//	@Override
-//	public Result<?> andRoute(String saasId, String resourceType, String targetUrl , String boxId) {
-//		Result<?> result = new Result<>();
-//		
-//		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
-//		
-//		org.json.JSONObject params = new org.json.JSONObject();
-//		params.put("saas_id", saasId);
-//		params.put("resource_type",resourceType);
-//		params.put("sandbox_id", boxId);
-//		params.put("target_url", targetUrl);
-//		
-//		boolean postGwJson = ApiCallUtils.postGwJson(url, params);
-//		
-//		if(postGwJson){
-//			saasService.saveBoxSaas(saasId, resourceType, targetUrl, boxId,HttpMethod.POST.toString());
-//			result.setSuccessMessage("add router Success!");
-//		} else {
-//			result.setErrorMessage("add router fail!");
-//		}
-//		
-//		return result;
-//	}
-//
-//	@Override
-//	public Result<?> updateRoute(String saasId, String resourceType, String targetUrl , String boxId) {
-//		
-//		Result<?> result = new Result<>();
-//		
-//		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
-//		
-//		org.json.JSONObject params = new org.json.JSONObject();
-//		params.put("saas_id", saasId);
-//		params.put("resource_type",resourceType);
-//		params.put("sandbox_id", boxId);
-//		params.put("target_url", targetUrl);
-//		
-//		boolean postGwJson = ApiCallUtils.postGwJson(url, params);
-//		
-//		if(postGwJson){
-//			saasService.saveBoxSaas(saasId, resourceType, targetUrl, boxId,Method.PUT.toString());
-//			result.setSuccessMessage("update router Success!");
-//		} else {
-//			result.setErrorMessage("update router fail!");
-//		}
-//
-//		return result;
-//	}
-//
-//	@Override
-//	public Result<?> deleteRoute(String saasId, String resourceType , String boxId) {
-//		
-//		Result<?> result = new Result<>();
-//		
-//		String url = GatewayUtils.getAllGatewayColony().get(0).getColUrl()+Constants.NETWORK_ROUTE_BOX;
-//		url.concat("/").concat(saasId).concat("-").concat(resourceType).concat("-").concat(boxId);
-//		
-//		boolean postGwJson = ApiCallUtils.deleteGwJson(url);
-//		
-//		if(postGwJson){
-//			saasService.deleteBoxRoute(saasId, resourceType, boxId, Method.DELETE.toString());
-//			result.setSuccessMessage("update router Success!");
-//		} else {
-//			result.setErrorMessage("update router fail!");
-//		}
-//		
-//		return result;
-//	}
-//	
-//
-//
-//	@Override
-//	public Result<?> routeList(QuerySaasEntity saas) {
-//		
-//		Page<SaasEntity> page = saasService.routeList(saas);
-//		if(null != page){
-//			return new Result<Page<SaasEntity>>("",ErrorCodeNo.SYS000,page,Status.SUCCESS);
-//		}else{
-//			return Result.errorResult("查询失败", ErrorCodeNo.SYS006, null, Status.FAILED);
-//		}
-//	}
-//
-//	@Override
-//	public Result<?> getRoute(String saasId, String resourceType, String boxId) {
-//		SaasEntity saas = saasService.getBoxSaas(saasId, resourceType, boxId,HttpMethod.GET.toString());
-//		if(null != saas){
-//			return new Result<SaasEntity>("",ErrorCodeNo.SYS000,saas,Status.SUCCESS);
-//		}else{
-//			return new Result<SaasEntity>("查询结果不存在",ErrorCodeNo.SYS015,null,Status.FAILED);
-//		}
-//	}
-
-
 	
 }
 
