@@ -102,7 +102,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 		}
 		
 		sandBox.setBoxUrl(sandBox.getBoxId()+"."+domainSuffix);
-		sandBox.setCreateState(SandBox.CreateState.BUILDDING);
+		sandBox.setCreateState("BUILDING");
 		sandBox.setState(1);
 		sandBox.setDeleted(false);
 		sandBox.setCreateDate(new Date());
@@ -210,7 +210,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 			return sandBox;
 		}else{
 			sandBox.setDeleted(paasState.getBoolean("deleted"));
-			sandBox.setCreateState(SandBox.CreateState.valueOf(paasState.getString("status")));
+			sandBox.setCreateState(paasState.getString("status"));
 			sandBoxDao.updateBox(sandBox);
 			return sandBox;
 		}
