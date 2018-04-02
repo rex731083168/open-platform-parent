@@ -50,7 +50,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 	private static final Logger _LOGGER = LoggerFactory.getLogger(SandBoxServiceImpl.class);
 	private static final int resultSuccess = 1;
 	private static final int resultFailed = 0;
-	private static final String domainSuffix  = "design.yun300.cn"; //域名后缀
+	private static final String domainSuffix  = "pdesign.yun300.cn"; //域名后缀
 	private static final String TEMPLATE_NAME = "templatename";
 	private static final String RESOURCE_POOL = "resourcePool";
 	private static final String SANDBOX_NAME = "sandboxname";
