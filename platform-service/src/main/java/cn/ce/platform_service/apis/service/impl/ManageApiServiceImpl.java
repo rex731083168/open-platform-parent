@@ -228,7 +228,11 @@ public class ManageApiServiceImpl implements IManageApiService {
 		// pageSize);
 		int totalNum = mysqlApiDao.findListSize(entity);
 		entity.setOrgCurrentPage(1);
-		entity.setOrgPageSize(totalNum);
+		if(totalNum > 0){
+			entity.setOrgPageSize(totalNum);
+		}else{
+			entity.setOrgPageSize(1);
+		}
 		List<NewApiEntity> list = mysqlApiDao.getPagedList(entity);
 		List<ApiEntity> apiList= ApiTransform.transToApis(list);
 		if (list != null) {
