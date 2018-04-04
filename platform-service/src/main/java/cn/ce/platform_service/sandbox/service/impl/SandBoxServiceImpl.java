@@ -50,7 +50,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 	private static final Logger _LOGGER = LoggerFactory.getLogger(SandBoxServiceImpl.class);
 	private static final int resultSuccess = 1;
 	private static final int resultFailed = 0;
-	private static final String domainSuffix  = "pdesign.yun300.cn"; //域名后缀
+	private static final String domainSuffix  = "sc-site.yun300.cn"; //域名后缀
 	private static final String TEMPLATE_NAME = "templatename";
 	private static final String RESOURCE_POOL = "resourcePool";
 	private static final String SANDBOX_NAME = "sandboxname";
@@ -101,7 +101,7 @@ public class SandBoxServiceImpl implements ISandBoxService{
 			return Result.errorResult("创建失败请稍后再试", ErrorCodeNo.SYS005, null, Status.FAILED);	
 		}
 		
-		sandBox.setBoxUrl(sandBox.getBoxId()+"."+domainSuffix);
+		sandBox.setBoxUrl("http://"+sandBox.getBoxId()+"."+domainSuffix);
 		sandBox.setCreateState("BUILDING");
 		sandBox.setState(1);
 		sandBox.setDeleted(false);
