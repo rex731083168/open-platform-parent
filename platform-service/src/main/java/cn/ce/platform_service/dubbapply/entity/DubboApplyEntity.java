@@ -46,7 +46,7 @@ public class DubboApplyEntity {
     private String unittype;
 
     /** 
-     * jar package class method
+     * jar class method
      */
     private String type;
 
