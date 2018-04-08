@@ -43,6 +43,7 @@ public enum ErrorCodeNo {
 	,SYS033("环境不支持")
 	,SYS034("删除失败")
 	,SYS035("已删除")
+	,SYS036("参数复制异常")
 	,DOWNLOAD001("部分id不存在")
 	,DOWNLOAD002("开放应用id不存在")
 	,DOWNLOAD003("文件格式错误")

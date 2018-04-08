@@ -138,30 +138,22 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, app);
 		//String replacedurl = url.replaceAll(tId$, tenantId);
 		
-		try {
-			/* get请求方法 */
-			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
+		/* get请求方法 */
+		InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
 
-			JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
-				//ApiCallUtils.putOrPostMethod(replacedurl, params, headers, method);
-			messageInfo.setData(jsonObject.getString("data"));
-			messageInfo.setMsg(jsonObject.getString("msg"));
-			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
+		JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
+			//ApiCallUtils.putOrPostMethod(replacedurl, params, headers, method);
+		messageInfo.setData(jsonObject.getString("data"));
+		messageInfo.setMsg(jsonObject.getString("msg"));
+		messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
 
-			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setSuccessData(messageInfo);
-				return result;
-			} else {
-				_LOGGER.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
-				result.setErrorMessage("请求失败");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			_LOGGER.error("registerBathApp http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("系统错误,请求失败");
+		if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
+			result.setSuccessData(messageInfo);
+			return result;
+		} else {
+			_LOGGER.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
+			result.setErrorMessage("请求失败");
+			result.setErrorCode(ErrorCodeNo.SYS006);
 			return result;
 		}
 

@@ -300,43 +300,35 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	@Override
 	public Result<?> updateApply(DiyApplyEntity apply) {
 		Result<String> result = new Result<String>();
-		try {
-			_LOGGER.info("updateApply");
-			if (StringUtils.isBlank(apply.getId())) {
-				result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
-				return result;
-			}
-			//DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
-			DiyApplyEntity apply1 = mysqlDiyApplyDao.findById(apply.getId());
-			if (null == apply1) {
-				result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
-				return result;
-			}
-			if (!apply1.getProductAuthCode().equals(apply.getProductAuthCode())) {
-				result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
+		_LOGGER.info("updateApply");
+		if (StringUtils.isBlank(apply.getId())) {
+			result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
+			return result;
+		}
+		//DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+		DiyApplyEntity apply1 = mysqlDiyApplyDao.findById(apply.getId());
+		if (null == apply1) {
+			result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
+			return result;
+		}
+		if (!apply1.getProductAuthCode().equals(apply.getProductAuthCode())) {
+			result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
+			return result;
+		}
+		
+		if(!apply1.getApplyName().equals(apply.getApplyName())){
+			//校验applyName
+			int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUserId(),apply.getApplyName());
+			if(applyNum > 0){
+				result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
 				return result;
 			}
 			
-			if(!apply1.getApplyName().equals(apply.getApplyName())){
-				//校验applyName
-				int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUserId(),apply.getApplyName());
-				if(applyNum > 0){
-					result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
-					return result;
-				}
-				
-			}
-			mysqlDiyApplyDao.update(apply);
-			_LOGGER.info("updateApply success");
-			result.setSuccessMessage("修改成功");
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			result.setErrorMessage("修改失败");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			_LOGGER.error("updateApply faile", e);
-			return result;
 		}
+		mysqlDiyApplyDao.update(apply);
+		_LOGGER.info("updateApply success");
+		result.setSuccessMessage("修改成功");
+		return result;
 	}
 
 	@Override
@@ -481,7 +473,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.error("send productMenuList error e:" + e.toString());
 			result.setErrorMessage("获取产品菜单列表错误!");
 		}
-		// TODO Auto-generated method stub
 		return result;
 	}
 

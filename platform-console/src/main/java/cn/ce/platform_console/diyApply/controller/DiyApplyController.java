@@ -65,14 +65,7 @@ public class DiyApplyController {
 		queryApply.setPageSize(pageSize);
 		
 		//只获取当前登录的用户数据,如果获取数据失败就会报异常
-		// TODO 20180205 mkw 这里的 try catch 可以去掉 因为前置的登录拦截器已经判断是否session中有用户数据了
-		User user = null;
-		try{
-			user = (User)session.getAttribute(Constants.SES_LOGIN_USER);
-		}catch(Exception e){
-			_LOGGER.error("session已经过期");
-			return new Result<String>("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
-		}
+		User user = (User)session.getAttribute(Constants.SES_LOGIN_USER);
 		queryApply.setUserId(user.getId());
 		
 		return consoleDiyApplyService.findApplyList(queryApply);

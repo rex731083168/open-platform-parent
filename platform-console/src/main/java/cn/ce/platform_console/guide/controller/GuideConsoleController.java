@@ -73,16 +73,14 @@ public class GuideConsoleController {
 			@RequestParam(required = false, defaultValue = "10") int pageSize) {
 		
 		QueryGuideEntity entity = new QueryGuideEntity();
-		try {
-			CoverBeanUtils.copyProperties(entity, entity1);
-			BeanUtils.copyProperty(entity,"userName", entity1.getCreatUserName());
-			BeanUtils.copyProperty(entity, "openApplyId", entity1.getApplyId());
-			entity.setCurrentPage(currentPage);
-			entity.setPageSize(pageSize);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-			return new Result<String>("程序内部异常",ErrorCodeNo.SYS004,null,Status.FAILED);
+		boolean bool1 = CoverBeanUtils.copyProperties(entity, entity1);
+		boolean bool2 = CoverBeanUtils.copyProperty(entity,"userName", entity1.getCreatUserName());
+		boolean bool3 = CoverBeanUtils.copyProperty(entity, "openApplyId", entity1.getApplyId());
+		if(!bool1 || !bool2 || !bool3){
+			return Result.errorResult("参数复制异常", ErrorCodeNo.SYS036, null, Status.FAILED);
 		}
+		entity.setCurrentPage(currentPage);
+		entity.setPageSize(pageSize);
 		
 		return consoleGuideService.guideList(entity);
 	}
