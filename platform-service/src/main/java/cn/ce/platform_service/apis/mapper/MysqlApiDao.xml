@@ -184,36 +184,26 @@
 	</sql>	
 	
 	<sql id="basicPagedConn">
-		<include refid="basicSelect" /> 
-		FROM 
-		(
-			select * from api_detail ad
-			<include refid="apiDetailCondition" />
-			order by create_time desc
-			limit
-			<choose>
-				<when test="startNum == null or startNum == '0'">
-					0,
-				</when>
-				<otherwise>
-					#{startNum},
-				</otherwise>
-			</choose>
-			<choose>
-				<when test="pageSize == null or pageSize == '0' ">
-					10
-				</when>
-				<otherwise>
-					#{pageSize}
-				</otherwise>
-			</choose>
-		) ad LEFT JOIN api_header hd ON ad.api_id = hd.api_id
-		LEFT JOIN api_arg ag ON ad.api_id = ag.api_id
-		LEFT JOIN api_query_arg qag ON ad.api_id = qag.api_id
-		LEFT JOIN api_result ru ON ad.api_id = ru.api_id 
-		LEFT JOIN api_result_example re ON ad.api_id = re.api_id
-		LEFT JOIN api_code ac ON ad.api_id = ac.api_id
-		order by ad.create_time desc
+		select * from api_detail ad
+		<include refid="apiDetailCondition" />
+		order by create_time desc
+		limit
+		<choose>
+			<when test="startNum == null or startNum == '0'">
+				0,
+			</when>
+			<otherwise>
+				#{startNum},
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="pageSize == null or pageSize == '0' ">
+				10
+			</when>
+			<otherwise>
+				#{pageSize}
+			</otherwise>
+		</choose>
 	</sql>
 
 	<sql id="findByIdsAndNameLikeBic">
@@ -244,7 +234,7 @@
 		,#{apiType},#{desc},#{state},#{checkState},#{checkMem},#{quotaMax},#{quotaRenewalRate}
 		,#{rate},#{per},#{apiSource},#{enterpriseName},#{resourceType},#{resourceTypeName}
 		,#{createTime}
-		,requestBodyType,responseBodyType,protocol,orgPath)
+		,#{requestBodyType},#{responseBodyType},#{protocol},#{orgPath})
 	</insert>
 
 	<insert id="save1" parameterType="cn.ce.platform_service.apis.entity.NewApiEntity">
@@ -373,6 +363,11 @@
 	<select id="findVersionNum" resultType="int">
 		select count(api_id) from
 		api_detail where version_id=#{versionId} and version=#{version}
+	</select>
+	
+	<select id="findVersionNumExpId" resultType="int">
+		select count(api_id) from
+		api_detail where version_id=#{versionId} and version=#{version} and api_id != #{apiId}
 	</select>
 
 	<update id="updateVersionByVersionId">

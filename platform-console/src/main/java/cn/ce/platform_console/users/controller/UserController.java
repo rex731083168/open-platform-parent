@@ -111,19 +111,12 @@ public class UserController {
 	@ApiOperation("检查登录")
 	public Result<?> checkLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		
-		User user = null;
-
 		Object userObj = session.getAttribute(Constants.SES_LOGIN_USER);
 		if(userObj == null){
 			return Result.errorResult("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
 		}
 		
-		try{
-			user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
-		}catch(Exception e){
-			_LOGGER.error("error happens when get user info from session",e);
-			return Result.errorResult("session已过期", ErrorCodeNo.SYS019, null, Status.FAILED);
-		}
+		User user = (User) session.getAttribute(Constants.SES_LOGIN_USER);
 		
 		_LOGGER.info("*********checkLogin 当前session仍然存在user数据");
 		User userNew = consoleUserService.findUserById(user.getId());

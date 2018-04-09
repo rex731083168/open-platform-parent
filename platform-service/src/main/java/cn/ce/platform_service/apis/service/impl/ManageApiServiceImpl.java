@@ -228,7 +228,11 @@ public class ManageApiServiceImpl implements IManageApiService {
 		// pageSize);
 		int totalNum = mysqlApiDao.findListSize(entity);
 		entity.setOrgCurrentPage(1);
-		entity.setOrgPageSize(totalNum);
+		if(totalNum > 0){
+			entity.setOrgPageSize(totalNum);
+		}else{
+			entity.setOrgPageSize(1);
+		}
 		List<NewApiEntity> list = mysqlApiDao.getPagedList(entity);
 		List<ApiEntity> apiList= ApiTransform.transToApis(list);
 		if (list != null) {
@@ -291,8 +295,8 @@ public class ManageApiServiceImpl implements IManageApiService {
 				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_PATH, 
 						listenPath); //TODO 这里的listenPath不同版本都必须使用相同的，做不到不同的版本不同的listenPath
 				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_METHOD, gVersion.getMethod().toUpperCase());
-				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_PATTERN, "/(.+)");
-				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_REWRITE_TO, gVersion.getOrgPath());
+				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_PATTERN, listenPath+"(.*)");
+				urlReObj.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITE_REWRITE_TO, gVersion.getOrgPath()+"$1");
 				urlReArr.put(urlReObj);
 				extendedPaths.put(DBFieldsConstants.GW_API_VERSIONS_URL_REWRITES, urlReArr);
 				version.put(DBFieldsConstants.GW_API_VERSIONS_EXTENDED_PATHS, extendedPaths);

@@ -45,6 +45,7 @@ import cn.ce.platform_service.apis.service.IConsoleApiService;
 import cn.ce.platform_service.apis.util.ApiTransform;
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.DBFieldsConstants;
+import cn.ce.platform_service.common.EnvironmentConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
@@ -219,13 +220,60 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	@Override
 	public Result<?> modifyApi(NewApiEntity apiEntity) {
 		
-		boolean bool = updateMysqlEntity(apiEntity);
+		// TODO 修改之前做校验
+		if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
+			return new Result<String>("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
+		}
+		if(StringUtils.isBlank(apiEntity.getListenPath())){
+			return new Result<String>("listenPath不能为空", ErrorCodeNo.SYS005,null,Status.FAILED);
+		}
+		
+		apiEntity.setListenPath(checkListenPathFormat(apiEntity.getListenPath()));
+		
+		if(StringUtils.isBlank(apiEntity.getVersion())){
+			return new Result<String>("版本名称不能为空", ErrorCodeNo.SYS005,null,Status.FAILED);
+		}
+		
+		// 第一次添加接口,并且选择未开启版本控制
+		
+		NewApiEntity entity = mysqlApiDao.findById(apiEntity.getId());
+		
+		if(null == entity){
+			return Result.errorResult("当前id不存在", ErrorCodeNo.SYS006, null, Status.FAILED);
+		}
+		
+		if((!entity.getUserId().equals(apiEntity.getUserId()))){
+			return Result.errorResult("用户信息错误", ErrorCodeNo.SYS028, null, Status.FAILED);
+		}
+		
+		int versionNum = mysqlApiDao.findVersionNumExpId(apiEntity.getId(), apiEntity.getVersionId(), apiEntity.getVersion());
+		
+		if(versionNum > 0){
+			return new Result<String>("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
+		}
+			
+		boolean bool;
+		if(null != entity && AuditConstants.API_CHECK_STATE_SUCCESS == entity.getCheckState()){
+			String env = PropertiesUtil.getInstance().getValue("environment");
+			if(EnvironmentConstants.local.toString().equals(env) || 
+					EnvironmentConstants.test.toString().equals(env)){
+				bool = updateSuccessEntity(apiEntity); //修改审核成功的api
+			}else{
+				_LOGGER.info("当前环境："+env+",不支持审核通过的api:"+apiEntity.getId()+"的修改");
+				bool = false;
+			}
+		}else{
+			bool = updateMysqlEntity(apiEntity);
+		}
+			
 		if(bool){
 			return new Result<String>("修改成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 		}else{
-			return new Result<String>("当前id不可用", ErrorCodeNo.SYS006,null,Status.FAILED);
+			return new Result<String>("部分参数错误", ErrorCodeNo.SYS008,null,Status.FAILED);
 		}
 	}
+	
+
 
 	
 
@@ -511,6 +559,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return listenPath;
 	}
 	
+	
 	private void saveErrorCodes(List<ErrorCodeEntity> errorCodes, String apiId) {
 		for (ErrorCodeEntity errorCodeEntity : errorCodes) {
 			ApiCodeEntity code = new ApiCodeEntity();
@@ -582,31 +631,39 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		mysqlApiDao.save1(apiEntity);
 		
 		List<ApiHeaderEntity> headers = apiEntity.getHeaders();
-		for (ApiHeaderEntity header : headers) {
-			header.setApiId(apiEntity.getId());
-			header.setId(RandomUtil.random32UUID());
-			apiHeaderDao.save(header);
+		if(null != headers && headers.size() > 0){
+			for (ApiHeaderEntity header : headers) {
+				header.setApiId(apiEntity.getId());
+				header.setId(RandomUtil.random32UUID());
+				apiHeaderDao.save(header);
+			}
 		}
 		
 		List<ApiArgEntity> args = apiEntity.getArgs();
-		for (ApiArgEntity arg : args) {
-			arg.setApiId(apiEntity.getId());
-			arg.setId(RandomUtil.random32UUID());
-			apiArgDao.save(arg);
+		if(null != args && args.size() > 0){
+			for (ApiArgEntity arg : args) {
+				arg.setApiId(apiEntity.getId());
+				arg.setId(RandomUtil.random32UUID());
+				apiArgDao.save(arg);
+			}
 		}
 
 		List<ApiArgEntity> queryArgs = apiEntity.getQueryArgs();
-		for (ApiArgEntity arg : queryArgs) {
-			arg.setApiId(apiEntity.getId());
-			arg.setId(RandomUtil.random32UUID());
-			apiQueryArgDao.save(arg);
+		if(null != queryArgs && queryArgs.size() > 0){
+			for (ApiArgEntity arg : queryArgs) {
+				arg.setApiId(apiEntity.getId());
+				arg.setId(RandomUtil.random32UUID());
+				apiQueryArgDao.save(arg);
+			}
 		}
 		
 		List<ApiResultEntity> results = apiEntity.getResult();
-		for (ApiResultEntity result : results) {
-			result.setApiId(apiEntity.getId());
-			result.setId(RandomUtil.random32UUID());
-			apiResultDao.save(result);
+		if(null != results && results.size() > 0){
+			for (ApiResultEntity result : results) {
+				result.setApiId(apiEntity.getId());
+				result.setId(RandomUtil.random32UUID());
+				apiResultDao.save(result);
+			}
 		}
 		
 		ApiResultExampleEntity rExample = apiEntity.getRetExample();
@@ -617,6 +674,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		
 		List<ApiCodeEntity> codes = apiEntity.getErrCodes();
+		if(null != codes && codes.size() > 0)
 		for (ApiCodeEntity code : codes) {
 			code.setApiId(apiEntity.getId());
 			code.setId(RandomUtil.random32UUID());
@@ -625,6 +683,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 		return true;
 	}
+	
 	
 	@Deprecated
 	@SuppressWarnings("unused")
@@ -679,31 +738,39 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		apiCodeDao.deleteByApiId(apiEntity.getId());
 		
 		List<ApiHeaderEntity> headers = apiEntity.getHeaders();
-		for (ApiHeaderEntity header : headers) {
-			header.setId(RandomUtil.random32UUID());
-			header.setApiId(apiEntity.getId());
-			apiHeaderDao.save(header);
+		if(null != headers && headers.size() > 0){
+			for (ApiHeaderEntity header : headers) {
+				header.setId(RandomUtil.random32UUID());
+				header.setApiId(apiEntity.getId());
+				apiHeaderDao.save(header);
+			}
 		}
 		
 		List<ApiArgEntity> args = apiEntity.getArgs();
-		for (ApiArgEntity arg : args) {
-			arg.setId(RandomUtil.random32UUID());
-			arg.setApiId(apiEntity.getId());
-			apiArgDao.save(arg);
+		if(null != args && args.size() > 0){
+			for (ApiArgEntity arg : args) {
+				arg.setId(RandomUtil.random32UUID());
+				arg.setApiId(apiEntity.getId());
+				apiArgDao.save(arg);
+			}
 		}
 		
 		List<ApiArgEntity> queryArgs = apiEntity.getQueryArgs();
-		for (ApiArgEntity queryArg : queryArgs) {
-			queryArg.setId(RandomUtil.random32UUID());
-			queryArg.setApiId(apiEntity.getId());
-			apiQueryArgDao.save(queryArg);
+		if(null != queryArgs && queryArgs.size() > 0){
+			for (ApiArgEntity queryArg : queryArgs) {
+				queryArg.setId(RandomUtil.random32UUID());
+				queryArg.setApiId(apiEntity.getId());
+				apiQueryArgDao.save(queryArg);
+			}
 		}
 		
 		List<ApiResultEntity> results = apiEntity.getResult();
-		for (ApiResultEntity result : results) {
-			result.setId(RandomUtil.random32UUID());
-			result.setApiId(apiEntity.getId());
-			apiResultDao.save(result);
+		if(null != results && results.size() > 0){
+			for (ApiResultEntity result : results) {
+				result.setId(RandomUtil.random32UUID());
+				result.setApiId(apiEntity.getId());
+				apiResultDao.save(result);
+			}
 		}
 		
 		ApiResultExampleEntity rExample = apiEntity.getRetExample();
@@ -714,14 +781,146 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		}
 		
 		List<ApiCodeEntity> codes = apiEntity.getErrCodes();
-		for (ApiCodeEntity code : codes) {
-			code.setId(RandomUtil.random32UUID());
-			code.setApiId(apiEntity.getId());
-			apiCodeDao.save(code);
+		if(null != codes && codes.size() > 0){
+			for (ApiCodeEntity code : codes) {
+				code.setId(RandomUtil.random32UUID());
+				code.setApiId(apiEntity.getId());
+				apiCodeDao.save(code);
+			}
 		}
 
 		return true;
 	}
 
+	private boolean updateSuccessEntity(NewApiEntity apiEntity) {
+		NewApiEntity entity = mysqlApiDao.findById(apiEntity.getId());
+		if(null == entity || StringUtils.isBlank(entity.getId())){
+			return false;
+		}
+		
+		//校验不可修改参数
+		if(AuditConstants.API_CHECK_STATE_SUCCESS != apiEntity.getCheckState()){
+			_LOGGER.info("修改审核通过的api：checkState != 2");
+			return false;
+		}
+		if(StringUtils.isNotBlank(entity.getDefaultTargetUrl())) {
+			if(!entity.getDefaultTargetUrl().equals(apiEntity.getDefaultTargetUrl())){
+					_LOGGER.info("修改审核通过的api：defaultTargetUrl与数据库不一致");
+					return false;
+			}
+		}
+		if(StringUtils.isNotBlank(entity.getOrgPath())) {
+			if(!entity.getOrgPath().equals(apiEntity.getOrgPath())){
+				_LOGGER.info("修改审核通过的api：orgPath与数据库不一致");
+				return false;
+			}
+		}
+		if(!entity.getListenPath().equals(apiEntity.getListenPath())){
+			_LOGGER.info("修改审核通过的api：listenPath与数据库不一致");
+			return false;
+		}
+		if(!entity.getHttpMethod().equals(apiEntity.getHttpMethod())){
+			_LOGGER.info("修改审核通过的api：httpMethod与数据库不一致");
+			return false;
+		}
+		if(!entity.getVersionId().equals(apiEntity.getVersionId())){
+			_LOGGER.info("修改审核通过的api：versionId与数据库不一致");
+			return false;
+		}
+		if(!entity.getVersion().equals(apiEntity.getVersion())){
+			_LOGGER.info("修改审核通过的api：version与数据库不一致");
+			return false;
+		}
+		if(!entity.getResourceType().equals(apiEntity.getResourceType())){
+			_LOGGER.info("修改审核通过的api：resourceType与数据库不一致");
+			return false;
+		}
+		if(!entity.getProtocol().equals(apiEntity.getProtocol())){
+			_LOGGER.info("修改审核通过的api：protocol与数据库不一致");
+			return false;
+		}
+		
+		mysqlApiDao.saveOrUpdateEntity(apiEntity);
+		
+		apiHeaderDao.deleteByApiId(apiEntity.getId());
+		apiArgDao.deleteByApiId(apiEntity.getId());
+		apiQueryArgDao.deleteByApiId(apiEntity.getId());
+		apiResultDao.deleteByApiId(apiEntity.getId());
+		apiRexampleDao.deleteByApiId(apiEntity.getId());
+		apiCodeDao.deleteByApiId(apiEntity.getId());
+		
+		List<ApiHeaderEntity> headers = apiEntity.getHeaders();
+		if(null != headers && headers.size() > 0){
+			for (ApiHeaderEntity header : headers) {
+				header.setId(RandomUtil.random32UUID());
+				header.setApiId(apiEntity.getId());
+				apiHeaderDao.save(header);
+			}
+		}
+		
+		List<ApiArgEntity> args = apiEntity.getArgs();
+		if(null != args && args.size() > 0){
+			for (ApiArgEntity arg : args) {
+				arg.setId(RandomUtil.random32UUID());
+				arg.setApiId(apiEntity.getId());
+				apiArgDao.save(arg);
+			}
+		}
+		
+		List<ApiArgEntity> queryArgs = apiEntity.getQueryArgs();
+		if(null != queryArgs && queryArgs.size() > 0){
+			for (ApiArgEntity queryArg : queryArgs) {
+				queryArg.setId(RandomUtil.random32UUID());
+				queryArg.setApiId(apiEntity.getId());
+				apiQueryArgDao.save(queryArg);
+			}
+		}
+		
+		List<ApiResultEntity> results = apiEntity.getResult();
+		if(null != results && results.size() > 0){
+			for (ApiResultEntity result : results) {
+				result.setId(RandomUtil.random32UUID());
+				result.setApiId(apiEntity.getId());
+				apiResultDao.save(result);
+			}
+		}
+		
+		ApiResultExampleEntity rExample = apiEntity.getRetExample();
+		if(null != rExample){
+			rExample.setId(RandomUtil.random32UUID());
+			rExample.setApiId(apiEntity.getId());
+			apiRexampleDao.save(rExample);
+		}
+		
+		List<ApiCodeEntity> codes = apiEntity.getErrCodes();
+		if(null != codes && codes.size() > 0){
+			for (ApiCodeEntity code : codes) {
+				code.setId(RandomUtil.random32UUID());
+				code.setApiId(apiEntity.getId());
+				apiCodeDao.save(code);
+			}
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public Result<?> migraQueryArgs() {
+		//1、删除旧的query表中导入的数据
+		apiQueryArgDao.deleteByImport();
+		//2、查询param库
+		List<ApiArgEntity> args = apiArgDao.getAllGetParam();
+		
+		//3、转化后插入query库
+		for (ApiArgEntity a : args) {
+			a.setImported(true);
+			apiQueryArgDao.saveImport(a);
+			apiArgDao.updateImport(a.getId());
+		}
+		
+		apiArgDao.deleteImport();
+		return Result.errorResult("一共迁移"+args.size()+"条数据", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+	}
 
 }

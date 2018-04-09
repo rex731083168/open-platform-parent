@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,47 +61,47 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
-		try {
-			/* 审核失败返回 */
-			if (checkState == AuditConstants.DIY_APPLY_CHECKED_FAILED) {
-				//String message = diyApplyDao.bathUpdateByid(ids, checkState, checkMem);
-				int num = mysqlDiyApplyDao.bathUpdateCheckState(ids, checkState, checkMem);
-				_LOGGER.info("bachUpdate diyApply message " + num + " count");
-				result.setSuccessMessage("审核成功:" + num + "条");
-				return result;
-			}
-			
-			//Query query = new Query(Criteria.where("id").in(ids));
-			//List<DiyApplyEntity> diyApply = diyApplyDao.findListByIds(ids);
-			List<DiyApplyEntity> diyApply = mysqlDiyApplyDao.findByIds(ids);
-			if(null == diyApply || diyApply.size() == 0){
-				_LOGGER.info("diyApply List is Null,ids:" + JSON.toJSONString(ids));
-				result.setMessage("应用不存在!");
-				result.setErrorCode(ErrorCodeNo.SYS015);
-				return result;
-			}
-			
-			RegisterBathAppInParameterEntity[] queryVO = new RegisterBathAppInParameterEntity[diyApply.size()];
-			for (int i = 0; i < diyApply.size(); i++) {
-				RegisterBathAppInParameterEntity rapentity = new RegisterBathAppInParameterEntity();
-				rapentity.setAppName(diyApply.get(i).getApplyName());
-				rapentity.setAppUrl(diyApply.get(i).getDomainUrl());
-				rapentity.setAppDesc(diyApply.get(i).getApplyDesc());
-				rapentity.setAppCode(diyApply.get(i).getId());
-				rapentity.setAppType("2");
-				rapentity.setOwner(diyApply.get(i).getEnterpriseName());
-				queryVO[i] = rapentity;
-			}
-			/* 开发者在开放平台发布应用审核 */
-
+		/* 审核失败返回 */
+		if (checkState == AuditConstants.DIY_APPLY_CHECKED_FAILED) {
+			int num = mysqlDiyApplyDao.bathUpdateCheckState(ids, checkState, checkMem);
+			_LOGGER.info("bachUpdate diyApply message " + num + " count");
+			result.setSuccessMessage("审核成功:" + num + "条");
+			return result;
+		}else if(AuditConstants.DIY_APPLY_CHECKED_FAILED != checkState &&
+				AuditConstants.DIY_APPLY_CHECKED_SUCCESS != checkState){
+			result.setErrorMessage("审核状态不正确", ErrorCodeNo.SYS012);
+			return result;
+		}
+		
+		List<DiyApplyEntity> diyApply = mysqlDiyApplyDao.findByIds(ids);
+		if(null == diyApply || diyApply.size() == 0){
+			_LOGGER.info("diyApply List is Null,ids:" + JSON.toJSONString(ids));
+			result.setErrorMessage("应用不存在!",ErrorCodeNo.SYS015);
+			return result;
+		}
+		
+		int totalNum=diyApply.size();
+		int successNum = 0;
+		for (DiyApplyEntity diy : diyApply) {
+			RegisterBathAppInParameterEntity[] queryVO = new RegisterBathAppInParameterEntity[1];
+			RegisterBathAppInParameterEntity rapentity = new RegisterBathAppInParameterEntity();
+			rapentity.setAppName(diy.getApplyName());
+			rapentity.setAppUrl(diy.getDomainUrl());
+			rapentity.setAppDesc(diy.getApplyDesc());
+			rapentity.setAppCode(diy.getId()); //将定制应用id作为code。如果更新应用会同时更新中台中相应的应用
+			rapentity.setAppType("2");
+			rapentity.setOwner(diy.getEnterpriseName());
+			queryVO[0] = rapentity;
 			_LOGGER.info("registerBathApp to interface satar");
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
-					.registerBathApp(diyApply.get(0).getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
-					//
-					//new org.json.JSONArray(queryVO)
+					.registerBathApp(diy.getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
 					.getData();
 			_LOGGER.info("registerBathApp to interface states" + interfaMessageInfoJasonObjectResult.getStatus() + "");
-//			JSONObject jsonObjecttest = JSONObject.fromObject(interfaMessageInfoJasonObjectResult.getData());
+			
+			/* 开发者在开放平台发布应用审核 */
+			
+			String appId = JSONObject.fromString(interfaMessageInfoJasonObjectResult.getData())
+				.getString(diy.getId());
 //			Iterator<String> keys = jsonObjecttest.keys();
 //			Map<String, Object> map = new HashMap<String, Object>();
 //			String key = null;
@@ -112,24 +113,19 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 //
 //			}
 			/* 审核成功 */
-			if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
+			if (StringUtils.isNotBlank(appId) && 
+					interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
 				//String message = String.valueOf(diyApplyDao.bathUpdateByidAndPush(ids, map, checkState, checkMem));
-				int totalNum = mysqlDiyApplyDao.bathUpdateCheckState(ids, checkState, checkMem);
-				_LOGGER.info("bachUpdate diyApply message " + totalNum + " count");
-				result.setSuccessMessage("审核成功:" + totalNum + "条");
-				return result;
-			} else {
-				result.setErrorMessage("审核失败", ErrorCodeNo.SYS030);
-				_LOGGER.info("bachUpdate diyApply message faile");
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			_LOGGER.error("bachUpdate diyApply message faile ", e);
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("系统错误");
-			return result;
+				//int totalNum = mysqlDiyApplyDao.bathUpdateCheckState(ids, checkState, checkMem);
+				int num = mysqlDiyApplyDao.auditSuccess(diy.getId(), appId, checkState, checkMem);
+				if(num > 0){
+					successNum++;
+				}
+			}	
 		}
+		_LOGGER.info("bachUpdate diyApply message " + successNum + " count");
+		result.setSuccessMessage("提交审核"+totalNum+"条,审核成功:" + successNum + "条");
+		return result;
 	}
 
 	@Override
@@ -142,30 +138,23 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		String replacedurl = url.replaceAll(tId$, tenantId).replaceAll(appList$, app);
 		//String replacedurl = url.replaceAll(tId$, tenantId);
 		
-		try {
-			/* get请求方法 */
-			InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
+		/* get请求方法 */
+		InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
+		_LOGGER.info("batch update diyApply push to zhongtai parameter:"+replacedurl);
+		JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
+		_LOGGER.info("batch update diyApply push to zongtai results:"+jsonObject);
+			//ApiCallUtils.putOrPostMethod(replacedurl, params, headers, method);
+		messageInfo.setData(jsonObject.getString("data"));
+		messageInfo.setMsg(jsonObject.getString("msg"));
+		messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
 
-			JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
-				//ApiCallUtils.putOrPostMethod(replacedurl, params, headers, method);
-			messageInfo.setData(jsonObject.getString("data"));
-			messageInfo.setMsg(jsonObject.getString("msg"));
-			messageInfo.setStatus(Integer.valueOf(jsonObject.getString("status")));
-
-			if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
-				result.setSuccessData(messageInfo);
-				return result;
-			} else {
-				_LOGGER.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
-				result.setErrorMessage("请求失败");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			_LOGGER.error("registerBathApp http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			result.setErrorMessage("系统错误,请求失败");
+		if (messageInfo.getStatus() == 200 || messageInfo.getStatus() == 110) {
+			result.setSuccessData(messageInfo);
+			return result;
+		} else {
+			_LOGGER.error("registerBathApp data http getfaile return code :" + messageInfo.getMsg() + " ");
+			result.setErrorMessage("请求失败");
+			result.setErrorCode(ErrorCodeNo.SYS006);
 			return result;
 		}
 

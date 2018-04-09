@@ -69,7 +69,7 @@ public class ExceptionInterceptor implements HandlerInterceptor{
 				this.returnJson(response, JSON.toJSONString(result));	
 			} catch (Exception e) {
 				
-				_LOGGER.error("error happens when handle errors occured in return "+","+e.getMessage(), e);
+				_LOGGER.error("error happens when handle errors occured in return "+","+e.getMessage());
 			}
 		}
 	}

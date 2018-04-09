@@ -108,6 +108,7 @@ public class GatewayRouteUtils {
 		
 		try {
 			JSONObject params = new JSONObject();
+			params.put("saas_id", saasId);
 			params.put("target_url", targetUrl);
 			params.put("resource_type",resourceType);
 			gwJsonApi = putOrPostGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params,method);
