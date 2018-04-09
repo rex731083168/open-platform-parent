@@ -3,7 +3,6 @@ package cn.ce.platform_console.sandbox;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,47 +60,68 @@ public class SandBoxController {
 	
 	@RequestMapping(value="/getOne",method=RequestMethod.GET)
 	public Result<?> boxList(@RequestParam(required=true)String boxId){
-		
-		return sandBoxService.getOne(boxId);
+		if(!EnvironmentHool.isSupportBox()){
+			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
+		}else{
+			return sandBoxService.getOne(boxId);
+		}
 	}
 	
 	@RequestMapping(value="/deleteOne",method=RequestMethod.GET)
 	public Result<?> deleteOne(String boxId){
-		
-		return sandBoxService.deleteOne(boxId);
+		if(!EnvironmentHool.isSupportBox()){
+			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
+		}else{
+			return sandBoxService.deleteOne(boxId);
+		}
 	}
 	
 	@RequestMapping(value="/boxList",method=RequestMethod.POST)
 	public Result<?> boxList(@RequestBody QuerySandBox queryBox){
-		
-		return sandBoxService.boxList(queryBox);
+		if(!EnvironmentHool.isSupportBox()){
+			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
+		}else{
+			return sandBoxService.boxList(queryBox);
+		}
 	}
 
 	
 	@RequestMapping(value="/saveOrUpdateBoxSaas", method=RequestMethod.POST)
 	public Result<?> andBoxSaas(HttpServletRequest request,@RequestBody SaasEntity saasEntity){
-	
-		return saasService1.saveOrUpdateBoxSaas(saasEntity);
+		if(!EnvironmentHool.isSupportBox()){
+			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
+		}else{
+			return saasService1.saveOrUpdateBoxSaas(saasEntity);
+		}
 	}
 	
 	@RequestMapping(value="/deleteBoxSaas", method=RequestMethod.DELETE)
 	public Result<?> updateRoute(HttpServletRequest request, @RequestParam String routeId){
-		
-		return saasService1.deleteBoxSaas(routeId);
+		if(!EnvironmentHool.isSupportBox()){
+			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
+		}else{
+			return saasService1.deleteBoxSaas(routeId);
+		}
 		
 	}
 	
 	@RequestMapping(value="/getBoxSaas", method=RequestMethod.GET)
 	public Result<?> getRoute(HttpServletRequest request,@RequestParam String routeId){
-		
-		return saasService1.getBoxSaas(routeId);
+		if(!EnvironmentHool.isSupportBox()){
+			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
+		}else{
+			return saasService1.getBoxSaas(routeId);
+		}
 		
 	}
 	
 	@RequestMapping(value="/sandBoxList", method=RequestMethod.POST)
 	public Result<?> routeList(HttpServletRequest request,@RequestBody QuerySaasEntity saas){
-		
-		return saasService1.boxSaasList(saas);
+		if(!EnvironmentHool.isSupportBox()){
+			return Result.errorResult("环境不支持", ErrorCodeNo.SYS033, null, Status.FAILED);
+		}else{
+			return saasService1.boxSaasList(saas);
+		}
 		
 	}
 	
