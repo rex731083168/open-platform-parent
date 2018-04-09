@@ -1,7 +1,6 @@
 package cn.ce.platform_console.data_migra;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -29,7 +28,6 @@ import cn.ce.platform_service.guide.service.IConsoleGuideService;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.PropertiesUtil;
-import cn.ce.platform_service.util.RandomUtil;
 
 /**
 * @Description : 说明
@@ -124,6 +122,12 @@ public class DataMigraController {
 		Result<String> result = new Result<String>();
 		result.setSuccessMessage("一共迁移了"+i+"条saas数据");
 		return result;
+	}
+
+	@RequestMapping(value="/queryArgs", method=RequestMethod.GET)
+	public Result<?> migraQueryArgs(){
+		
+		return consoleApiService.migraQueryArgs();
 	}
 	
 }

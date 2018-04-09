@@ -94,7 +94,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			queryVO[0] = rapentity;
 			_LOGGER.info("registerBathApp to interface satar");
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
-					.registerBathApp(diyApply.get(0).getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
+					.registerBathApp(diy.getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
 					.getData();
 			_LOGGER.info("registerBathApp to interface states" + interfaMessageInfoJasonObjectResult.getStatus() + "");
 			
@@ -140,8 +140,9 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 		
 		/* get请求方法 */
 		InterfaMessageInfoString messageInfo = new InterfaMessageInfoString();
-
+		_LOGGER.info("batch update diyApply push to zhongtai parameter:"+replacedurl);
 		JSONObject jsonObject = (JSONObject) HttpClientUtil.getUrlReturnJsonObject(replacedurl);
+		_LOGGER.info("batch update diyApply push to zongtai results:"+jsonObject);
 			//ApiCallUtils.putOrPostMethod(replacedurl, params, headers, method);
 		messageInfo.setData(jsonObject.getString("data"));
 		messageInfo.setMsg(jsonObject.getString("msg"));

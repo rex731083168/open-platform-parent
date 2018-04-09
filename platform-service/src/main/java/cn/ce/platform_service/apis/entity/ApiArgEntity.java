@@ -14,7 +14,14 @@ public class ApiArgEntity {
 	private boolean required; 
 	private String example;
 	private String argDesc;
+	private boolean imported; //对于query标识是否是导入的。对于arg标识是否已经导出	
 	
+	public boolean isImported() {
+		return imported;
+	}
+	public void setImported(boolean imported) {
+		this.imported = imported;
+	}
 	public String getId() {
 		return id;
 	}
