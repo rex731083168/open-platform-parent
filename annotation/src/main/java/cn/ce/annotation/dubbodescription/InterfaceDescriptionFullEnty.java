@@ -1,23 +1,19 @@
 package cn.ce.annotation.dubbodescription;
 
 /**
- * 解析的完整信息
+ * 自定义注解解析实体类
  * 
  * @author huangdayang 2018年3月19日
  */
 public class InterfaceDescriptionFullEnty extends InterfaceDescriptionEnty {
-	/**
-	 * 包名
-	 */
+	
+	//包名
 	private String packagename;
-	/**
-	 * 类名
-	 */
+	//类名
 	private String classname;
-	/**
-	 * 方法名
-	 */
+	//方法名
 	private String method;
+	
 	public String getPackagename() {
 		return packagename;
 	}
@@ -36,7 +32,13 @@ public class InterfaceDescriptionFullEnty extends InterfaceDescriptionEnty {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "InterfaceDescriptionFullEnty [packagename=" + packagename + ", classname=" + classname + ", method="
+				+ method + ", toString()=" + super.toString() + "]";
+	}
+	
 	
 
 }

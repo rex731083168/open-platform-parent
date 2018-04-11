@@ -20,7 +20,7 @@ public class GetAppListSerciceImpl implements IGetAppListSercice {
 	private static Logger _LOGGER = Logger.getLogger(GetAppListSerciceImpl.class);
 
 	@Override
-	public Result<DubboApps> findAppsByUnit(String unit) {
+	public Result<DubboApps> findAppsByUnit(String unit, String appName, Integer currentPage, Integer pageSize) {
 		Result<DubboApps> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("dubbo_app_interfaceurl");
 		String unit$ = Pattern.quote("${unit}");// ${o} 所属企业 CE 为中企动力 不填为所有

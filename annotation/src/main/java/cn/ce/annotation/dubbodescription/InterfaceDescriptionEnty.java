@@ -36,4 +36,11 @@ public class InterfaceDescriptionEnty {
 		this.version = version;
 	}
 
+	@Override
+	public String toString() {
+		return "InterfaceDescriptionEnty [name=" + name + ", des=" + des + ", version=" + version + "]";
+	}
+	
+	
+
 }

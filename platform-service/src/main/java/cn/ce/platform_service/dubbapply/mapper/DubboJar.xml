@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ce.platform_service.dubbapply.dao.IDubboApplyDao">
+
+	<insert id="saveMainJar" parameterType="cn.ce.platform_service.dubbapply.entity.MainJar">
+		insert into main_jar
+			(jar_id,jar_file)
+		values
+			(#{id},#{jarByte})
+	</insert>
+</mapper>

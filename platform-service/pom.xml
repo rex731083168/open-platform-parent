@@ -93,6 +93,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+<!-- 		<dependency>
+			<groupId>cn.ce.ebiz</groupId>
+			<artifactId>framework-pbase</artifactId>
+			<version>2.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency> -->
 		<dependency>
 			<groupId>cn.ce.ebiz</groupId>
 			<artifactId>framework-core</artifactId>

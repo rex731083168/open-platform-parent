@@ -151,6 +151,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,
 						entity.getResourceType(), RequestMethod.GET.toString());
 
+				//{"status":"error","message":"saasKey not found"}
 				if (StringUtils.isBlank(routeBySaasId)) {
 					result.setErrorMessage("未配置定制应用资源池,请联系管理员!");
 					result.setErrorCode(ErrorCodeNo.SYS015);
@@ -186,6 +187,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 					+ entity.getProductInstanceId());
 			String saveAppkeyResult = GatewayRouteUtils.saveAppkey(clientId, entity.getProductInstanceId(),
 					HttpMethod.POST.toString());
+			//http://10.12.40.161:8000/tyk/router/appkey/ae2b7c4e544b41969d415bd386dcde40
+			//{"saas_id":"1600002358"}
+			//{"status":"error","message":"AppKey can't be empty"}
 			_LOGGER.info("**********调用保存appkey与tenantId结束 返回值:*********" + saveAppkeyResult);
 
 			List<String> appIdList = new ArrayList<String>();

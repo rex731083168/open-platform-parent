@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.ce.annotation.dubbodescription.InterfaceDescription;
-import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
 
 /**
@@ -21,11 +20,12 @@ public class CustomAnnotationUtils {
 
 	private static Log logger = LogFactory.getLog(CustomAnnotationUtils.class);
 
-	public static Map<String, InterfaceDescriptionFullEnty> initJsonServiceMap(Class clazz) throws ClassNotFoundException {
-		Map<String, InterfaceDescriptionFullEnty> ServiceMap = new HashMap<>();
+	//从class中解析注解
+	public static Map<String, InterfaceDescriptionFullEnty> initJsonServiceMap(Class<?> clazz) throws ClassNotFoundException {
+		
+		Map<String, InterfaceDescriptionFullEnty> serviceMap = new HashMap<>();
 		Method[] method = clazz.getDeclaredMethods();
 		for (int i = 0; i < method.length; i++) {
-			method[i].getDeclaredAnnotation(InterfaceDescription.class);
 			InterfaceDescription service = (InterfaceDescription) method[i].getAnnotation(InterfaceDescription.class);
 			InterfaceDescriptionFullEnty ide = new InterfaceDescriptionFullEnty();
 			if (service != null) {
@@ -34,23 +34,15 @@ public class CustomAnnotationUtils {
 				ide.setVersion(service.version());
 				ide.setClassname(method[i].getDeclaringClass().getName());
 				ide.setMethod(method[i].getName());
-				ide.setClassname(method[i].getDeclaringClass().getName());
-				ide.setMethod(method[i].getName());
 				int index = method[i].getDeclaringClass().getName().lastIndexOf(".");
 				ide.setPackagename(method[i].getDeclaringClass().getName().substring(0, index));
-				ServiceMap.put(method[i].getDeclaringClass().getName() + "." + method[i].getName(), ide);
-				logger.info(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
-						+ method[i].getDeclaringClass().getName() + "." + method[i].getName());
-				System.out.println(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
-						+ method[i].getDeclaringClass().getName() + "." + method[i].getName());
+				
+				String key = method[i].getDeclaringClass().getName() + "." + method[i].getName();
+				serviceMap.put(key, ide);
+				logger.info("method annotation parser key:"+key+",value="+ide);
 			}
 		}
-		return ServiceMap;
+		return serviceMap;
 	}
 
-	public static void main(String[] args) throws ClassNotFoundException {
-		Class clzz = ClassLoader.getSystemClassLoader()
-				.loadClass("cn.ce.platform_service.apis.service.IApiTransportService");
-		CustomAnnotationUtils.initJsonServiceMap(clzz);
-	}
 }

@@ -9,7 +9,10 @@ public interface IGetAppListSercice {
 	 * 获取物理应用列表
 	 * 
 	 * @param unit
+	 * @param pageSize 
+	 * @param currentPage 
+	 * @param appName 
 	 * @return
 	 */
-	public Result<DubboApps> findAppsByUnit(String unit);
+	public Result<DubboApps> findAppsByUnit(String unit, String appName, Integer currentPage, Integer pageSize);
 }

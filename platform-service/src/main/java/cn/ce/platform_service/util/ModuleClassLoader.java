@@ -15,9 +15,7 @@ import java.util.jar.JarFile;
 
 import org.apache.log4j.Logger;
 
-import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
-import cn.ce.platform_service.dubbapply.service.impl.DubboApplySerciceImpl;
 
 public class ModuleClassLoader extends URLClassLoader {
 	/** 日志对象 */
@@ -27,6 +25,7 @@ public class ModuleClassLoader extends URLClassLoader {
 	private static final Method ADD_URL = initAddMethod();
 
 	static {
+		// 加载，装配jar包过程
 		ClassLoader.registerAsParallelCapable();
 	}
 
@@ -44,7 +43,7 @@ public class ModuleClassLoader extends URLClassLoader {
 	private static Method initAddMethod() {
 		try {
 			Method addUrl = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-			addUrl.setAccessible(true);
+			addUrl.setAccessible(true); //初始化jar包加载的方法
 			return addUrl;
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
@@ -58,61 +57,64 @@ public class ModuleClassLoader extends URLClassLoader {
 			e.printStackTrace();
 		}
 	}
-    /**
-     * 根椐jar路径解析注解信息 
-     * @return key :jarName
-     * @param jarFilePath
-     * @throws URISyntaxException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-	public  Map<String, Map<String, InterfaceDescriptionFullEnty>>  parseJars(String[] jarFilePath) throws URISyntaxException, IOException, ClassNotFoundException {
+	
+	/**
+	 * @throws URISyntaxException 
+	 * @throws MalformedURLException 
+	 * @Title: loadJars
+	 * @Description: 将jar包加载到jvm
+	 * @author: makangwei 
+	 * @date:   2018年4月10日 下午2:30:30 
+	 * @param : @param jarFilePath
+	 * @param : @return
+	 * @return: boolean
+	 * @throws
+	 */
+	public boolean loadJars(String[] jarFilePath) throws MalformedURLException, URISyntaxException{
 		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
-		//key :jarName
-		Map<String, Map<String, InterfaceDescriptionFullEnty>> resultMap = new HashMap<String, Map<String, InterfaceDescriptionFullEnty>>();
 		for (String path : jarFilePath) {
 			File f = new File(path);
 			URL url = new URL("file:"+f.getPath());
 			moduleClassLoader.setDefaultAssertionStatus(false);
 			moduleClassLoader.loadJar(url.toURI().toURL());
 		}
-		       
-		for (String path : jarFilePath) {
-			Map<String, InterfaceDescriptionFullEnty> map = new HashMap<String, InterfaceDescriptionFullEnty>();
-			JarFile localJarFile = new JarFile(path);
-			Enumeration<JarEntry> entries = localJarFile.entries();
-			while (entries.hasMoreElements()) {
-				JarEntry jarEntry = entries.nextElement();
-				if (jarEntry.isDirectory() || !jarEntry.getName().endsWith(".class"))
-					continue;
-				String clazz = jarEntry.getName().substring(0, jarEntry.getName().length() - 6).replace("/", ".");
-				Class<?> spawnClass = Class.forName(clazz);
-				Map<String, InterfaceDescriptionFullEnty> maptmp = CustomAnnotationUtils.initJsonServiceMap(spawnClass);
-				map.putAll(maptmp);
-			}
-			resultMap.put(new File(path).getName(), map);
+		return true;
+	}
+    /**
+     * 根椐jar路径解析注解信息 
+     * @param mainJar 
+     * @return key :jarName
+     * @param jarFilePath
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+	public  Map<String, Map<String, InterfaceDescriptionFullEnty>>  parseJars(String marJar, String[] jarFilePath) throws URISyntaxException, IOException, ClassNotFoundException {
+		
+		loadJars(jarFilePath); //加载jar包
+		
+		Map<String, Map<String, InterfaceDescriptionFullEnty>> resultMap = new HashMap<String, Map<String, InterfaceDescriptionFullEnty>>();
+		JarFile localJarFile = new JarFile(marJar);
+		Enumeration<JarEntry> entries = localJarFile.entries();
+		while (entries.hasMoreElements()) {
+			JarEntry jarEntry = entries.nextElement();
+			if (jarEntry.isDirectory() || !jarEntry.getName().endsWith(".class"))
+				continue;
+			String clazz = jarEntry.getName().substring(0, jarEntry.getName().length() - 6).replace("/", ".");
+			Class<?> spawnClass = Class.forName(clazz);
+			Map<String, InterfaceDescriptionFullEnty> methodAnnotationMap = CustomAnnotationUtils.initJsonServiceMap(spawnClass);
+			resultMap.put(new File(marJar).getName(), methodAnnotationMap);
 		}
+		localJarFile.close();
 		return resultMap;
 	}
 
 
 	public static void main(String[] args) throws Exception {
-//		URL url1 = new URL("file:D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar");
-//		URL url2 = new URL("file:D:/lib/service-info-api-2.0.0-SNAPSHOT.jar");
-//		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
-//		moduleClassLoader.setDefaultAssertionStatus(false);
-//		moduleClassLoader.loadJar(url1.toURI().toURL());
-//		moduleClassLoader.loadJar(url2.toURI().toURL());
-//		System.out.println("加载成功");  
-//		Class<?> spawnClass = Class.forName("cn.ce.ebiz.info.service.AppInfoService"); // AppInfoCategoryService
-//		spawnClass.getDeclaredMethods();
-//		CustomAnnotationUtils.initJsonServiceMap(spawnClass);
-		
-		
 		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
-		//String[] path = new String[]{"D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar","D:/lib/service-info-api-2.0.0-SNAPSHOT.jar"};
-		String[] path = new String[]{"D:/lib/service-info-api-2.0.0-SNAPSHOT.jar","D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
-		moduleClassLoader.parseJars(path);
+		String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar","D:/lib/service-info-api-2.0.0-SNAPSHOT.jar","D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
+		String mainJar = "D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar";
+		moduleClassLoader.parseJars(mainJar,path);
 	}
 
 }

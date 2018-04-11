@@ -1,11 +1,12 @@
 package cn.ce.platform_service.dubbapply.service;
 
-import java.util.List;
+import java.io.File;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.dubbapply.entity.DubboApplyEntity;
 
-public interface IDubboApplySercice {
+public interface IDubboApplyService {
 	
     /**
      * 解析jar
@@ -15,4 +16,8 @@ public interface IDubboApplySercice {
      * @return
      */
 	public boolean saveDubboApplySercice(String path,String[] dependcyFileName,String mainJarName);
+
+	public Result<?> uploadMainJar(MultipartFile mainJar);
+
+	public Result<?> uploadDepJar(String mainJarId, MultipartFile[] depJar);
 }

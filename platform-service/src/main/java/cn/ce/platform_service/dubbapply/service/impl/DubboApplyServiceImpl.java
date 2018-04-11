@@ -1,6 +1,7 @@
 package cn.ce.platform_service.dubbapply.service.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -14,24 +15,30 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
+import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.dubbapply.dao.DubboApplyEntityMapper;
+import cn.ce.platform_service.dubbapply.dao.IDubboApplyDao;
 import cn.ce.platform_service.dubbapply.entity.DubboApplyEntity;
-import cn.ce.platform_service.dubbapply.service.IDubboApplySercice;
+import cn.ce.platform_service.dubbapply.entity.MainJar;
+import cn.ce.platform_service.dubbapply.service.IDubboApplyService;
 import cn.ce.platform_service.util.ModuleClassLoader;
+import cn.ce.platform_service.util.RandomUtil;
 /***
  * dubbo jar解析服务
  * @author huangdayang
  * 2018年3月16日
  */
-@Service("dubboApplySercice")
-public class DubboApplySerciceImpl implements IDubboApplySercice {
+@Service("dubboApplyService")
+public class DubboApplyServiceImpl implements IDubboApplyService {
 	/** 日志对象 */
-	private static Logger _LOGGER = Logger.getLogger(DubboApplySerciceImpl.class);
+	private static Logger _LOGGER = Logger.getLogger(DubboApplyServiceImpl.class);
 	@Resource
 	private DubboApplyEntityMapper dubboApplyEntityMapper;
+	@Resource
+	private IDubboApplyDao dubboApplyDao;
 
 	private void saveDubboApplySercice(List<DubboApplyEntity> dubboApplyEntityList) {
 		for (DubboApplyEntity record : dubboApplyEntityList) {
@@ -41,8 +48,9 @@ public class DubboApplySerciceImpl implements IDubboApplySercice {
 
 	@Override
 	public boolean saveDubboApplySercice(String path, String[] dependencyJarName, String mainJarName) {
-		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
+		
 		List<String> list = new ArrayList<String>();
+		
 		list.add(path+File.separator+mainJarName);
 		if(dependencyJarName != null) {
 			for (String string : dependencyJarName) {
@@ -52,7 +60,8 @@ public class DubboApplySerciceImpl implements IDubboApplySercice {
 		String[] jarpath =list.toArray(new String[] {});
 		Map<String, Map<String, InterfaceDescriptionFullEnty>> simpleInfo= null;
 		try {
-			simpleInfo = moduleClassLoader.parseJars(jarpath);
+			// TODO
+			simpleInfo = ModuleClassLoader.getInstance().parseJars("sss",jarpath);
 		} catch (ClassNotFoundException e) {
 			_LOGGER.error("class load ClassNotFoundException", e);
 		} catch (URISyntaxException e) {
@@ -155,6 +164,30 @@ public class DubboApplySerciceImpl implements IDubboApplySercice {
 		}
 		return list;
 		
+	}
+
+	@Override
+	public Result<?> uploadMainJar(MultipartFile mainJar) {
+		try {
+//			FileInputStream is = new FileInputStream(mainJar);
+			byte[] b = null;
+			b = mainJar.getBytes();
+			MainJar jarEntity = new MainJar(RandomUtil.random32UUID(),b);
+			dubboApplyDao.saveMainJar(jarEntity);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+	}
+
+	@Override
+	public Result<?> uploadDepJar(String mainJarId, MultipartFile[] depJar) {
+		return null;
 	}
 
 }
