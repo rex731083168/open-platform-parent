@@ -151,3 +151,20 @@ ADD COLUMN `sandbox_id` VARCHAR(45) NULL AFTER `target_url`,
 ADD COLUMN `create_date` DATETIME NULL AFTER `sandbox_id`,
 ADD COLUMN `update_date` DATETIME NULL AFTER `create_date`;
 ADD COLUMN `route_id` VARCHAR(45) NULL AFTER `uuid`;
+
+
+------------------- 未执行SQL by lida 解决showApi接口查询慢得问题 增加API相关表的索引 @makangwei 进行验证后更新生产数据库 --------
+ALTER  TABLE  `api_header`  ADD  INDEX header_index_api_id (`api_id`);
+
+ALTER  TABLE  `api_arg`  ADD  INDEX arg_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_query_arg  ADD  INDEX query_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_result ADD  INDEX result_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_result_example ADD  INDEX example_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_code ADD  INDEX code_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_detail ADD  INDEX header_index_api_arg (`api_id`);
+
