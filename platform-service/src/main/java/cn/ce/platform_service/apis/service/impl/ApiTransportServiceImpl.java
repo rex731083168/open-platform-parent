@@ -370,24 +370,30 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 		mysqlApiDao.save1(apiEntity);
 		
 		List<ApiHeaderEntity> headers = apiEntity.getHeaders();
-		for (ApiHeaderEntity header : headers) {
-			header.setApiId(apiEntity.getId());
-			header.setId(RandomUtil.random32UUID());
-			apiHeaderDao.save(header);
+		if(null != headers && headers.size() > 0){
+			for (ApiHeaderEntity header : headers) {
+				header.setApiId(apiEntity.getId());
+				header.setId(RandomUtil.random32UUID());
+				apiHeaderDao.save(header);
+			}
 		}
 		
 		List<ApiArgEntity> args = apiEntity.getArgs();
-		for (ApiArgEntity arg : args) {
-			arg.setApiId(apiEntity.getId());
-			arg.setId(RandomUtil.random32UUID());
-			apiArgDao.save(arg);
+		if(null != args && args.size() > 0){
+			for (ApiArgEntity arg : args) {
+				arg.setApiId(apiEntity.getId());
+				arg.setId(RandomUtil.random32UUID());
+				apiArgDao.save(arg);
+			}
 		}
 		
 		List<ApiResultEntity> results = apiEntity.getResult();
-		for (ApiResultEntity result : results) {
-			result.setApiId(apiEntity.getId());
-			result.setId(RandomUtil.random32UUID());
-			apiResultDao.save(result);
+		if(null != results && results.size() > 0){
+			for (ApiResultEntity result : results) {
+				result.setApiId(apiEntity.getId());
+				result.setId(RandomUtil.random32UUID());
+				apiResultDao.save(result);
+			}
 		}
 		
 		ApiResultExampleEntity rExample = apiEntity.getRetExample();
@@ -398,10 +404,12 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 		}
 		
 		List<ApiCodeEntity> codes = apiEntity.getErrCodes();
-		for (ApiCodeEntity code : codes) {
-			code.setApiId(apiEntity.getId());
-			code.setId(RandomUtil.random32UUID());
-			apiCodeDao.save(code);
+		if(null != codes && codes.size() > 0){
+			for (ApiCodeEntity code : codes) {
+				code.setApiId(apiEntity.getId());
+				code.setId(RandomUtil.random32UUID());
+				apiCodeDao.save(code);
+			}
 		}
 
 		return true;

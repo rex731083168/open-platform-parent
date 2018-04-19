@@ -72,4 +72,10 @@ public class DataMigraController {
 		return gatewayManageService.migraGateway();
 	}
 	
+	@RequestMapping(value="/queryArgs", method=RequestMethod.GET)
+	public Result<?> migraQueryArgs(){
+		
+		return consoleApiService.migraQueryArgs();
+	}
+	
 }

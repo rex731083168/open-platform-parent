@@ -2,6 +2,7 @@ package cn.ce.platform_service.apis.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,5 +21,11 @@ public interface IMysqlApiArgDao {
 	List<ApiArgEntity> findByApiId(String apiId);
 
 	int deleteByApiId(String apiId);
+
+	List<ApiArgEntity> getAllGetParam();
+
+	int updateImport(@Param("argId")String argId);
+
+	int deleteImport();
 
 }

@@ -13,6 +13,7 @@
 		<result column="required" property="required" />
 		<result column="example" property="example" />
 		<result column="arg_desc" property="argDesc" />
+		<result column="is_important" property="imported"/>
 	</resultMap>
 
 	<insert id="save" parameterType="cn.ce.platform_service.apis.entity.ApiArgEntity">
@@ -29,4 +30,15 @@
 	<delete id="deleteByApiId">
 		delete from api_query_arg where api_id=#{apiId}
 	</delete>
+	
+	<delete id="deleteByImport">
+		delete from api_query_arg where is_import = 1
+	</delete>
+	
+	<insert id="saveImport">
+		INSERT INTO api_query_arg
+			(arg_id,api_id,arg_name,arg_type,required,example,arg_desc,is_import)
+		VALUES
+			(#{id},#{apiId},#{argName},#{argType},#{required},#{example},#{argDesc},#{imported})
+	</insert>
 </mapper>

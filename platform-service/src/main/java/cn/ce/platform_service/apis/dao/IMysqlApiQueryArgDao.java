@@ -20,5 +20,9 @@ public interface IMysqlApiQueryArgDao {
 	List<ApiArgEntity> findByApiId(String apiId);
 
 	int deleteByApiId(String apiId);
+
+	int deleteByImport();
+
+	int saveImport(ApiArgEntity a);
 }
 

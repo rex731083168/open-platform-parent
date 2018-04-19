@@ -87,6 +87,7 @@ public class GatewayRouteUtils {
 		try {
 			JSONObject params = new JSONObject();
 			params.put("saas_id", tenantId);
+			params.put("app_key", appkey);
 			gwJsonApi = putOrPostGwJson(colonySingle.getColUrl()+Constants.NETWORK_APPKEY_URL+"/"+appkey, params,method);
 		}catch(Exception e){
 			LOGGER.error("调用网关时出现错误,信息为:" + gwJsonApi + ",异常:" + e.toString());
@@ -108,6 +109,7 @@ public class GatewayRouteUtils {
 		
 		try {
 			JSONObject params = new JSONObject();
+			params.put("saas_id", saasId);
 			params.put("target_url", targetUrl);
 			params.put("resource_type",resourceType);
 			gwJsonApi = putOrPostGwJson(colonySingle.getColUrl()+Constants.NETWORK_ROUTE_URL+"/"+saasId, params,method);
