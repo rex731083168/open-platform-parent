@@ -168,6 +168,7 @@
 					<include>**/*</include>
 					<include>**/*.xml</include>
 					<include>conf/application.properties</include>
+					<include>conf/dfs.zk.properties</include>
 				</includes>
 				<filtering>true</filtering>
 			</resource>
@@ -232,6 +233,7 @@
 							<includes>
 								<include>application.properties</include>
 								<include>log4j.properties</include>
+								<include>dfs.zk.properties</include>
 							</includes>
 						</resource>
 					</webResources>
@@ -637,6 +639,21 @@
 			<groupId>net.oschina.zcx7878</groupId>
 			<artifactId>fastdfs-client-java</artifactId>
 			<version>1.27.0.0</version>
+		</dependency>
+		<dependency>
+		  <groupId>cn.ce.dfs</groupId>
+		  <artifactId>DfsFolderClient</artifactId>
+		  <version>1.0.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.thrift</groupId>
+			<artifactId>libthrift</artifactId>
+			<version>0.9.3</version>
+		</dependency>
+		<dependency>
+		  <groupId>cn.ce.zkclient</groupId>
+		  <artifactId>zkclient</artifactId>
+		  <version>1.0.1.3</version>
 		</dependency>
 	</dependencies>
 

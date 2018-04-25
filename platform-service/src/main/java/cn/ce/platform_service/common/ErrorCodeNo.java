@@ -48,7 +48,12 @@ public enum ErrorCodeNo {
 	,DOWNLOAD002("开放应用id不存在")
 	,DOWNLOAD003("文件格式错误")
 	,UPLOAD001("文档格式错误") //导入的时候文档格式错误
-	,UPLOAD002("文件大小错误"), 
+	,UPLOAD002("文件大小错误") 
+	,UPLOAD003("文件读取错误")
+	,UPLOAD004("fastdfs客户端创建发生异常")
+	,UPLOAD005("添加数据到fastdfs失败")
+	,UPLOAD006("跟新数据到fastdfs失败")
+	,UPLOAD007("删除fastdfs数据失败")
 	;
 	
 	
