@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
-import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
 import cn.ce.platform_service.apis.service.IConsoleApiService;
@@ -25,7 +24,6 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.DiyBoundApi;
@@ -49,12 +47,12 @@ import cn.ce.platform_service.util.PropertiesUtil;
 public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	private static Logger _LOGGER = Logger.getLogger(PublicDiyApplyServiceImple.class);
 
-	@Resource
-	private INewApiDao newApiDao;
+//	@Resource
+//	private INewApiDao newApiDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
-	@Resource
-	private IDiyApplyDao diyApplyDao;
+//	@Resource
+//	private IDiyApplyDao diyApplyDao;
 	@Resource
 	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource

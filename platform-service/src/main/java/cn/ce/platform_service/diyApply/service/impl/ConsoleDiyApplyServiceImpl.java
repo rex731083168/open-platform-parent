@@ -38,7 +38,6 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.Menu;
@@ -74,8 +73,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 //	private INewApiDao newApiDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
-	@Resource
-	private IDiyApplyDao diyApplyDao;
+//	@Resource
+//	private IDiyApplyDao diyApplyDao;
 	@Resource
 	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
@@ -549,29 +548,29 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 	}
 
-	@Override
-	public Result<?> migraDiyApply() {
-		int i = 0;
-		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
-		mysqlDiyApplyDao.deleteAll();
-		for (DiyApplyEntity diyApplyEntity : diyList) {
-			Map<String,List<String>> map = diyApplyEntity.getLimitList();
-			for (String openId : map.keySet()) {
-				String boundId = RandomUtil.random32UUID();
-				mysqlDiyApplyDao.saveBoundOpenApply(boundId,diyApplyEntity.getId(),openId);
-				List<String> apiIds = map.get(openId);
-				for (String apiId : apiIds) {
-					mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID()
-							, diyApplyEntity.getId(), openId, apiId,boundId);
-				}
-			}
-			i+=mysqlDiyApplyDao.save(diyApplyEntity);
-			
-		}
-		Result<String> result = new Result<String>();
-		result.setSuccessMessage("一共"+diyList.size()+"条数据，成功插入mysql数据库"+i+"条");
-		return result;
-	}
+//	@Override
+//	public Result<?> migraDiyApply() {
+//		int i = 0;
+//		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
+//		mysqlDiyApplyDao.deleteAll();
+//		for (DiyApplyEntity diyApplyEntity : diyList) {
+//			Map<String,List<String>> map = diyApplyEntity.getLimitList();
+//			for (String openId : map.keySet()) {
+//				String boundId = RandomUtil.random32UUID();
+//				mysqlDiyApplyDao.saveBoundOpenApply(boundId,diyApplyEntity.getId(),openId);
+//				List<String> apiIds = map.get(openId);
+//				for (String apiId : apiIds) {
+//					mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID()
+//							, diyApplyEntity.getId(), openId, apiId,boundId);
+//				}
+//			}
+//			i+=mysqlDiyApplyDao.save(diyApplyEntity);
+//			
+//		}
+//		Result<String> result = new Result<String>();
+//		result.setSuccessMessage("一共"+diyList.size()+"条数据，成功插入mysql数据库"+i+"条");
+//		return result;
+//	}
 
 	@Override
 	public Result<?> productMenuList1(String tenantId) {

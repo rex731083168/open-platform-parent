@@ -1,6 +1,5 @@
 package cn.ce.platform_console.zookeeper.controller;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,7 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.util.PageValidateUtil;
+import cn.ce.platform_service.util.PropertiesUtil;
 import cn.ce.platform_service.zk.service.IZkDubboService;
 
 /**
@@ -24,9 +24,13 @@ import cn.ce.platform_service.zk.service.IZkDubboService;
 @RequestMapping("/dubboDateController")
 public class DubboDataUpdate {
 	
-	@Value("#{redis['zookeeper.connection']}")
+//	@Value("#{application['zookeeper.connection']}")
+	@Value("${zookeeper.connection}")
+//	private String zkconnectioninfo = PropertiesUtil.getInstance().getValue("zookeeper.connection");
 	private String zkconnectioninfo;
-	@Value("#{redis['dubbo.node']}")
+//	@Value("#{application['dubbo.node']}")
+	@Value("${dubbo.node}")
+//	private String datakey = PropertiesUtil.getInstance().getValue("zdubbo.node");
 	private String datakey;
 	
 	@Resource

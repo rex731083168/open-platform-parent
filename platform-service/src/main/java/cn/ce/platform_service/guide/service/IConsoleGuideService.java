@@ -29,7 +29,7 @@ public interface IConsoleGuideService {
 
 	Result<String> submitVerify(String id);
 
-	public Result<String> migraGuide();
+//	public Result<String> migraGuide();
 
 
 }

@@ -28,7 +28,6 @@ import cn.ce.platform_service.apis.dao.IMysqlApiHeaderDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiQueryArgDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiResultDao;
 import cn.ce.platform_service.apis.dao.IMysqlApiRexampleDao;
-import cn.ce.platform_service.apis.dao.INewApiDao;
 import cn.ce.platform_service.apis.entity.ApiArgEntity;
 import cn.ce.platform_service.apis.entity.ApiCodeEntity;
 import cn.ce.platform_service.apis.entity.ApiEntity;
@@ -69,8 +68,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(ConsoleApiServiceImpl.class);
 	
-	@Resource
-	private INewApiDao newApiDao;
+//	@Resource
+//	private INewApiDao newApiDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
 	@Resource
@@ -528,29 +527,29 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
-	@Override
-	public Result<String> migraApi() {
-		
-		List<ApiEntity> apiList = newApiDao.findAll();
-		mysqlApiDao.clearAll();
-		int i = 0;
-		for (ApiEntity apiEntity : apiList) {
-			List<SubArgEntity> headers = apiEntity.getHeaders(); //Header参数
-			saveHeaders(headers,apiEntity.getId());
-			List<SubArgEntity> args = apiEntity.getArgs(); //应用参数
-			saveArgs(args,apiEntity.getId());
-			List<RetEntity> results = apiEntity.getResult(); //返回参数
-			saveResults(results, apiEntity.getId());
-			RetExamEntity retExampleEntity = apiEntity.getRetExample(); //返回示例
-			saveRexample(retExampleEntity, apiEntity.getId());
-			List<ErrorCodeEntity> errorCodes =  apiEntity.getErrCodes(); //错误码
-			saveErrorCodes(errorCodes,apiEntity.getId());
-			i+=mysqlApiDao.save(apiEntity);
-		}
-		Result<String> result = new Result<String>();
-		result.setSuccessMessage("一共迁移了"+apiList.size()+"条数据，成功了"+i+"条");
-		return result;
-	}
+//	@Override
+//	public Result<String> migraApi() {
+//		
+//		List<ApiEntity> apiList = newApiDao.findAll();
+//		mysqlApiDao.clearAll();
+//		int i = 0;
+//		for (ApiEntity apiEntity : apiList) {
+//			List<SubArgEntity> headers = apiEntity.getHeaders(); //Header参数
+//			saveHeaders(headers,apiEntity.getId());
+//			List<SubArgEntity> args = apiEntity.getArgs(); //应用参数
+//			saveArgs(args,apiEntity.getId());
+//			List<RetEntity> results = apiEntity.getResult(); //返回参数
+//			saveResults(results, apiEntity.getId());
+//			RetExamEntity retExampleEntity = apiEntity.getRetExample(); //返回示例
+//			saveRexample(retExampleEntity, apiEntity.getId());
+//			List<ErrorCodeEntity> errorCodes =  apiEntity.getErrCodes(); //错误码
+//			saveErrorCodes(errorCodes,apiEntity.getId());
+//			i+=mysqlApiDao.save(apiEntity);
+//		}
+//		Result<String> result = new Result<String>();
+//		result.setSuccessMessage("一共迁移了"+apiList.size()+"条数据，成功了"+i+"条");
+//		return result;
+//	}
 
 	private String checkListenPathFormat(String listenPath) {
 		if(!listenPath.startsWith("/")){
@@ -905,22 +904,22 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	}
 
 
-	@Override
-	public Result<?> migraQueryArgs() {
-		//1、删除旧的query表中导入的数据
-		apiQueryArgDao.deleteByImport();
-		//2、查询param库
-		List<ApiArgEntity> args = apiArgDao.getAllGetParam();
-		
-		//3、转化后插入query库
-		for (ApiArgEntity a : args) {
-			a.setImported(true);
-			apiQueryArgDao.saveImport(a);
-			apiArgDao.updateImport(a.getId());
-		}
-		
-		apiArgDao.deleteImport();
-		return Result.errorResult("一共迁移"+args.size()+"条数据", ErrorCodeNo.SYS000, null, Status.SUCCESS);
-	}
+//	@Override
+//	public Result<?> migraQueryArgs() {
+//		//1、删除旧的query表中导入的数据
+//		apiQueryArgDao.deleteByImport();
+//		//2、查询param库
+//		List<ApiArgEntity> args = apiArgDao.getAllGetParam();
+//		
+//		//3、转化后插入query库
+//		for (ApiArgEntity a : args) {
+//			a.setImported(true);
+//			apiQueryArgDao.saveImport(a);
+//			apiArgDao.updateImport(a.getId());
+//		}
+//		
+//		apiArgDao.deleteImport();
+//		return Result.errorResult("一共迁移"+args.size()+"条数据", ErrorCodeNo.SYS000, null, Status.SUCCESS);
+//	}
 
 }

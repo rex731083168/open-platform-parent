@@ -30,5 +30,5 @@ public interface IGatewayManageService {
 	
 	Result<String> modifyGatewayNodeById(GatewayNodeEntity nodeEntity);
 
-	Result<?> migraGateway();
+//	Result<?> migraGateway();
 }

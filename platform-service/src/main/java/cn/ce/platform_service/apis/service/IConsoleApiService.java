@@ -44,11 +44,11 @@ public interface IConsoleApiService {
 
 	Result<?> getResourceType();
 
-	Result<?> migraApi();
+//	Result<?> migraApi();
 
 	Result<?> showDocApiList(QueryApiEntity apiEntity);
 
-	Result<?> migraQueryArgs();
+//	Result<?> migraQueryArgs();
 
 	
 }
