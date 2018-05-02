@@ -47,6 +47,8 @@ public enum ErrorCodeNo {
 	,DOWNLOAD001("部分id不存在")
 	,DOWNLOAD002("开放应用id不存在")
 	,DOWNLOAD003("文件格式错误")
+	,DOWNLOAD004("查询结果不存在")
+	,DOWNLOAD005("下载发生 异常")
 	,UPLOAD001("文档格式错误") //导入的时候文档格式错误
 	,UPLOAD002("文件大小错误") 
 	,UPLOAD003("文件读取错误")

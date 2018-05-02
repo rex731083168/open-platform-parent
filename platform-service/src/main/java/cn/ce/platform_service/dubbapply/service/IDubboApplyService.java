@@ -1,9 +1,6 @@
 package cn.ce.platform_service.dubbapply.service;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.dubbapply.entity.Interfaceapplyentity.DubboApps;
 
 public interface IDubboApplyService {
 	
@@ -16,7 +13,7 @@ public interface IDubboApplyService {
 	 * @param appName 
 	 * @return
 	 */
-	public Result<DubboApps> findAppsByUnit(String unit, String appName, Integer currentPage, Integer pageSize);
+	public Result<?> findAppsByUnit(String unit, String appName, Integer currentPage, Integer pageSize);
 	
 //    /**
 //     * 解析jar

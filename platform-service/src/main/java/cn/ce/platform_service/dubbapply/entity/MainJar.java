@@ -21,9 +21,9 @@ public class MainJar {
 	
 	private String dfsPath;
 	
-	private Date createDate;
+	private Date createTime;
 	
-	private Date updateDate;
+	private Date updateTime;
 	
 	private String userId;
 	
@@ -33,16 +33,16 @@ public class MainJar {
 
 	public MainJar(){}
 	
-	public MainJar(String id, boolean isDeleted, boolean isParsed, int jarSize, String dfsPath, Date createDate,
-			Date updateDate, String userId, String userName, String enterpriseName) {
+	public MainJar(String id, boolean isDeleted, boolean isParsed, int jarSize, String dfsPath, Date createTime,
+			Date updateTime, String userId, String userName, String enterpriseName) {
 		super();
 		this.id = id;
 		this.isDeleted = isDeleted;
 		this.isParsed = isParsed;
 		this.jarSize = jarSize;
 		this.dfsPath = dfsPath;
-		this.createDate = createDate;
-		this.updateDate = updateDate;
+		this.createTime = createTime;
+		this.updateTime = updateTime;
 		this.userId = userId;
 		this.userName = userName;
 		this.enterpriseName = enterpriseName;
@@ -96,20 +96,20 @@ public class MainJar {
 		this.dfsPath = dfsPath;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
-	public Date getUpdateDate() {
-		return updateDate;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public String getUserId() {

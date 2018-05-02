@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ce.platform_service.dubbapply.dao.IDubboMainJarDao">
+	<resultMap type="cn.ce.platform_service.dubbapply.entity.MainJar" id="mainJar">
+		<id column="jar_id" property="id"/>
+		<result column="original_file_name" property="originalFileName"/>
+		<result column="is_deleted" property="isDeleted"/>
+		<result column="is_parsed" property="isParsed"/>
+		<result column="jar_size" property="jarSize"/>
+		<result column="dfs_path" property="dfsPath"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="enterprise_name" property="enterpriseName"/>
+	</resultMap>
+	
+	<insert id="saveMainJar" parameterType="cn.ce.platform_service.dubbapply.entity.MainJar">
+		insert into main_jar
+			(jar_id,original_file_name,is_deleted,is_parsed,jar_size
+			,dfs_path,create_time,update_time,user_id,user_name,enterprise_name)
+		values
+			(#{id},#{originalFileName},#{isDeleted},#{isParsed},#{jarSize},
+			#{dfsPath},#{createTime},#{updateTime},#{userId},#{userName},#{enterpriseName})
+	</insert>
+	
+	<select id="findMainJarById" resultMap="mainJar">
+		select * from main_jar where jar_id=#{mainJarId}
+	</select>
+	
+	<update id="updateMainJar" parameterType="cn.ce.platform_service.dubbapply.entity.MainJar">
+		update main_jar set
+			jar_id=#{jarId},original_file_name=#{originalFileName},is_deleted=#{isDeleted}
+			,is_parsed=#{isParsed},jar_size=#{jarSize},dfs_path=#{dfsPath},create_time=#{createTime}
+			,update_time=#{updateTime},user_id=#{userId},user_name=#{userName},enterprise_name=#{enterpriseName}
+	</update>
+	
+	<sql id="listCondition">
+		<where>
+			<if test="null != originalFieName && originalFileName !=''">
+				AND original_file_name like concat(concat("%",#{s}),"%")
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findListSize" parameterType="cn.ce.platform_service.dubbapply.entity.QueryMainJar" resultType="int">
+		select count(*) from main_jar
+		<include refid="listConiditon" />
+	</select>
+	
+	<select id="getPagedList" parameterType="cn.ce.platform_service.dubbapply.entity.QueryMainJar" resultMap="mainJar">
+		select * from main_jar order by update_time desc,create_time desc
+		<include refid="listConiditon" />
+		limit
+		<choose>
+			<when test="startNum == null or startNum == '0'">
+				0,
+			</when>
+			<otherwise>
+				#{startNum},
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="pageSize == null or pageSize == '0' ">
+				10
+			</when>
+			<otherwise>
+				#{pageSize}
+			</otherwise>
+		</choose>
+	</select>	
+	
+</mapper>

@@ -14,13 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import cn.ce.platform_service.common.Constants;
-import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
-import cn.ce.platform_service.dubbapply.entity.Interfaceapplyentity.DubboApps;
 import cn.ce.platform_service.dubbapply.service.IDubboApplyService;
 import cn.ce.platform_service.dubbapply.service.IJarService;
-import cn.ce.platform_service.dubbapply.util.JarDfsUtil;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.util.PageValidateUtil;
 import cn.ce.platform_service.util.SplitUtil;
@@ -64,7 +60,7 @@ public class dubboJarController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/findAppsByUnit", method = RequestMethod.GET)
-	public Result<DubboApps> findAppsByUnit(@RequestParam(required = true) String unit,
+	public Result<?> findAppsByUnit(@RequestParam(required = true, defaultValue="166666") String unit,
 		@RequestParam(required=false)String appName,
 		@RequestParam(required=false, defaultValue="1")Integer currentPage,
 		@RequestParam(required=false, defaultValue="10")Integer pageSize) {
@@ -167,40 +163,40 @@ public class dubboJarController {
 	}
 
     
-	@RequestMapping(value = "/testUpload", method=RequestMethod.POST)
-	public Result<?> testUpload(MultipartFile file) throws Exception {
-	
-	System.out.println(file.getOriginalFilename());
-	String saveList = JarDfsUtil.getInstance().saveFile(file.getOriginalFilename(), file.getBytes());
-	System.out.println(saveList);
-	return new Result<String>("messageaaa",ErrorCodeNo.SYS000,saveList,Status.SUCCESS);
-		
-	}
-	
-	@RequestMapping(value = "/testGet", method=RequestMethod.GET)
-	public Result<?> testGet(@RequestParam String fid) throws Exception {
-		
-	byte[] saveList = JarDfsUtil.getInstance().readFile(fid);
-	return new Result<String>("messageaaa",ErrorCodeNo.SYS000,new String(saveList),Status.SUCCESS);
-		
-	}
-	
-	@RequestMapping(value = "/testDelete", method=RequestMethod.DELETE)
-	public Result<?> testDelete(@RequestParam String fid) throws Exception{
-		
-	boolean bool = JarDfsUtil.getInstance().deleteFile(fid);
-	
-	return new Result<Boolean>("messageaaa",ErrorCodeNo.SYS000,bool,Status.SUCCESS);
-		
-	}
-	
-	@RequestMapping(value = "/testUpdate", method=RequestMethod.POST)
-	public Result<?> testUpdate(@RequestParam String fid,
-			MultipartFile file) throws Exception {
-		
-	String str = JarDfsUtil.getInstance().updateFile(fid, file.getOriginalFilename(), file.getBytes());
-	return new Result<String>("messageaaa",ErrorCodeNo.SYS000,str,Status.SUCCESS);
-		
-	}
+//	@RequestMapping(value = "/testUpload", method=RequestMethod.POST)
+//	public Result<?> testUpload(MultipartFile file) throws Exception {
+//	
+//	System.out.println(file.getOriginalFilename());
+//	String saveList = JarDfsUtil.getInstance().saveFile(file.getOriginalFilename(), file.getBytes());
+//	System.out.println(saveList);
+//	return new Result<String>("messageaaa",ErrorCodeNo.SYS000,saveList,Status.SUCCESS);
+//		
+//	}
+//	
+//	@RequestMapping(value = "/testGet", method=RequestMethod.GET)
+//	public Result<?> testGet(@RequestParam String fid) throws Exception {
+//		
+//	byte[] saveList = JarDfsUtil.getInstance().readFile(fid);
+//	return new Result<String>("messageaaa",ErrorCodeNo.SYS000,new String(saveList),Status.SUCCESS);
+//		
+//	}
+//	
+//	@RequestMapping(value = "/testDelete", method=RequestMethod.DELETE)
+//	public Result<?> testDelete(@RequestParam String fid) throws Exception{
+//		
+//	boolean bool = JarDfsUtil.getInstance().deleteFile(fid);
+//	
+//	return new Result<Boolean>("messageaaa",ErrorCodeNo.SYS000,bool,Status.SUCCESS);
+//		
+//	}
+//	
+//	@RequestMapping(value = "/testUpdate", method=RequestMethod.POST)
+//	public Result<?> testUpdate(@RequestParam String fid,
+//			MultipartFile file) throws Exception {
+//		
+//	String str = JarDfsUtil.getInstance().updateFile(fid, file.getOriginalFilename(), file.getBytes());
+//	return new Result<String>("messageaaa",ErrorCodeNo.SYS000,str,Status.SUCCESS);
+//		
+//	}
 	
 }

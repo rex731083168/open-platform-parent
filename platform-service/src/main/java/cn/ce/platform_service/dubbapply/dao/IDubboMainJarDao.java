@@ -1,6 +1,9 @@
 package cn.ce.platform_service.dubbapply.dao;
 
+import java.util.List;
+
 import cn.ce.platform_service.dubbapply.entity.MainJar;
+import cn.ce.platform_service.dubbapply.entity.QueryMainJar;
 
 /**
 * @Description : dubbo 上传下载jar包 记录保存数据库
@@ -14,6 +17,10 @@ public interface IDubboMainJarDao {
 	MainJar findMainJarById(String mainJarId);
 
 	int updateMainJar(MainJar main);
+
+	int findListSize(QueryMainJar queryMainJar);
+
+	List<MainJar> getPagedList(QueryMainJar queryMainJar);
 
 }
 

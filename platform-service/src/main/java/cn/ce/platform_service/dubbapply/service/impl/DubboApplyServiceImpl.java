@@ -1,27 +1,27 @@
 package cn.ce.platform_service.dubbapply.service.impl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.HttpClientUtil;
 import cn.ce.platform_service.common.Result;
+import cn.ce.platform_service.common.Status;
+import cn.ce.platform_service.common.page.Page;
 import cn.ce.platform_service.dubbapply.dao.DubboApplyEntityMapper;
-import cn.ce.platform_service.dubbapply.dao.IDubboApplyDao;
-import cn.ce.platform_service.dubbapply.entity.MainJar;
+import cn.ce.platform_service.dubbapply.entity.Interfaceapplyentity.Data;
 import cn.ce.platform_service.dubbapply.entity.Interfaceapplyentity.DubboApps;
 import cn.ce.platform_service.dubbapply.service.IDubboApplyService;
 import cn.ce.platform_service.util.PropertiesUtil;
-import cn.ce.platform_service.util.RandomUtil;
 /***
  * dubbo jar解析服务
  * @author huangdayang
@@ -33,8 +33,8 @@ public class DubboApplyServiceImpl implements IDubboApplyService {
 	private static Logger _LOGGER = Logger.getLogger(DubboApplyServiceImpl.class);
 	@Resource
 	private DubboApplyEntityMapper dubboApplyEntityMapper;
-	@Resource
-	private IDubboApplyDao dubboApplyDao;
+//	@Resource
+//	private IDubboApplyDao dubboApplyDao;
 
 //	private void saveDubboApplySercice(List<DubboApplyEntity> dubboApplyEntityList) {
 //		for (DubboApplyEntity record : dubboApplyEntityList) {
@@ -163,8 +163,8 @@ public class DubboApplyServiceImpl implements IDubboApplyService {
 //	}
 
 	@Override
-	public Result<DubboApps> findAppsByUnit(String unit, String appName, Integer currentPage, Integer pageSize) {
-		Result<DubboApps> result = new Result<>();
+	public Result<?> findAppsByUnit(String unit, String appName, Integer currentPage, Integer pageSize) {
+		
 		String url = PropertiesUtil.getInstance().getValue("dubbo_app_interfaceurl");
 		String unit$ = Pattern.quote("${unit}");// ${o} 所属企业 CE 为中企动力 不填为所有
 		String replacedurl = url.replaceAll(unit$, unit);
@@ -178,20 +178,60 @@ public class DubboApplyServiceImpl implements IDubboApplyService {
 			DubboApps apps = (DubboApps) HttpClientUtil.getUrlReturnObject(replacedurl, DubboApps.class, classMap);
 			_LOGGER.info("调用产品Http请求发送成功");
 			if (apps.getStatus().equals("200") || apps.getStatus().equals("110")) {
-				result.setSuccessData(apps);
-				return result;
+				//分页，模糊
+				List<Data> reData = apps.getData();
+				Page<Data> page = adaptAppData(reData,appName,currentPage,pageSize);
+				return new Result<Page<Data>>("",ErrorCodeNo.SYS000,page,Status.SUCCESS);
 			} else {
 				_LOGGER.error("dubbo_app_interfaceurl data http getfaile return code :" + apps.getMsg() + " ");
-				result.setErrorCode(ErrorCodeNo.SYS006);
-				return result;
+				return new Result<Page<Data>>("",ErrorCodeNo.SYS006,null,Status.FAILED);
 			}
 		} catch (Exception e) {
-
 			_LOGGER.error("dubbo_app_interfaceurl http error " + e + "");
-			result.setErrorCode(ErrorCodeNo.SYS018);
-			result.setErrorMessage("请求失败");
-			return result;
+			return new Result<Page<Data>>("",ErrorCodeNo.SYS018,null,Status.FAILED);
 		}
 	}
+
 	
+	/**
+	 * 
+	 * @Title: adaptAppData
+	 * @Description: 王佳的接口不支持适配。通过该方法支持分页和模糊搜索的功能
+	 * @author: makangwei 
+	 * @date:   2018年4月28日 上午11:36:11 
+	 * @param : @param reData
+	 * @param : @param appName
+	 * @param : @param currentPage
+	 * @param : @param pageSize
+	 * @param : @return
+	 * @return: List<Data>
+	 * @throws
+	 */
+	private Page<Data> adaptAppData(List<Data> reData, String appName, Integer currentPage, Integer pageSize) {
+		
+		if(null == reData || reData.size() < 1){
+			return new Page<Data>(currentPage,0,pageSize);
+		}
+		
+		//根据名称模糊查询
+		if(StringUtils.isNotBlank(appName)){
+			for (Data data : reData) {
+				if(data.getAppName().indexOf(appName) < 0){
+					reData.remove(data);
+				}
+			}
+		}
+		
+		//分页
+		List<Data> newData = new ArrayList<Data>();
+		int begin = (currentPage-1)*pageSize;
+		int end = currentPage*pageSize;
+		for(int i = begin ; i< end ; i++){
+			// TODO 处理越界异常
+			newData.add(reData.get(i));
+		}
+		Page<Data> page = new Page<Data>(currentPage,reData.size(),pageSize,newData);
+		return page;
+	}
+
 }
