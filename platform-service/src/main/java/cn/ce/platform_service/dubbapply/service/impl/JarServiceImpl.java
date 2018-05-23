@@ -72,8 +72,8 @@ public class JarServiceImpl implements IJarService{
 		MainJar jar = new MainJar();
 		
 		jar.setId(RandomUtil.random32UUID());
-		jar.setCreateDate(new Date());
-		jar.setUpdateDate(jar.getCreateDate()); 
+		jar.setCreateTime(new Date());
+		jar.setUpdateTime(jar.getCreateTime()); 
 		jar.setDeleted(false);
 		jar.setDfsPath(jarPath);
 		jar.setJarSize(bytes.length);
@@ -119,7 +119,7 @@ public class JarServiceImpl implements IJarService{
 		
 		main.setOriginalFileName(newFileName);
 		main.setDfsPath(newPath);
-		main.setUpdateDate(new Date());
+		main.setUpdateTime(new Date());
 		dubboMainJarDao.updateMainJar(main);
 		return new Result<String>("跟新成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}

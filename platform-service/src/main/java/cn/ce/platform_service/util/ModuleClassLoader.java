@@ -112,9 +112,18 @@ public class ModuleClassLoader extends URLClassLoader {
 
 	public static void main(String[] args) throws Exception {
 		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
-		String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar","D:/lib/service-info-api-2.0.0-SNAPSHOT.jar","D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
+		String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar"
+				,"D:/lib/service-info-api-2.0.0-SNAPSHOT.jar"
+				,"D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
 		String mainJar = "D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar";
-		moduleClassLoader.parseJars(mainJar,path);
+		Map<String, Map<String, InterfaceDescriptionFullEnty>> map = moduleClassLoader.parseJars(mainJar,path);
+		for (String string : map.keySet()) {
+			System.out.println("key:"+string+",value"+map.get(string));
+			Map<String, InterfaceDescriptionFullEnty> map2 = map.get(string);
+			for (String string2 : map2.keySet()) {
+				System.out.println("key :"+string2+",value:"+map2.get(string2));
+			}
+		}
 	}
 
 }

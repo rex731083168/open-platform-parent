@@ -1,4 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
 <mapper namespace="cn.ce.platform_service.dubbapply.dao.IDubboDepJarDao">
+
 	<resultMap type="cn.ce.platform_service.dubbapply.entity.DepJar" id="depJar">
 		<id column="jar_id" property="id"/>
 		<result column="main_jar_id" property="mainJarId"/>
@@ -48,10 +55,10 @@
 	
 	<sql id="listCondition">
 		<where>
-			<if test="null != mainJarId && mainJarId != ''">
+			<if test="null != mainJarId and mainJarId != ''">
 				AND main_jar_id = #{mainJarId}
 			</if>
-			<if test="null != originalFieName && originalFileName !=''">
+			<if test="null != originalFieName and originalFileName !=''">
 				AND original_file_name like concat(concat("%",#{s}),"%")
 			</if>
 		</where>

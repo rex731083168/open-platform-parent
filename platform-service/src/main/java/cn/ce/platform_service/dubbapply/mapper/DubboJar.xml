@@ -11,5 +11,4 @@
 		values
 			(#{id},#{jarByte})
 	</insert>
-	s
 </mapper>

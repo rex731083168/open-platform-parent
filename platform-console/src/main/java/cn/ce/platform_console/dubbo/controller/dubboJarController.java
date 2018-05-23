@@ -1,6 +1,15 @@
 package cn.ce.platform_console.dubbo.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.dubbapply.service.IDubboApplyService;
 import cn.ce.platform_service.dubbapply.service.IJarService;
+import cn.ce.platform_service.dubbapply.util.JarDfsUtil;
 import cn.ce.platform_service.users.entity.User;
+import cn.ce.platform_service.util.ModuleClassLoader;
 import cn.ce.platform_service.util.PageValidateUtil;
 import cn.ce.platform_service.util.SplitUtil;
 
@@ -162,7 +174,111 @@ public class dubboJarController {
 		return jarService.deleteDepJars(depJarIds);
 	}
 
-    
+    /**    
+    * @Description: ${todo}(用一句话描述该文件做什么)  
+    * @author ${user}  
+    * @date ${date}  
+    * @update date/author/content ${date}	${date}/${user}/(说明。)....多次修改添加多次update   
+    */  
+	@RequestMapping(value="/testParse",method=RequestMethod.GET)
+	public Result<?> testParse() throws Exception{
+////		File file = new File("D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar");
+////		File file2 = new File("D:/lib/service-info-api-2.0.0-SNAPSHOT.jar");
+////		File file3 = new File("D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jars");
+//		File[] files = new File[]{
+//				new File("D:\\lib\\framework-pbase-2.0.0-20180328.074441-7.jar")
+//				,new File("D:\\lib\\service-info-api-2.0.0-SNAPSHOT.jar")
+//				,new File("D:\\lib\\appservice-info-api-2.0.0-SNAPSHOT.jar")};
+//		Map<String,String> map = new HashMap<String,String>();
+//		for (File fi : files) {
+//			System.out.println(fi.exists());
+//			FileInputStream f = new FileInputStream(fi);
+//			byte b[] =new byte[(int) fi.length()];
+//			f.read(b);
+//			System.out.println(fi.getName());
+//			System.out.println(new String(b));
+//			String path = JarDfsUtil.getInstance().saveFile(fi.getName(), b);
+//			System.out.println(fi.getName()+":"+path);
+//			map.put(fi.getName(), path);
+//		}
+//		List<String> fList = new ArrayList<String>();
+//		for (String key : map.keySet()) {
+//			byte[] b = JarDfsUtil.getInstance().readFile(map.get(key));
+//			File f = new File(this.getClass().getResource("/").getPath()+"fastdfsTemp",key);
+//			if(!f.exists()){
+//				f.createNewFile();
+//			}
+//			FileOutputStream fis = new FileOutputStream(f);
+//			BufferedOutputStream bis = new BufferedOutputStream(fis);
+//			bis.write(b);
+//			bis.close();
+//			fis.close();
+//			System.out.println(f.getAbsolutePath());
+//			fList.add(f.getAbsolutePath());
+//		}
+//		
+//		String mainJarPath = null;
+//		for (String string : fList) {
+//			if(string.indexOf("appservice-info-api-2.0.0-SNAPSHOT.jar")> 0){
+//				mainJarPath = string;
+//				break;
+//			}
+//		}
+//		String[] strs = new String[3];
+//		for (int i = 0; i < strs.length; i++) {
+//			strs[i] =  fList.get(i);
+//		}
+//		System.out.println(mainJarPath);
+//		System.out.println(strs);
+////		Map<String, Map<String, InterfaceDescriptionFullEnty>> m = ModuleClassLoader.getInstance().parseJars(mainJarPath,strs);
+////		for (String string : m.keySet()) {
+////			System.out.println("key:"+string+",value"+m.get(string));
+////			Map<String, InterfaceDescriptionFullEnty> map2 = m.get(string);
+////			for (String string2 : map2.keySet()) {
+////				System.out.println("key :"+string2+",value:"+map2.get(string2));
+////			}
+////		}
+//		String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar"
+//				,"D:/lib/service-info-api-2.0.0-SNAPSHOT.jar"
+//				,"D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
+//		String mainJar = "D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar";
+//		Map<String, Map<String, InterfaceDescriptionFullEnty>> map1 = ModuleClassLoader.getInstance().parseJars(mainJar,path);
+//		for (String string : map1.keySet()) {
+//			System.out.println("key:"+string+",value"+map1.get(string));
+//			Map<String, InterfaceDescriptionFullEnty> map2 = map1.get(string);
+//			for (String string2 : map2.keySet()) {
+//				System.out.println("key :"+string2+",value:"+map2.get(string2));
+//			}
+//		}
+		String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar"
+				,"D:/lib/service-info-api-2.0.0-SNAPSHOT.jar"
+				,"D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
+		String mainJar = "D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar";
+		Map<String, Map<String, InterfaceDescriptionFullEnty>> map1 = ModuleClassLoader.getInstance().parseJars(mainJar,path);
+		for (String string : map1.keySet()) {
+			System.out.println("key:"+string+",value"+map1.get(string));
+			Map<String, InterfaceDescriptionFullEnty> map2 = map1.get(string);
+			for (String string2 : map2.keySet()) {
+				System.out.println("key :"+string2+",value:"+map2.get(string2));
+			}
+		}
+		return null;
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, URISyntaxException, IOException {
+		String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar"
+				,"D:/lib/service-info-api-2.0.0-SNAPSHOT.jar"
+				,"D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
+		String mainJar = "D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar";
+		Map<String, Map<String, InterfaceDescriptionFullEnty>> map1 = ModuleClassLoader.getInstance().parseJars(mainJar,path);
+		for (String string : map1.keySet()) {
+			System.out.println("key:"+string+",value"+map1.get(string));
+			Map<String, InterfaceDescriptionFullEnty> map2 = map1.get(string);
+			for (String string2 : map2.keySet()) {
+				System.out.println("key :"+string2+",value:"+map2.get(string2));
+			}
+		}
+	}
 //	@RequestMapping(value = "/testUpload", method=RequestMethod.POST)
 //	public Result<?> testUpload(MultipartFile file) throws Exception {
 //	
@@ -198,5 +314,5 @@ public class dubboJarController {
 //	return new Result<String>("messageaaa",ErrorCodeNo.SYS000,str,Status.SUCCESS);
 //		
 //	}
-	
+	 
 }

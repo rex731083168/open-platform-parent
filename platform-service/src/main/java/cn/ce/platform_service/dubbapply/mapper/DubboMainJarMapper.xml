@@ -40,7 +40,7 @@
 	
 	<sql id="listCondition">
 		<where>
-			<if test="null != originalFieName && originalFileName !=''">
+			<if test="null != originalFieName and originalFileName !=''">
 				AND original_file_name like concat(concat("%",#{s}),"%")
 			</if>
 		</where>

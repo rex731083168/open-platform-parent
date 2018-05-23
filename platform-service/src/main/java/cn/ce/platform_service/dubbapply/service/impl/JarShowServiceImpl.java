@@ -111,30 +111,39 @@ public class JarShowServiceImpl implements IJarShowService{
 	@Override
 	public Result<?> parseMainJar(String mainJarId){
 		
-		if(StringUtils.isBlank(mainJarId)){
-			return new Result<String>("主包id不能为空",ErrorCodeNo.SYS005,null,Status.FAILED);
+		try {
+			if(StringUtils.isBlank(mainJarId)){
+				return new Result<String>("主包id不能为空",ErrorCodeNo.SYS005,null,Status.FAILED);
+			}
+			MainJar mainJar = dubboMainJarDao.findMainJarById(mainJarId);
+			if(null == mainJar){
+				return new Result<String>("当前id不存在",ErrorCodeNo.SYS006,null,Status.FAILED);
+			}
+			byte[] mainJarFile = JarDfsUtil.getInstance().readFile(mainJar.getDfsPath());
+			File f = new File(this.getClass().getResource("/").getPath(),mainJar.getOriginalFileName());
+			if(!f.exists()){
+				f.createNewFile();
+			}
+			FileInputStream fis = new FileInputStream(f);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			bis.read(mainJarFile);
+			bis.close();
+			fis.close();
+			//将jar包保存本地然后删除  
+			List<String> list = new ArrayList<String>();
+			list.add(f.getAbsolutePath());
+			String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar","D:/lib/service-info-api-2.0.0-SNAPSHOT.jar","D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
+			ModuleClassLoader.getInstance().parseJars(f.getAbsolutePath(),path);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		MainJar mainJar = dubboMainJarDao.findMainJarById(mainJarId);
-		if(null == mainJar){
-			return new Result<String>("当前id不存在",ErrorCodeNo.SYS006,null,Status.FAILED);
-		}
-		byte[] mainJarFile = JarDfsUtil.getInstance().readFile(mainJar.getDfsPath());
-		File f = new File(this.getClass().getResource("/").getPath(),mainJar.getOriginalFileName());
-		if(!f.exists()){
-			f.createNewFile();
-		}
-		FileInputStream fis = new FileInputStream(f);
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		bis.read(mainJarFile);
-		bis.close();
-		fis.close();
-		//将jar包保存本地然后删除  
-		List<String> list = new ArrayList<String>();
-		list.add(f.getAbsolutePath());
-		String[] path = new String[]{"D:/lib/framework-pbase-2.0.0-20180328.074441-7.jar","D:/lib/service-info-api-2.0.0-SNAPSHOT.jar","D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
-		ModuleClassLoader.getInstance().parseJars(f.getAbsolutePath(),path);
 		return null;
 	}
+	
+	
+	public static void main(String[] args) throws Exception {
+
+	}	
 
 	@Override
 	public Result<?> getMainJarList(String mainJarName, Integer currentPage, Integer pageSize) {
@@ -209,10 +218,6 @@ public class JarShowServiceImpl implements IJarShowService{
         out.flush();
         out.close();
 	}
-	
-	public static void main(String[] args) throws IOException {
-		
-		System.out.println(new File("").getCanonicalPath());
-	}
+
 }
 
