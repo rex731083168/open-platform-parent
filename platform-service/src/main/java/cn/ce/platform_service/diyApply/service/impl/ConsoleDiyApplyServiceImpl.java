@@ -150,7 +150,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 				// 根据网站实例id查询是否配置资源IP
 				String routeBySaasId = GatewayRouteUtils.getRouteBySaasId(findTenantAppsByTenantKeyTenantIdtemp,
 						entity.getResourceType(), RequestMethod.GET.toString());
-
+				// TODO mkw2010411 http://10.12.40.161:8000/tyk/router/saas/1600002358/null
+				//{"status":"error","message":"saasKey not found"}
 				if (StringUtils.isBlank(routeBySaasId)) {
 					result.setErrorMessage("未配置定制应用资源池,请联系管理员!");
 					result.setErrorCode(ErrorCodeNo.SYS015);
