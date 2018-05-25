@@ -48,6 +48,11 @@ public interface IConsoleApiService {
 
 	Result<?> showDocApiList(QueryApiEntity apiEntity);
 
+    Result<?> getOpenApplyBound();
+
+	Result<?> getDiyApplyBound();
+
+
 //	Result<?> migraQueryArgs();
 
 	

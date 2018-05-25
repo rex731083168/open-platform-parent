@@ -352,7 +352,17 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return result;
 	}
 
-	
+	@Override
+	public Result<?> getOpenApplyBound() {
+		return null;
+	}
+
+	@Override
+	public Result<?> getDiyApplyBound() {
+		return null;
+	}
+
+
 	/**
 	 * @Title: checkApiChName
 	 * @Description: 校验当前开放应用中是否存在这个中文名称
