@@ -8,22 +8,29 @@ package cn.ce.platform_service.open.entity;
 public class BiDiyApply {
 
 	private String id;
-	
+
 	private String appId;
-	
+
 	private String applyName;
-	
+
 	private String clientId;
-	
+
 	private String applyDesc;
-	
+
 	private String userId;
-	
+
 	private Integer checkState;
-	
+
 	private Long count;
 
-	public String getId() {
+    public static BiDiyApply InnerAccess(Long innerAccessCount) {
+		BiDiyApply biDiyApply = new BiDiyApply();
+		biDiyApply.setCount(innerAccessCount);
+		biDiyApply.setApplyName("内部调用");
+		return biDiyApply;
+    }
+
+    public String getId() {
 		return id;
 	}
 

@@ -42,7 +42,7 @@ import cn.ce.platform_service.util.http.HttpUtil;
 */
 @Service(value="operatingService")
 public class OperatingServiceImpl implements IOperatingService{
-	
+
 	private static final String ORDER = "order";
 	private static final String CURRENT_PAGE = "pageNumber";
 	private static final String PAGE_SIZE = "itemPerPage";
@@ -56,16 +56,16 @@ public class OperatingServiceImpl implements IOperatingService{
 	private static final String TOTAL_PAGE1 = "totalPage";
 	private static final String TOTAL_NUMBER1 = "totalNumber";
 	private static final int TIME_OUT = 5000;
-	
+
 	@Resource
 	IMysqlApiDao mysqlApiDao;
 	@Resource
 	IMysqlDiyApplyDao diyApplyDao;
 
 	private static PropertiesUtil propertiesUtil = PropertiesUtil.getInstance();
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperatingServiceImpl.class);
-	
+
 	@Override
 	public Result<?> api(Long startTimeStamp, Long endTimeStamp, Integer order, String apiId, Integer currentPage,
 			Integer pageSize) {
@@ -100,23 +100,23 @@ public class OperatingServiceImpl implements IOperatingService{
 	}
 
 	private Result<?> parseApi(HttpResult hResult) {
-		
+
 		BiPageEntity2 biPage = getBounds(hResult);
-		
+
 		if(null == biPage){
 			return Result.errorResult("获取bi统计数据异常", ErrorCodeNo.SYS037, null, Status.FAILED);
 		}
-		
+
 		List<JSONObject> jobs = new ArrayList<JSONObject>(); //封装最后的list用于返回
 		List<BiBoundEntity2> biBound = biPage.getResultList();//原始的运营访问数据数据
 		Map<String,Long> cMap = new LinkedHashMap<String,Long>();//封装verionid和number关系
 		List<String> versionIds = new ArrayList<String>();//封装versionids
-		
+
 		for (BiBoundEntity2 biBoundEntity2 : biBound) {
 			cMap.put(biBoundEntity2.getVersionId(), biBoundEntity2.getNumber());
 			versionIds.add(biBoundEntity2.getVersionId());
 		}
-		
+
 		if(versionIds.size() > 0){ //判断只有集合不为空才去查询数据库
 			List<NewApiEntity> entitys = mysqlApiDao.findByVersionIds(versionIds);
 			for (NewApiEntity newApiEntity : entitys) {
@@ -125,24 +125,24 @@ public class OperatingServiceImpl implements IOperatingService{
 				jobs.add(job);
 			}
 		}
-		
+
 		JSONObject data = new JSONObject();
 		data.put(CURRENT_PAGE1, biPage.getCurrentPage());
 		data.put(PAGE_SIZE1, biPage.getPageSize());
 		data.put(TOTAL_NUMBER1, biPage.getTotalNumber());
 		data.put(TOTAL_PAGE1, biPage.getTotalPage());
 		data.put(RESULT_LIST, jobs);
-		
+
 		return Result.successResult("",data);
 	}
-	
+
 	private Result<?> parseOpenApply(HttpResult hResult, String openApplyId, String apiId) {
-		
+
 		//如果openApplyId不为空代表查询开放应用下api
 		if(StringUtils.isNotBlank(openApplyId)){
 			return parseApi(hResult);
 		}
-		
+
 		//否则查询开放应用热度
 		BiPageEntity2 biPage = getBounds(hResult);
 		if(null == biPage){
@@ -155,7 +155,7 @@ public class OperatingServiceImpl implements IOperatingService{
 			openApplyIds.add(biBoundEntity2.getOpenApplyId());
 			cMap.put(biBoundEntity2.getOpenApplyId(), biBoundEntity2.getNumber());
 		}
-		
+
 		List<BiOpenApply> inOrder = new ArrayList<BiOpenApply>();
 		JSONObject data = new JSONObject();
 		if(openApplyIds.size() > 0){
@@ -166,8 +166,8 @@ public class OperatingServiceImpl implements IOperatingService{
 				url = url.replaceAll(apiIds$, URLEncoder.encode(openApplyIds.toString(), "UTF-8"));
 			} catch (UnsupportedEncodingException e) {}
 			HttpResult result = HttpUtil.get(url, null, true, TIME_OUT);
-			
-			
+
+
 			if(null != result && null != result.getStatus() && 200 == result.getStatus()){
 				JSONObject job = JSONObject.parseObject(result.getBody());
 				List<BiOpenApply> biOpenApplys = JSONObject.parseArray(job.getJSONArray("data").toJSONString(),
@@ -183,9 +183,9 @@ public class OperatingServiceImpl implements IOperatingService{
 				for (String id : openApplyIds) {
 					inOrder.add(outOfOrder.get(id));
 				}
-				//调用租户接口根据id获取开放应用列表并排序以及绑定结束------------------------------------------	
+				//调用租户接口根据id获取开放应用列表并排序以及绑定结束------------------------------------------
 			}
-			
+
 			data.put(CURRENT_PAGE1, biPage.getCurrentPage());
 			data.put(PAGE_SIZE1, biPage.getPageSize());
 			data.put(TOTAL_NUMBER1, biPage.getTotalNumber());
@@ -194,12 +194,12 @@ public class OperatingServiceImpl implements IOperatingService{
 		}
 		return Result.successResult("", data);
 	}
-	
+
 	private Result<?> parseDiyApply(HttpResult hResult, String diyApplyId, String openApplyId, String apiId) {
 		if(StringUtils.isNotBlank(diyApplyId)){
-			parseOpenApply(hResult, openApplyId, apiId);
+			return parseOpenApply(hResult, openApplyId, apiId);
 		}
-		
+
 		//获取所有定制应用列表
 		BiPageEntity2 biPage = getBounds(hResult);
 		if(null == biPage){
@@ -209,21 +209,28 @@ public class OperatingServiceImpl implements IOperatingService{
 		List<BiBoundEntity2> bounds = biPage.getResultList();
 		List<String> diyClientIds = new ArrayList<String>();
 		Map<String,Long> cMap = new LinkedHashMap<String,Long>();
+
+		Long innerAccessCount = null;
 		for (BiBoundEntity2 bound : bounds) {
+			if(StringUtils.isBlank(bound.getClientId())){
+				innerAccessCount = bound.getNumber();
+				continue;
+			}
 			diyClientIds.add(bound.getClientId());
 			cMap.put(bound.getClientId(), bound.getNumber());
 		}
-		
+
 		List<BiDiyApply> inOrder = new ArrayList<BiDiyApply>();
 		JSONObject data = new JSONObject();
 		if(diyClientIds.size() > 0){
 			inOrder = diyApplyDao.findBiDiyByClientIds(diyClientIds);
 			//将定制应用数据和当前数据绑定
 			for (BiDiyApply biDiyApply : inOrder) {
-				biDiyApply.setCount(cMap.get(biDiyApply.getId()));
+				biDiyApply.setCount(cMap.get(biDiyApply.getClientId()));
 			}
+			inOrder.add(0,BiDiyApply.InnerAccess(innerAccessCount)); //添加内部调用的访问统计
 		}
-		
+
 		data.put(CURRENT_PAGE1, biPage.getCurrentPage());
 		data.put(PAGE_SIZE1, biPage.getPageSize());
 		data.put(TOTAL_NUMBER1, biPage.getTotalNumber());
@@ -231,13 +238,13 @@ public class OperatingServiceImpl implements IOperatingService{
 		data.put(RESULT_LIST, inOrder);
 		return Result.successResult("", data);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @Title: getBounds
 	 * @Description: 从httpResult中获取绑定集合
-	 * @author: makangwei 
-	 * @date:   2018年6月5日 上午10:45:44 
+	 * @author: makangwei
+	 * @date:   2018年6月5日 上午10:45:44
 	 * @param : @param hResult
 	 * @param : @return
 	 * @return: List<BiBoundEntity2>
@@ -258,7 +265,7 @@ public class OperatingServiceImpl implements IOperatingService{
 		}
 		BiPageEntity2 biPage2 = null;
 		try{
-			com.alibaba.fastjson.JSONObject data = 
+			com.alibaba.fastjson.JSONObject data =
 					com.alibaba.fastjson.JSONObject.parseObject(hResult.getBody()).getJSONObject("data");
 			BiPageEntity biPage = data.toJavaObject(BiPageEntity.class);
 			biPage2 = new BiPageEntity2(biPage);
@@ -267,17 +274,17 @@ public class OperatingServiceImpl implements IOperatingService{
 			LOGGER.warn("返回json解析错误,原数据为：{},堆栈信息为：{}/n",hResult.getBody(),e);
 			return null;
 		}
-		
+
 		return biPage2;
 	}
-	
+
 
 	/**
-	 * 
+	 *
 	 * @Title: putParams
 	 * @Description: TODO(这里用一句话描述这个方法的作用)
-	 * @author: makangwei 
-	 * @date:   2018年6月5日 下午2:45:32 
+	 * @author: makangwei
+	 * @date:   2018年6月5日 下午2:45:32
 	 * @param : @param order
 	 * @param : @param apiId
 	 * @param : @param openApplyId

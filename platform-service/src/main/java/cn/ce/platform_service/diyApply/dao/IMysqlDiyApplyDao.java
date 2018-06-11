@@ -48,6 +48,6 @@ public interface IMysqlDiyApplyDao {
 
 	int auditSuccess(@Param("applyId")String applyId, @Param("appId")String appId, @Param("checkState")Integer checkState, @Param("checkMem")String checkMem);
 
-	List<BiDiyApply> findBiDiyByClientIds(List<String> diyClientIds);
+	List<BiDiyApply> findBiDiyByClientIds(@Param("diyClientIds") List<String> diyClientIds);
 	
 }
