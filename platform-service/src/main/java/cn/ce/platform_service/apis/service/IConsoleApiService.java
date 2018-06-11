@@ -47,9 +47,13 @@ public interface IConsoleApiService {
 //	Result<?> migraApi();
 
 	Result<?> showDocApiList(QueryApiEntity apiEntity);
-
+	
+	// warn 返回的是开放应用绑定的version_id 作为api_id
+	// 该接口作为网关获取开放应用和api绑定关系的调用。不作为其它调用
     Result<?> getOpenApplyBound();
 
+    // warn 返回的是开放应用绑定的version_id 作为api_id
+ 	// 该接口作为定制应用绑定开放应用和api绑定关系的调用。不作为其它调用
 	Result<?> getDiyApplyBound();
 
 

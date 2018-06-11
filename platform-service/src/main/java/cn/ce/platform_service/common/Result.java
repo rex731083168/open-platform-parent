@@ -132,4 +132,13 @@ public class Result <T> {
 		return result;
 	}
 	
+	public static <T> Result<T> successResult(String message, T data){
+		Result<T> result = new Result<T>();
+		result.setMessage(message);
+		result.setData(data);
+		result.setStatus(Status.SUCCESS);
+		result.setErrorCode(ErrorCodeNo.SYS000);
+		return result;
+	}
+	
 }

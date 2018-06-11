@@ -172,4 +172,22 @@
 		check_state=#{checkState},app_id=#{appId}
 		where apply_id=#{applyId}
 	</update>
+	
+	<resultMap type="cn.ce.platform_service.open.entity.BiDiyApply" id="biDiyApply">
+		<id column="apply_id" property="id"/>
+		<result column="app_id" property="appId"/>
+		<result column="apply_name" property="applyName"/>
+		<result column="client_id" property="clientId"/>
+		<result column="apply_desc" property="applyDesc"/>
+		<result column="user_id" property="userId"/>
+		<result column="check_state" property="checkState"/>
+	</resultMap>
+	<select id="findBiDiyByClientIds" parameterType="java.util.List" resultMap="biDiyApply">
+		select apply_id,app_id,apply_name,client_id,apply_desc,
+			user_id,check_state from diy_apply where client_id in
+				<foreach collection="diyClientIds" item="item" index="index"
+					open="(" separator="," close=")">
+					#{item}				
+				</foreach>
+	</select>
 </mapper>

@@ -53,6 +53,8 @@
 			<mvc:exclude-mapping path="/v2/api-docs" />
 			<!-- swagger ui page -->
 			<mvc:exclude-mapping path="/swagger/index.html" />
+			<!-- 对公司外部提供的其它运营api -->
+			<mvc:exclude-mapping path="/open/**"/>
 			<!-- 文档中心接口 -->
 			<mvc:exclude-mapping path="/diyapplyProduct/findPagedApps" />
 			<mvc:exclude-mapping path="/guideConsole/guideList" />
@@ -66,11 +68,11 @@
 			<mvc:exclude-mapping path="/data/migra/**" />
             <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
-        <mvc:interceptor>
+<!--         <mvc:interceptor>
         	<mvc:mapping path="/guideConsole/guide"/>
         	<bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
         </mvc:interceptor>
-        <mvc:interceptor>
+ -->        <mvc:interceptor>
         	<mvc:mapping path="/**"/>
         	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
         </mvc:interceptor>

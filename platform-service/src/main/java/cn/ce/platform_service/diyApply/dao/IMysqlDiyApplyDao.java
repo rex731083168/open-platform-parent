@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
+import cn.ce.platform_service.open.entity.BiDiyApply;
 import cn.ce.platform_service.diyApply.entity.DiyBoundApi;
 
 /**
@@ -46,5 +47,7 @@ public interface IMysqlDiyApplyDao {
 	int deleteAll();
 
 	int auditSuccess(@Param("applyId")String applyId, @Param("appId")String appId, @Param("checkState")Integer checkState, @Param("checkMem")String checkMem);
+
+	List<BiDiyApply> findBiDiyByClientIds(List<String> diyClientIds);
 	
 }
