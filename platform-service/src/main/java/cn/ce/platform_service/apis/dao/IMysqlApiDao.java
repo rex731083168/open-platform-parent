@@ -84,7 +84,5 @@ public interface IMysqlApiDao {
 			String apiTypeOpen);
 
 
-
-
-
+    NewApiEntity findByListenPathAndVersion(@Param("listenPath") String listenPath, @Param("version") String version);
 }

@@ -546,4 +546,9 @@
 				#{item}
 			</foreach>
 	</select>
+
+	<select id="findByListenPathAndVersion" resultMap="apiMap">
+		select * from api_detail where listen_path=#{listenPath} and version = #{version}
+	</select>
+
 </mapper>
