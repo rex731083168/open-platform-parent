@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.ce.annotation.dubbodescription.InterfaceDescription;
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
+import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
 
 /**
  * 返回自定义标签接口描述的公共方法
@@ -20,17 +21,23 @@ public class CustomAnnotationUtils {
 
 	private static Log logger = LogFactory.getLog(CustomAnnotationUtils.class);
 
-	public static Map<String, InterfaceDescriptionEnty> initJsonServiceMap(Class clazz) throws ClassNotFoundException {
-		Map<String, InterfaceDescriptionEnty> ServiceMap = new HashMap<>();
+	public static Map<String, InterfaceDescriptionFullEnty> initJsonServiceMap(Class clazz) throws ClassNotFoundException {
+		Map<String, InterfaceDescriptionFullEnty> ServiceMap = new HashMap<>();
 		Method[] method = clazz.getDeclaredMethods();
 		for (int i = 0; i < method.length; i++) {
 			method[i].getDeclaredAnnotation(InterfaceDescription.class);
 			InterfaceDescription service = (InterfaceDescription) method[i].getAnnotation(InterfaceDescription.class);
-			InterfaceDescriptionEnty ide = new InterfaceDescriptionEnty();
+			InterfaceDescriptionFullEnty ide = new InterfaceDescriptionFullEnty();
 			if (service != null) {
 				ide.setName(service.name());
 				ide.setDes(service.des());
 				ide.setVersion(service.version());
+				ide.setClassname(method[i].getDeclaringClass().getName());
+				ide.setMethod(method[i].getName());
+				ide.setClassname(method[i].getDeclaringClass().getName());
+				ide.setMethod(method[i].getName());
+				int index = method[i].getDeclaringClass().getName().lastIndexOf(".");
+				ide.setPackagename(method[i].getDeclaringClass().getName().substring(0, index));
 				ServiceMap.put(method[i].getDeclaringClass().getName() + "." + method[i].getName(), ide);
 				logger.info(service.name() + ">>>" + service.des() + ">>>" + service.version() + "----->"
 						+ method[i].getDeclaringClass().getName() + "." + method[i].getName());

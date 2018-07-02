@@ -22,9 +22,13 @@ import io.swagger.annotations.ApiOperation;
 @Api("dubbo接口信息")
 public class ZookeeperController {
 
-	@Value("#{redis['zookeeper.connection']}")
+//	@Value("#{application['zookeeper.connection']}")
+	@Value("${zookeeper.connection}")
+//	private String zkconnectioninfo = PropertiesUtil.getInstance().getValue("zookeeper.connection");
 	private String zkconnectioninfo;
-	@Value("#{redis['dubbo.node']}")
+//	@Value("#{application['dubbo.node']}")
+	@Value("${dubbo.node}")
+//	private String datakey = PropertiesUtil.getInstance().getValue("zdubbo.node");
 	private String datakey;
 
 	@RequestMapping(value = "/getDubboList", method = RequestMethod.GET)

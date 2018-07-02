@@ -85,7 +85,7 @@ public interface IConsoleDiyApplyService {
 
 	Result<?> updateApply(DiyApplyEntity apply);
 
-	Result<?> migraDiyApply();
+//	Result<?> migraDiyApply();
 
 	Result<?> productMenuList1(String tenantId);
 

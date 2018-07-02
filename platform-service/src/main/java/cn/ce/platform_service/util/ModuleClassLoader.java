@@ -13,10 +13,15 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.log4j.Logger;
+
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
+import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
+import cn.ce.platform_service.dubbapply.service.impl.DubboApplySerciceImpl;
 
 public class ModuleClassLoader extends URLClassLoader {
-
+	/** 日志对象 */
+	private static Logger _LOGGER = Logger.getLogger(ModuleClassLoader.class);
 	private static ModuleClassLoader instance;
 	private static URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 	private static final Method ADD_URL = initAddMethod();
@@ -54,24 +59,26 @@ public class ModuleClassLoader extends URLClassLoader {
 		}
 	}
     /**
-     * 根椐jar路径解析注解信息
+     * 根椐jar路径解析注解信息 
+     * @return key :jarName
      * @param jarFilePath
      * @throws URISyntaxException
      * @throws IOException
      * @throws ClassNotFoundException
      */
-	public  Map<String, InterfaceDescriptionEnty>  parseJars(String[] jarFilePath) throws URISyntaxException, IOException, ClassNotFoundException {
+	public  Map<String, Map<String, InterfaceDescriptionFullEnty>>  parseJars(String[] jarFilePath) throws URISyntaxException, IOException, ClassNotFoundException {
 		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
-		Map<String, InterfaceDescriptionEnty> map = new HashMap<String, InterfaceDescriptionEnty>();
+		//key :jarName
+		Map<String, Map<String, InterfaceDescriptionFullEnty>> resultMap = new HashMap<String, Map<String, InterfaceDescriptionFullEnty>>();
 		for (String path : jarFilePath) {
 			File f = new File(path);
 			URL url = new URL("file:"+f.getPath());
 			moduleClassLoader.setDefaultAssertionStatus(false);
 			moduleClassLoader.loadJar(url.toURI().toURL());
 		}
-		System.out.println("加载成功");  
-		
+		       
 		for (String path : jarFilePath) {
+			Map<String, InterfaceDescriptionFullEnty> map = new HashMap<String, InterfaceDescriptionFullEnty>();
 			JarFile localJarFile = new JarFile(path);
 			Enumeration<JarEntry> entries = localJarFile.entries();
 			while (entries.hasMoreElements()) {
@@ -80,11 +87,12 @@ public class ModuleClassLoader extends URLClassLoader {
 					continue;
 				String clazz = jarEntry.getName().substring(0, jarEntry.getName().length() - 6).replace("/", ".");
 				Class<?> spawnClass = Class.forName(clazz);
-				Map<String, InterfaceDescriptionEnty> maptmp = CustomAnnotationUtils.initJsonServiceMap(spawnClass);
+				Map<String, InterfaceDescriptionFullEnty> maptmp = CustomAnnotationUtils.initJsonServiceMap(spawnClass);
 				map.putAll(maptmp);
 			}
+			resultMap.put(new File(path).getName(), map);
 		}
-		return map;
+		return resultMap;
 	}
 
 
@@ -102,7 +110,8 @@ public class ModuleClassLoader extends URLClassLoader {
 		
 		
 		ModuleClassLoader moduleClassLoader = ModuleClassLoader.getInstance();
-		String[] path = new String[]{"D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar","D:/lib/service-info-api-2.0.0-SNAPSHOT.jar"};
+		//String[] path = new String[]{"D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar","D:/lib/service-info-api-2.0.0-SNAPSHOT.jar"};
+		String[] path = new String[]{"D:/lib/service-info-api-2.0.0-SNAPSHOT.jar","D:/lib/appservice-info-api-2.0.0-SNAPSHOT.jar"};
 		moduleClassLoader.parseJars(path);
 	}
 

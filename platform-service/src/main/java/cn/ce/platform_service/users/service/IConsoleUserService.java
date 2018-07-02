@@ -35,5 +35,5 @@ public interface IConsoleUserService {
 
 	Result<?> checkIdCard(String idCard);
 
-	Result<String> migraUser();
+//	Result<String> migraUser();
 }

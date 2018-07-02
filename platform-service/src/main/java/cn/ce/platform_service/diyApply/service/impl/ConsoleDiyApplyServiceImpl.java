@@ -38,7 +38,6 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayRouteUtils;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.diyApply.dao.IDiyApplyDao;
 import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.Menu;
@@ -74,8 +73,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 //	private INewApiDao newApiDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
-	@Resource
-	private IDiyApplyDao diyApplyDao;
+//	@Resource
+//	private IDiyApplyDao diyApplyDao;
 	@Resource
 	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
@@ -301,43 +300,35 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	@Override
 	public Result<?> updateApply(DiyApplyEntity apply) {
 		Result<String> result = new Result<String>();
-		try {
-			_LOGGER.info("updateApply");
-			if (StringUtils.isBlank(apply.getId())) {
-				result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
-				return result;
-			}
-			//DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
-			DiyApplyEntity apply1 = mysqlDiyApplyDao.findById(apply.getId());
-			if (null == apply1) {
-				result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
-				return result;
-			}
-			if (!apply1.getProductAuthCode().equals(apply.getProductAuthCode())) {
-				result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
+		_LOGGER.info("updateApply");
+		if (StringUtils.isBlank(apply.getId())) {
+			result.setErrorMessage("当前id不能为空", ErrorCodeNo.SYS005);
+			return result;
+		}
+		//DiyApplyEntity apply1 = diyApplyDao.findById(apply.getId());
+		DiyApplyEntity apply1 = mysqlDiyApplyDao.findById(apply.getId());
+		if (null == apply1) {
+			result.setErrorMessage("查询结果不存在", ErrorCodeNo.SYS015);
+			return result;
+		}
+		if (!apply1.getProductAuthCode().equals(apply.getProductAuthCode())) {
+			result.setErrorMessage("productAuthCode前后不一致", ErrorCodeNo.SYS016);
+			return result;
+		}
+		
+		if(!apply1.getApplyName().equals(apply.getApplyName())){
+			//校验applyName
+			int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUserId(),apply.getApplyName());
+			if(applyNum > 0){
+				result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
 				return result;
 			}
 			
-			if(!apply1.getApplyName().equals(apply.getApplyName())){
-				//校验applyName
-				int applyNum = mysqlDiyApplyDao.checkApplyName(apply.getUserId(),apply.getApplyName());
-				if(applyNum > 0){
-					result.setErrorMessage("应用名称不可重复!", ErrorCodeNo.SYS010);
-					return result;
-				}
-				
-			}
-			mysqlDiyApplyDao.update(apply);
-			_LOGGER.info("updateApply success");
-			result.setSuccessMessage("修改成功");
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			result.setErrorMessage("修改失败");
-			result.setErrorCode(ErrorCodeNo.SYS001);
-			_LOGGER.error("updateApply faile", e);
-			return result;
 		}
+		mysqlDiyApplyDao.update(apply);
+		_LOGGER.info("updateApply success");
+		result.setSuccessMessage("修改成功");
+		return result;
 	}
 
 	@Override
@@ -482,7 +473,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			_LOGGER.error("send productMenuList error e:" + e.toString());
 			result.setErrorMessage("获取产品菜单列表错误!");
 		}
-		// TODO Auto-generated method stub
 		return result;
 	}
 
@@ -559,29 +549,29 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 	}
 
-	@Override
-	public Result<?> migraDiyApply() {
-		int i = 0;
-		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
-		mysqlDiyApplyDao.deleteAll();
-		for (DiyApplyEntity diyApplyEntity : diyList) {
-			Map<String,List<String>> map = diyApplyEntity.getLimitList();
-			for (String openId : map.keySet()) {
-				String boundId = RandomUtil.random32UUID();
-				mysqlDiyApplyDao.saveBoundOpenApply(boundId,diyApplyEntity.getId(),openId);
-				List<String> apiIds = map.get(openId);
-				for (String apiId : apiIds) {
-					mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID()
-							, diyApplyEntity.getId(), openId, apiId,boundId);
-				}
-			}
-			i+=mysqlDiyApplyDao.save(diyApplyEntity);
-			
-		}
-		Result<String> result = new Result<String>();
-		result.setSuccessMessage("一共"+diyList.size()+"条数据，成功插入mysql数据库"+i+"条");
-		return result;
-	}
+//	@Override
+//	public Result<?> migraDiyApply() {
+//		int i = 0;
+//		List<DiyApplyEntity> diyList = diyApplyDao.findAll();
+//		mysqlDiyApplyDao.deleteAll();
+//		for (DiyApplyEntity diyApplyEntity : diyList) {
+//			Map<String,List<String>> map = diyApplyEntity.getLimitList();
+//			for (String openId : map.keySet()) {
+//				String boundId = RandomUtil.random32UUID();
+//				mysqlDiyApplyDao.saveBoundOpenApply(boundId,diyApplyEntity.getId(),openId);
+//				List<String> apiIds = map.get(openId);
+//				for (String apiId : apiIds) {
+//					mysqlDiyApplyDao.saveBoundApi(RandomUtil.random32UUID()
+//							, diyApplyEntity.getId(), openId, apiId,boundId);
+//				}
+//			}
+//			i+=mysqlDiyApplyDao.save(diyApplyEntity);
+//			
+//		}
+//		Result<String> result = new Result<String>();
+//		result.setSuccessMessage("一共"+diyList.size()+"条数据，成功插入mysql数据库"+i+"条");
+//		return result;
+//	}
 
 	@Override
 	public Result<?> productMenuList1(String tenantId) {

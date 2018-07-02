@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 import cn.ce.platform_service.common.Constants;
 import cn.ce.platform_service.common.IOUtils;
 import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.gateway.dao.IGatewayColonyManageDao;
+import cn.ce.platform_service.gateway.dao.IMysqlGwColonyDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import io.netty.handler.codec.http.HttpMethod;
 
@@ -36,19 +36,24 @@ public class GatewayRouteUtils {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(GatewayRouteUtils.class);
 
+//	@Resource
+//	private IGatewayColonyManageDao gatewayColonyManageDao;
 	@Resource
-	private IGatewayColonyManageDao gatewayColonyManageDao;
+	private IMysqlGwColonyDao mysqlGwColonyDao;
+	
 	
 	private static GatewayRouteUtils utils;
 
 	@PostConstruct
 	public void init(){
 		utils = this;
-		utils.gatewayColonyManageDao = this.gatewayColonyManageDao;
+//		utils.gatewayColonyManageDao = this.gatewayColonyManageDao;
+		utils.mysqlGwColonyDao = this.mysqlGwColonyDao;
 	}
 
 	public static String getRouteBySaasId(String saasId,String resourceType,String method){
-		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+//		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		GatewayColonyEntity colonySingle = utils.mysqlGwColonyDao.getAll().get(0);
 		Result<String> result = new Result<>();
 		if(null == colonySingle){
 			LOGGER.error("网关集群信息为空!");
@@ -72,7 +77,8 @@ public class GatewayRouteUtils {
 	
 	public static String saveAppkey(String appkey,String tenantId,String method){
 		
-		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+//		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		GatewayColonyEntity colonySingle = utils.mysqlGwColonyDao.getAll().get(0);
 		
 		Result<String> result = new Result<>();
 		
@@ -98,7 +104,8 @@ public class GatewayRouteUtils {
 	}
 	
 	public static String saveRoute(String saasId,String targetUrl,String resourceType,String method){
-		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+//		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		GatewayColonyEntity colonySingle = utils.mysqlGwColonyDao.getAll().get(0);
 		Result<String> result = new Result<>();
 		String gwJsonApi = "";
 		if(null == colonySingle){
@@ -122,7 +129,8 @@ public class GatewayRouteUtils {
 	}
 	
 	public static String deleteRoute(String saasId,String resourceType,String method){
-		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+//		GatewayColonyEntity colonySingle = utils.gatewayColonyManageDao.getColonySingle();
+		GatewayColonyEntity colonySingle = utils.mysqlGwColonyDao.getAll().get(0);
 		Result<String> result = new Result<>();
 		String gwJsonApi = "";
 		if(null == colonySingle){

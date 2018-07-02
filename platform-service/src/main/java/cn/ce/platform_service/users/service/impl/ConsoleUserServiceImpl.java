@@ -23,7 +23,6 @@ import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.mail.MailInfo;
 import cn.ce.platform_service.common.mail.MailUtil;
 import cn.ce.platform_service.users.dao.IMysqlUserDao;
-import cn.ce.platform_service.users.dao.INewUserDao;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.users.service.IConsoleUserService;
 import cn.ce.platform_service.util.RandomUtil;
@@ -40,8 +39,8 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ConsoleUserServiceImpl.class);
 	
-    @Resource
-    private INewUserDao newUserDao;
+//    @Resource
+//    private INewUserDao newUserDao;
     @Resource
     private IMysqlUserDao mysqlUserDao;
     
@@ -339,19 +338,19 @@ public class ConsoleUserServiceImpl implements IConsoleUserService{
 	
 
 
-	@Override
-	public Result<String> migraUser() {
-		
-		//删除mysql数据库中的user
-		int i = 0;
-		List<User> userList = newUserDao.findAll();
-		mysqlUserDao.deleteAll();
-		for (User user : userList) {
-			i+=mysqlUserDao.save(user);
-		}
-		Result<String> result = new Result<String>();
-		result.setSuccessMessage("一共"+userList.size()+"条数据，成功插入mysql数据库"+i+"条");
-		return result;
-	}
+//	@Override
+//	public Result<String> migraUser() {
+//		
+//		//删除mysql数据库中的user
+//		int i = 0;
+//		List<User> userList = newUserDao.findAll();
+//		mysqlUserDao.deleteAll();
+//		for (User user : userList) {
+//			i+=mysqlUserDao.save(user);
+//		}
+//		Result<String> result = new Result<String>();
+//		result.setSuccessMessage("一共"+userList.size()+"条数据，成功插入mysql数据库"+i+"条");
+//		return result;
+//	}
 	
 }

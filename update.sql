@@ -34,6 +34,22 @@ ALTER TABLE `openplatform`.`diy_apply`
 CHANGE COLUMN `apply_id` `apply_id` VARCHAR(45) NOT NULL COMMENT '定制应用主键，唯一标识' ,
 CHANGE COLUMN `app_id` `app_id` VARCHAR(100) NULL DEFAULT NULL COMMENT '推送到产品中心后，回推的字段，很重要' ;
 
+
+-------------------Phase 2.4.4.6 2018-03.22-------------------
+CREATE TABLE `openplatform`.`saas` (
+  `uuid` INT NOT NULL AUTO_INCREMENT,
+  `id` VARCHAR(45) NOT NULL COMMENT 'saas表业务主键',
+  `saas_id` VARCHAR(45) NOT NULL,
+  `resource_type` VARCHAR(45) NOT NULL,
+  `target_url` VARCHAR(200) NOT NULL,
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
+COMMENT = 'saas表';
+-------------------Phase 2.4.4.6 2018-03.23-------------------
+ALTER TABLE `openplatform`.`api_result_example` 
+CHANGE COLUMN `rex_value` `rex_value` LONGTEXT NULL DEFAULT NULL ;
+
 -------------------Phase 2.4.5.6 2018-03.28-------------------
 ALTER TABLE `openplatform`.`api_arg` 
 ADD COLUMN `is_import` TINYINT(1) NULL DEFAULT 0 AFTER `arg_desc`;
@@ -81,7 +97,7 @@ CREATE TABLE `dubbo_apply` (
   `appName` varchar(255) DEFAULT NULL COMMENT '应用名称-接口获取',
   `appId` varchar(255) DEFAULT NULL COMMENT '应用id-接口获取',
   `appCode` varchar(255) DEFAULT NULL COMMENT '应用code-接口获取',
-  `unitType` varchar(255) DEFAULT NULL COMMENT '接口所属单位   100000	平台\r\n                     100001	官网\r\n                     100002	营销宝\r\n                     100003	扫码购\r\n                     100004	酒店\r\n                     100007	高程\r\n                     100008	电商\r\n                     166666	中台',
+  `unitType` varchar(255) DEFAULT NULL COMMENT '接口所属单位   100000 平台\r\n                     100001 官网\r\n                     100002 营销宝\r\n                     100003  扫码购\r\n                     100004  酒店\r\n                     100007 高程\r\n                     100008 电商\r\n                     166666 中台',
   `type` varchar(255) DEFAULT NULL COMMENT 'jar class method',
   `packageName` varchar(255) DEFAULT NULL,
   `className` varchar(255) DEFAULT NULL,sss
@@ -99,10 +115,56 @@ CREATE TABLE `dubbo_apply` (
   PRIMARY KEY (`pkid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 -------------------Phase 2.4.5.6 2018-03.29-------------------
+ALTER TABLE `openplatform`.`api_result` 
+CHANGE COLUMN `ret_name` `ret_name` VARCHAR(200) NULL DEFAULT NULL ;
+
 ALTER TABLE `openplatform`.`api_arg` 
 CHANGE COLUMN `arg_name` `arg_name` VARCHAR(200) NULL DEFAULT NULL ;
 
-ALTER TABLE `openplatform`.`api_result` 
-CHANGE COLUMN `ret_name` `ret_name` VARCHAR(200) NULL DEFAULT NULL ;
+ALTER TABLE `openplatform`.`api_query_arg` 
+CHANGE COLUMN `arg_name` `arg_name` VARCHAR(200) NULL DEFAULT NULL ;
+
+-------------------Phase 2.4.5.6 2018-03.30-------------------
+CREATE TABLE `openplatform`.`sand_box` (
+  `uuid` INT NOT NULL AUTO_INCREMENT,
+  `box_id` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(100) NULL,
+  `template_name` VARCHAR(45) NULL,
+  `box_url` VARCHAR(200) NULL,
+  `resource_pool` VARCHAR(200) NULL,
+  `create_state` VARCHAR(45) NULL,
+  `state` TINYINT(1) UNSIGNED NULL,
+  `deleted` VARCHAR(45) NULL,
+  `create_date` DATETIME NULL,
+  `delete_date` DATETIME NULL,
+  `user_id` VARCHAR(45) NULL,
+  `enterprise_name` VARCHAR(45) NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `box_id_UNIQUE` (`box_id` ASC),
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
+  
+-------------------Phase 2.4.5.6 2018-03.31-------------------  
+ALTER TABLE `openplatform`.`saas` 
+ADD COLUMN `sandbox_id` VARCHAR(45) NULL AFTER `target_url`,
+ADD COLUMN `create_date` DATETIME NULL AFTER `sandbox_id`,
+ADD COLUMN `update_date` DATETIME NULL AFTER `create_date`;
+ADD COLUMN `route_id` VARCHAR(45) NULL AFTER `uuid`;
+
+
+------------------- 未执行SQL by lida 解决showApi接口查询慢得问题 增加API相关表的索引 @makangwei 进行验证后更新生产数据库 --------
+ALTER  TABLE  `api_header`  ADD  INDEX header_index_api_id (`api_id`);
+
+ALTER  TABLE  `api_arg`  ADD  INDEX arg_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_query_arg  ADD  INDEX query_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_result ADD  INDEX result_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_result_example ADD  INDEX example_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_code ADD  INDEX code_index_api_arg (`api_id`);
+
+ALTER  TABLE  api_detail ADD  INDEX header_index_api_arg (`api_id`);
 

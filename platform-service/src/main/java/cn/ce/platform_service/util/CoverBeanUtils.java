@@ -43,4 +43,18 @@ public class CoverBeanUtils {
 			}
 
 	}
+	
+	public static boolean copyProperty(Object bean, String name, Object value){
+		try {
+			BeanUtils.copyProperty(bean, name, value);
+			return true;
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			_LOGGER.error("复制参数发生异常：");
+			_LOGGER.error("bean："+bean);
+			_LOGGER.error("param key:"+name);
+			_LOGGER.error("param value:"+value);
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

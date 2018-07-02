@@ -14,7 +14,6 @@ import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.guide.dao.IGuideDao;
 import cn.ce.platform_service.guide.dao.IMysqlGuideDao;
 import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.entity.QueryGuideEntity;
@@ -37,8 +36,8 @@ import cn.ce.platform_service.util.SplitUtil;
 public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(ConsoleGuideServiceImpl.class);
-	@Resource
-	private IGuideDao guideDaoImpl;
+//	@Resource
+//	private IGuideDao guideDaoImpl;
 	@Resource
 	private IMysqlGuideDao mysqlGuideDao;
 
@@ -190,18 +189,18 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 
 	}
 
-	@Override
-	public Result<String> migraGuide() {
-		
-		List<GuideEntity> list = guideDaoImpl.findAll();
-		mysqlGuideDao.deleteAll();
-		int i = 0;
-		for (GuideEntity guideEntity : list) {
-			i+= mysqlGuideDao.save(guideEntity);
-		}
-		Result<String> result = new Result<String>(); 
-		result.setSuccessMessage("一共迁移了"+list.size()+"条数据，成功了"+i+"条");
-		return result;
-	}
+//	@Override
+//	public Result<String> migraGuide() {
+//		
+//		List<GuideEntity> list = guideDaoImpl.findAll();
+//		mysqlGuideDao.deleteAll();
+//		int i = 0;
+//		for (GuideEntity guideEntity : list) {
+//			i+= mysqlGuideDao.save(guideEntity);
+//		}
+//		Result<String> result = new Result<String>(); 
+//		result.setSuccessMessage("一共迁移了"+list.size()+"条数据，成功了"+i+"条");
+//		return result;
+//	}
 
 }
