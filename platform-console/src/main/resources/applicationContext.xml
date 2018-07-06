@@ -4,7 +4,7 @@
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:util="http://www.springframework.org/schema/util"
-	
+
 	xsi:schemaLocation="
     	http://www.springframework.org/schema/mvc   
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd  
@@ -25,9 +25,9 @@
         http://www.springframework.org/schema/util/spring-util.xsd
         ">
 
-<!-- 	<util:properties id="applicationConfig"
-		location="classpath:conf/application.properties" /> -->
-	<context:property-placeholder location="classpath:conf/application.properties"/>
+	<!-- <util:properties id="applicationConfig" location="classpath:conf/application.properties" 
+		/> -->
+	<context:property-placeholder location="classpath:conf/application.properties" />
 
 	<!-- Activates various annotations to be detected in bean classes -->
 	<context:annotation-config />
@@ -54,7 +54,7 @@
 			<!-- swagger ui page -->
 			<mvc:exclude-mapping path="/swagger/index.html" />
 			<!-- 对公司外部提供的其它运营api -->
-			<mvc:exclude-mapping path="/open/**"/>
+			<mvc:exclude-mapping path="/open/**" />
 			<!-- 文档中心接口 -->
 			<mvc:exclude-mapping path="/diyapplyProduct/findPagedApps" />
 			<mvc:exclude-mapping path="/guideConsole/guideList" />
@@ -66,22 +66,27 @@
 			<mvc:exclude-mapping path="/dubboInfo/**" />
 			<mvc:exclude-mapping path="/dubboDateController/manualUpdataData" />
 			<mvc:exclude-mapping path="/data/migra/**" />
-            <bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
-        </mvc:interceptor>
-<!--         <mvc:interceptor>
-        	<mvc:mapping path="/guideConsole/guide"/>
-        	<bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
-        </mvc:interceptor>
- -->        <mvc:interceptor>
-        	<mvc:mapping path="/**"/>
-        	<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
-        </mvc:interceptor>
-        <mvc:interceptor>
-       	<mvc:mapping path="/**"/>
-        	<bean class="cn.ce.platform_service.interceptors.ExceptionInterceptor" />
-        </mvc:interceptor>
-    </mvc:interceptors>
-    
+			<bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
+		</mvc:interceptor>
+		<!-- <mvc:interceptor> <mvc:mapping path="/guideConsole/guide"/> <bean 
+			class="cn.ce.platform_service.interceptors.LoginInterceptor" /> </mvc:interceptor> -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="cn.ce.platform_service.interceptors.DbInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="cn.ce.platform_service.interceptors.LogInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="cn.ce.platform_service.interceptors.ExceptionInterceptor" />
+		</mvc:interceptor>
+
+
+
+	</mvc:interceptors>
+
 
 	<!-- <context:property-placeholder location="classpath:conf/init_data.properties"/> -->
 
@@ -90,12 +95,12 @@
 
 	<!-- redis -->
 	<!-- <import resource="spring-session.xml" /> -->
-	
+
 	<!-- mybatis -->
-	<import resource="mybatis-config.xml"/>
-	
+	<import resource="mybatis-config.xml" />
+
 	<!-- Swagger Configue -->
-	<bean class="cn.ce.platform_service.interceptors.SwaggerConfig"/>
+	<bean class="cn.ce.platform_service.interceptors.SwaggerConfig" />
 
 
 	<!-- es -->
@@ -137,19 +142,11 @@
 		</property>
 	</bean>
 
-<!-- 	<bean id="configProperties"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="locations">
-			<list>
-				<value>classpath*:application.properties</value>
-			</list>
-		</property>
-	</bean>
-	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
-		<property name="properties" ref="configProperties" />
-	</bean> -->
-	
+	<!-- <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean"> 
+		<property name="locations"> <list> <value>classpath*:application.properties</value> 
+		</list> </property> </bean> <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"> 
+		<property name="properties" ref="configProperties" /> </bean> -->
+
 	<!-- 开启spring定时任务注解 -->
 	<task:annotation-driven scheduler="qbScheduler"
 		mode="proxy" />

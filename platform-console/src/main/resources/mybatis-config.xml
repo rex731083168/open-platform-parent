@@ -15,24 +15,52 @@
 	http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	">
 
-	<context:property-placeholder location="classpath:conf/application.properties"/>
+	<context:property-placeholder location="classpath:conf/application.properties" />
 
-	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<bean id="ds" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+	<bean id="dbprod" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+		<property name="driver" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://${db.mysql.connect.sandbox}?characterEncoding=utf8&amp;allowMultiQueries=true" />
+		<property name="username" value="${db.mysql.username}" />
+		<property name="password" value="${db.mysql.password}" />
+		<property name="poolMaximumActiveConnections" value="20" />
+		<property name="poolMaximumIdleConnections" value="10" />
+		<property name="poolMaximumCheckoutTime" value="15" />
+		<property name="poolTimeToWait" value="10" />
+		<property name="poolPingQuery" value="select 1 from dual" />
+		<property name="poolPingEnabled" value="true" />
+		<property name="poolPingConnectionsNotUsedFor" value="0" />
+	</bean>
+
+	<bean id="dbsandbox" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
 		<property name="driver" value="com.mysql.jdbc.Driver" />
 		<property name="url"
 			value="jdbc:mysql://${db.mysql.connect}?characterEncoding=utf8&amp;allowMultiQueries=true" />
 		<property name="username" value="${db.mysql.username}" />
 		<property name="password" value="${db.mysql.password}" />
-	    <property name="poolMaximumActiveConnections" value="20" />
-	    <property name="poolMaximumIdleConnections" value="10" />
-	    <property name="poolMaximumCheckoutTime" value="15" />
-	    <property name="poolTimeToWait" value="10" />
-	    <property name="poolPingQuery" value="select 1 from dual" />
-	    <property name="poolPingEnabled" value="true" />
-	    <property name="poolPingConnectionsNotUsedFor" value="0" />
+		<property name="poolMaximumActiveConnections" value="20" />
+		<property name="poolMaximumIdleConnections" value="10" />
+		<property name="poolMaximumCheckoutTime" value="15" />
+		<property name="poolTimeToWait" value="10" />
+		<property name="poolPingQuery" value="select 1 from dual" />
+		<property name="poolPingEnabled" value="true" />
+		<property name="poolPingConnectionsNotUsedFor" value="0" />
 	</bean>
+
+	<bean id="ds"
+		class="cn.ce.platform_service.dbSwitch.ThreadLocalRountingDataSource">
+		<property name="defaultTargetDataSource" ref="dbprod" />
+		<property name="targetDataSources">
+			<map key-type="cn.ce.platform_service.common.DataSourceEnum">
+				<entry key="PROD" value-ref="dbprod" />
+				<entry key="SANDBOX" value-ref="dbsandbox" />
+				<!-- 这里还可以加多个dataSource -->
+			</map>
+		</property>
+	</bean>
+
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="ds" />
