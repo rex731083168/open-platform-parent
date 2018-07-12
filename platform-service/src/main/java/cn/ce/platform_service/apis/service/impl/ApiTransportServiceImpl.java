@@ -196,25 +196,40 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 				flag = false;
 			}else{
 				/**校验listenPath*/
-//			List<ApiEntity> checkApiList = newApiDao.findByField(DBFieldsConstants.APIS_LISTEN_PATH,
-//					entity.getListenPath());
-				List<NewApiEntity> checkApiList = mysqlApiDao.findByListenPath(entity.getListenPath());
-				if(null != checkApiList && checkApiList.size() > 0){
-					if(entity.getVersionId().equals(checkApiList.get(0).getVersionId())){
-						for (NewApiEntity apiEntity : checkApiList) {
-							String version = apiEntity.getVersion();
-							if(version.equals(entity.getVersion())){
-								flag=false;
-								importLog = "版本号重复";
-								break;
-							}
-						}
-					}else{
-						flag = false;
-						importLog="listenPath重复.";
+//				List<NewApiEntity> checkApiList = mysqlApiDao.findByListenPath(entity.getListenPath());
+//				if(null != checkApiList && checkApiList.size() > 0){
+//					if(entity.getVersionId().equals(checkApiList.get(0).getVersionId())){
+//						for (NewApiEntity apiEntity : checkApiList) {
+//							String version = apiEntity.getVersion();
+//							if(version.equals(entity.getVersion())){
+//								flag=false;
+//								importLog = "版本号重复";
+//								break;
+
+				
+//							}
+//						}
+//					}else{
+//						flag = false;
+//						importLog="listenPath重复.";
+//					}
+//				}
+				NewApiEntity newEntity = mysqlApiDao.findByListenPathAndVersion(entity.getListenPath(),entity.getVersion());
+				if(null != newEntity){
+					flag = false;
+					importLog="listenPath以及版本号重复.";
+				}else{
+					//构建versionId
+					List<NewApiEntity> checkApiList = mysqlApiDao.findByListenPath(entity.getListenPath());
+					if(null != checkApiList && checkApiList.size() > 0){ //有旧的versionId用旧的
+						entity.setVersionId(checkApiList.get(0).getVersionId());
+					}else if(StringUtils.isBlank(entity.getVersionId())){ //如果没有旧的。并且传过来的文件中也没有versionId。创建新的
+						entity.setVersionId(RandomUtil.random32UUID());
 					}
 				}
-				
+
+				//获取versionId
+				List<NewApiEntity> checkApiList = mysqlApiDao.findByListenPath(entity.getListenPath());
 				if (flag) {// 当前监听路径可以使用
 					entity.setId(null);
 					entity.setCheckState(1);
