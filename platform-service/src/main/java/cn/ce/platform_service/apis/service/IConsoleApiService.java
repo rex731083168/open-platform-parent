@@ -14,11 +14,11 @@ import cn.ce.platform_service.users.entity.User;
 */
 public interface IConsoleApiService {
 
-	Result<?> publishApi(User user, NewApiEntity apiEntity);
+	Result<?> publishApi(String sourceConfig, User user, NewApiEntity apiEntity);
 
 	Result<?> submitApi(List<String> apiId);
 
-	Result<?> modifyApi(NewApiEntity apiEntity);
+	Result<?> modifyApi(String sourceConfig, NewApiEntity apiEntity);
 
 	Result<?> showApi(String apiId);
 
@@ -42,7 +42,7 @@ public interface IConsoleApiService {
 
 	Result<?> checkListenPath(String listenPath);
 
-	Result<?> getResourceType();
+	Result<?> getResourceType(String sourceConfig);
 
 //	Result<?> migraApi();
 

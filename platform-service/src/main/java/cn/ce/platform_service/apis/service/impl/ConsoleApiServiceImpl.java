@@ -101,10 +101,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 上午10:58:11 
 	 */
 	@Override
-	public Result<?> publishApi(User user, NewApiEntity apiEntity) {
+	public Result<?> publishApi(String sourceConfig, User user, NewApiEntity apiEntity) {
 		
 		try{ //资源类型校验
-			if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
+			if(!getResourceType(sourceConfig).getData().toString().contains(apiEntity.getResourceType())){
 				return new Result<String>("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
 			}
 		}catch(Exception e ){
@@ -222,10 +222,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 上午11:18:39 
 	 */
 	@Override
-	public Result<?> modifyApi(NewApiEntity apiEntity) {
+	public Result<?> modifyApi(String sourceConfig,NewApiEntity apiEntity) {
 		
 		// TODO 修改之前做校验
-		if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
+		if(!getResourceType(sourceConfig).getData().toString().contains(apiEntity.getResourceType())){
 			return new Result<String>("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
 		}
 		if(StringUtils.isBlank(apiEntity.getListenPath())){
@@ -505,9 +505,9 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	}
 	
 	@Override
-	public Result<?> getResourceType() {
+	public Result<?> getResourceType(String sourceConfig) {
 		// TODO Auto-generated method stub
-		String getProvidersUrl = PropertiesUtil.getInstance().getValue("getProviders");
+		String getProvidersUrl = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"getProviders");
 		
 		Result<String> result = new Result<>();
 		

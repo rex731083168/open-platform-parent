@@ -31,6 +31,8 @@ public class QueryDiyApplyEntity {
 	
 	private Integer startNum = 0; // 分页起始下标
 
+	private String projectId;
+
 	
 	public String getAppId() {
 		return appId;
@@ -128,5 +130,12 @@ public class QueryDiyApplyEntity {
 			this.startNum = (this.currentPage-1)*this.pageSize;
 		}
 	}
-	
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
 }

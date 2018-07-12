@@ -83,7 +83,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	private IPlublicDiyApplyService plublicDiyApplyService;
 
 	@Override
-	public Result<?> saveApply(DiyApplyEntity entity) {
+	public Result<?> saveApply(String sourceConfig, DiyApplyEntity entity) {
 		Result<String> result = new Result<>();
 
 		int applyNum = mysqlDiyApplyDao.checkApplyName(entity.getUser().getId(),entity.getApplyName());
@@ -109,7 +109,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 			TenantApps apps = new TenantApps();
 			try {
 				_LOGGER.info("get message from interface satar");
-				apps = plublicDiyApplyService.findTenantAppsByTenantKey(key).getData(); // 接入产品中心获取产品信息和开放应用信息
+				apps = plublicDiyApplyService.findTenantAppsByTenantKey(sourceConfig,key).getData(); // 接入产品中心获取产品信息和开放应用信息
 				if (apps == null || !apps.getStatus().equals("200")) {
 					return Result.errorResult("产品码错误", ErrorCodeNo.SYS024, null, Status.FAILED);
 				}
@@ -383,10 +383,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<InterfaMessageInfoString> generatorTenantKey(String id) {
+	public Result<InterfaMessageInfoString> generatorTenantKey(String sourceConfig, String id) {
 		// TODO Auto-generated method stub
 		Result<InterfaMessageInfoString> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("generatorTenantKey");
+		String url = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"generatorTenantKey");
 		String id$ = Pattern.quote("${TenantKeyid}");
 		String replacedurl = url.replaceAll(id$, id);
 
@@ -413,10 +413,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 	}
 
-	public Result<String> productMenuList(String bossInstanceCode) {
+	public Result<String> productMenuList(String sourceConfig, String bossInstanceCode) {
 		Result<String> result = new Result<>();
 
-		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList");
+		String productMenuListURL = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"productMenuList");
 
 		if (StringUtils.isBlank(productMenuListURL)) {
 			_LOGGER.error("productMenuListURL is null !");
@@ -477,9 +477,9 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<String> registerMenu(String appid, String bossInstanceCode, String menuJson) {
+	public Result<String> registerMenu(String sourceConfig, String appid, String bossInstanceCode, String menuJson) {
 
-		String registerMenuURL = PropertiesUtil.getInstance().getValue("registerMenu");
+		String registerMenuURL = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"registerMenu");
 
 		Result<String> result = new Result<>();
 		if (StringUtils.isBlank(registerMenuURL)) {
@@ -535,7 +535,6 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<String> batchUpdateCheckState(String ids, Integer checkState, String checkMem) {
 		Result<String> result = new Result<>();
 		try {
-//			String message = diyApplyDao.bathUpdateByid(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 			int changeNum = mysqlDiyApplyDao.bathUpdateCheckState(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 			_LOGGER.info("bachUpdate diyApply message " + changeNum + " count");
 			result.setSuccessMessage("审核成功:" + changeNum + "条");
@@ -574,10 +573,10 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 //	}
 
 	@Override
-	public Result<?> productMenuList1(String tenantId) {
+	public Result<?> productMenuList1(String sourceConfig, String tenantId) {
 		Result<List<RetMenu>> result = new Result<>();
 
-		String productMenuListURL = PropertiesUtil.getInstance().getValue("productMenuList1");
+		String productMenuListURL = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"productMenuList1");
 
 		if (StringUtils.isBlank(productMenuListURL)) {
 			_LOGGER.error("productMenuListURL is null !");
@@ -641,8 +640,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<?> registerMenu1(String tenantId, List<Menu> menus) {
-		String registerMenuURL = PropertiesUtil.getInstance().getValue("registerMenu1");
+	public Result<?> registerMenu1(String sourceConfig, String tenantId, List<Menu> menus) {
+		String registerMenuURL = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"registerMenu1");
 
 		Result<String> result = new Result<>();
 		if (StringUtils.isBlank(registerMenuURL)) {
@@ -708,8 +707,8 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	}
 
 	@Override
-	public Result<?> deleteMenu1(ArrayList<String> ids) {
-		String deleteMenuURL = PropertiesUtil.getInstance().getValue("deleteMenu1");
+	public Result<?> deleteMenu1(String sourceConfig, ArrayList<String> ids) {
+		String deleteMenuURL = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"deleteMenu1");
 
 		Result<String> result = new Result<>();
 		if (StringUtils.isBlank(deleteMenuURL)) {

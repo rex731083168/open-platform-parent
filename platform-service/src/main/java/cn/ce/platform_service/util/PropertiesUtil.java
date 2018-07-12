@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -92,4 +93,14 @@ public class PropertiesUtil {
 		return ret;
 	}
 
+
+	public String getSourceConfigValue(String sourceConfig, String key) {
+		String ret = null;
+		if (StringUtils.isNotBlank(sourceConfig)){
+			ret = (String) m_config.get(sourceConfig+"."+key);
+		}else{
+			ret = (String) m_config.get(key);
+		}
+		return ret;
+	}
 }

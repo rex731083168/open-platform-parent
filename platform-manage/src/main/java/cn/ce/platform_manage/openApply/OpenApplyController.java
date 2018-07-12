@@ -1,6 +1,7 @@
 package cn.ce.platform_manage.openApply;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +48,9 @@ public class OpenApplyController extends BaseController {
 //	@RequestMapping(value = "/batchCommit", method = RequestMethod.POST)
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	@ApiOperation("批量更新_TODO")
-	public Result<?> batchUpdate(@RequestParam(value = "ids", required = true) String ids,
+	public Result<?> batchUpdate(
+			HttpServletRequest request,
+			@RequestParam(value = "ids", required = true) String ids,
 			@RequestParam(value = "checkState",required = true) Integer checkState, 
 			@RequestParam(value = "checkMem", required = false) String checkMem) {
 		
@@ -55,8 +58,9 @@ public class OpenApplyController extends BaseController {
 				&& checkState != AuditConstants.OPEN_APPLY_CHECKED_SUCCESS){
 			return new Result<String>("当前审核状态不正确", ErrorCodeNo.SYS023,null,Status.FAILED);
 		}
-		
-		return openApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+		String sourceConfig = request.getParameter("sourceConfig");
+
+		return openApplyService.batchUpdate(sourceConfig,SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 	}
 
 	/***

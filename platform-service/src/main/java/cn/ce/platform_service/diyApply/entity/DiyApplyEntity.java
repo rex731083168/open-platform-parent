@@ -113,6 +113,9 @@ public class DiyApplyEntity {
 	@Field("resourceType")
 	private String resourceType;
 
+	//项目id
+	private String projectId;
+
 //	@Transient
 //	private List<ApiAuditEntity> auditList;// api集合
 
@@ -351,18 +354,45 @@ public class DiyApplyEntity {
 		this.resourceType = resourceType;
 	}
 
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
+
 	@Override
 	public String toString() {
-		return "DiyApplyEntity [id=" + id + ", appId=" + appId + ", applyName=" + applyName + ", productAuthCode="
-				+ productAuthCode + ", productInstanceId=" + productInstanceId + ", bossProductInstance="
-				+ bossProductInstance + ", productName=" + productName + ", domainUrl=" + domainUrl + ", frequencyType="
-				+ frequencyType + ", rate=" + rate + ", per=" + per + ", quotaMax=" + quotaMax + ", quotaRenewRate="
-				+ quotaRenewRate + ", policyId=" + policyId + ", clientId=" + clientId + ", secret=" + secret
-				+ ", logoImage=" + Arrays.toString(logoImage) + ", applyDesc=" + applyDesc + ", createDate="
-				+ createDate + ", userId=" + userId + ", userName=" + userName + ", enterpriseName=" + enterpriseName
-				+ ", limitList=" + limitList + ", checkState=" + checkState + ", checkMem=" + checkMem
-				+ ", resourceType=" + resourceType + ", user=" + user + "]";
+		return "DiyApplyEntity{" +
+				"id='" + id + '\'' +
+				", appId='" + appId + '\'' +
+				", applyName='" + applyName + '\'' +
+				", productAuthCode='" + productAuthCode + '\'' +
+				", productInstanceId='" + productInstanceId + '\'' +
+				", bossProductInstance='" + bossProductInstance + '\'' +
+				", productName='" + productName + '\'' +
+				", domainUrl='" + domainUrl + '\'' +
+				", frequencyType=" + frequencyType +
+				", rate=" + rate +
+				", per=" + per +
+				", quotaMax=" + quotaMax +
+				", quotaRenewRate=" + quotaRenewRate +
+				", policyId='" + policyId + '\'' +
+				", clientId='" + clientId + '\'' +
+				", secret='" + secret + '\'' +
+				", logoImage=" + Arrays.toString(logoImage) +
+				", applyDesc='" + applyDesc + '\'' +
+				", createDate=" + createDate +
+				", userId='" + userId + '\'' +
+				", userName='" + userName + '\'' +
+				", enterpriseName='" + enterpriseName + '\'' +
+				", limitList=" + limitList +
+				", checkState=" + checkState +
+				", checkMem='" + checkMem + '\'' +
+				", resourceType='" + resourceType + '\'' +
+				", projectId='" + projectId + '\'' +
+				", user=" + user +
+				'}';
 	}
-	
-
 }
