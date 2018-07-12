@@ -1,12 +1,22 @@
 package cn.ce.platform_console.diyApply.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import cn.ce.platform_service.common.*;
+import cn.ce.platform_service.common.gateway.ApiCallUtils;
+import cn.ce.platform_service.util.PropertiesUtil;
+import cn.ce.platform_service.util.http.HttpMethod;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.ce.platform_service.common.AuditConstants;
-import cn.ce.platform_service.common.Constants;
-import cn.ce.platform_service.common.ErrorCodeNo;
-import cn.ce.platform_service.common.Result;
-import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.diyApply.entity.DiyApplyEntity;
 import cn.ce.platform_service.diyApply.entity.QueryDiyApplyEntity;
 import cn.ce.platform_service.diyApply.service.IConsoleDiyApplyService;
@@ -50,8 +55,6 @@ public class DiyApplyController {
 
 	@RequestMapping(value = "/findApplyList", method = RequestMethod.POST)
 	@ApiOperation(value = "根据条件查询应用列表_TODO", httpMethod = "POST", response = Result.class, notes = "根据条件查询应用列表")
-//	public Result<?> findApplyList(HttpSession session,
-//			@RequestBody QueryDiyApplyEntity queryApply) {
 	public Result<?> findApplyList(HttpSession session, @RequestBody DiyApplyEntity apply,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage) {
@@ -67,6 +70,10 @@ public class DiyApplyController {
 		//只获取当前登录的用户数据,如果获取数据失败就会报异常
 		User user = (User)session.getAttribute(Constants.SES_LOGIN_USER);
 		queryApply.setUserId(user.getId());
+
+		if(StringUtils.isBlank(apply.getProjectId())){
+			// 项目id允许为空？
+		}
 		
 		return consoleDiyApplyService.findApplyList(queryApply);
 	}
@@ -96,7 +103,8 @@ public class DiyApplyController {
 	 */
 	@RequestMapping(value = "/saveApply", method = RequestMethod.POST)
 	@ApiOperation("新增或修改应用")
-	public Result<?> saveApply(HttpSession session, @RequestBody DiyApplyEntity apply) {
+	public Result<?> saveApply(HttpServletRequest request,
+							   HttpSession session, @RequestBody DiyApplyEntity apply) {
 
 		//如果id不为空就update
 		if(StringUtils.isNotBlank(apply.getId())){
@@ -111,7 +119,8 @@ public class DiyApplyController {
 
 		apply.setUser(user);
 
-		return consoleDiyApplyService.saveApply(apply);
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleDiyApplyService.saveApply(sourceConfig,apply);
 
 	}
 
@@ -122,7 +131,6 @@ public class DiyApplyController {
 		return consoleDiyApplyService.updateApply(apply);
 	}
 
-//	@RequestMapping(value = "/batchCommit", method = RequestMethod.POST)
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	@ApiOperation("批量发布应用 更改checkState为1_TODO")
 	public Result<String> batchUpdate(@RequestParam String ids) {
@@ -130,4 +138,24 @@ public class DiyApplyController {
 		return consoleDiyApplyService.batchUpdateCheckState(ids, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null);
 	}
 
+	@RequestMapping(value="/getProjectList",method = RequestMethod.GET)
+	public Object getProjectList(HttpServletRequest request){
+        String sourceConfig = request.getParameter("sourceConfig");
+
+        if(StringUtils.equalsIgnoreCase(DataSourceEnum.SANDBOX.toString(),sourceConfig)){
+            String ticket = request.getHeader("ticket");
+            _LOGGER.info("getProjectList ticket:{}",ticket);
+            String url = PropertiesUtil.getInstance().getSourceConfigValue(null,"getProjectsList");
+            Map<String,String> headers = new HashMap<String, String>();
+            headers.put("ticket",request.getHeader("ticket"));
+            String resultStr =  ApiCallUtils.getOrDelMethod(url,headers,io.netty.handler.codec.http.HttpMethod.GET);
+            return com.alibaba.fastjson.JSONObject.parseObject(resultStr);
+        }else{
+            com.alibaba.fastjson.JSONObject job = new com.alibaba.fastjson.JSONObject();
+            job.put("Message","OK");
+            job.put("Data",new ArrayList<Object>());
+            job.put("Code",200);
+            return job;
+        }
+	}
 }

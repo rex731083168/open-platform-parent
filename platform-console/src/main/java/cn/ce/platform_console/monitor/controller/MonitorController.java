@@ -62,7 +62,7 @@ public class MonitorController {
 	@RequestMapping(value="/productCentre", method=RequestMethod.GET)
 	public String productCentre(){
 		
-		Result<Apps> result = plublicDiyApplyService.findPagedApps(null, null, currentPage, pageSize);
+		Result<Apps> result = plublicDiyApplyService.findPagedApps(null, null, null, currentPage, pageSize);
 		
 		System.out.println(result.toString());
 		if(result != null && result.getData() != null){

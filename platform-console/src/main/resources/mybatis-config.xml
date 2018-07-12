@@ -22,7 +22,7 @@
 	<bean id="dbprod" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
 		<property name="driver" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://${db.mysql.connect.sandbox}?characterEncoding=utf8&amp;allowMultiQueries=true" />
+			value="jdbc:mysql://${db.mysql.connect}?characterEncoding=utf8&amp;allowMultiQueries=true" />
 		<property name="username" value="${db.mysql.username}" />
 		<property name="password" value="${db.mysql.password}" />
 		<property name="poolMaximumActiveConnections" value="20" />
@@ -37,7 +37,7 @@
 	<bean id="dbsandbox" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
 		<property name="driver" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://${db.mysql.connect}?characterEncoding=utf8&amp;allowMultiQueries=true" />
+			value="jdbc:mysql://${db.mysql.connect.sandbox}?characterEncoding=utf8&amp;allowMultiQueries=true" />
 		<property name="username" value="${db.mysql.username}" />
 		<property name="password" value="${db.mysql.password}" />
 		<property name="poolMaximumActiveConnections" value="20" />
