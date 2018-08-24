@@ -38,8 +38,8 @@
 		<property name="driver" value="com.mysql.jdbc.Driver" />
 		<property name="url"
 			value="jdbc:mysql://${db.mysql.connect.sandbox}?characterEncoding=utf8&amp;allowMultiQueries=true" />
-		<property name="username" value="${db.mysql.username}" />
-		<property name="password" value="${db.mysql.password}" />
+		<property name="username" value="${db.mysql.username.sandbox}" />
+		<property name="password" value="${db.mysql.password.sandbox}" />
 		<property name="poolMaximumActiveConnections" value="20" />
 		<property name="poolMaximumIdleConnections" value="10" />
 		<property name="poolMaximumCheckoutTime" value="15" />

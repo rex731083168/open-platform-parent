@@ -59,7 +59,7 @@
 				AND project_id = #{projectId}
 			</if>
 			<if test="projectId == null or projectId == ''">
-				AND isnull(project_id)
+				AND (isnull(project_id) or project_id = '')
 			</if>
 			<if test="productName!= null and productName != ''">
 				AND product_name = #{productName}

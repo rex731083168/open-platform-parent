@@ -480,7 +480,7 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 	public Result<String> registerMenu(String sourceConfig, String appid, String bossInstanceCode, String menuJson) {
 
 		String registerMenuURL = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"registerMenu");
-
+		_LOGGER.info("注册菜单地址："+registerMenuURL);
 		Result<String> result = new Result<>();
 		if (StringUtils.isBlank(registerMenuURL)) {
 			_LOGGER.error("registerMenuURL is null !");
