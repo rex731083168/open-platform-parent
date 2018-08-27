@@ -59,9 +59,9 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	private IConsoleApiService consoleApiService;
 	
 	@Override
-	public Result<Apps> findPagedApps(String owner, String name, int pageNum, int pageSize) {
+	public Result<Apps> findPagedApps(String sourceConfig, String owner, String name, int pageNum, int pageSize) {
 		Result<Apps> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("findPagedApps");
+		String url = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"findPagedApps");
 		String o$ = Pattern.quote("${o}");// ${o} 所属企业 CE 为中企动力 不填为所有
 		String n$ = Pattern.quote("${n}");// ${n} 名称 模糊搜索  不填为所有
 		String p$ = Pattern.quote("${p}");// ${p} 当前第几页
@@ -106,12 +106,12 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	}
 
 	@Override
-	public Result<TenantApps> findTenantAppsByTenantKey(String key) {
+	public Result<TenantApps> findTenantAppsByTenantKey(String sourceConfig,String key) {
 
 		// TODO 需要把key查询出来的定制应用和多个开放应用的绑定关系存入数据库
 
 		Result<TenantApps> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKey");
+		String url = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"findTenantAppsByTenantKey");
 		String key$ = Pattern.quote("${key}");
 		String replacedurl = url.replaceAll(key$, key);
 		try {
@@ -137,10 +137,11 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	}
 
 	@Override
-	public Result<TenantAppPage> findTenantAppsByTenantKeyPage(String key, String appName, int pageNum, int pageSize) {
+	public Result<TenantAppPage> findTenantAppsByTenantKeyPage(String sourceConfig, String key, String appName, int pageNum, int pageSize) {
 
 		Result<TenantAppPage> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("findTenantAppsByTenantKeypage");
+		String url =  PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"findTenantAppsByTenantKeypage");
+
 		String key$ = Pattern.quote("${key}");
 		String n$ = Pattern.quote("${n}");
 		String p$ = Pattern.quote("${p}");

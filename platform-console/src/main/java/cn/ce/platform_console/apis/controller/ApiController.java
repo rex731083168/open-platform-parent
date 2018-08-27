@@ -3,6 +3,7 @@ package cn.ce.platform_console.apis.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -54,7 +55,9 @@ public class ApiController {
 	@RequestMapping(value = "/publishApi", method = RequestMethod.POST)
 	@ApiOperation("发布api_TODO")
 //	public Result<?> publishApi(HttpSession session, @RequestBody NewApiEntity apiEntity) {
-	public Result<?> publishApi(HttpSession session, @RequestBody ApiEntity entity) {
+	public Result<?> publishApi(
+			HttpServletRequest request,
+			HttpSession session, @RequestBody ApiEntity entity) {
 	
 		/**
 		 * TODO 下一期改动api定义和api参数
@@ -85,8 +88,8 @@ public class ApiController {
 		// TODO 如果请求body不为空校验请求body为可选值
 		// TODO 如果返回body不为空校验返回body为固定值
 		// TODO 校验protocol 协议必须是http或者https
-		
-		return consoleApiService.publishApi(user, newApiEntity);
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleApiService.publishApi(sourceConfig, user, newApiEntity);
 	}
 
 	@RequestMapping(value="/checkListenPath", method= RequestMethod.GET)
@@ -131,15 +134,17 @@ public class ApiController {
 	@RequestMapping(value="/modifyApi",method=RequestMethod.POST)
 	@ApiOperation("api更新_TODO")
 //	public Result<?> modifyApi(@RequestBody NewApiEntity apiEntity){
-	public Result<?> modifyApi(@RequestBody ApiEntity entity){
+	public Result<?> modifyApi(
+			HttpServletRequest request,
+			@RequestBody ApiEntity entity){
 		
 		NewApiEntity apiEntity = ApiTransform.transToTotalNewApi(entity);
 		
 //		if(apiEntity.getCheckState() == AuditConstants.API_CHECK_STATE_SUCCESS){	
 //			return Result.errorResult("当前状态不支持修改", ErrorCodeNo.SYS012, null, Status.FAILED);
 //		}
-		
-		return consoleApiService.modifyApi(apiEntity);
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleApiService.modifyApi(sourceConfig,apiEntity);
 	}
 	
 	/**
@@ -250,8 +255,9 @@ public class ApiController {
 	}
 	
 	@RequestMapping(value="/getResourceType", method=RequestMethod.GET)
-	public Result<?> getResourceType(){
-		
-		return consoleApiService.getResourceType();
+	public Result<?> getResourceType(HttpServletRequest request){
+
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleApiService.getResourceType(sourceConfig);
 	}
 }

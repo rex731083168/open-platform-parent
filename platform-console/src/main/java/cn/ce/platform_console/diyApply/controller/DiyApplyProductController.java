@@ -48,22 +48,26 @@ public class DiyApplyProductController {
 	@RequestMapping(value = "findTenantAppsByTenantKey", method = RequestMethod.GET)
 	@ApiOperation("###获取产品实例 查询带分页")
 	public Result<TenantAppPage> findTenantAppsByTenantKey(
+			HttpServletRequest request,
 			@RequestParam(required = true) String key,
 			@RequestParam(required = false) String appName, 
 			@RequestParam(required = true, defaultValue = "10") int pageSize,
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
-		
-		return plublicDiyApplyService.findTenantAppsByTenantKeyPage(key, appName, currentPage, pageSize);
+		String sourceConfig = request.getParameter("sourceConfig");
+		return plublicDiyApplyService.findTenantAppsByTenantKeyPage(sourceConfig,key, appName, currentPage, pageSize);
 	}
 	
 	@RequestMapping(value = "/findPagedApps", method = RequestMethod.GET)
 	@ApiOperation("获取所有应用列表")
 	public Result<Apps> findPagedApps(
+			HttpServletRequest request,
 			@RequestParam(required = false) String owner,			
 			@RequestParam(required = false) String name,
 			@RequestParam(required = true, defaultValue = "10") int pageSize,			
 			@RequestParam(required = true, defaultValue = "1") int currentPage) {
-		return plublicDiyApplyService.findPagedApps(owner, name, currentPage, pageSize);
+
+		String sourceConfig = request.getParameter("sourceConfig");
+		return plublicDiyApplyService.findPagedApps(sourceConfig,owner, name, currentPage, pageSize);
 	}
 
 	@RequestMapping(value = "generatorTenantKey", method = RequestMethod.POST)
@@ -71,7 +75,9 @@ public class DiyApplyProductController {
 	public Result<InterfaMessageInfoString> generatorTenantKey(
 			@RequestBody GeneratorTenantKeyInParameterEntity queryVO,
 			HttpServletRequest request, HttpServletResponse response) {
-		return consoleDiyApplyService.generatorTenantKey(queryVO.getId());
+
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleDiyApplyService.generatorTenantKey(sourceConfig,queryVO.getId());
 	}
 
 	/**
@@ -82,8 +88,11 @@ public class DiyApplyProductController {
 	@Deprecated
 	@RequestMapping(value = "/productMenuList", method = RequestMethod.GET)
 	public Result<String> productMenuList(
+			HttpServletRequest request,
 			@RequestParam(required = true) String bossInstanceCode) {
-		return consoleDiyApplyService.productMenuList(bossInstanceCode);
+
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleDiyApplyService.productMenuList(sourceConfig,bossInstanceCode);
 	}
 
 	
@@ -95,10 +104,12 @@ public class DiyApplyProductController {
 	@Deprecated
 	@RequestMapping(value = "/registerMenu", method = RequestMethod.POST)
 	public Result<String> registerMenu(
+			HttpServletRequest request,
 			@RequestParam(value = "appid", required = true) String appid,
 			@RequestParam(value = "bossInstanceCode", required = true) String bossInstanceCode,
 			String menuJson) {
-		return consoleDiyApplyService.registerMenu(appid, bossInstanceCode, menuJson);
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleDiyApplyService.registerMenu(sourceConfig,appid, bossInstanceCode, menuJson);
 	}
 	
 	/**
@@ -109,9 +120,11 @@ public class DiyApplyProductController {
 	 * @date:   2018年3月7日 下午5:45:04  
 	 */
 	@RequestMapping(value="/productMenuList1", method=RequestMethod.GET)
-	public Result<?> productMenuList1(@RequestParam(required = true) String tenantId){
-		
-		return consoleDiyApplyService.productMenuList1(tenantId);
+	public Result<?> productMenuList1(
+			HttpServletRequest request,
+			@RequestParam(required = true) String tenantId){
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleDiyApplyService.productMenuList1(sourceConfig,tenantId);
 	}
 	
 	/**
@@ -122,9 +135,12 @@ public class DiyApplyProductController {
 	 * @throws
 	 */
 	@RequestMapping(value = "/registerMenu1", method = RequestMethod.POST)
-	public Result<?> registerMenu1(@RequestParam String tenantId,
+	public Result<?> registerMenu1(
+			HttpServletRequest request,
+			@RequestParam String tenantId,
 			@RequestBody ArrayList<Menu> menus) {
-		return consoleDiyApplyService.registerMenu1(tenantId,menus);
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleDiyApplyService.registerMenu1(sourceConfig,tenantId,menus);
 	}
 	
 	/**
@@ -135,9 +151,11 @@ public class DiyApplyProductController {
 	 * @date:   2018年3月8日 上午10:33:10  
 	 */
 	@RequestMapping(value="/deleteMenu1", method=RequestMethod.POST)
-	public Result<?> deleteMenu1(@RequestParam ArrayList<String> ids){
-		
-		return consoleDiyApplyService.deleteMenu1(ids);
+	public Result<?> deleteMenu1(HttpServletRequest request,
+			 @RequestParam ArrayList<String> ids){
+
+		String sourceConfig = request.getParameter("sourceConfig");
+		return consoleDiyApplyService.deleteMenu1(sourceConfig,ids);
 	}
 	
 	// 查看当前应用可以访问哪些开放应用下的哪些api

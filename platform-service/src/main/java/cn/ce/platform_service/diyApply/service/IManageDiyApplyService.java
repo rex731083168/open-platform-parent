@@ -20,10 +20,10 @@ public interface IManageDiyApplyService {
 
 	Result<Page<DiyApplyEntity>> findPagedApps(QueryDiyApplyEntity queryApply);
 	
-	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem);
+	public Result<String> batchUpdate(String sourceConfig,List<String> ids, Integer checkState, String checkMem);
 
 
-	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String apps);
+	public Result<InterfaMessageInfoString> registerBathApp(String sourceConfig, String tenantId, String apps);
 
 	/***
 	 * 

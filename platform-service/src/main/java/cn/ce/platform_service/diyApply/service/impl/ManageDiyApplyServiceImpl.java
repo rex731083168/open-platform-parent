@@ -58,7 +58,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem) {
+	public Result<String> batchUpdate(String sourceConfig,List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		/* 审核失败返回 */
@@ -94,7 +94,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 			queryVO[0] = rapentity;
 			_LOGGER.info("registerBathApp to interface satar");
 			InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
-					.registerBathApp(diy.getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
+					.registerBathApp(sourceConfig, diy.getProductInstanceId(), JSONArray.fromObject(queryVO).toString())
 					.getData();
 			_LOGGER.info("registerBathApp to interface states" + interfaMessageInfoJasonObjectResult.getStatus() + "");
 			
@@ -129,7 +129,7 @@ public class ManageDiyApplyServiceImpl implements IManageDiyApplyService {
 	}
 
 	@Override
-	public Result<InterfaMessageInfoString> registerBathApp(String tenantId, String app) {
+	public Result<InterfaMessageInfoString> registerBathApp(String sourceConfig, String tenantId, String app) {
 		
 		Result<InterfaMessageInfoString> result = new Result<>();
 		String url = PropertiesUtil.getInstance().getValue("registerBathApp");

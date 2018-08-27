@@ -26,7 +26,7 @@ public interface IConsoleDiyApplyService {
 	 * @param entity
 	 */
 	@InterfaceDescription(name="",des="保存实体",version="1.0")
-	Result<?> saveApply(DiyApplyEntity entity);
+	Result<?> saveApply(String sourceConfig, DiyApplyEntity entity);
 
 	/***
 	 * 根据id删除实体
@@ -38,9 +38,6 @@ public interface IConsoleDiyApplyService {
 	/***
 	 * 根据条件分页查询应用列表
 	 * 
-	 * @param query
-	 * @param currentPage
-	 * @param pageSize
 	 * @return
 	 */
 	//Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page);
@@ -62,7 +59,7 @@ public interface IConsoleDiyApplyService {
 	public Result<?> findById(String applyId);
 
 	
-	public Result<InterfaMessageInfoString> generatorTenantKey(String id);
+	public Result<InterfaMessageInfoString> generatorTenantKey(String sourceConfig, String id);
 
 
 	public Result<String> batchUpdateCheckState(String ids,Integer checkState, String checkMem);
@@ -73,7 +70,7 @@ public interface IConsoleDiyApplyService {
 	 * bossInstanceCode @param : @return @return:
 	 * Result<InterfaMessageInfoJasonObject> @throws
 	 */
-	public Result<String> productMenuList(String bossInstanceCode);
+	public Result<String> productMenuList(String sourceConfig, String bossInstanceCode);
 
 	/**
 	 * 
@@ -81,17 +78,17 @@ public interface IConsoleDiyApplyService {
 	 * bossInstanceCode @param : @param menuJson @param : @return @return:
 	 * Result<InterfaMessageInfoJasonObject> @throws
 	 */
-	public Result<String> registerMenu(String appid, String bossInstanceCode, String menuJson);
+	public Result<String> registerMenu(String sourceConfig, String appid, String bossInstanceCode, String menuJson);
 
 	Result<?> updateApply(DiyApplyEntity apply);
 
 //	Result<?> migraDiyApply();
 
-	Result<?> productMenuList1(String tenantId);
+	Result<?> productMenuList1(String sourceConfig, String tenantId);
 
-	Result<?> registerMenu1(String tenantId, List<Menu> menus);
+	Result<?> registerMenu1(String sourceConfig, String tenantId, List<Menu> menus);
 
-	Result<?> deleteMenu1(ArrayList<String> ids);
+	Result<?> deleteMenu1(String sourceConfig, ArrayList<String> ids);
 
 
 	

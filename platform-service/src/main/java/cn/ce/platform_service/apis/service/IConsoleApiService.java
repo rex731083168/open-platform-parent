@@ -14,11 +14,11 @@ import cn.ce.platform_service.users.entity.User;
 */
 public interface IConsoleApiService {
 
-	Result<?> publishApi(User user, NewApiEntity apiEntity);
+	Result<?> publishApi(String sourceConfig, User user, NewApiEntity apiEntity);
 
 	Result<?> submitApi(List<String> apiId);
 
-	Result<?> modifyApi(NewApiEntity apiEntity);
+	Result<?> modifyApi(String sourceConfig, NewApiEntity apiEntity);
 
 	Result<?> showApi(String apiId);
 
@@ -42,14 +42,18 @@ public interface IConsoleApiService {
 
 	Result<?> checkListenPath(String listenPath);
 
-	Result<?> getResourceType();
+	Result<?> getResourceType(String sourceConfig);
 
 //	Result<?> migraApi();
 
 	Result<?> showDocApiList(QueryApiEntity apiEntity);
-
+	
+	// warn 返回的是开放应用绑定的version_id 作为api_id
+	// 该接口作为网关获取开放应用和api绑定关系的调用。不作为其它调用
     Result<?> getOpenApplyBound();
 
+    // warn 返回的是开放应用绑定的version_id 作为api_id
+ 	// 该接口作为定制应用绑定开放应用和api绑定关系的调用。不作为其它调用
 	Result<?> getDiyApplyBound();
 
 

@@ -334,21 +334,21 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		return Result.errorResult("当前key可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
 	}
 	
-	public boolean getRepatDiyApplyName(String applyName) {
-
-		boolean falult = false;
-
-		Result<Apps> result = this.plublicDiyApplyService.findPagedApps("", applyName, 1, 50);
-
-		List<AppList> list = result.getData().getData().getList();
-		//AppList applist = new AppList();
-		for (AppList app1 : list) {
-			if(app1.getAppName().equals(applyName)){
-				falult = true;
-				return falult;
-			}
-		}
-		return falult;
+//	public boolean getRepatDiyApplyName(String applyName) {
+//
+//		boolean falult = false;
+//
+//		Result<Apps> result = this.plublicDiyApplyService.findPagedApps(sourceConfig, "", applyName, 1, 50);
+//
+//		List<AppList> list = result.getData().getData().getList();
+//		//AppList applist = new AppList();
+//		for (AppList app1 : list) {
+//			if(app1.getAppName().equals(applyName)){
+//				falult = true;
+//				return falult;
+//			}
+//		}
+//		return falult;
 		
 		//执行后是死循环
 //		while (list.iterator().hasNext()) {
@@ -360,7 +360,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 //		}
 //		return falult;
 
-	}
+//	}
 
 //	@Override
 //	public Result<?> migraOpenApply() {

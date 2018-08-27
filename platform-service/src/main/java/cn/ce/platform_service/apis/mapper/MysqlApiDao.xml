@@ -3,6 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <mapper namespace="cn.ce.platform_service.apis.dao.IMysqlApiDao">
 
 	<resultMap type="cn.ce.platform_service.apis.entity.ApiHeaderEntity"
@@ -428,6 +429,17 @@
 		select * from api_detail where version_id = #{versionId}
 	</select>
 	
+	<select id="findByVersionIds" parameterType="java.util.List" resultMap="apiMap">
+		select * from api_detail where version_id in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+		order by field(version_id,
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</select>
 	<select id="findByVersionIdExp" resultMap="apiMap">
 		select * from api_detail where version_id = #{versionId} AND api_id != #{id}
 	</select>
@@ -551,4 +563,35 @@
 		select * from api_detail where listen_path=#{listenPath} and version = #{version}
 	</select>
 
+
+<!-- 	<typeAlias type="cn.ce.platform_service.apis.entity.OpenApplyBound" alias="openApplyBoundAlias"/>
+	<typeAlias type="cn.ce.platform_service.apis.entity.DiyApplyBound" alias="diyApplyBoundAlias"/> -->
+
+	<resultMap type="cn.ce.platform_service.apis.entity.OpenApplyBound" id="openApplyBound" >
+		<id column="open_apply_id" property="openApplyId"/>
+		<collection column="api_id" property="apiIds" ofType="cn.ce.platform_service.apis.entity.OpenApplyBound$ApiBound">
+			<id column="api_id" property="apiId"/>
+		</collection>
+	</resultMap>
+
+	<resultMap type="cn.ce.platform_service.apis.entity.DiyApplyBound" id="diyApplyBound">
+		<id column="diy_apply_id" property="diyApplyId"/>
+		<collection column="open_apply_id" property="openApplyIds"
+			ofType="cn.ce.platform_service.apis.entity.OpenApplyBound" resultMap="openApplyBound"/>
+	</resultMap>
+
+	<select id="getOpenApplyBound" resultMap="openApplyBound">
+		select distinct open_apply_id,version_id as api_id from api_detail
+	</select>
+
+	<select id="getDiyApplyBound" resultMap="diyApplyBound">
+		select distinct
+			d.client_id as diy_apply_id,
+		    b.open_apply_id,
+		    a.version_id as api_id
+		from
+			diy_apply d
+		    left join diy_bound_api b on d.apply_id = b.diy_apply_id
+		    left join api_detail a on b.api_id = a.api_id
+	</select>
 </mapper>

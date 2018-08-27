@@ -1,6 +1,7 @@
 package cn.ce.platform_manage.diyApply;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,10 +57,12 @@ public class DiyApplyController {
 	@ApiOperation("###批量审核 调用租户接口2， 开发者在开放平台发布应用审核 发布应用")
 	@RequestMapping(value = "/batchUpdate", method = RequestMethod.POST)
 	public Result<?> batchUpdate(
+			HttpServletRequest request,
 			@RequestParam(value = "ids", required = true) String ids,
 			@RequestParam(value = "checkState",required = true) Integer checkState, 
 			@RequestParam(value = "checkMem", required = false) String checkMem) {
-		return manageDiyApplyService.batchUpdate(SplitUtil.splitStringWithComma(ids), checkState, checkMem);
+		String sourceConfig = request.getParameter("sourceConfig");
+		return manageDiyApplyService.batchUpdate(sourceConfig,SplitUtil.splitStringWithComma(ids), checkState, checkMem);
 	}
 
 }

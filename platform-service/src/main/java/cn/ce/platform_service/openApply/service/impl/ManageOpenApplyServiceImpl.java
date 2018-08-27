@@ -277,16 +277,6 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	public Result<Page<OpenApplyEntity>> findOpenApplyList(QueryOpenApplyEntity entity) {
 		
 		Result<Page<OpenApplyEntity>> result = new Result<Page<OpenApplyEntity>>();
-
-//		try {
-//
-//			Page<OpenApplyEntity> ds = openApplyDao.findOpenApplyByEntity(entity, currentPage, pageSize);
-//
-//			result.setSuccessData(ds);
-//		} catch (Exception e) {
-//			_LOGGER.info("error happens when execute findOpenApplyList", e);
-//			result.setErrorMessage("");
-//		}
 		int totalNum = mysqlOpenApplyDao.findListSize(entity);
 		List<OpenApplyEntity> openList = mysqlOpenApplyDao.getPagedList(entity);
 		Page<OpenApplyEntity> page = new Page<OpenApplyEntity>(entity.getCurrentPage(),
@@ -297,7 +287,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 	}
 
 	@Override
-	public Result<String> batchUpdate(List<String> ids, Integer checkState, String checkMem) {
+	public Result<String> batchUpdate(String sourceConfig, List<String> ids, Integer checkState, String checkMem) {
 		// TODO Auto-generated method stub
 		Result<String> result = new Result<String>();
 		/* 审核失败返回 */
@@ -325,7 +315,7 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		/* 调用接口推送信息 */
 		_LOGGER.info("saveOrUpdateApps to interface satar");
 		InterfaMessageInfoString interfaMessageInfoJasonObjectResult = this
-				.saveOrUpdateApps(JSONArray.fromObject(queryVO).toString()).getData();
+				.saveOrUpdateApps(sourceConfig, JSONArray.fromObject(queryVO).toString()).getData();
 		_LOGGER.info("saveOrUpdateApps to interface states " + interfaMessageInfoJasonObjectResult.getStatus() + "");
 		/* 审核成功提交 */
 		if (interfaMessageInfoJasonObjectResult.getStatus() == AuditConstants.INTERFACE_RETURNSATAS_SUCCESS) {
@@ -340,10 +330,10 @@ public class ManageOpenApplyServiceImpl implements IManageOpenApplyService {
 		return result;
 	}
 
-	private Result<InterfaMessageInfoString> saveOrUpdateApps(String apps) {
+	private Result<InterfaMessageInfoString> saveOrUpdateApps(String sourceConfig,String apps) {
 		// TODO Auto-generated method stub
 		Result<InterfaMessageInfoString> result = new Result<>();
-		String url = PropertiesUtil.getInstance().getValue("saveOrUpdateApps");
+		String url = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"saveOrUpdateApps");
 		String apps$ = Pattern.quote("${apps}");
 		String replacedurl = url.replaceAll(apps$, apps);
 		try {

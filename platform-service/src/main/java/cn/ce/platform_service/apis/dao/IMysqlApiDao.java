@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
+import cn.ce.platform_service.apis.entity.DiyApplyBound;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
+import cn.ce.platform_service.apis.entity.OpenApplyBound;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 
 /**
@@ -82,6 +84,18 @@ public interface IMysqlApiDao {
 
 	public List<NewApiEntity> findApiByApplyIdsAndCheckState(@Param("openApplyIds")List<String> openApplyIds, @Param("checkState")int checkState,
 			String apiTypeOpen);
+
+	// warn 返回的是开放应用绑定的version_id 作为api_id
+	// 该接口作为网关获取开放应用和api绑定关系的调用。不作为其它调用
+	public List<OpenApplyBound> getOpenApplyBound();
+
+    // warn 返回的是开放应用绑定的version_id 作为api_id
+ 	// 该接口作为定制应用绑定开放应用和api绑定关系的调用。不作为其它调用
+	public List<DiyApplyBound> getDiyApplyBound();
+
+	public List<NewApiEntity> findByVersionIds(List<String> versionIds);
+	
+	
 
 
     NewApiEntity findByListenPathAndVersion(@Param("listenPath") String listenPath, @Param("version") String version);

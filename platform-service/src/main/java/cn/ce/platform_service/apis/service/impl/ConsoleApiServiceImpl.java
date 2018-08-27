@@ -34,8 +34,10 @@ import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.ApiHeaderEntity;
 import cn.ce.platform_service.apis.entity.ApiResultEntity;
 import cn.ce.platform_service.apis.entity.ApiResultExampleEntity;
+import cn.ce.platform_service.apis.entity.DiyApplyBound;
 import cn.ce.platform_service.apis.entity.ErrorCodeEntity;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
+import cn.ce.platform_service.apis.entity.OpenApplyBound;
 import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.entity.RetEntity;
 import cn.ce.platform_service.apis.entity.RetExamEntity;
@@ -51,6 +53,7 @@ import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
+import cn.ce.platform_service.diyApply.dao.IMysqlDiyApplyDao;
 import cn.ce.platform_service.gateway.entity.GatewayColonyEntity;
 import cn.ce.platform_service.gateway.service.IGatewayApiService;
 import cn.ce.platform_service.users.entity.User;
@@ -66,12 +69,14 @@ import cn.ce.platform_service.util.RandomUtil;
 @Transactional(propagation=Propagation.REQUIRED)
 public class ConsoleApiServiceImpl implements IConsoleApiService{
 
-	private static Logger _LOGGER = LoggerFactory.getLogger(ConsoleApiServiceImpl.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(ConsoleApiServiceImpl.class);
 	
 //	@Resource
 //	private INewApiDao newApiDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
+	@Resource
+	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
 	private IMysqlApiHeaderDao apiHeaderDao;
 	@Resource
@@ -96,14 +101,14 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 上午10:58:11 
 	 */
 	@Override
-	public Result<?> publishApi(User user, NewApiEntity apiEntity) {
+	public Result<?> publishApi(String sourceConfig, User user, NewApiEntity apiEntity) {
 		
 		try{ //资源类型校验
-			if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
+			if(!getResourceType(sourceConfig).getData().toString().contains(apiEntity.getResourceType())){
 				return new Result<String>("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
 			}
 		}catch(Exception e ){
-			_LOGGER.error("network error, cannot get resource type from zhong tai", e);
+			LOGGER.error("network error, cannot get resource type from zhong tai", e);
 		}
 		
 		if(StringUtils.isBlank(apiEntity.getListenPath())){
@@ -112,7 +117,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		apiEntity.setListenPath(checkListenPathFormat(apiEntity.getListenPath()));
 		
-		_LOGGER.info("************************** listenPath = " + apiEntity.getListenPath());
+		LOGGER.info("************************** listenPath = " + apiEntity.getListenPath());
 		
 		//设置默认值，否则会后面审核api会报错
 		if(null == apiEntity.getCheckState() 
@@ -149,7 +154,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			if(StringUtils.isBlank(user.getId())
 					|| StringUtils.isBlank(user.getUserName())
 					|| StringUtils.isBlank(user.getEnterpriseName())){
-				_LOGGER.info("用户信息不完整："+user.toString());
+				LOGGER.info("用户信息不完整："+user.toString());
 				return Result.errorResult("用户信息错误", ErrorCodeNo.SYS028, null, Status.FAILED);
 			}
 			apiEntity.setUserId(user.getId());
@@ -160,13 +165,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			
 			//int num = newApiDao.updApiVersionByApiId(apiEntity.getVersionId(),false);
 			int num = mysqlApiDao.updateVersionByVersionId(apiEntity.getVersionId(),false);
-			_LOGGER.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");
+			LOGGER.info("----->将原来其他版本的api的newVersion字段全部修改为false，一共修改了"+num+"条数据");
 			
 			// TODO 前端传入版本号和newVersion字段吗？
 			apiEntity.setNewVersion(true);
 			//如果前端没有传入版本的版本的apiId则重新生成版本versionId
 			if(StringUtils.isBlank(apiEntity.getVersionId())){
-				_LOGGER.info("当前添加的api是新的api不存在旧的版本，生成新的versionId");
+				LOGGER.info("当前添加的api是新的api不存在旧的版本，生成新的versionId");
 				String versionId = UUID.randomUUID().toString().replace("-", "");
 				apiEntity.setVersionId(versionId);
 			}
@@ -176,7 +181,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			apiEntity.setId(RandomUtil.random32UUID());
 			saveMysqlEntity(apiEntity);
 			
-			_LOGGER.info("------新添加的数据为："+apiEntity.toString());
+			LOGGER.info("------新添加的数据为："+apiEntity.toString());
 //		}
 		return new Result<String>("添加成功",ErrorCodeNo.SYS000,null,Status.SUCCESS);
 	}
@@ -196,7 +201,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			//ApiEntity api = newApiDao.findApiById(apiId);
 			NewApiEntity api = mysqlApiDao.findById(apiId);
 			if(null == api){
-				_LOGGER.info("当前api:"+apiId+"在数据库中不存在");
+				LOGGER.info("当前api:"+apiId+"在数据库中不存在");
 				continue;
 			}
 			api.setCheckState(AuditConstants.API_CHECK_STATE_UNAUDITED);
@@ -217,10 +222,10 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	 * @date:   2017年10月12日 上午11:18:39 
 	 */
 	@Override
-	public Result<?> modifyApi(NewApiEntity apiEntity) {
+	public Result<?> modifyApi(String sourceConfig,NewApiEntity apiEntity) {
 		
 		// TODO 修改之前做校验
-		if(!getResourceType().getData().toString().contains(apiEntity.getResourceType())){
+		if(!getResourceType(sourceConfig).getData().toString().contains(apiEntity.getResourceType())){
 			return new Result<String>("resourceType不正确", ErrorCodeNo.SYS008, null, Status.FAILED);
 		}
 		if(StringUtils.isBlank(apiEntity.getListenPath())){
@@ -258,7 +263,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 					EnvironmentConstants.test.toString().equals(env)){
 				bool = updateSuccessEntity(apiEntity); //修改审核成功的api
 			}else{
-				_LOGGER.info("当前环境："+env+",不支持审核通过的api:"+apiEntity.getId()+"的修改");
+				LOGGER.info("当前环境："+env+",不支持审核通过的api:"+apiEntity.getId()+"的修改");
 				bool = false;
 			}
 		}else{
@@ -354,12 +359,19 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 	@Override
 	public Result<?> getOpenApplyBound() {
-		return null;
+		// warn 返回绑定的apiId是versionId以便和网关统一
+		List<OpenApplyBound> boundList = mysqlApiDao.getOpenApplyBound();
+		LOGGER.info("获取openApplyBound大小:{}",boundList.size());
+		return new Result<List<OpenApplyBound>>("", ErrorCodeNo.SYS000, boundList, Status.SUCCESS);
 	}
 
 	@Override
 	public Result<?> getDiyApplyBound() {
-		return null;
+		// warn 返回绑定的apiId是versionId以便和网关统一
+		// warn 返回绑定的diyApplyId是diyApply的clientId和bi保持统一
+		List<DiyApplyBound> boundList = mysqlApiDao.getDiyApplyBound();
+		LOGGER.info("获取diyApplyBound大小:{}",boundList.size());
+		return new Result<List<DiyApplyBound>>("", ErrorCodeNo.SYS000, boundList, Status.SUCCESS);
 	}
 
 
@@ -430,7 +442,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		//获取versionId集合以及用逗号隔开的长数组
 //		List<ApiEntity> apiEntityList = newApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS);
 		List<NewApiEntity> apiEntityList = mysqlApiDao.findApiByApplyIdsAndCheckState(openApplyIds,AuditConstants.API_CHECK_STATE_SUCCESS, DBFieldsConstants.API_TYPE_OPEN);
-		_LOGGER.info("根据开放应用Id查询的即将绑定的api数量"+apiEntityList.size());
+		LOGGER.info("根据开放应用Id查询的即将绑定的api数量"+apiEntityList.size());
 		StringBuffer versionIdsBuf = new StringBuffer(); // versionId用逗号分隔的长字符串
 		Set<String> versionIdList = new HashSet<String>(); //versionId的集合
 		for (NewApiEntity apiEntity : apiEntityList) { //装参数
@@ -442,8 +454,8 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			}
 		}
 		if(!(versionIdsBuf.length() > 0)){
-			_LOGGER.info("versionidBuf的长度为0,查询不到api");
-			_LOGGER.info("不推送网关，直接分配clientId和secret");
+			LOGGER.info("versionidBuf的长度为0,查询不到api");
+			LOGGER.info("不推送网关，直接分配clientId和secret");
 			// TODO 紧急
 			return true;
 		}
@@ -465,7 +477,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		String policyResult =  gatewayApiService.pushPolicy(policyId, rate, per, quotaMax, quotaRenewRate, apiInfos);
 		
 		if(StringUtils.isBlank(policyResult)){ //推送policy失败
-			_LOGGER.error("____________>error happens when execute push policy to gateway");
+			LOGGER.error("____________>error happens when execute push policy to gateway");
 			return false;
 		}
 		
@@ -473,7 +485,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		String clientResult = gatewayApiService.pushClient(clientId, secret, versionIdsBuf, policyId);
 		
 		if(StringUtils.isBlank(clientResult)){
-			_LOGGER.error("____________>error happens when execute push client to gateway");
+			LOGGER.error("____________>error happens when execute push client to gateway");
 			return false;
 		}
 		
@@ -493,9 +505,9 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	}
 	
 	@Override
-	public Result<?> getResourceType() {
+	public Result<?> getResourceType(String sourceConfig) {
 		// TODO Auto-generated method stub
-		String getProvidersUrl = PropertiesUtil.getInstance().getValue("getProviders");
+		String getProvidersUrl = PropertiesUtil.getInstance().getSourceConfigValue(sourceConfig,"getProviders");
 		
 		Result<String> result = new Result<>();
 		
@@ -503,7 +515,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 
 			StringBuffer sendGetRequest = HttpClientUtil.sendGetRequest(getProvidersUrl, "UTF-8");
 
-			_LOGGER.debug("getProviders return json:" + sendGetRequest);
+			LOGGER.debug("getProviders return json:" + sendGetRequest);
 
 			net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(sendGetRequest.toString());
 
@@ -524,13 +536,13 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 				result.setMessage(jsonObject.get("msg").toString());
 
 			} else {
-				_LOGGER.error("获取资源池类型时,缺失返回值:" + jsonObject);
+				LOGGER.error("获取资源池类型时,缺失返回值:" + jsonObject);
 
 				result.setErrorMessage("获取资源池类型错误!");
 			}
 
 		} catch (Exception e) {
-			_LOGGER.error("send productMenuList error e:" + e.toString());
+			LOGGER.error("send productMenuList error e:" + e.toString());
 			result.setErrorMessage("获取资源池类型错误!");
 		}
 		
@@ -809,43 +821,43 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		
 		//校验不可修改参数
 		if(AuditConstants.API_CHECK_STATE_SUCCESS != apiEntity.getCheckState()){
-			_LOGGER.info("修改审核通过的api：checkState != 2");
+			LOGGER.info("修改审核通过的api：checkState != 2");
 			return false;
 		}
 		if(StringUtils.isNotBlank(entity.getDefaultTargetUrl())) {
 			if(!entity.getDefaultTargetUrl().equals(apiEntity.getDefaultTargetUrl())){
-					_LOGGER.info("修改审核通过的api：defaultTargetUrl与数据库不一致");
+					LOGGER.info("修改审核通过的api：defaultTargetUrl与数据库不一致");
 					return false;
 			}
 		}
 		if(StringUtils.isNotBlank(entity.getOrgPath())) {
 			if(!entity.getOrgPath().equals(apiEntity.getOrgPath())){
-				_LOGGER.info("修改审核通过的api：orgPath与数据库不一致");
+				LOGGER.info("修改审核通过的api：orgPath与数据库不一致");
 				return false;
 			}
 		}
 		if(!entity.getListenPath().equals(apiEntity.getListenPath())){
-			_LOGGER.info("修改审核通过的api：listenPath与数据库不一致");
+			LOGGER.info("修改审核通过的api：listenPath与数据库不一致");
 			return false;
 		}
 		if(!entity.getHttpMethod().equals(apiEntity.getHttpMethod())){
-			_LOGGER.info("修改审核通过的api：httpMethod与数据库不一致");
+			LOGGER.info("修改审核通过的api：httpMethod与数据库不一致");
 			return false;
 		}
 		if(!entity.getVersionId().equals(apiEntity.getVersionId())){
-			_LOGGER.info("修改审核通过的api：versionId与数据库不一致");
+			LOGGER.info("修改审核通过的api：versionId与数据库不一致");
 			return false;
 		}
 		if(!entity.getVersion().equals(apiEntity.getVersion())){
-			_LOGGER.info("修改审核通过的api：version与数据库不一致");
+			LOGGER.info("修改审核通过的api：version与数据库不一致");
 			return false;
 		}
 		if(!entity.getResourceType().equals(apiEntity.getResourceType())){
-			_LOGGER.info("修改审核通过的api：resourceType与数据库不一致");
+			LOGGER.info("修改审核通过的api：resourceType与数据库不一致");
 			return false;
 		}
 		if(!entity.getProtocol().equals(apiEntity.getProtocol())){
-			_LOGGER.info("修改审核通过的api：protocol与数据库不一致");
+			LOGGER.info("修改审核通过的api：protocol与数据库不一致");
 			return false;
 		}
 		
