@@ -6,13 +6,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import cn.ce.platform_service.apis.entity.ApiMock;
+import cn.ce.platform_service.apis.service.IMockService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import cn.ce.platform_service.apis.entity.ApiEntity;
 import cn.ce.platform_service.apis.entity.NewApiEntity;
@@ -45,6 +44,8 @@ public class ApiController {
 
 	@Resource
 	private IConsoleApiService consoleApiService;
+	@Autowired
+	private IMockService mockService;
 
 	/**
 	 * 
@@ -54,11 +55,10 @@ public class ApiController {
 	 */
 	@RequestMapping(value = "/publishApi", method = RequestMethod.POST)
 	@ApiOperation("发布api_TODO")
-//	public Result<?> publishApi(HttpSession session, @RequestBody NewApiEntity apiEntity) {
 	public Result<?> publishApi(
-			HttpServletRequest request,
-			HttpSession session, @RequestBody ApiEntity entity) {
-	
+            HttpServletRequest request,
+	        HttpSession session, @RequestBody ApiEntity entity) {
+
 		/**
 		 * TODO 下一期改动api定义和api参数
 		 */
@@ -83,7 +83,10 @@ public class ApiController {
 		
 		if(StringUtils.isBlank(newApiEntity.getResourceTypeName())){
 			return Result.errorResult("api资源类型名称必须指定", ErrorCodeNo.SYS005, null, Status.FAILED);
-		}		
+		}
+		if(null != newApiEntity.getVersion() && "mock" == newApiEntity.getVersion()){
+            return Result.errorResult("api版本号不能为mock", ErrorCodeNo.SYS008, null, Status.FAILED);
+        }
 		
 		// TODO 如果请求body不为空校验请求body为可选值
 		// TODO 如果返回body不为空校验返回body为固定值
@@ -259,5 +262,21 @@ public class ApiController {
 
 		String sourceConfig = request.getParameter("sourceConfig");
 		return consoleApiService.getResourceType(sourceConfig);
+	}
+
+	@RequestMapping(value = "mock/{versionId}",method = RequestMethod.GET)
+	public Result mock(@PathVariable String versionId){
+
+		return mockService.selectByVersionId(versionId);
+	}
+
+	@RequestMapping(value="mock/inserOrUpdate",method = RequestMethod.POST)
+	public Result mock(@RequestBody ApiMock apiMock){
+
+		if(StringUtils.isBlank(apiMock.getVersionId())){
+			return new Result<String>("apiId不能为空", ErrorCodeNo.SYS005, null, Status.FAILED);
+		}
+
+		return mockService.inserOrUpdate(apiMock);
 	}
 }
