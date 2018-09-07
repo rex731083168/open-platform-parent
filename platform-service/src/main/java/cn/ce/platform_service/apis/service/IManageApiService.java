@@ -12,11 +12,9 @@ import cn.ce.platform_service.common.Result;
 */
 public interface IManageApiService {
 
-	Result<?> auditApi(List<String> apiId, Integer checkState, String checkMem);
+	Result<?> auditApi(List<String> apiId, Integer checkState, String checkMem, boolean isMocked);
 
 	Result<?> showApi(String apiId);
-
-	//Result<Page<ApiEntity>> apiList(QueryApiEntity entity, int currentPage, int pageSize);
 
 	Result<?> apiList(QueryApiEntity apiEntity);
 

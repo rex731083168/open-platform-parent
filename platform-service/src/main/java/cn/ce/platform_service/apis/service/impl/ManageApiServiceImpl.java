@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import cn.ce.platform_service.apis.dao.IMysqlApiMockDao;
+import cn.ce.platform_service.apis.entity.*;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
@@ -20,10 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
-import cn.ce.platform_service.apis.entity.ApiEntity;
-import cn.ce.platform_service.apis.entity.GatewayVersion;
-import cn.ce.platform_service.apis.entity.NewApiEntity;
-import cn.ce.platform_service.apis.entity.QueryApiEntity;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.apis.util.ApiTransform;
 import cn.ce.platform_service.common.AuditConstants;
@@ -54,6 +53,8 @@ public class ManageApiServiceImpl implements IManageApiService {
 	// private IOpenApplyDao openApplyDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
+	@Resource
+	private IMysqlApiMockDao mysqlApiMockDao;
 
 	/**
 	 * @Title: auditApi
@@ -62,10 +63,9 @@ public class ManageApiServiceImpl implements IManageApiService {
 	 * @date: 2017年10月13日 下午8:08:38
 	 */
 	@Override
-	public Result<?> auditApi(List<String> apiIds, Integer checkState, String checkMem) {
+	public Result<?> auditApi(List<String> apiIds, Integer checkState, String checkMem, boolean isMocked) {
 		Result<String> result = new Result<String>();
 
-		// List<ApiEntity> apiList = newApiDao.findApiByIds(apiId);
 		List<NewApiEntity> apiList = mysqlApiDao.findByIds(apiIds);
 
 		if (checkState == AuditConstants.USER__CHECKED_FAILED) { // 批量审核不通过
@@ -95,38 +95,35 @@ public class ManageApiServiceImpl implements IManageApiService {
 				 * 所以这个bug由业务来避免了。
 				 */
 
-				//Map<String, String> map = new HashMap<String, String>(); // map中放着不同的版本和版本对应的endPoint.
 				List<GatewayVersion> versionList = new ArrayList<GatewayVersion>();
 				for (NewApiEntity entity : apiVersionList) { // 查询旧的版本信息和Url
 					if (entity.getCheckState() == 2) {
 						// TODO 这里将来会往两个网关里推，测试网关推送测试Url，正式网关推送正式Url
-						//map.put(entity.getVersion() + "", entity.getListenPath()); // 这里只往正式网关里面推送
 						versionList.add(new GatewayVersion(entity.getVersion(),entity.getListenPath(),
 								entity.getHttpMethod().toUpperCase(),entity.getOrgPath()));
 					}
 				}
-				//map.put(apiEntity.getVersion() + "", apiEntity.getListenPath());// 最后加上新添加的版本信息和Url
+
 				versionList.add(new GatewayVersion(apiEntity.getVersion(),apiEntity.getListenPath(),
 						apiEntity.getHttpMethod().toUpperCase(),apiEntity.getOrgPath()));
-
-				// 打印最终所有的版本信息和每个版本的请求路径
-//				for (String key : map.keySet()) {
-//					_LOGGER.info("版本键：" + key + "," + "请求地址是：" + map.get(key));
-//				}
 
 				if (!apiEntity.getListenPath().startsWith("/")) {
 					apiEntity.setListenPath("/" + apiEntity.getListenPath());
 				}
-				// if(!apiEntity.getListenPath().endsWith("/")){
-				// apiEntity.setListenPath(apiEntity.getListenPath()+"/");
-				// }
+
 				String listenPath = apiEntity.getListenPath();
 				String targetUrl = apiEntity.getDefaultTargetUrl(); // 如果saas-id对应的租户找不到地址。就跳到这个地址。非必填。如果传入，必须校验url格式
 				String resourceType = apiEntity.getResourceType();
 				/*** 添加api到网关接口 ***/
 				/** 20180319 update:api支持url重定向。如果回源地址不为空。就要支持url重定向*/
+				ApiMock apiMock = null;
+				if(isMocked){
+					apiMock = mysqlApiMockDao.selectByVersionId(apiEntity.getVersionId());
+				}
+
 				JSONObject params = generateGwApiJson(apiEntity.getVersionId(), listenPath, listenPath, resourceType,
-						targetUrl, versionList, AuditConstants.GATEWAY_API_VERSIONED_TRUE);
+						targetUrl, versionList, AuditConstants.GATEWAY_API_VERSIONED_TRUE,
+						apiMock);
 
 				if (params == null) {
 					_LOGGER.info("拼接网关api json发生错误");
@@ -267,7 +264,7 @@ public class ManageApiServiceImpl implements IManageApiService {
 	}
 
 	private JSONObject generateGwApiJson(String versionId, String apiEnName, String listenPath, String resourceType,
-			String targetUrl, List<GatewayVersion> versionList, boolean gatewayApiVersionedTrue) {
+										 String targetUrl, List<GatewayVersion> versionList, boolean apiVersionedTrue, ApiMock apiMock) {
 
 		String path = Constants.GW_API_JSON;
 		JSONObject job = LocalFileReadUtil.readLocalClassPathJson(path);
@@ -303,7 +300,40 @@ public class ManageApiServiceImpl implements IManageApiService {
 			}
 			versions.put(gVersion.getVersion(), version);
 		}
-		// job.put(DBFieldsConstants.GW_API_VERSIONS, versions);
+
+		if(null != apiMock && StringUtils.isNotBlank(apiMock.getMockId())){
+			JSONObject version = new JSONObject();
+			version.put(DBFieldsConstants.GW_API_VERSIONS_NAME, DBFieldsConstants.GW_API_MOCK_VERSION);
+			version.put(DBFieldsConstants.GW_API_VERSIONS_EXPIRES, "-1");
+			version.put(DBFieldsConstants.GW_API_VERSIONS_OVERRIDE_TARGET, "");
+			version.put(DBFieldsConstants.GW_API_VERSIONS_USE_EXTENDED_PATHS, true);
+			String[] method= new String[]{org.springframework.http.HttpMethod.GET.toString(),
+					org.springframework.http.HttpMethod.POST.toString(),
+					org.springframework.http.HttpMethod.DELETE.toString(),
+					org.springframework.http.HttpMethod.PUT.toString()
+					};
+			JSONObject extendedPaths = new JSONObject();
+			JSONArray whiteLists = new JSONArray();
+			JSONObject whiteList = new JSONObject();
+			JSONObject methodActions = new JSONObject();
+			for (int i = 0 ; i< method.length ; i++){
+				JSONObject methodAction = new JSONObject();
+				methodAction.put(DBFieldsConstants.GW_API_MOCK_ACTIONS_ACTION,"reply");
+				methodAction.put(DBFieldsConstants.GW_API_MOCK_ACTIONS_CODE,apiMock.getCode());
+				methodAction.put(DBFieldsConstants.GW_API_MOCK_ACTIONS_DATA,
+						StringUtils.isBlank(apiMock.getMockStr()) ? "" : apiMock.getMockStr());
+				methodAction.put(DBFieldsConstants.GW_API_MOCK_ACTIONS_HEADERS,
+						StringUtils.isBlank(apiMock.getHeaderStr()) ? new JSONObject() : new JSONObject(apiMock.getHeaderStr()));
+				methodActions.put(method[i],methodAction);
+			}
+			whiteList.put(DBFieldsConstants.GW_API_VERSIONS_EXTENDED_PATHS_WHITELIST_PATH,"");
+			whiteList.put(DBFieldsConstants.GW_API_VERSIONS_EXTENDED_PATHS_WHITELIST_METHODACTIONS,methodActions);
+			whiteLists.put(whiteList);
+			extendedPaths.put(DBFieldsConstants.GW_API_VERSIONS_EXTENDED_PATHS_WHITELIST,whiteLists);
+			version.put(DBFieldsConstants.GW_API_VERSIONS_EXTENDED_PATHS,extendedPaths);
+			versions.put(DBFieldsConstants.GW_API_MOCK_VERSION,version);
+		}
+
 		job.getJSONObject(DBFieldsConstants.GW_API_VERSION_DATA).put(DBFieldsConstants.GW_API_VERSIONS, versions);
 
 		JSONObject proxy = (JSONObject) job.get(DBFieldsConstants.GW_API_PROXY);
@@ -313,5 +343,4 @@ public class ManageApiServiceImpl implements IManageApiService {
 		}
 		return job;
 	}
-
 }

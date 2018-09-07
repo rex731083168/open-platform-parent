@@ -148,8 +148,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		if(versionNum > 0){
 			return new Result<String>("当前版本已经存在", ErrorCodeNo.SYS025, null, Status.FAILED);
 		}
-		// 第一次添加接口,并且选择未开启版本控制
-			
+
 			// 开启版本控制
 			if(StringUtils.isBlank(user.getId())
 					|| StringUtils.isBlank(user.getUserName())

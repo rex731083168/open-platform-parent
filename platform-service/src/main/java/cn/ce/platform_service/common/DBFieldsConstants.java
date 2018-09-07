@@ -49,6 +49,9 @@ public class DBFieldsConstants {
 	public static final String GW_API_VERSIONS_OVERRIDE_TARGET = "override_target";
 	public static final String GW_API_VERSIONS_USE_EXTENDED_PATHS = "use_extended_paths";
 	public static final String GW_API_VERSIONS_EXTENDED_PATHS = "extended_paths";
+	public static final String GW_API_VERSIONS_EXTENDED_PATHS_WHITELIST = "white_list";
+	public static final String GW_API_VERSIONS_EXTENDED_PATHS_WHITELIST_PATH = "path";
+	public static final String GW_API_VERSIONS_EXTENDED_PATHS_WHITELIST_METHODACTIONS = "method_actions";
 	public static final String GW_API_VERSIONS_URL_REWRITES = "url_rewrites";
 	public static final String GW_API_VERSIONS_URL_REWRITE_PATH = "path";
 	public static final String GW_API_VERSIONS_URL_REWRITE_METHOD = "method";
@@ -59,6 +62,13 @@ public class DBFieldsConstants {
 	public static final String GW_API_PROXY = "proxy";
 	public static final String GW_API_VERSION_DATA = "version_data";
 	public static final String GW_API_RESOURCE_TYPE = "resource_type";
+	public static final String GW_API_MOCK_VERSION = "mock";
+	public static final String GW_API_MOCK_ACTIONS_ACTION = "action";
+	public static final String GW_API_MOCK_ACTIONS_CODE = "code";
+	public static final String GW_API_MOCK_ACTIONS_DATA = "data";
+	public static final String GW_API_MOCK_ACTIONS_HEADERS = "headers";
+
+
 
 	
 	public static final String GW_POLICY_ID = "id";
@@ -99,5 +109,7 @@ public class DBFieldsConstants {
 	/*************** dubbo **********************/
 	public static final String DUBBO_NODE_ID = "nodeId";
 	public static final String DUBBO_ROOT_ID = "rootId";
+
+	/*************** HTTPMETHOD **********************/
 
 }

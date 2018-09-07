@@ -43,7 +43,7 @@ public class ApiController {
 	 * @Description : 审核后推送网关是多版本+oauth，批量审核，多个api用逗号隔开
 	 * @Author : makangwei
 	 * @Date : 2017年8月21日
-	 * @param apiId 
+	 * @param apiIds
 	 * @param checkState 审核状态 2：通过，3：拒绝
 	 * @param checkMem  如果审核失败，此字段输入审核失败原因
 	 * @return
@@ -70,7 +70,7 @@ public class ApiController {
 			return result;
 		}
 
-		Result<?> result = manageApiService.auditApi(apiId, checkState, checkMem);
+		Result<?> result = manageApiService.auditApi(apiId, checkState, checkMem,true);
 		_LOGGER.info("api:"+apiIds+"，批量审核成功");
 		return result;
 	}
