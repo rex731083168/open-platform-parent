@@ -43,11 +43,9 @@ public class MockServiceImpl implements IMockService {
     public Result selectByVersionId(String versionId) {
         ApiMock mock = apiMockDao.selectByVersionId(versionId);
         if(null != mock && StringUtils.isNotBlank(mock.getMockStr())){
-            mock.setMock(
-                    JSONObject.parse(
-                            StringEscapeUtils.unescapeJava(mock.getMockStr())
-                    )
-            );
+            String str = mock.getMockStr();
+            Object obj = JSONObject.parse(str);
+            mock.setMock(obj);
         }
         if(null != mock && StringUtils.isNotBlank(mock.getHeaderStr())){
             Map map = JSONObject.parseObject(
@@ -91,15 +89,6 @@ public class MockServiceImpl implements IMockService {
             return new Result<String>("mock格式异常，支持持json", ErrorCodeNo.SYS012, apiMock.getMockStr(), Status.FAILED);
         }
 
-//        String escapeStr = null;
-//        if(null == apiMock.getMock()){//如果mock为空。则添加为{ }
-//            job = new net.sf.json.JSONObject();
-//        }else{
-//            //转义
-//            escapeStr = StringEscapeUtils.escapeJava(job.toString());
-//        }
-
-
         apiMock.setMockStr(null == job ? null : job.toString());
         if(null != apiMock.getHeaders() && !apiMock.getHeaders().isEmpty()){
             apiMock.setHeaderStr(new org.json.JSONObject(apiMock.getHeaders()).toString());
@@ -113,5 +102,4 @@ public class MockServiceImpl implements IMockService {
         apiIds.add(entity.getId());
         return manageApiService.auditApi(apiIds,AuditConstants.API_CHECK_STATE_SUCCESS,null,true);
     }
-
 }

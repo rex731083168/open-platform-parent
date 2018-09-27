@@ -1,6 +1,7 @@
 package cn.ce.platform_console.guide.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -55,7 +56,7 @@ public class GuideConsoleController {
 		return consoleGuideService.add(user, g);
 	}
 
-	@RequestMapping(value = "/updateGuide", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateGuide", method = {RequestMethod.PUT,RequestMethod.POST})
 	@ApiOperation("修改指南")
 	public Result<?> guideUpdate(@RequestBody GuideEntity guideEntity) {
 		
@@ -103,9 +104,9 @@ public class GuideConsoleController {
 		return consoleGuideService.getByid(id);
 	}
 
-	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
-	public Result<?> submitVerify(@RequestParam String ids) {
-		
+	@RequestMapping(value = "/submitVerify", method = {RequestMethod.PUT,RequestMethod.POST})
+	public Result<?> submitVerify(@RequestBody List<String> ids) {
+
 		return consoleGuideService.submitVerify(ids);
 	}
 

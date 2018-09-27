@@ -176,13 +176,12 @@ public class ConsoleGuideServiceImpl implements IConsoleGuideService {
 	}
 
 	@Override
-	public Result<String> submitVerify(String id) {
+	public Result<String> submitVerify(List<String> ids) {
 		Result<String> result = new Result<>();
-		List<String> asList = SplitUtil.splitStringWithComma(id);
-		
+
 //			String num = String
 //					.valueOf(guideDaoImpl.bachUpdateGuide(asList, AuditConstants.DIY_APPLY_CHECKED_COMMITED, null));
-		int num = mysqlGuideDao.bathUpdateCheckState(asList,AuditConstants.DIY_APPLY_CHECKED_COMMITED,null);
+		int num = mysqlGuideDao.bathUpdateCheckState(ids,AuditConstants.DIY_APPLY_CHECKED_COMMITED,null);
 		_LOGGER.info("bachUpdate guide message " + num + " count");
 		result.setSuccessMessage("提交审核:" + num + "条");
 		return result;

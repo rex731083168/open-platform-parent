@@ -6,6 +6,8 @@ import cn.ce.platform_service.guide.entity.GuideEntity;
 import cn.ce.platform_service.guide.entity.QueryGuideEntity;
 import cn.ce.platform_service.users.entity.User;
 
+import java.util.List;
+
 /**
  *
  * @Title: IConsoleGuideService.java
@@ -27,7 +29,7 @@ public interface IConsoleGuideService {
 
 	public Result<Page<GuideEntity>> guideList(QueryGuideEntity entity);
 
-	Result<String> submitVerify(String id);
+	Result<String> submitVerify(List<String> ids);
 
 //	public Result<String> migraGuide();
 

@@ -18,8 +18,6 @@ import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.Status;
 import cn.ce.platform_service.common.page.Page;
-import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
-import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
 import cn.ce.platform_service.diyApply.service.IPlublicDiyApplyService;
 import cn.ce.platform_service.openApply.dao.IMysqlOpenApplyDao;
 import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
@@ -247,16 +245,14 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 //	}
 
 	@Override
-	public Result<?> submitVerify(String ids, Integer checkState) {
+	public Result<?> submitVerify(List<String> ids, Integer checkState) {
 
 		_LOGGER.info("consoleOpenApplySubmitVerify begin ids:" + ids + ",checkState:" + checkState);
 
 		Result<Page<OpenApplyEntity>> result = new Result<>();
 
-		List<String> asList = SplitUtil.splitStringWithComma(ids);
-
 		//newOpenApplyDao.batchSaveApply(asList, checkState);
-		int num = mysqlOpenApplyDao.batchUpdateCheckState(asList, checkState, null);
+		int num = mysqlOpenApplyDao.batchUpdateCheckState(ids, checkState, null);
 
 		_LOGGER.info("consoleOpenApplySubmitVerify success! batch update num is "+num);
 

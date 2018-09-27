@@ -5,6 +5,8 @@ import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
 import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.users.entity.User;
 
+import java.util.List;
+
 /***
  * 
  * 
@@ -80,10 +82,11 @@ public interface IConsoleOpenApplyService {
 	 * @param : @param id
 	 * @param : @param checkState 0:初始，1:提交审核，2:通过，3:未通过
 	 * @param : @return
-	 * @return: Result<?>
+	 * @param id
+     * @return: Result<?>
 	 * @throws
 	 */
-	public Result<?> submitVerify(String id,Integer checkState);
+	public Result<?> submitVerify(List<String> ids, Integer checkState);
 	
 	public Result<?> getApplyById(String id);
 

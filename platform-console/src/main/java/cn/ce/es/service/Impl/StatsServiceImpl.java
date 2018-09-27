@@ -159,6 +159,7 @@ public class StatsServiceImpl implements IStatsService {
 			data.put("bucketsPie", bucketsPie(param, dateTime, apiKey, type));
 			result.setSuccessData(data.toString());
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.setErrorMessage("查询统计图失败,请联系管理员!");
 		}
 

@@ -1,6 +1,7 @@
 package cn.ce.platform_console.openApply.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -130,7 +131,7 @@ public class OpenApplyController {
 	 * @Title: modifyApply
 	 * @Description: 修改应用
 	 */
-	@RequestMapping(value = "/modifyApply", method = RequestMethod.PUT)
+	@RequestMapping(value = "/modifyApply", method = {RequestMethod.PUT,RequestMethod.POST})
 	@ApiOperation("修改api")
 	public Result<?> modifyApply(@RequestBody OpenApplyEntity openApply) {
 		
@@ -142,11 +143,11 @@ public class OpenApplyController {
 	 * @Title: submitVerify
 	 * @Description: 提交审核
 	 */
-	@RequestMapping(value = "/submitVerify", method = RequestMethod.PUT)
+	@RequestMapping(value = "/submitVerify", method = {RequestMethod.PUT,RequestMethod.POST})
 	@ApiOperation("批量提交_TODO")
-//	public Result<?> submitVerify(@RequestParam(required = true) String ids) {
-	public Result<?> submitVerify(@RequestParam(value = "id", required = true) String id) {
-		return consoleOpenApplyService.submitVerify(id,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
+	public Result<?> submitVerify(@RequestBody List<String> ids) {
+
+		return consoleOpenApplyService.submitVerify(ids,AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
 	}
 	
 }
