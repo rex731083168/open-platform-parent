@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.ce.platform_service.apis.dao.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.ce.platform_service.apis.dao.IMysqlApiArgDao;
-import cn.ce.platform_service.apis.dao.IMysqlApiCodeDao;
-import cn.ce.platform_service.apis.dao.IMysqlApiDao;
-import cn.ce.platform_service.apis.dao.IMysqlApiHeaderDao;
-import cn.ce.platform_service.apis.dao.IMysqlApiResultDao;
-import cn.ce.platform_service.apis.dao.IMysqlApiRexampleDao;
-import cn.ce.platform_service.apis.dao.IMysqlDApiRecordDao;
-import cn.ce.platform_service.apis.dao.IMysqlUApiRecordDao;
 import cn.ce.platform_service.apis.entity.ApiArgEntity;
 import cn.ce.platform_service.apis.entity.ApiCodeEntity;
 import cn.ce.platform_service.apis.entity.ApiEntity;
@@ -63,6 +56,8 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 	private IMysqlApiHeaderDao apiHeaderDao;
 	@Resource
 	private IMysqlApiArgDao apiArgDao;
+	@Resource
+	private IMysqlApiQueryArgDao apiQueryArgDao;
 	@Resource
 	private IMysqlApiResultDao apiResultDao;
 	@Resource
@@ -400,6 +395,13 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 				arg.setId(RandomUtil.random32UUID());
 				apiArgDao.save(arg);
 			}
+		}
+
+		List<ApiArgEntity> queryArgs = apiEntity.getQueryArgs();
+		for (ApiArgEntity qag: queryArgs) {
+			qag.setApiId(apiEntity.getId());
+			qag.setId(RandomUtil.random32UUID());
+			apiQueryArgDao.save(qag);
 		}
 		
 		List<ApiResultEntity> results = apiEntity.getResult();
