@@ -594,4 +594,12 @@
 		    left join diy_bound_api b on d.apply_id = b.diy_apply_id
 		    left join api_detail a on b.api_id = a.api_id
 	</select>
+
+	<select id="findTotalSuccessApi" parameterType="int" resultType="int">
+		select count(api_id) from api_detail where check_state = 2
+	</select>
+
+	<select id="getTotalOpenApply" resultType="int">
+		select COUNT(open_apply_id) from api_detail where check_state = 2 and api_type = 'OPEN'
+	</select>
 </mapper>

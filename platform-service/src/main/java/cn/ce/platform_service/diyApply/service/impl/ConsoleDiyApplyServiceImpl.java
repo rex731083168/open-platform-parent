@@ -762,7 +762,12 @@ public class ConsoleDiyApplyServiceImpl implements IConsoleDiyApplyService {
 		}
 		return result;
 	}
-	
+
+	@Override
+	public int getTotalDiyApply() {
+		return mysqlDiyApplyDao.getTotalDiyApply();
+	}
+
 	private boolean validateMenu(List<Menu> menus) {
 		
 		if(menus.isEmpty()){

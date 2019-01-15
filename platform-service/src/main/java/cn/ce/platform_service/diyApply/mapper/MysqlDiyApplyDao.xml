@@ -198,4 +198,8 @@
 					#{item}				
 				</foreach>
 	</select>
+
+	<select id="getTotalDiyApply" resultType="int">
+		select count(apply_id) from diy_apply
+	</select>
 </mapper>

@@ -3,7 +3,6 @@ package cn.ce.platform_service.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -15,9 +14,7 @@ import java.util.jar.JarFile;
 
 import org.apache.log4j.Logger;
 
-import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
-import cn.ce.platform_service.dubbapply.service.impl.DubboApplySerciceImpl;
 
 public class ModuleClassLoader extends URLClassLoader {
 	/** 日志对象 */

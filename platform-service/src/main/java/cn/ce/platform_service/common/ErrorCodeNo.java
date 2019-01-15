@@ -45,6 +45,7 @@ public enum ErrorCodeNo {
 	,SYS035("已删除")
 	,SYS036("参数复制异常")
 	,SYS037("BI数据统计异常")
+	,SYS038("es服务器连接异常")
 	,DOWNLOAD001("部分id不存在")
 	,DOWNLOAD002("开放应用id不存在")
 	,DOWNLOAD003("文件格式错误")

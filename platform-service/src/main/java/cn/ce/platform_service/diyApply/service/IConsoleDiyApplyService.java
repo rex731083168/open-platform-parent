@@ -1,6 +1,6 @@
 package cn.ce.platform_service.diyApply.service;
 
-import cn.ce.annotation.dubbodescription.InterfaceDescription;
+//import cn.ce.annotation.dubbodescription.InterfaceDescription;
 import java.util.ArrayList;
 import java.util.List;
 import cn.ce.platform_service.common.Result;
@@ -25,7 +25,7 @@ public interface IConsoleDiyApplyService {
 	 * 
 	 * @param entity
 	 */
-	@InterfaceDescription(name="",des="保存实体",version="1.0")
+//	@InterfaceDescription(name="",des="保存实体",version="1.0")
 	Result<?> saveApply(String sourceConfig, DiyApplyEntity entity);
 
 	/***
@@ -40,7 +40,6 @@ public interface IConsoleDiyApplyService {
 	 * 
 	 * @return
 	 */
-	//Result<Page<DiyApplyEntity>> findApplyList(DiyApplyEntity entity, Page<DiyApplyEntity> page);
 	Result<Page<DiyApplyEntity>> findApplyList(QueryDiyApplyEntity queryApply);
 
 	/**
@@ -90,6 +89,5 @@ public interface IConsoleDiyApplyService {
 
 	Result<?> deleteMenu1(String sourceConfig, ArrayList<String> ids);
 
-
-	
+    int getTotalDiyApply();
 }

@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.ce.annotation.dubbodescription.InterfaceDescription;
-import cn.ce.annotation.dubbodescription.InterfaceDescriptionEnty;
 import cn.ce.annotation.dubbodescription.InterfaceDescriptionFullEnty;
 
 /**

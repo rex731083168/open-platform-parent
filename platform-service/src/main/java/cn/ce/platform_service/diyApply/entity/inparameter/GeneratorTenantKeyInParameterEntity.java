@@ -1,6 +1,5 @@
 package cn.ce.platform_service.diyApply.entity.inparameter;
 
-import cn.ce.annotation.dubbodescription.InterfaceDescription;
 
 /**
  *

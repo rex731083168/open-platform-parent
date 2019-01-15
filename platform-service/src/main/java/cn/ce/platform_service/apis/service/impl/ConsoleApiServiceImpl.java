@@ -373,6 +373,17 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 		return new Result<List<DiyApplyBound>>("", ErrorCodeNo.SYS000, boundList, Status.SUCCESS);
 	}
 
+	@Override
+	public int getTotalAmount() {
+
+		return mysqlApiDao.findTotalSuccessApi();
+	}
+
+	@Override
+	public int getTotalOpenApply() {
+		return mysqlApiDao.getTotalOpenApply(); //获取审核通多的api，并且api类型为开放的开放应用总量
+	}
+
 
 	/**
 	 * @Title: checkApiChName

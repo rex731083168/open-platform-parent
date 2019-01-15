@@ -56,6 +56,10 @@ public class ElasticsearchUtils {
 		return this.client;
 	}
 
+	public static TransportClient getclient(){
+
+		return client;
+	}
 	/**
 	 * 
 	 */
@@ -157,6 +161,12 @@ public class ElasticsearchUtils {
 		logger.info(ra.getBuckets().size() + "Termscount");
 		return ra.getBuckets();
 
+	}
+
+	public int getTotalAccess(){
+		client.prepareGet();
+
+		return 0;
 	}
 
 }

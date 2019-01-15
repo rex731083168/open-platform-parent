@@ -1,10 +1,6 @@
 package cn.ce.platform_service.apis.service;
 
 import javax.servlet.http.HttpServletResponse;
-
-import com.alibaba.dubbo.config.annotation.Service;
-
-import cn.ce.annotation.dubbodescription.InterfaceDescription;
 import cn.ce.platform_service.apis.entity.ApiExportParamEntity;
 import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.users.entity.User;
@@ -16,7 +12,6 @@ import cn.ce.platform_service.users.entity.User;
  */
 public interface IApiTransportService {
 
-	@InterfaceDescription(name = "我的", des = "啊啊啊啊啊", version = "1.0.0")
 	String exportApis(String recordId, HttpServletResponse response);
 
 	Result<?> generalExportList(ApiExportParamEntity exportParam, User user);

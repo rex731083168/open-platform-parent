@@ -56,6 +56,11 @@ public interface IConsoleApiService {
  	// 该接口作为定制应用绑定开放应用和api绑定关系的调用。不作为其它调用
 	Result<?> getDiyApplyBound();
 
+	// 获取审核通过的api总量
+    int getTotalAmount();
+
+	int getTotalOpenApply();
+
 
 //	Result<?> migraQueryArgs();
 
