@@ -67,6 +67,7 @@
 			<mvc:exclude-mapping path="/dubboDateController/manualUpdataData" />
 			<mvc:exclude-mapping path="/data/migra/**" />
 			<mvc:exclude-mapping path="/statistics/**" />
+			<mvc:exclude-mapping path="/document/**" />
 			<bean class="cn.ce.platform_service.interceptors.LoginInterceptor" />
 		</mvc:interceptor>
 		<!-- <mvc:interceptor> <mvc:mapping path="/guideConsole/guide"/> <bean 

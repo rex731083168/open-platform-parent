@@ -29,27 +29,20 @@ import io.swagger.annotations.ApiOperation;
  * @ClassName:  UserController   
  * @Description:Console用户控制类
  * @author: makangwei
- * @date:   2017年10月11日 下午2:27:28   
+ * @date:   2017年10月11日 下午2:27:28
+ * @update data: 2019年1月24日 下午16:32:24
  * @Copyright: 2017 中企动力科技股份有限公司 © 1999-2017 300.cn All Rights Reserved
  */
 @RestController
 @RequestMapping("/user")
-@Api("用户管理")
 public class UserController {
 
-	/** 日志对象 */
 	private static Logger _LOGGER = Logger.getLogger(UserController.class);
 
 	@Resource
 	private IConsoleUserService consoleUserService;
 	
-	/**
-	 * 
-	 * 用户中心迁移后，该类已经不再使用。
-	 * 新的迁移mysql未经过联调测试，如果重新使用该模块，需要重新联调测试
-	 * @date:   2018年01月29日 上午11:10:18 
-	 */
-	
+
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	@ApiOperation("用户注册")
 	public Result<?> userRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session,
@@ -57,8 +50,7 @@ public class UserController {
 		
 		_LOGGER.info("userName:"+user.getUserName());
 		_LOGGER.info("email:"+user.getEmail());
-		
-		
+
 		_LOGGER.info("校验验证码是否正确");
 		Integer checkCode1 = (Integer)session.getAttribute(user.getEmail());
 		

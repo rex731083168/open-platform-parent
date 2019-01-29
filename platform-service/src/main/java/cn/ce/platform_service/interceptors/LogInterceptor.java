@@ -39,7 +39,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter{
 		Enumeration<String> enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();  
-			_LOGGER.info(paraName+": "+request.getParameter(paraName));  
+			_LOGGER.debug(paraName+": "+request.getParameter(paraName));
 		}
 		_LOGGER.debug("_____________>log interceptor finished");
 		return true;

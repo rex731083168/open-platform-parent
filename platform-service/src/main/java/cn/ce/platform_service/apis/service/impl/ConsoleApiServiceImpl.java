@@ -133,8 +133,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			}else{
 				return new Result<String>("修改失败，请检查当前id是否存在",ErrorCodeNo.SYS006,null,Status.FAILED);
 			}
-//			mysqlApiDao.save1(apiEntity);
-			//newApiDao.save(apiEntity);
 		}
 		
 		
@@ -142,7 +140,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 			return new Result<String>("版本名称不能为空", ErrorCodeNo.SYS005,null,Status.FAILED);
 		}
 		
-		//ApiEntity vEntity = newApiDao.findByVersion(apiEntity.getVersionId(),apiEntity.getVersion());
 		int versionNum = mysqlApiDao.findVersionNum(apiEntity.getVersionId(),apiEntity.getVersion());
 		
 		if(versionNum > 0){
@@ -175,8 +172,6 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 				apiEntity.setVersionId(versionId);
 			}
 			
-			//newApiDao.save(apiEntity);
-//			mysqlApiDao.save1(apiEntity);
 			apiEntity.setId(RandomUtil.random32UUID());
 			saveMysqlEntity(apiEntity);
 			
@@ -658,7 +653,7 @@ public class ConsoleApiServiceImpl implements IConsoleApiService{
 	}
 	
 	private boolean saveMysqlEntity(NewApiEntity apiEntity) {
-		
+
 		mysqlApiDao.save1(apiEntity);
 		
 		List<ApiHeaderEntity> headers = apiEntity.getHeaders();

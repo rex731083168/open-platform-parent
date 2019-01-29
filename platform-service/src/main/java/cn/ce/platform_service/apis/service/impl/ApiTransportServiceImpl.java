@@ -130,7 +130,6 @@ public class ApiTransportServiceImpl implements IApiTransportService{
 		}
 
 		List<String> apiIds = recordEntity.getApiIds();
-//		List<ApiEntity> apiList = newApiDao.findApiByIds(apiIds, AuditConstants.API_CHECK_STATE_SUCCESS);
 		List<NewApiEntity> apiList = mysqlApiDao.findTotalOnesByIdsAndCheckState(apiIds, AuditConstants.API_CHECK_STATE_SUCCESS);
 		for (NewApiEntity apiEntity : apiList) {
 			// 获取产品中心applist

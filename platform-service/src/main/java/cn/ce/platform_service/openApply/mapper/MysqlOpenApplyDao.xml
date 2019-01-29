@@ -15,6 +15,7 @@
  		<result column="apply_key" property="applyKey" />
  		<result column="apply_name" property="applyName" />
  		<result column="apply_desc" property="applyDesc" />
+		<result column="apply_icon" property="applyIcon" />
  		<result column="create_time" property="createDate" />
  		<result column="check_state" property="checkState" />
  		<result column="check_mem" property="checkMem" />
@@ -30,11 +31,11 @@
  	</sql>
   	<insert id="save" parameterType="cn.ce.platform_service.openApply.entity.OpenApplyEntity">
 		INSERT INTO open_apply 
-			(apply_id,app_id,user_id,user_name,enterprise_name,apply_key,apply_name
-			,apply_desc,create_time,check_state,check_mem)
+			(apply_id,app_id,user_id,user_name,enterprise_name,apply_key,apply_name,
+			apply_desc,apply_icon,create_time,check_state,check_mem)
 		VALUES  	
   			(#{id},#{appId},#{userId},#{userName},#{enterpriseName}
-  			,#{applyKey},#{applyName},#{applyDesc},#{createDate},#{checkState},#{checkMem})
+  			,#{applyKey},#{applyName},#{applyDesc},#{applyIcon},#{createDate},#{checkState},#{checkMem})
   	</insert>
   
   	<update id="batchUpdateCheckState">
@@ -62,6 +63,9 @@
   	
   	<select id="findById" resultMap = "openApplyMap">
   		select * from open_apply where apply_id = #{id}
+  	</select>
+	<select id="findByAppId" resultMap = "openApplyMap">
+  		select * from open_apply where app_id = #{id}
   	</select>
   	
   	<select id="findListSize" parameterType="cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity"
@@ -110,4 +114,59 @@
   	<delete id="deleteAll">
   		delete from open_apply
   	</delete>
+
+	<delete id="deleteAllSuccess">
+  		delete from open_apply where check_state = 2
+  	</delete>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into open_apply (apply_id,app_id, apply_name, apply_icon,create_time,apply_desc,apply_key,check_state) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id},
+			#{item.appId},
+			#{item.applyName},
+			#{item.applyIcon},
+			#{item.createDate},
+			#{item.applyDesc},
+			#{item.applyKey},
+			#{item.checkState})
+		</foreach>
+	</insert>
+	
+	<select id="findSuccessSize" resultType="int" parameterType="cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity">
+        select count(open_apply.apply_id)
+        from open_apply
+        where open_apply.check_state = #{checkState}
+        and open_apply.app_id in (select DISTINCT(open_apply_id) from api_detail)
+		<if test="applyName!= null and applyName != ''">
+			AND open_apply.apply_name like concat(concat("%",#{applyName}),"%")
+		</if>
+	</select>
+
+	<select id="getSuccessedList" resultMap="openApplyMap" parameterType="cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity">
+        select open_apply.*
+        from open_apply
+        where open_apply.check_state = #{checkState}
+        and open_apply.app_id in (select DISTINCT(open_apply_id) from api_detail)
+		<if test="applyName!= null and applyName != ''">
+			AND open_apply.apply_name like concat(concat("%",#{applyName}),"%")
+		</if>
+		limit
+		<choose>
+			<when test="startIndex == null or startIndex == '0'">
+				0,
+			</when>
+			<otherwise>
+				#{startIndex},
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="pageSize == null or pageSize == '0' ">
+				10
+			</when>
+			<otherwise>
+				#{pageSize}
+			</otherwise>
+		</choose>
+	</select>
   </mapper>

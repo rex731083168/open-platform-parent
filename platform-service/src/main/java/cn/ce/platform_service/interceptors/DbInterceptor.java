@@ -28,10 +28,10 @@ public class DbInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 
-		_LOGGER.info("_____________>db interceptor Started");
+		_LOGGER.debug("_____________>db interceptor Started");
 		String sourceConfig = request.getParameter("sourceConfig");
 		
-		_LOGGER.info("_____________>db flag :" + "========" + sourceConfig
+		_LOGGER.debug("_____________>db flag :" + "========" + sourceConfig
 				+ "========");
 		if ("sandbox".equals(sourceConfig)) {
 			DataSourceTypeManager.set(DataSourceEnum.SANDBOX);

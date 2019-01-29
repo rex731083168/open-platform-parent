@@ -1,14 +1,22 @@
 package cn.ce.platform_service.apis.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
 import cn.ce.platform_service.apis.dao.IMysqlApiMockDao;
 import cn.ce.platform_service.apis.entity.*;
+import cn.ce.platform_service.common.*;
+import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps2;
+import cn.ce.platform_service.openApply.dao.IMysqlOpenApplyDao;
+import cn.ce.platform_service.openApply.entity.OpenApplyEntity;
+import cn.ce.platform_service.util.PropertiesUtil;
+import cn.ce.platform_service.util.RandomUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
@@ -25,11 +33,6 @@ import com.alibaba.fastjson.JSON;
 import cn.ce.platform_service.apis.dao.IMysqlApiDao;
 import cn.ce.platform_service.apis.service.IManageApiService;
 import cn.ce.platform_service.apis.util.ApiTransform;
-import cn.ce.platform_service.common.AuditConstants;
-import cn.ce.platform_service.common.Constants;
-import cn.ce.platform_service.common.DBFieldsConstants;
-import cn.ce.platform_service.common.ErrorCodeNo;
-import cn.ce.platform_service.common.Result;
 import cn.ce.platform_service.common.gateway.ApiCallUtils;
 import cn.ce.platform_service.common.gateway.GatewayUtils;
 import cn.ce.platform_service.common.page.Page;
@@ -47,10 +50,8 @@ import io.netty.handler.codec.http.HttpMethod;
 public class ManageApiServiceImpl implements IManageApiService {
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(ManageApiServiceImpl.class);
-	// @Resource
-	// private INewApiDao newApiDao;
-	// @Resource
-	// private IOpenApplyDao openApplyDao;
+	 @Resource
+	 private IMysqlOpenApplyDao openApplyDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
 	@Resource
@@ -171,7 +172,8 @@ public class ManageApiServiceImpl implements IManageApiService {
 			// 批量修改数据库
 			for (NewApiEntity apiEntity2 : apiList) {
 				apiEntity2.setCheckState(AuditConstants.API_CHECK_STATE_SUCCESS);
-				// newApiDao.save(apiEntity2);
+				//修改如果openApply是新的openApply则将新的openApply添加到表里
+				checkAndInsertOpenApply(apiEntity2.getOpenApplyId());
 				mysqlApiDao.saveOrUpdateEntity(apiEntity2);
 			}
 			result.setSuccessMessage("修改成功");
@@ -181,6 +183,39 @@ public class ManageApiServiceImpl implements IManageApiService {
 																			// 重复的判断
 		}
 		return result;
+	}
+
+	//校验开放应用是否存在如果不存在插入。
+	private boolean checkAndInsertOpenApply(String applyId) {
+		OpenApplyEntity openApplyEntity = openApplyDao.findByAppId(applyId);
+		if(null != openApplyEntity) {
+			return true;
+		}
+		List<String> ids = new ArrayList<String>();
+		ids.add(applyId);
+		String url = PropertiesUtil.getInstance().getSourceConfigValue(null,"findAppsById");
+		String a$ = Pattern.quote("${apiIds}");
+
+		String replacedurl = null;
+		replacedurl = url.replaceAll(a$,ids.toString());
+		Apps2 apps2 = (Apps2) HttpClientUtil.getUrlReturnObject(replacedurl, Apps2.class, null);
+		if (apps2.getStatus().equals("200") || apps2.getStatus().equals("110")) {
+			//插入到openApply
+			for (AppList app:apps2.getData()) {
+				OpenApplyEntity openApplyEntity1 = new OpenApplyEntity(
+						RandomUtil.random32UUID(),
+						app.getAppId(),
+						app.getAppCode(),
+						app.getAppIcon(),
+						app.getAppName(),
+						app.getAppDesc(),
+						2,
+						StringUtils.isBlank(app.getAppCreateTime()) ? new Date() : new Date(Long.parseLong(app.getAppCreateTime()))
+				);
+				openApplyDao.save(openApplyEntity1);
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -343,4 +378,5 @@ public class ManageApiServiceImpl implements IManageApiService {
 		}
 		return job;
 	}
+
 }

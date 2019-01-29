@@ -1,6 +1,5 @@
 package cn.ce.platform_console.openApply.controller;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.annotation.Resource;

@@ -1,18 +1,20 @@
 package cn.ce.platform_service.openApply.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.annotation.Resource;
 
+import cn.ce.platform_service.diyApply.entity.appsEntity.AppList;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Apps;
+import cn.ce.platform_service.diyApply.entity.appsEntity.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
-
 import cn.ce.platform_service.common.AuditConstants;
 import cn.ce.platform_service.common.ErrorCodeNo;
 import cn.ce.platform_service.common.Result;
@@ -25,7 +27,6 @@ import cn.ce.platform_service.openApply.entity.QueryOpenApplyEntity;
 import cn.ce.platform_service.openApply.service.IConsoleOpenApplyService;
 import cn.ce.platform_service.users.entity.User;
 import cn.ce.platform_service.util.RandomUtil;
-import cn.ce.platform_service.util.SplitUtil;
 
 /***
  * 
@@ -43,8 +44,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 	private static Logger _LOGGER = LoggerFactory.getLogger(ConsoleOpenApplyServiceImpl.class);
 
-//	@Resource
-//	private INewOpenApplyDao newOpenApplyDao;
 	@Resource
 	private IMysqlOpenApplyDao mysqlOpenApplyDao;	
 	
@@ -64,24 +63,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 		Result<String> result = new Result<String>();
 
-		// Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
-		//
-		// List<OpenApplyEntity> tempEntityList;
-		//
-		// if (StringUtils.isNotBlank(apply.getApplyName())) {
-		// whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME,
-		// new MongoDBWhereEntity(apply.getApplyName(), ConditionEnum.EQ));
-		// }
-		//
-		// tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
-		//
-		// if (tempEntityList != null && tempEntityList.size() > 0
-		// || this.getRepatDiyApplyName(apply.getApplyName())) {
-		// result.setErrorMessage("应用名称已存在!", ErrorCodeNo.SYS009);
-		// return result;
-		// }
-		//
-		// whereEntity.clear();
+
 		int cNum = mysqlOpenApplyDao.checkApplyName(apply.getApplyName());
 		if (cNum > 0) {
 			result.setErrorMessage("应用名称已存在!", ErrorCodeNo.SYS009);
@@ -93,32 +75,7 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 			result.setErrorMessage("应用key已存在!", ErrorCodeNo.SYS009);
 			return result;
 		}
-		// if (StringUtils.isNotBlank(apply.getApplyKey())) {
-		// whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYKEY,
-		// new MongoDBWhereEntity(apply.getApplyKey(), ConditionEnum.EQ));
-		// }
-		//
-		// tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
-		//
-		// if (tempEntityList != null && tempEntityList.size() > 0) {
-		// result.setErrorMessage("应用key已存在!", ErrorCodeNo.SYS009);
-		// return result;
-		// }
 
-		// if (user.getUserType() == AuditConstants.USER_ADMINISTRATOR) {
-		// apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_SUCCESS); //
-		// 后台系统添加服务分类默认审核通过
-		// } else {
-		// if (apply.getCheckState() == null || apply.getCheckState() == 0) {
-		// apply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED); //
-		// 提供者添加服务分类需要提交审核
-		// } else if (apply.getCheckState() == 1) {
-		// apply.setCheckState(AuditConstants.OPEN_APPLY_CHECKED_COMMITED);
-		// } else {
-		// result.setErrorMessage("当前审核状态不可用", ErrorCodeNo.SYS012);
-		// return result;
-		// }
-		// }
 		// TODO 管理员添加直接是审核通过的
 		if(null == apply.getCheckState()){
 			apply.setCheckState(AuditConstants.OPEN_APPLY_UNCHECKED);
@@ -138,7 +95,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 			result.setErrorMessage("appKey不能以/开头和/结尾");
 			return result;
 		}
-		// newOpenApplyDao.save(apply);
 		apply.setId(RandomUtil.random32UUID());
 		mysqlOpenApplyDao.save(apply);
 
@@ -163,8 +119,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 		Result<String> result = new Result<String>();
 
-		// OpenApplyEntity apply =
-		// newOpenApplyDao.findOpenApplyById(openApply.getId());
 		OpenApplyEntity apply = mysqlOpenApplyDao.findById(openApply.getId());
 
 		if (null == apply) {
@@ -191,7 +145,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 			return result;
 		}
 
-		// newOpenApplyDao.save(openApply);
 		int uNum = mysqlOpenApplyDao.update(openApply);
 
 		_LOGGER.info("modifyConsoleOpenApply end success!" + " change num is:" + uNum);
@@ -210,16 +163,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 	@Override
 	public Result<Page<OpenApplyEntity>> applyList(QueryOpenApplyEntity entity) {
 
-//		Result<List<OpenApplyEntity>> result = new Result<>();
-
-//		try {
-//			List<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao
-//					.findOpenApplyByEntity(getSearchWhereMap(entity));
-//			result.setSuccessData(findOpenApplyByEntity);
-//		} catch (Exception e) {
-//			_LOGGER.error("查询应用时出现错误,e:" + e.toString());
-//			result.setErrorMessage("查询失败!");
-//		}
 		Result<Page<OpenApplyEntity>> result = new Result<Page<OpenApplyEntity>>();
 		int uNum = mysqlOpenApplyDao.findListSize(entity);
 		List<OpenApplyEntity> openList = mysqlOpenApplyDao.getPagedList(entity);
@@ -229,21 +172,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		return result;
 	}
 
-//	public Result<Page<OpenApplyEntity>> applyList(OpenApplyEntity entity, Page<OpenApplyEntity> page) {
-//
-//		Result<Page<OpenApplyEntity>> result = new Result<>();
-//
-//		try {
-//			Page<OpenApplyEntity> findOpenApplyByEntity = newOpenApplyDao
-//					.findOpenApplyByEntity(getSearchWhereMap(entity), page);
-//			result.setSuccessData(findOpenApplyByEntity);
-//		} catch (Exception e) {
-//			_LOGGER.error("查询应用时出现错误,e:" + e.toString());
-//			result.setErrorMessage("查询失败!");
-//		}
-//		return result;
-//	}
-
 	@Override
 	public Result<?> submitVerify(List<String> ids, Integer checkState) {
 
@@ -251,7 +179,6 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 
 		Result<Page<OpenApplyEntity>> result = new Result<>();
 
-		//newOpenApplyDao.batchSaveApply(asList, checkState);
 		int num = mysqlOpenApplyDao.batchUpdateCheckState(ids, checkState, null);
 
 		_LOGGER.info("consoleOpenApplySubmitVerify success! batch update num is "+num);
@@ -273,44 +200,11 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		return result;
 	}
 
-//	private Map<String, MongoDBWhereEntity> getSearchWhereMap(OpenApplyEntity entity) {
-//
-//		Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
-//
-//		if (StringUtils.isNotBlank(entity.getApplyName())) {
-//			whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME,
-//					new MongoDBWhereEntity(entity.getApplyName(), ConditionEnum.LIKE));
-//		}
-//
-//		if (StringUtils.isNotBlank(entity.getUserName())) {
-//			whereEntity.put(MongoFiledConstants.OPEN_APPLY_USERNAME,
-//					new MongoDBWhereEntity(entity.getUserName(), ConditionEnum.LIKE));
-//		}
-//
-//		if (null != entity.getCheckState()) {
-//			whereEntity.put(MongoFiledConstants.OPEN_APPLY_CHECKSTATE,
-//					new MongoDBWhereEntity(entity.getCheckState(), ConditionEnum.EQ));
-//		}
-//		return whereEntity;
-//	}
+
 
 	@Override
 	public Result<?> checkApplyName(String applyName) {
 
-//		Map<String, MongoDBWhereEntity> whereEntity = new HashMap<>();
-//
-//		List<OpenApplyEntity> tempEntityList;
-//
-//		if (StringUtils.isNotBlank(applyName)) {
-//			whereEntity.put(MongoFiledConstants.OPEN_APPLY_APPLYNAME,
-//					new MongoDBWhereEntity(applyName, ConditionEnum.EQ));
-//		}
-//
-//		tempEntityList = newOpenApplyDao.findOpenApplyByEntity(whereEntity);
-//
-//		if (tempEntityList != null && tempEntityList.size() > 0 || this.getRepatDiyApplyName(applyName)) {
-//			return Result.errorResult("当前应用名称已经存在！", ErrorCodeNo.SYS009, null, Status.FAILED);
-//		}
 		int aNum = mysqlOpenApplyDao.checkApplyName(applyName);
 		if(aNum > 0){
 			return Result.errorResult("当前应用名称已经存在！", ErrorCodeNo.SYS009, null, Status.FAILED);
@@ -329,50 +223,50 @@ public class ConsoleOpenApplyServiceImpl implements IConsoleOpenApplyService {
 		
 		return Result.errorResult("当前key可以使用", ErrorCodeNo.SYS000, null, Status.SUCCESS);
 	}
-	
-//	public boolean getRepatDiyApplyName(String applyName) {
-//
-//		boolean falult = false;
-//
-//		Result<Apps> result = this.plublicDiyApplyService.findPagedApps(sourceConfig, "", applyName, 1, 50);
-//
-//		List<AppList> list = result.getData().getData().getList();
-//		//AppList applist = new AppList();
-//		for (AppList app1 : list) {
-//			if(app1.getAppName().equals(applyName)){
-//				falult = true;
-//				return falult;
-//			}
-//		}
-//		return falult;
-		
-		//执行后是死循环
-//		while (list.iterator().hasNext()) {
-//			applist = (AppList) list.iterator().next();
-//			if (applist.getAppName().equals(applyName)) {
-//				falult = true;
-//				return falult;
-//			}
-//		}
-//		return falult;
 
-//	}
+	@Override
+	public Result batchDeleteOpenApply() {
+		int temp = mysqlOpenApplyDao.deleteAllSuccess();
+		return Result.successResult("success",temp);
+	}
 
-//	@Override
-//	public Result<?> migraOpenApply() {
-//		List<OpenApplyEntity> openApplyList = newOpenApplyDao.findAll();
-//		int i = 0;
-//		mysqlOpenApplyDao.deleteAll();
-//		for (OpenApplyEntity openApplyEntity : openApplyList) {
-//			i+=mysqlOpenApplyDao.save(openApplyEntity);
-//		}
-//		Result<String> result = new Result<String>();
-//		result.setSuccessMessage("一共"+openApplyList.size()+"条数据，成功插入mysql数据库"+i+"条");
-//		return result;
-//	}
-//	
-//	public static void main(String[] args) {
-//
-//	}
-	
+	@Override
+	public Result batchInsertOpenApply() {
+		Result<Apps> appsResult = plublicDiyApplyService.findPagedApps(null,null,null,0,Integer.MAX_VALUE);
+		Data data = appsResult.getData().getData();
+		List<AppList> list = data.getList();
+		List<OpenApplyEntity> openApplyEntityList = new ArrayList<>();
+		for (AppList app: list) {
+			openApplyEntityList.add(
+					new OpenApplyEntity(
+							RandomUtil.random32UUID(),
+							app.getAppId(),
+							app.getAppCode(),
+							app.getAppIcon(),
+							app.getAppName(),
+							app.getAppDesc(),
+							2,
+							StringUtils.isBlank(app.getAppCreateTime()) ? new Date() : new Date(Long.parseLong(app.getAppCreateTime()))
+					)
+			);
+		}
+		int temp = mysqlOpenApplyDao.batchInsert(openApplyEntityList);
+		return Result.successResult("",temp);
+	}
+
+	@Override
+	public Result getOpenApplyList(String owner, String name, int currentPage, int pageSize) {
+		//分页
+		QueryOpenApplyEntity queryOpenApplyEntity = new QueryOpenApplyEntity();
+		queryOpenApplyEntity.setApplyName(name);
+		queryOpenApplyEntity.setCurrentPage(currentPage);
+		queryOpenApplyEntity.setPageSize(pageSize);
+		queryOpenApplyEntity.setCheckState(2);
+
+		int totalSize = mysqlOpenApplyDao.findSuccessSize(queryOpenApplyEntity);
+		List<OpenApplyEntity> list = mysqlOpenApplyDao.getSuccessedList(queryOpenApplyEntity);
+		Page<OpenApplyEntity> page = new Page(currentPage,totalSize,pageSize,list);
+		return Result.successResult("",page);
+	}
+
 }

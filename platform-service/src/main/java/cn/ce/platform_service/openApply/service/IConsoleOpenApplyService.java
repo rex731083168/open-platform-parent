@@ -94,5 +94,11 @@ public interface IConsoleOpenApplyService {
 
 	public Result<?> checkApplyKey(String applyKey);
 
+    Result batchDeleteOpenApply();
+
+	Result batchInsertOpenApply();
+
+	Result getOpenApplyList(String owner, String name, int currentPage, int pageSize);
+
 //	public Result<?> migraOpenApply();
 }

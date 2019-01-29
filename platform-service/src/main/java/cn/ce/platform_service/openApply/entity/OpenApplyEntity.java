@@ -45,6 +45,8 @@ public class OpenApplyEntity implements Serializable {
 	@Field(MongoFiledConstants.OPEN_APPLY_APPLYKEY)
 	private String applyKey;
 
+	private String applyIcon; //图标
+
 	/** 开放应用名称 */
 	@Field("applyName")
 	private String applyName;
@@ -67,6 +69,28 @@ public class OpenApplyEntity implements Serializable {
 	/** dao判断刨除当前修改id的数据进行判断时赋值 */
 	@Transient
 	private String neqId;
+
+	public OpenApplyEntity(){}
+
+
+	public OpenApplyEntity(String applyId, String appId, String applyKey, String applyIcon, String applyName, String applyDesc, int checkState, Date createDate) {
+		this.id = applyId;
+		this.appId = appId;
+		this.applyKey = applyKey;
+		this.applyIcon = applyIcon;
+		this.applyName = applyName;
+		this.applyDesc = applyDesc;
+		this.checkState = checkState;
+		this.createDate = createDate;
+	}
+
+	public String getApplyIcon() {
+		return applyIcon;
+	}
+
+	public void setApplyIcon(String applyIcon) {
+		this.applyIcon = applyIcon;
+	}
 
 	public String getId() {
 		return id;

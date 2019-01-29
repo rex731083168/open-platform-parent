@@ -25,6 +25,8 @@ public interface IMysqlOpenApplyDao {
 
 	OpenApplyEntity findById(@Param("id")String id);
 
+	OpenApplyEntity findByAppId(String id);
+
 	int findListSize(QueryOpenApplyEntity entity);
 
 	List<OpenApplyEntity> getPagedList(QueryOpenApplyEntity entity);
@@ -40,4 +42,14 @@ public interface IMysqlOpenApplyDao {
 	int update(OpenApplyEntity openApply);
 
 	int deleteAll();
+
+    int deleteAllSuccess();
+
+	int batchInsert(List<OpenApplyEntity> openApplyEntityList);
+
+	int findSuccessSize(QueryOpenApplyEntity name);
+
+	List<OpenApplyEntity> getSuccessedList(QueryOpenApplyEntity queryOpenApplyEntity);
+
+
 }

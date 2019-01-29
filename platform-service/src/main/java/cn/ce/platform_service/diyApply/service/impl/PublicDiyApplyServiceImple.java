@@ -47,12 +47,8 @@ import cn.ce.platform_service.util.PropertiesUtil;
 public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 	private static Logger _LOGGER = Logger.getLogger(PublicDiyApplyServiceImple.class);
 
-//	@Resource
-//	private INewApiDao newApiDao;
 	@Resource
 	private IMysqlApiDao mysqlApiDao;
-//	@Resource
-//	private IDiyApplyDao diyApplyDao;
 	@Resource
 	private IMysqlDiyApplyDao mysqlDiyApplyDao;
 	@Resource
@@ -180,15 +176,12 @@ public class PublicDiyApplyServiceImple implements IPlublicDiyApplyService {
 			result.setErrorMessage("请求失败");
 			return result;
 		}
-
 	}
 
 	@Override
 	public Result<?> limitScope(String diyApplyId, String openApplyId, String apiName, Integer currentPage, Integer pageSize ) {
 
-//		Result<Page<NewApiEntity>> result = new Result<Page<NewApiEntity>>();
 		Result<Page<ApiEntity>> result = new Result<Page<ApiEntity>>();
-		//DiyApplyEntity diyEntity = diyApplyDao.findById(diyApplyId);
 		DiyApplyEntity diyEntity = mysqlDiyApplyDao.findById(diyApplyId);
 		if (null == diyEntity) {
 			result.setErrorMessage("当前id不存在", ErrorCodeNo.SYS015);
