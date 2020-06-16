@@ -16,7 +16,7 @@
 		<spring.data.mongodb.version>1.10.7.RELEASE</spring.data.mongodb.version>
 		<spring.data.commons.version>1.13.7.RELEASE</spring.data.commons.version>
 		<commons.codec.version>1.10</commons.codec.version>
-		<spring.version>4.2.9.RELEASE</spring.version>
+		<spring.version>5.2.7.RELEASE</spring.version>
 		<maven.plugin.version>2.3.2</maven.plugin.version>
 		<java.version>1.8</java.version>
 		<tomcat7.maven.version>2.2</tomcat7.maven.version>
