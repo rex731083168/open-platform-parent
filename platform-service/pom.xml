@@ -10,7 +10,7 @@
 	<version>2.0.2</version>
 
 	<properties>
-		<elasticsearch.version>5.5.2</elasticsearch.version>
+		<elasticsearch.version>6.8.15</elasticsearch.version>
 	</properties>
 
 
