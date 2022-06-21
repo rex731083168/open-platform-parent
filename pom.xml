@@ -44,7 +44,7 @@
 		<junit>4.12</junit>
 		<org.mybatis.mybatis>3.4.5</org.mybatis.mybatis>
 		<org.mybatis.mybatis-spring>1.3.1</org.mybatis.mybatis-spring>
-		<myql.mysql-connector-java>5.1.8</myql.mysql-connector-java>
+		<myql.mysql-connector-java>8.0.28</myql.mysql-connector-java>
 
 
 	</properties>
