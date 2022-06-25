@@ -13,7 +13,7 @@
 		<springfox-swagger>2.7.0</springfox-swagger>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<spring.data.mongodb.version>1.10.7.RELEASE</spring.data.mongodb.version>
+		<spring.data.mongodb.version>3.3.5</spring.data.mongodb.version>
 		<spring.data.commons.version>1.13.7.RELEASE</spring.data.commons.version>
 		<commons.codec.version>1.10</commons.codec.version>
 		<spring.version>4.2.9.RELEASE</spring.version>
