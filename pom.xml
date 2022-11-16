@@ -20,7 +20,7 @@
 		<maven.plugin.version>2.3.2</maven.plugin.version>
 		<java.version>1.8</java.version>
 		<tomcat7.maven.version>2.2</tomcat7.maven.version>
-		<fasterxml.jackson.version>2.8.6</fasterxml.jackson.version>
+		<fasterxml.jackson.version>2.12.7.1</fasterxml.jackson.version>
 		<jackson.mapper.version>1.9.2</jackson.mapper.version>
 		<commons.dbcp.version>1.3</commons.dbcp.version>
 		<java.servlet.api.version>2.5</java.servlet.api.version>
